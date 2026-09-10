@@ -7,7 +7,7 @@ FP32 二维 valid 卷积 `conv2d(in, H, W, k, KH, KW, out)` 的 SME（FMOPA）�
 
 | 用例 | 4096×6144 k39 | 6144×4096 k41 | 4256×6390 k55 | 6390×4256 k81 |
 |---|---|---|---|---|
-| GFLOPS | 12631 | 12664 | 13805 | 14028 |
+| GFLOPS | 12827 | 12752 | 13840 | 14043 |
 | 纯 fmopa 形态下限 | 13000 | 13090 | 13560 | 14020 |
 
 评测机主频 2.0 GHz，成绩约为本机 × 1.27。方法与全部实测记录见 `NOTES.md`。
@@ -26,7 +26,8 @@ FP32 二维 valid 卷积 `conv2d(in, H, W, k, KH, KW, out)` 的 SME（FMOPA）�
 
 - `conv2d.c` 实现；`bench_conv.c` 官方基准；`run.sh` 判题脚本（编译 + 四例）。
 - `tools/test_conv.c` 泛化位精确测试；`tools/fbench.c` 快速判题口径 bench（参考哈希缓存）；`tools/drv.c` 分相计时。
-- `probe/` 微架构探针；`jobs/` Donau 作业脚本（`validate_job.sh` 完整验证、`fbench_job.sh`、`accept_zip_job.sh`、探针）。
+- `probe/` 微架构探针；`jobs/` Donau 作业脚本（`validate_job.sh` 完整验证、`fbench_job.sh`、`accept_zip_job.sh`、
+  `prof_job.sh`/`diag_job.sh`/`brmis_job.sh` 深度 profile 与归因诊断、探针）。
 - `submissions/conv.zip` 提交包（`bash run.sh` 即可）；`NOTES.md` 完整笔记。
 
 ## 编译运行

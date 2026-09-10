@@ -78,7 +78,7 @@ static int env_int(const char* name, int def)
 }
 
 // 可调参数只在首次调用时读环境（getenv 每次要扫整个环境表，~2 µs/次，一次调用 9 次就是 ~0.3%）
-typedef struct { int inited, slice, sp, prof, pf_in, pf_out, postart, uzp, poolwfe, pool, store_asm, pf_fresh, pf_l2, br, sw_dense; } knobs_t;
+typedef struct { int inited, slice, sp, prof, pf_in, pf_out, postart, uzp, poolwfe, pool, store_asm, pf_fresh, pf_l2, br, sw_dense, diag_l1; } knobs_t;
 static knobs_t g_knobs;
 static int g_pf_fresh = 1;
 static void read_knobs(void)
@@ -95,6 +95,7 @@ static void read_knobs(void)
     g_knobs.pool = env_int("CONV_POOL", 1);
     g_knobs.store_asm = env_int("CONV_STORE", -1); // 1: jc=3/2/1 行的回写与 pass 末三行的 fmopa 重叠；0: 全部由 C 回写；-1 自动
     g_knobs.pf_l2 = env_int("CONV_PFL2", -1);      // 1: DRAM 预取到 L2；0: L1；-1 自动（长 pass 用 L2）
+    g_knobs.diag_l1 = env_int("CONV_DIAG_L1", 0);    // 诊断（结果错误）：1 a 数据 L1 驻留；2 a+b 都 L1 驻留
     g_knobs.pf_fresh = env_int("CONV_PFFRESH", 1); // 整环重建前先预取全部行
     g_knobs.br = env_int("CONV_BR", 1);            // 边界行 fmla 方案（0 关；1 自动选去掉的行数）
     g_knobs.sw_dense = env_int("CONV_SWDENSE", -1); // 半步密度：1 稠密 / 0 稀疏 / -1 按容量自动
@@ -253,8 +254,8 @@ static inline void sme_zero_za(void) { asm volatile("zero {za}\n\t" ::: "memory"
 // DRAM 预取（下一组的原始输入行、本组输出行）用游标放在每行的第 0 个 4 步组里，与 fmopa 交错。
 // （行间 C 代码每多 ~20 条指令，fmopa 队列就会被抽空一次，实测整体慢 3–7%。）
 // 参数通过 pass_t 结构传入（字段偏移作立即数），游标/常量驻留在显式寄存器：
-//   x12 槽表游标  x13 R 行指针  x14 剩余行数（= 回写行 jc，兼作 mova 切片索引）  x15 下一行平面 0 基址（预载）
-//   x16 RSB  x17 切片槽表游标
+//   x12 槽表游标  x13 R 行指针  x14 剩余行数（= 回写行 jc，兼作 mova 切片索引）  x15 sweep 的 a 地址（0 = 空闲）
+//   x16 下一行平面 0 基址（行首软流水）  x17 sweep 的 kernel 四元组地址
 //   x19-x21 输入预取游标  x24-x26 输出预取游标  x22/x23/x27/x28 切片构建  x9-x11 临时
 // 回写重叠：输出行 j0+3-jc 在 Y=KH-1+jc 后已完成（此后 b 的该列恒为 0，fmopa 只加 0），
 //   因此 jc=3/2/1 三行分别在剩余行数 x14=3/2/1 的行内（块 6..9，每块一个 tile）用 mova+st4w 存出，
@@ -440,26 +441,28 @@ _Static_assert(offsetof(pass_t, pon) == 80 && offsetof(pass_t, PWb) == 104 && of
     "sub x28, x28, #1\n\t"                                                                               \
     "41:\n\t"
 
-// 行首平面 0 基址 = 槽表项 + pass 偏移（预载到寄存器 A/B 实测无差别——乱序窗口遮住了这条链）
-#define ROW_P0 "ldr %[p0], [x12], #8\n\t ldr x9, [%[a], #288]\n\t add %[p0], %[p0], x9\n\t"
+// 行首软流水：本行平面 0 基址已在 x16（上一行末/序言算好：槽表项 + pass 偏移），行首只需 mov，随后立刻取下一行的项。
+// 行首链 ldr→add→ld1w→ext→fmopa 会抽空 SME 队列：去掉链头的 ldr 后 k39 +1.4%（v29 的"预载"仍留着 ldr+add 在链上，所以无效）
+#define ROW_P0 "mov %[p0], x16\n\t ldr x16, [x12], #8\n\t ldr x9, [%[a], #288]\n\t add x16, x16, x9\n\t"
+#define ROW_P0_INIT "ldr x16, [x12], #8\n\t ldr x9, [%[a], #288]\n\t add x16, x16, x9\n\t"
 #define PASS_LOOP(STEP, TAIL, HI, HO)                                                                       \
     asm volatile("ptrue p0.s\n\t"                                                                           \
                  "ldr x12, [%[a], #0]\n\t ldr x13, [%[a], #8]\n\t ldr x14, [%[a], #16]\n\t"                 \
                  "ldr x19, [%[a], #24]\n\t ldr x20, [%[a], #32]\n\t ldr x21, [%[a], #40]\n\t"               \
                  "ldr x24, [%[a], #64]\n\t ldr x25, [%[a], #72]\n\t ldr x26, [%[a], #80]\n\t"               \
-                 "ldr x16, [%[a], #112]\n\t"                                                                \
                  "ldr x22, [%[a], #144]\n\t ldr x9, [%[a], #152]\n\t str x9, [%[a], #440]\n\t ldr x23, [%[a], #184]\n\t" \
                  "ldr x27, [%[a], #192]\n\t ldr x28, [%[a], #168]\n\t"   /* 哑行：sdcnt 片写到 sdummy */        \
                  "cbnz x21, 32f\n\t mov x19, xzr\n\t 32:\n\t"          /* 无预取任务：指针清零 */                \
                  "cbnz x26, 33f\n\t mov x24, xzr\n\t 33:\n\t"                                               \
                  "ldr x15, [%[a], #336]\n\t ldr x17, [%[a], #344]\n\t"  /* sweep 状态；首个 sweep 的初值 */      \
                  "cbz x15, 85f\n\t ldr x9, [%[a], #400]\n\t" SW_LOAD "85:\n\t"                        \
+                 ROW_P0_INIT                                                                                \
                  "10:\n\t"                                                                                  \
                  /* 行首：平面基址 = 槽表项 + pass 偏移；PWb/2PWb/3PWb 互不依赖 */                                 \
                  ROW_P0                                                                                     \
                  "ldr x9, [%[a], #104]\n\t ldr x10, [%[a], #272]\n\t ldr x11, [%[a], #280]\n\t"             \
                  "add %[p1], %[p0], x9\n\t add %[p2], %[p0], x10\n\t add %[p3], %[p0], x11\n\t"             \
-                 "mov %[pb], x13\n\t add x13, x13, x16\n\t"                                                 \
+                 "mov %[pb], x13\n\t ldr x9, [%[a], #112]\n\t add x13, x13, x9\n\t"                          \
                  "ldr %[m], [%[a], #120]\n\t"                                                               \
                  "cbz %[m], 9f\n\t"                                                                         \
                  "1:\n\t"                                                                                   \
@@ -711,6 +714,9 @@ typedef struct {
 static int sw_add(swd_t* q, int n, long jc, long kj0, long kj1, long d0, const uint64_t* tab, long poff,
                   const float* Kp, long KPS, const float* src0, float* stash, char* final_out, long ntile)
 {
+#ifdef CONV_NOHALF   // 仅供归因诊断：不排任何 sweep（边界行结果错误），量 BR 主循环 + ZA 初值/抽取本身的代价
+    (void)jc; (void)kj0; (void)kj1; (void)d0; (void)tab; (void)poff; return n;
+#endif
     for (long kj = kj0; kj <= kj1; kj++) {
         q[n].ntile = ntile;
         q[n].abase = (char*)(uintptr_t)tab[d0 + kj + 3 - jc] + poff;
@@ -803,6 +809,7 @@ static void conv_worker(int tid, int nt_, const ctx_t* c)
     // 槽表：tab[i] = 槽 (i mod NS) 的平面 0 字节地址，2NS+1 项，使从任意起点连续走 NS+1 项（含末行预载）无需取模
     uint64_t* slot_tab = g_tab + (size_t)tid * g_tab_stride;
     for (long i = 0; i < 2 * NS + 1; i++) slot_tab[i] = (uint64_t)(uintptr_t)(P + (i % NS) * slot_floats);
+    if (g_knobs.diag_l1) for (long i = 0; i < 2 * NS + 1; i++) slot_tab[i] = (uint64_t)(uintptr_t)P;   // 诊断：a 全走槽 0（L1 驻留，结果错误）
     const float* R = g_R;
     const long sht = (((m4 - 1) & 15) + 1) * 4;    // 尾步相对对齐基址的字节偏移
     const long chunks = (m4 + 14) / 16;            // 每行执行切片的块组数（最后一块组若只含块 0 则不执行切片）
@@ -810,7 +817,7 @@ static void conv_worker(int tid, int nt_, const ctx_t* c)
     pass_t pa;
     memset(&pa, 0, sizeof(pa));
     pa.pbrow = R; pa.Y = NS;
-    pa.PWb = PW * 4; pa.PW2b = PW * 8; pa.PW3b = PW * 12; pa.RSB = RS * 4; pa.m4 = m4; pa.rem = rem; pa.sht = sht;
+    pa.PWb = PW * 4; pa.PW2b = PW * 8; pa.PW3b = PW * 12; pa.RSB = g_knobs.diag_l1 >= 2 ? 0 : RS * 4; /* 诊断 2：b 只读 R 行 0 */ pa.m4 = m4; pa.rem = rem; pa.sht = sht;
     pa.istride = (long)W * 4; pa.ostride = outW * 4;
     pa.sdummy = dummy; pa.sdcnt = chunks;
     // 边界行方案：每线程暂存（按 pass 序号 p）——前半初值 pre_st[p][3-jc]、后半抽取 post_st[p][jc]，各 16 向量；

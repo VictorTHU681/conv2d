@@ -24,8 +24,12 @@ OMP_NUM_THREADS=1 numactl -N 1 build/test_conv 12 1408 2>&1 | grep -E "FAIL|PASS
 CONV_BR=0 numactl -N 1 build/test_conv 30 1409 2>&1 | grep -E "FAIL|PASS"
 CONV_POOL=0 numactl -N 1 build/test_conv 30 1410 2>&1 | grep -E "FAIL|PASS"
 CONV_NO_SME=1 numactl -N 1 build/test_conv 20 1411 2>&1 | grep -E "FAIL|PASS"
-echo "--- fbench 四例 ×3"
-for args in "4096 6144 39 39" "6144 4096 41 41" "4256 6390 55 55" "6390 4256 81 81"; do numactl -N 1 build/fbench $args 3 2>&1 | tail -1; done
+echo "--- fbench 四例 ×3（cur vs v42 基线，同节点）"
+[ -f build/conv2d_v42.c ] && gcc $F tools/fbench.c build/conv2d_v42.c -o build/fbench_v42 -lm 2>&1 | grep -iE "error"
+for args in "4096 6144 39 39" "6144 4096 41 41" "4256 6390 55 55" "6390 4256 81 81"; do
+  echo "## cur $args"; numactl -N 1 build/fbench $args 3 2>&1 | tail -1 | sed -E "s/.*best/  best/"
+  [ -x build/fbench_v42 ] && { echo "## v42 $args"; numactl -N 1 build/fbench_v42 $args 3 2>&1 | tail -1 | sed -E "s/.*best/  best/"; }
+done
 echo "--- 分相"
 run() { echo "##### $1"; shift; numactl -N 1 build/drv "$@" 3 2>&1 | grep -E "conv prof" | sed -E "s/.*br ([0-9]+\/[0-9]+).*region ([0-9.]+) ms.*avg\/max ([0-9.]+)\/([0-9.]+)\/([0-9.]+) \| build ([0-9.]+)\/[0-9.]+ \| kern ([0-9.]+)\/[0-9.]+ \| store ([0-9.]+).*/  br \1 region \2 avg \4 kern \7 store \8/" | tail -2; }
 for c in "4096 6144 39 39" "6144 4096 41 41" "4256 6390 55 55" "6390 4256 81 81"; do CONV_PROFILE=1 run "$c" $c; done
