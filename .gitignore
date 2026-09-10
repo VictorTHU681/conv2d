@@ -1,0 +1,21 @@
+# 编译产物与运行输出
+build/
+*.o
+*.out
+*.err
+refcache/
+# 探针/工具二进制（源码同名）
+probe/smef32
+probe/bw
+probe/rowbench
+probe/alias
+probe/l1sm
+probe/zastore
+probe/fmlarow
+probe/brmix
+probe/brdbg
+drv
+fbench
+test_conv
+conv2d_test
+conv2d_test_plain

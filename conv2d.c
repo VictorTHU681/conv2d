@@ -1,0 +1,1292 @@
+// conv2d：二维 valid 卷积（相关）FP32，鲲鹏 SME 优化实现
+//
+// 位精确约束：校验容差 1e-5（绝对），而输出量级 ~KH*KW/4（数百到上千），FP32 一个 ulp 就超过容差，
+// 因此每个输出必须与参考实现逐步相同：acc = fma(in, k, acc)，按 (jk, ik) 行主序累加（gcc -O3 默认
+// -ffp-contract=fast 会把参考的 "+= a*b" 融合为 fmla）。SME 的 fmopa（非加宽 FP32）对每个 ZA 元素
+// 正好是一次 fused multiply-add，所以可以把卷积映射成外积序列并保持逐步顺序。
+//
+// 映射（每个 ZA tile 16×16 FP32，4 个 tile）：
+//   tile t、行 r、列 c=4*ic+jc  ↔  输出 (j0+3-jc, i0+64t+4r+3-ic)
+//   步 (Y, X)（Y=0..KH+2, X=0..KW+2）：a_t[r] = in[j0+Y][i0+64t+4r+X]，b[c] = kpad[Y-3+jc][X-3+ic]
+//   于是元素 (r,c) 在步 (Y,X) 累加 in[j+jk][i+ik]*k[jk][ik]，其中 jk=Y-3+jc、ik=X-3+ic，
+//   越界的 kernel 位置补 0（fma(a,0,acc)=acc，位精确）。步序 Y 外 X 内 ⇒ 每个输出按 (jk,ik) 行主序累加。
+//   代价：(KH+3)(KW+3)/(KH*KW) 的额外步数（39×39: 16%，81×81: 7.5%）。
+// 供数：a 向量按列 stride 4 取输入 → 预先把输入行去交织为 4 个平面 plane_q[x] = in[row][4x+q]，
+//   a_t 即 plane_q 上连续 16 个元素（q = X%4），每线程一个 L2 驻留的行环形缓冲（KH+3 槽，槽距 2 的幂不跨页）；
+//   a 用 5 条 64B 对齐载入 + 4 条 ext（移位 4*(m mod 16) 字节）生成，避免非对齐载入（跨行 1.5 周期、命中 L2 时 2.5）；
+//   b 向量由打包的 kernel R[Y][X'][jc] = kpad[Y-3+jc][X'-3] 连续取 16 个（行距 2 的幂）。
+// 结构：一个 pass = 4 tile × (KH+3) 行，整个 Y 循环在一段汇编里（行间只有几条标量指令；行间 C 代码会抽空
+//   fmopa 队列）；DRAM 预取（下一组输入行、本组输出行）与下一组平面的 ld4w 切片构建分散在各 4 步组末尾；
+//   输出行 j0+3-jc 在第 KH-1+jc 行后已完成，jc=3/2/1 三行在 pass 最后三行内用 mova+st4w 存出（与 fmopa 交错），
+//   回写前一行先把要写的线预取进 L1。按 pass 长度特化：KH+3 > 64（k81）时 DRAM 预取只进 L2、不做 pass 内回写。
+//   工作项 = (列块, 4 行组)，静态加权划分 + relaxed CAS 窃取（release 会等 st4w 落地）；线程池在调用之间自旋。
+//
+// 编译：gcc -O3 [-march=armv9-a+sme+sve2] -fopenmp；运行期检测 SME(+FA64)，缺失时回退 SVE/标量通用实现。
+// 可调环境变量（默认即最优）：CONV_SP 块宽 256*SP（0=自动）、CONV_POOL 线程池、CONV_SLICE 切片构建、
+//   CONV_PFIN/CONV_PFOUT 预取、CONV_STORE 回写重叠、CONV_UZP 构建方式、CONV_PROFILE 分相计时（2 = 每线程）。
+#define _GNU_SOURCE
+// 若编译命令没给 -march（如题面的参考命令 gcc -O3 ...），在此打开 SME/SVE2（内联汇编与 SVE 内建函数都需要）；
+// 编译器不认识 SME（GCC < 12）则退到通用实现（-DCONV_NO_SME_ASM 亦可强制）
+#if !defined(CONV_NO_SME_ASM)
+#  if defined(__aarch64__) && (defined(__ARM_FEATURE_SME) || __GNUC__ >= 12)
+#    if !defined(__ARM_FEATURE_SME)
+#      pragma GCC target("arch=armv9-a+sme+sve2")
+#    endif
+#  else
+#    define CONV_NO_SME_ASM 1
+#  endif
+#endif
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdint.h>
+#include <stddef.h>
+#include <sched.h>
+#include <omp.h>
+#include <sys/auxv.h>
+#ifdef __ARM_FEATURE_SVE
+#include <arm_sve.h>
+#endif
+
+typedef float CONVFLOAT;
+typedef int CONVINT;
+
+#ifndef CONV_NO_SME_ASM
+#define CONV_SME 1
+#endif
+
+// ---------------------------------------------------------------- 运行环境
+#define HWCAP2_SME_BIT (1UL << 23)
+#define HWCAP2_SME_FA64_BIT (1UL << 30)
+
+static int sme_available(void)
+{
+    static int cached = -1;
+    if (cached < 0) {
+        unsigned long hw2 = getauxval(AT_HWCAP2);
+        cached = ((hw2 & HWCAP2_SME_BIT) && (hw2 & HWCAP2_SME_FA64_BIT)) ? 1 : 0;
+        const char* env = getenv("CONV_NO_SME");
+        if (env && env[0] == '1') cached = 0;
+    }
+    return cached;
+}
+
+static int env_int(const char* name, int def)
+{
+    const char* s = getenv(name);
+    return (s && *s) ? atoi(s) : def;
+}
+
+// 可调参数只在首次调用时读环境（getenv 每次要扫整个环境表，~2 µs/次，一次调用 9 次就是 ~0.3%）
+typedef struct { int inited, slice, sp, prof, pf_in, pf_out, postart, uzp, poolwfe, pool, store_asm, pf_fresh, pf_l2, br, sw_dense; } knobs_t;
+static knobs_t g_knobs;
+static int g_pf_fresh = 1;
+static void read_knobs(void)
+{
+    if (g_knobs.inited) return;
+    g_knobs.slice = env_int("CONV_SLICE", 1);
+    g_knobs.sp = env_int("CONV_SP", 0);
+    g_knobs.prof = env_int("CONV_PROFILE", 0);
+    g_knobs.pf_in = env_int("CONV_PFIN", 1);
+    g_knobs.pf_out = env_int("CONV_PFOUT", 1);
+    g_knobs.postart = env_int("CONV_POSTART", 0);
+    g_knobs.uzp = env_int("CONV_UZP", 1);
+    g_knobs.poolwfe = env_int("CONV_POOLWFE", 0);
+    g_knobs.pool = env_int("CONV_POOL", 1);
+    g_knobs.store_asm = env_int("CONV_STORE", -1); // 1: jc=3/2/1 行的回写与 pass 末三行的 fmopa 重叠；0: 全部由 C 回写；-1 自动
+    g_knobs.pf_l2 = env_int("CONV_PFL2", -1);      // 1: DRAM 预取到 L2；0: L1；-1 自动（长 pass 用 L2）
+    g_knobs.pf_fresh = env_int("CONV_PFFRESH", 1); // 整环重建前先预取全部行
+    g_knobs.br = env_int("CONV_BR", 1);            // 边界行 fmla 方案（0 关；1 自动选去掉的行数）
+    g_knobs.sw_dense = env_int("CONV_SWDENSE", -1); // 半步密度：1 稠密 / 0 稀疏 / -1 按容量自动
+    g_pf_fresh = g_knobs.pf_fresh;
+    g_knobs.inited = 1;
+}
+
+static cpu_set_t g_thr_mask[1024];
+static int g_cpus[CPU_SETSIZE];
+static int g_ncpu = -1;
+
+// 可用 CPU 集 = 各线程亲和掩码的并集（兼容 numactl / taskset / OMP_PROC_BIND）
+static void discover_cpus(void)
+{
+    if (g_ncpu >= 0) return;
+#pragma omp parallel
+    {
+        int tid = omp_get_thread_num();
+        int nt = omp_get_num_threads();
+        if (tid < 1024) sched_getaffinity(0, sizeof(cpu_set_t), &g_thr_mask[tid]);
+#pragma omp barrier
+#pragma omp single
+        {
+            cpu_set_t u;
+            CPU_ZERO(&u);
+            int lim = nt < 1024 ? nt : 1024;
+            for (int t = 0; t < lim; t++) CPU_OR(&u, &u, &g_thr_mask[t]);
+            int n = 0;
+            for (int c = 0; c < CPU_SETSIZE; c++) if (CPU_ISSET(c, &u)) g_cpus[n++] = c;
+            g_ncpu = n;
+        }
+    }
+}
+
+static inline void pin_self(int tid)
+{
+    if (g_ncpu > 0 && tid < g_ncpu) {
+        cpu_set_t s;
+        CPU_ZERO(&s);
+        CPU_SET(g_cpus[tid], &s);
+        sched_setaffinity(0, sizeof(s), &s);
+    }
+}
+
+// ---------------------------------------------------------------- 通用实现（SVE，按列向量化，位精确）
+static void conv2d_generic(const CONVFLOAT* in, CONVINT H, CONVINT W, const CONVFLOAT* k, CONVINT KH, CONVINT KW,
+                           CONVFLOAT* out)
+{
+    const long outH = H - KH + 1, outW = W - KW + 1;
+#pragma omp parallel for schedule(static)
+    for (long j = 0; j < outH; ++j) {
+        CONVFLOAT* orow = out + j * outW;
+#ifdef __ARM_FEATURE_SVE
+        long i = 0;
+        const long VL = svcntw();
+        for (; i < outW; i += VL) {
+            svbool_t pg = svwhilelt_b32((int64_t)i, (int64_t)outW);
+            svfloat32_t acc = svdup_f32(0.0f);
+            for (long jk = 0; jk < KH; ++jk) {
+                const CONVFLOAT* irow = in + (j + jk) * (long)W + i;
+                const CONVFLOAT* krow = k + jk * (long)KW;
+                for (long ik = 0; ik < KW; ++ik)
+                    acc = svmla_n_f32_x(pg, acc, svld1_f32(pg, irow + ik), krow[ik]);
+            }
+            svst1_f32(pg, orow + i, acc);
+        }
+#else
+        for (long i = 0; i < outW; ++i) {
+            float acc = 0.0f;
+            for (long jk = 0; jk < KH; ++jk)
+                for (long ik = 0; ik < KW; ++ik) acc = __builtin_fmaf(in[(j + jk) * (long)W + i + ik], k[jk * KW + ik], acc);
+            orow[i] = acc;
+        }
+#endif
+    }
+}
+
+#ifdef CONV_SME
+// ---------------------------------------------------------------- SME 内核
+#define VCLOB "z0","z1","z2","z3","z4","z5","z6","z7","z8","z9","z10","z11","z12","z13","z14","z15","z16","z17","z18","z19","z20","z21","z22","z23","z24","z25","z26","z27","z28","z29","z30","z31"
+#define PCLOB "p0","p1","p2","p3","p4","p5","p6","p7","p8","p9","p10","p11","p12","p13","p14","p15"
+
+static inline uint64_t cyc(void) { uint64_t v; asm volatile("mrs %0, cntvct_el0" : "=r"(v)); return v; }
+static inline uint64_t cyc_hz(void) { uint64_t v; asm volatile("mrs %0, cntfrq_el0" : "=r"(v)); return v; }
+typedef struct { uint64_t build, kern, store, total, enter, items, steals, cpu; } prof_t;
+
+static inline void sme_start(void) { asm volatile("smstart\n\t" ::: "memory", VCLOB, PCLOB); }
+static inline void sme_stop(void) { asm volatile("smstop\n\t" ::: "memory", VCLOB, PCLOB); }
+static inline void sme_zero_za(void) { asm volatile("zero {za}\n\t" ::: "memory"); }
+
+// 1×4 tile 排布：tile t ↔ 输出列 c0+64t..+63，4 个 tile 同一行组（j0..j0+3），共用 b 向量。
+// 步 (Y, X)：输入行 j0+Y，a_t = plane_q[m + 16t + r]（q = X%4, m = X/4），b = R[Y][X]，4 条 fmopa 共 8 周期。
+// a 向量按元素偏移 m 滑动 → 若直接非对齐载入（4 条/步），载入管线成为瓶颈（每条 1.5 周期，行在 L2 时 2.5）。
+// 改为：5 条 64B 对齐载入 V0..V4 + 4 条 ext（按字节移位 4*(m mod 16)，1 条/周期且与 fmopa 并发）生成 a0..a3；
+// m 每 16 步组推进一次对齐基址；移位量是立即数，因此把 16 个移位展开为 16 个块，尾步（rem）用非对齐载入。
+// 相比 2×2（两个行组错开 4 行 → 每 pass 8 个只有一半 fmopa 的边界行 ≈ 10%），1×4 没有边界行且只有一条 b 流。
+#define OPA(T, A, B) "fmopa za" #T ".s, p0/m, p0/m, z" #A ".s, z" #B ".s\n\t"
+#define LDV(V, q, i) "ld1w {z" #V ".s}, p0/z, [%[p" #q "], #" #i ", mul vl]\n\t"
+// 破坏式 ext：a_t 直接覆盖 V_t（V_t 之后不再用），主循环只占 6 个向量寄存器（z5..z10），
+// 腾出 z0..z4 与 z16..z31 给边界行 fmla（探针：单寄存器组、fmla 与 ext 并发均无损）
+#define EXT(V0, V1, sh) "ext z" #V0 ".b, z" #V0 ".b, z" #V1 ".b, #" #sh "\n\t"
+#define LDB(B) "ld1w {z" #B ".s}, p0/z, [%[pb]]\n\t add %[pb], %[pb], #16\n\t"
+
+// 向量寄存器分配：z0 fmla 的 kernel 四元组 | z1..z4 fmla 的 a | z5..z9 V0..V4（ext 后即 a0..a3）| z10 b |
+//                 z11..z14 切片 ld4w / 回写 mova（不同块组，分时复用）| z16..z31 fmla 累加器（4 tile × 4 ic）
+// 一步（平面 q，移位 sh 字节），nt = 4/3/2/1 个 tile
+#define STEP4X(q, sh)                                                                       \
+    LDB(10) LDV(5, q, 0) LDV(6, q, 1) LDV(7, q, 2) LDV(8, q, 3) LDV(9, q, 4)               \
+    EXT(5, 6, sh) EXT(6, 7, sh) EXT(7, 8, sh) EXT(8, 9, sh)                                 \
+    OPA(0, 5, 10) OPA(1, 6, 10) OPA(2, 7, 10) OPA(3, 8, 10)
+#define STEP3X(q, sh)                                                                       \
+    LDB(10) LDV(5, q, 0) LDV(6, q, 1) LDV(7, q, 2) LDV(8, q, 3)                            \
+    EXT(5, 6, sh) EXT(6, 7, sh) EXT(7, 8, sh)                                               \
+    OPA(0, 5, 10) OPA(1, 6, 10) OPA(2, 7, 10)
+#define STEP2X(q, sh)                                                                       \
+    LDB(10) LDV(5, q, 0) LDV(6, q, 1) LDV(7, q, 2)                                         \
+    EXT(5, 6, sh) EXT(6, 7, sh)                                                             \
+    OPA(0, 5, 10) OPA(1, 6, 10)
+#define STEP1X(q, sh)                                                                       \
+    LDB(10) LDV(5, q, 0) LDV(6, q, 1)                                                      \
+    EXT(5, 6, sh)                                                                           \
+    OPA(0, 5, 10)
+// 一个 4 步组（q=0..3 同一移位），末尾：b 流预取、边界行 fmla 步、附加工作、计数并可能退出
+#ifdef CONV_NOPFB
+#define PFB_ROW
+#else
+#define PFB_ROW "prfm pldl1keep, [%[pb], #256]\n\t"
+#endif
+// 边界行 fmla 半步（8 条 fmla）插在步之间：偶数块组在步 0、2 之后，奇数块组在步 1 之后 → 每 8 步 3 个半步 = 3 fmla/步，
+// 均匀（探针：≤ 3.2/步且 8 条一簇无开销；16 条一簇即使平均 2.65/步也慢 5 周期/步）
+// 偶数块组步 0 之后的半步可按 pass 关闭（sw_dense=0 → 每块组 1 个半步 = 2 fmla/步，容量够时更稀疏）
+#define EX_HALF_D "ldr x9, [%[a], #352]\n\t cbz x9, 87f\n\t" EX_HALF "87:\n\t"
+#define BLOCKX_E(sh, STEP, EXTRA)                                                           \
+    STEP(0, sh) EX_HALF_D STEP(1, sh) STEP(2, sh) EX_HALF STEP(3, sh)                       \
+    PFB_ROW                                                                                 \
+    EXTRA                                                                                   \
+    "subs %[m], %[m], #1\n\t b.eq 9f\n\t"
+#define BLOCKX_O(sh, STEP, EXTRA)                                                           \
+    STEP(0, sh) STEP(1, sh) EX_HALF STEP(2, sh) STEP(3, sh)                                 \
+    PFB_ROW                                                                                 \
+    EXTRA                                                                                   \
+    "subs %[m], %[m], #1\n\t b.eq 9f\n\t"
+// 尾步：非对齐载入（基址 = 对齐基址 + sht），nt 个 a
+#define TL(A, xq, i) "ld1w {z" #A ".s}, p0/z, [" #xq ", #" #i ", mul vl]\n\t"
+#define TAIL4(xq) LDB(10) TL(5, xq, 0) TL(6, xq, 1) TL(7, xq, 2) TL(8, xq, 3) OPA(0, 5, 10) OPA(1, 6, 10) OPA(2, 7, 10) OPA(3, 8, 10)
+#define TAIL3(xq) LDB(10) TL(5, xq, 0) TL(6, xq, 1) TL(7, xq, 2) OPA(0, 5, 10) OPA(1, 6, 10) OPA(2, 7, 10)
+#define TAIL2(xq) LDB(10) TL(5, xq, 0) TL(6, xq, 1) OPA(0, 5, 10) OPA(1, 6, 10)
+#define TAIL1(xq) LDB(10) TL(5, xq, 0) OPA(0, 5, 10)
+
+// 整个 pass 的 Y 循环都在一个 asm 里：行与行之间只有 ~10 条指令（槽表取址、b 行推进），
+// DRAM 预取（下一组的原始输入行、本组输出行）用游标放在每行的第 0 个 4 步组里，与 fmopa 交错。
+// （行间 C 代码每多 ~20 条指令，fmopa 队列就会被抽空一次，实测整体慢 3–7%。）
+// 参数通过 pass_t 结构传入（字段偏移作立即数），游标/常量驻留在显式寄存器：
+//   x12 槽表游标  x13 R 行指针  x14 剩余行数（= 回写行 jc，兼作 mova 切片索引）  x15 下一行平面 0 基址（预载）
+//   x16 RSB  x17 切片槽表游标
+//   x19-x21 输入预取游标  x24-x26 输出预取游标  x22/x23/x27/x28 切片构建  x9-x11 临时
+// 回写重叠：输出行 j0+3-jc 在 Y=KH-1+jc 后已完成（此后 b 的该列恒为 0，fmopa 只加 0），
+//   因此 jc=3/2/1 三行分别在剩余行数 x14=3/2/1 的行内（块 6..9，每块一个 tile）用 mova+st4w 存出，
+//   与 fmopa 交错；pass 结束后只剩 jc=0 一行暴露（回写相 0.09 → ~0.03 ms）。
+typedef struct {
+    const uint64_t* tab;       // 0  槽表游标（每项 = 平面 0 基址，字节地址）
+    const float* pbrow;        // 8  R 行 0
+    long Y;                    // 16 行数 NS
+    const char* pi;            // 24 输入预取：下一线地址
+    const char* pie;           // 32 当前段末（不含）
+    long pin;                  // 40 剩余线数
+    long ijump;                // 48 段末跳到下一行：+jump
+    long istride;              // 56 段末推进：e += stride
+    const char* po;            // 64 输出预取（同上）
+    const char* poe;           // 72
+    long pon;                  // 80
+    long ojump;                // 88
+    long ostride;              // 96
+    long PWb;                  // 104 平面字节宽
+    long RSB;                  // 112 R 行字节距
+    long m4;                   // 120 每行 4 步组数
+    long rem;                  // 128 尾步数
+    long sht;                  // 136 尾步字节偏移
+    const char* ssrc;          // 144 切片构建：哑行起点（真行 0 起点 - 256 - sjump）
+    const uint64_t* stab;      // 152 切片构建：目标槽表（行 j0+NS+i 的槽基址）
+    long snfull;               // 160 每行整切片数（64 列一片）
+    long srows;                // 168 要构建的行数 + 1（哑行）；0 = 不做
+    long sjump;                // 176 行末 src 跳转 = W*4 - snfull*256
+    char* sdummy;              // 184 哑行目标：Y=0 期间槽 j0 还在被读，切片先写到这里
+    long sdcnt;                // 192 哑行片数 = 每行 16 块组数（每个块组都会执行一次切片）
+    long postart;              // 200 输出预取从"剩余行数 ≤ postart"时开始（太早预取会在回写前被挤出 L1）
+    char* sdst[4];             // 208..232 tile t 输出行 j0（jc=3）的目标地址；NULL = 该 tile 不在 asm 内回写
+    long sstr[4];              // 240..264 tile t 输出行距（字节）：行 jc 的地址 = sdst + (3-jc)*sstr
+    long PW2b, PW3b;           // 272, 280 = 2*PWb, 3*PWb（行首三条 add 互不依赖）
+    long poff;                 // 288 槽表项 → 本 pass 平面 0 基址的偏移（第 p 个 pass = 256*p 字节），免去每 pass 复制槽表
+    char* pfst[4];             // 296..320 tile t 输出行 j0 的地址（回写前一行把该 tile 即将写的 4 线预取进 L1）；NULL = 不做
+    long jcoff;                // 328 边界行方案：Y 循环少跑的尾行数 → 剩余行数 x14 对应的回写行 jc = x14 + jcoff
+    // 边界行 fmla 扫描（sweep）状态：一个 sweep = 某输入行 Y'、某 kernel 行 kj，对 4 tile × 4 ic 的 16 个累加器
+    // 走 X' = 0..KW+2；每个块组末尾走一步（4 条非对齐 a 载入 + ld1rqw + 16 条索引 fmla）
+    char* sw_xc;               // 336 当前 a 地址（plane_q[m] + 64t 用 #t, mul vl）；0 = 无活动 sweep（asm 内驻留 x15）
+    const char* sw_xk;         // 344 当前 kernel 四元组地址（Kp[kj][X']）（asm 内驻留 x17）
+    long sw_dense;             // 352 1 → 每 8 步 3 个半步（3 fmla/步）；0 → 每块组 1 个半步（2 fmla/步）
+    long sw_len;               // 360 每个 sweep 的字节长度 = 4*(KW+3)（kernel 四元组地址每步 +4）
+    long inc[4];               // 368..392 a 地址增量表（按 X' mod 4）：+PWb ×3，然后 −3PWb+4
+    const struct swd* swq;     // 400 当前 sweep 描述符；结束时取下一个（abase=0 终止）
+    long sw_pad1[3];           // 408..424
+    long sw_half;              // 432 半步标志：0 → 下一半步做 tile 0/1（并载四元组），1 → tile 2/3 并推进 X'
+    uint64_t* scur;            // 440 切片目标槽表游标（原 x17）
+    const char* sw_kend;       // 448 当前 sweep 的四元组结束地址 = kq + sw_len
+} pass_t;
+// sweep 描述符：abase = 行 Y' 的平面 0 地址（含 pass 偏移）；kq = Kp[kj]；src = 累加器初值（16 向量，NULL = 0）；
+// dst：kind 0 → 16 向量存回暂存区；kind 1 → 4 tile 的输出行（st4w，tile t 在 dst + 256t）
+typedef struct swd { char* abase; const float* kq; const float* src; char* dst; long kind; long ntile; } swd_t;
+_Static_assert(offsetof(pass_t, pon) == 80 && offsetof(pass_t, PWb) == 104 && offsetof(pass_t, sht) == 136 &&
+               offsetof(pass_t, postart) == 200 && offsetof(pass_t, sdst) == 208 && offsetof(pass_t, sstr) == 240 &&
+               offsetof(pass_t, PW2b) == 272 && offsetof(pass_t, PW3b) == 280 && offsetof(pass_t, poff) == 288 &&
+               offsetof(pass_t, pfst) == 296 && offsetof(pass_t, jcoff) == 328 && offsetof(pass_t, sw_xc) == 336 &&
+               offsetof(pass_t, sw_xk) == 344 && offsetof(pass_t, sw_len) == 360 &&
+               offsetof(pass_t, inc) == 368 && offsetof(pass_t, swq) == 400 && offsetof(pass_t, sw_half) == 432 &&
+               offsetof(pass_t, scur) == 440 && offsetof(pass_t, sw_kend) == 448 && sizeof(swd_t) == 48 && offsetof(swd_t, ntile) == 40 &&
+               offsetof(swd_t, kq) == 8 && offsetof(swd_t, src) == 16 && offsetof(swd_t, dst) == 24 && offsetof(swd_t, kind) == 32, "pass_t 布局");
+
+// 预取游标（每次 2 线）：P = 下一线地址，E = 当前段末，N = 剩余线数；到段末则 P += jump，E += stride（跳转量从结构体取）
+// 段末跳转用 csel 而不用分支：段末每 pass 只出现 4–8 次，分支预测器学不到，每次误预测都抽空 fmopa 队列
+//（实测 k39/k41 −0.6%）
+#define PFCUR(hint, P, E, N, OJ, OS, L)                                                                  \
+    "cbz " P ", " #L "f\n\t"                                                                             \
+    "prfm " hint ", [" P "]\n\t"                                                                         \
+    "prfm " hint ", [" P ", #64]\n\t"                                                                    \
+    "add " P ", " P ", #128\n\t"                                                                         \
+    "subs " N ", " N ", #2\n\t"                                                                          \
+    "csel " P ", xzr, " P ", le\n\t"          /* 线数用完：指针清零，之后 cbz 跳过 */                          \
+    "ldr x9, [%[a], #" #OJ "]\n\t ldr x10, [%[a], #" #OS "]\n\t"                                          \
+    "cmp " P ", " E "\n\t"                                                                               \
+    "csel x9, x9, xzr, hs\n\t csel x10, x10, xzr, hs\n\t"    /* 到段末：P += jump, E += stride，否则 +0 */    \
+    "add " P ", " P ", x9\n\t add " E ", " E ", x10\n\t"                                                 \
+    #L ":\n\t"
+// 预取/切片分散到各块组末尾（块 0/2/3：输入预取各 2 线；块 4/5：输出预取各 2 线（仅最后 postart 行）；块 1：切片），
+// 避免把 ~80 条标量指令堆在同一个块组里挤占前端。KW<21 的核每行块数不足时部分槽不执行（只影响预取覆盖）。
+// 预取目标层级是立即数 → 两种实例（L1 / L2 提示）运行期按 pass 长度选择：短 pass（k39/k41/k55）预取到 L1 更快；
+// 长 pass（k81：每 pass 经 L1 的平面+R 数据 ~240 KB）预取进 L1 只会把热的平面/R 线挤掉，L2 提示快 0.3–0.9%。
+#define EX_PFI(HI) PFCUR(HI, "x19", "x20", "x21", 48, 56, 21)
+#define EX_PFO(HO) "ldr x9, [%[a], #200]\n\t cmp x14, x9\n\t b.hi 29f\n\t" PFCUR(HO, "x24", "x25", "x26", 88, 96, 23) "29:\n\t"
+// 回写重叠：剩余行数 x14 ∈ {3,2,1} 的行内，把 tile T 已完成的输出行 jc = x14（竖切片 c = jc, jc+4, jc+8, jc+12，
+// 即 ic = 0..3）用 mova 取出并 st4w 交织成 64 个连续 float；目标 = sdst[T] + (3-jc)*sstr[T]；sdst[T]=0 则跳过。
+// 放在块 6..9（每块一个 tile），要求每行至少 10 个块组（m4 ≥ 10，即 KW ≥ 37），否则由 C 回写全部四行。
+// 另外在 x14 = 4..1 的行里把该 tile 下一步要写的输出行（j0 + 4 - x14）的 4 线预取进 L1：早先的 pstl 预取（postart 行前）
+// 只保证线在 L2，到回写时早被平面/R 数据挤出 L1，st4w 就要等 RFO。
+// 回写行 jc' = x14 + jcoff（经典 jcoff=0；边界行方案的 Y 循环少跑 jcoff 个尾行）；jc'=4 只预取 j0 行
+#define EX_STORE(T, L, L2)                                                                               \
+    "ldr x11, [%[a], #328]\n\t add x9, x14, x11\n\t"                                                     \
+    "cmp x9, #4\n\t b.hi " #L "f\n\t"                                                                     \
+    "ldr x10, [%[a], #" #T "*8+240]\n\t"                                                                 \
+    "ldr x11, [%[a], #" #T "*8+296]\n\t cbz x11, " #L2 "f\n\t"                                           \
+    "msub x11, x9, x10, x11\n\t add x11, x11, x10, lsl #2\n\t"          /* base + (4-jc')*stride */        \
+    "prfm pstl1keep, [x11]\n\t prfm pstl1keep, [x11, #64]\n\t prfm pstl1keep, [x11, #128]\n\t prfm pstl1keep, [x11, #192]\n\t" \
+    #L2 ":\n\t"                                                                                          \
+    "cmp x9, #3\n\t b.hi " #L "f\n\t"                                                                     \
+    "ldr x11, [%[a], #" #T "*8+208]\n\t cbz x11, " #L "f\n\t"                                            \
+    "msub x11, x9, x10, x11\n\t add x11, x11, x10\n\t add x11, x11, x10, lsl #1\n\t"   /* base + (3-jc')*stride */ \
+    "ldr x10, [%[a], #328]\n\t add w14, w14, w10\n\t"                    /* 切片索引寄存器只能用 w12..w15：借 w14 */ \
+    "mova z14.s, p0/m, za" #T "v.s[w14, 0]\n\t add w14, w14, #4\n\t"                                     \
+    "mova z13.s, p0/m, za" #T "v.s[w14, 0]\n\t add w14, w14, #4\n\t"                                     \
+    "mova z12.s, p0/m, za" #T "v.s[w14, 0]\n\t add w14, w14, #4\n\t"                                     \
+    "mova z11.s, p0/m, za" #T "v.s[w14, 0]\n\t sub w14, w14, #12\n\t sub w14, w14, w10\n\t"              \
+    "st4w {z11.s-z14.s}, p0, [x11]\n\t"                                                                  \
+    #L ":\n\t"
+
+// 边界行 fmla 步（每个块组末尾）：有活动 sweep 时走一步 X'；sweep 结束时把 16 个累加器存出（暂存区或输出行），
+// 取下一个描述符并装入其初值（NULL → 清零）。累加器 z16+4t+i 对应 tile t、ic = 3-i（与 st4w 的列序一致）。
+#define FML4(A, R0, R1, R2, R3) \
+    "fmla z" #R0 ".s, z" #A ".s, z0.s[3]\n\t fmla z" #R1 ".s, z" #A ".s, z0.s[2]\n\t" \
+    "fmla z" #R2 ".s, z" #A ".s, z0.s[1]\n\t fmla z" #R3 ".s, z" #A ".s, z0.s[0]\n\t"
+#define ST8(X, R0, R1, R2, R3, R4, R5, R6, R7) \
+    "st1w {z" #R0 ".s}, p0, [" X "]\n\t st1w {z" #R1 ".s}, p0, [" X ", #1, mul vl]\n\t st1w {z" #R2 ".s}, p0, [" X ", #2, mul vl]\n\t st1w {z" #R3 ".s}, p0, [" X ", #3, mul vl]\n\t" \
+    "st1w {z" #R4 ".s}, p0, [" X ", #4, mul vl]\n\t st1w {z" #R5 ".s}, p0, [" X ", #5, mul vl]\n\t st1w {z" #R6 ".s}, p0, [" X ", #6, mul vl]\n\t st1w {z" #R7 ".s}, p0, [" X ", #7, mul vl]\n\t"
+#define LD8(X, R0, R1, R2, R3, R4, R5, R6, R7) \
+    "ld1w {z" #R0 ".s}, p0/z, [" X "]\n\t ld1w {z" #R1 ".s}, p0/z, [" X ", #1, mul vl]\n\t ld1w {z" #R2 ".s}, p0/z, [" X ", #2, mul vl]\n\t ld1w {z" #R3 ".s}, p0/z, [" X ", #3, mul vl]\n\t" \
+    "ld1w {z" #R4 ".s}, p0/z, [" X ", #4, mul vl]\n\t ld1w {z" #R5 ".s}, p0/z, [" X ", #5, mul vl]\n\t ld1w {z" #R6 ".s}, p0/z, [" X ", #6, mul vl]\n\t ld1w {z" #R7 ".s}, p0/z, [" X ", #7, mul vl]\n\t"
+// sweep 状态寄存器：x15 = 当前 a 地址（0 = 无活动 sweep），x17 = 当前 kernel 四元组地址（bit0 = 半步标志）；
+// 结束地址在 pass_t.sw_kend。装入当前描述符（x9）的累加器初值：src 为 NULL 则清零，为 1 则沿用（链式）
+#define SW_LOAD \
+    "ldr x11, [x9, #16]\n\t cbz x11, 83f\n\t cmp x11, #1\n\t b.eq 85f\n\t"   /* src=1：链式衔接，累加器沿用 */ \
+    LD8("x11", 16, 17, 18, 19, 20, 21, 22, 23) "add x11, x11, #512\n\t" LD8("x11", 24, 25, 26, 27, 28, 29, 30, 31) "b 85f\n\t" \
+    "83:\n\t mov z16.s, #0\n\t mov z17.s, #0\n\t mov z18.s, #0\n\t mov z19.s, #0\n\t mov z20.s, #0\n\t mov z21.s, #0\n\t mov z22.s, #0\n\t mov z23.s, #0\n\t" \
+    "mov z24.s, #0\n\t mov z25.s, #0\n\t mov z26.s, #0\n\t mov z27.s, #0\n\t mov z28.s, #0\n\t mov z29.s, #0\n\t mov z30.s, #0\n\t mov z31.s, #0\n\t"
+// 每个 sweep 首次触碰 ~30 条线（4 平面 × 4 tile × 2 线）是 L2 命中，每次卡住其后 8 条 fmla（perf：BR 每 pass 多 152 次
+// L1 refill，约 1 周期/半步）。试过在 sweep 开始一次预取、或在上一 sweep 末尾分散预取：都更慢 0.3–0.8%——预取占用
+// miss 队列反而卡住主循环的载入。保留现状。
+// 取下一个描述符（x9 = 当前描述符）：x15/x17 ← abase/kq，sw_kend ← kq + 4(KW+3)，装入初值；abase=0 → x15=0 结束。
+// 半步标志放在 x17 的 bit0（kq 地址 4 B 对齐）：0 → 下一半步做 tile 0/1，1 → tile 2/3
+#define SW_NEXT \
+    "add x9, x9, #48\n\t str x9, [%[a], #400]\n\t ldr x15, [x9]\n\t cbz x15, 85f\n\t" \
+    "ldr x17, [x9, #8]\n\t ldr x11, [%[a], #360]\n\t add x11, x17, x11\n\t str x11, [%[a], #448]\n\t" \
+    SW_LOAD
+// 半步：half 0 → tile 0/1（载 kernel 四元组），half 1 → tile 2/3，然后推进 X'；X' 用完 → 存累加器、取下一个描述符
+#define SW_LD0 "ld1w {z1.s}, p0/z, [x15]\n\t ld1w {z2.s}, p0/z, [x15, #1, mul vl]\n\t ld1rqw {z0.s}, p0/z, [x17]\n\t"
+#define SW_LD1 "ld1w {z1.s}, p0/z, [x15, #2, mul vl]\n\t ld1w {z2.s}, p0/z, [x15, #3, mul vl]\n\t"
+#define EX_HALF \
+    "cbz x15, 85f\n\t" \
+    "tbnz x17, #0, 84f\n\t" \
+    SW_LD0 \
+    "orr x17, x17, #1\n\t" \
+    FML4(1, 16, 17, 18, 19) FML4(2, 20, 21, 22, 23) "b 85f\n\t" \
+    "84:\n\t bic x17, x17, #1\n\t" \
+    SW_LD1 \
+    FML4(1, 24, 25, 26, 27) FML4(2, 28, 29, 30, 31) \
+    "and x11, x17, #12\n\t add x11, %[a], x11, lsl #1\n\t ldr x11, [x11, #368]\n\t add x15, x15, x11\n\t"  /* a 地址按 X' mod 4 推进 */ \
+    "add x17, x17, #4\n\t ldr x11, [%[a], #448]\n\t cmp x17, x11\n\t b.lo 85f\n\t"                          /* 四元组滑一个元素 */ \
+    /* sweep 结束：存累加器 */ \
+    "ldr x9, [%[a], #400]\n\t ldr x10, [x9, #24]\n\t ldr x11, [x9, #32]\n\t cbz x11, 81f\n\t cmp x11, #2\n\t b.eq 82f\n\t" \
+    "ldr x11, [x9, #40]\n\t"                                                   /* 只存前 ntile 个 tile */ \
+    "st4w {z16.s-z19.s}, p0, [x10]\n\t add x10, x10, #256\n\t cmp x11, #2\n\t b.lo 82f\n\t" \
+    "st4w {z20.s-z23.s}, p0, [x10]\n\t add x10, x10, #256\n\t cmp x11, #3\n\t b.lo 82f\n\t" \
+    "st4w {z24.s-z27.s}, p0, [x10]\n\t add x10, x10, #256\n\t cmp x11, #4\n\t b.lo 82f\n\t" \
+    "st4w {z28.s-z31.s}, p0, [x10]\n\t b 82f\n\t" \
+    "81:\n\t" ST8("x10", 16, 17, 18, 19, 20, 21, 22, 23) "add x10, x10, #512\n\t" ST8("x10", 24, 25, 26, 27, 28, 29, 30, 31) \
+    "82:\n\t" SW_NEXT \
+    "85:\n\t"
+#define EX_NONE
+// 各块组末尾的附加工作：块 0 输入预取、块 1 切片、块 2/3 输入预取 + tile 0/1 回写、块 4/5 输出预取 + tile 2/3 回写
+//（回写放在块 6..9 时 k39（每行恰 10 块）末块紧接行尾，实测不如并入块 2..5）
+#define EXB2(HI, HO) EX_PFI(HI) EX_STORE(0, 51, 61)
+#define EXB3(HI, HO) EX_PFI(HI) EX_STORE(1, 52, 62)
+#define EXB4(HI, HO) EX_PFO(HO) EX_STORE(2, 53, 63)
+#define EXB5(HI, HO) EX_PFO(HO) EX_STORE(3, 54, 64)
+#define STORE_MIN_M4 6
+//（试过在块 7..9 把下一行的平面/R 行预取进 L1：k39 反而慢 2.5%，这些线本来就由硬件预取/顺序访问覆盖，多余 prfm 只挤载入口）
+
+// 切片构建（每个 16 块组执行一次，放在块 0 之后）：把下一组一个新行的 64 列用 ld4w 去交织进 4 个平面，
+// x22 = src，x23 = dst（平面 0），x27 = 本行剩余片数，x28 = 剩余行数（含哑行），x17 = 目标槽表游标。
+// 只用载入/存储管线（ld4w 8 周期，占用本步组的载入空闲），不用向量置换管线（uzp 会与 ext/fmopa 争端口）。
+#define SLICE_ROW                                                                                        \
+    "cbz x28, 41f\n\t"                                                                                   \
+    "ld4w {z11.s-z14.s}, p0/z, [x22]\n\t"                                                                \
+    "ldr x9, [%[a], #104]\n\t add x10, x23, x9\n\t add x11, x10, x9\n\t add x9, x11, x9\n\t"            \
+    "st1w {z11.s}, p0, [x23]\n\t st1w {z12.s}, p0, [x10]\n\t st1w {z13.s}, p0, [x11]\n\t st1w {z14.s}, p0, [x9]\n\t" \
+    "add x22, x22, #256\n\t add x23, x23, #64\n\t"                                                      \
+    "subs x27, x27, #1\n\t b.ne 41f\n\t"                                                                \
+    "ldr x9, [%[a], #176]\n\t add x22, x22, x9\n\t"          /* 下一行 src */                              \
+    "ldr x9, [%[a], #440]\n\t ldr x23, [x9], #8\n\t str x9, [%[a], #440]\n\t"   /* 下一行目标槽（游标在内存） */ \
+    "ldr x27, [%[a], #160]\n\t"                                                                          \
+    "sub x28, x28, #1\n\t"                                                                               \
+    "41:\n\t"
+
+// 行首平面 0 基址 = 槽表项 + pass 偏移（预载到寄存器 A/B 实测无差别——乱序窗口遮住了这条链）
+#define ROW_P0 "ldr %[p0], [x12], #8\n\t ldr x9, [%[a], #288]\n\t add %[p0], %[p0], x9\n\t"
+#define PASS_LOOP(STEP, TAIL, HI, HO)                                                                       \
+    asm volatile("ptrue p0.s\n\t"                                                                           \
+                 "ldr x12, [%[a], #0]\n\t ldr x13, [%[a], #8]\n\t ldr x14, [%[a], #16]\n\t"                 \
+                 "ldr x19, [%[a], #24]\n\t ldr x20, [%[a], #32]\n\t ldr x21, [%[a], #40]\n\t"               \
+                 "ldr x24, [%[a], #64]\n\t ldr x25, [%[a], #72]\n\t ldr x26, [%[a], #80]\n\t"               \
+                 "ldr x16, [%[a], #112]\n\t"                                                                \
+                 "ldr x22, [%[a], #144]\n\t ldr x9, [%[a], #152]\n\t str x9, [%[a], #440]\n\t ldr x23, [%[a], #184]\n\t" \
+                 "ldr x27, [%[a], #192]\n\t ldr x28, [%[a], #168]\n\t"   /* 哑行：sdcnt 片写到 sdummy */        \
+                 "cbnz x21, 32f\n\t mov x19, xzr\n\t 32:\n\t"          /* 无预取任务：指针清零 */                \
+                 "cbnz x26, 33f\n\t mov x24, xzr\n\t 33:\n\t"                                               \
+                 "ldr x15, [%[a], #336]\n\t ldr x17, [%[a], #344]\n\t"  /* sweep 状态；首个 sweep 的初值 */      \
+                 "cbz x15, 85f\n\t ldr x9, [%[a], #400]\n\t" SW_LOAD "85:\n\t"                        \
+                 "10:\n\t"                                                                                  \
+                 /* 行首：平面基址 = 槽表项 + pass 偏移；PWb/2PWb/3PWb 互不依赖 */                                 \
+                 ROW_P0                                                                                     \
+                 "ldr x9, [%[a], #104]\n\t ldr x10, [%[a], #272]\n\t ldr x11, [%[a], #280]\n\t"             \
+                 "add %[p1], %[p0], x9\n\t add %[p2], %[p0], x10\n\t add %[p3], %[p0], x11\n\t"             \
+                 "mov %[pb], x13\n\t add x13, x13, x16\n\t"                                                 \
+                 "ldr %[m], [%[a], #120]\n\t"                                                               \
+                 "cbz %[m], 9f\n\t"                                                                         \
+                 "1:\n\t"                                                                                   \
+                 BLOCKX_E(0, STEP, EX_PFI(HI)) BLOCKX_O(4, STEP, SLICE_ROW) BLOCKX_E(8, STEP, EXB2(HI, HO)) BLOCKX_O(12, STEP, EXB3(HI, HO)) \
+                 BLOCKX_E(16, STEP, EXB4(HI, HO)) BLOCKX_O(20, STEP, EXB5(HI, HO)) BLOCKX_E(24, STEP, EX_NONE) BLOCKX_O(28, STEP, EX_NONE) \
+                 BLOCKX_E(32, STEP, EX_NONE) BLOCKX_O(36, STEP, EX_NONE) BLOCKX_E(40, STEP, EX_NONE) BLOCKX_O(44, STEP, EX_NONE) \
+                 BLOCKX_E(48, STEP, EX_NONE) BLOCKX_O(52, STEP, EX_NONE) BLOCKX_E(56, STEP, EX_NONE) BLOCKX_O(60, STEP, EX_NONE) \
+                 "add %[p0], %[p0], #64\n\t add %[p1], %[p1], #64\n\t add %[p2], %[p2], #64\n\t add %[p3], %[p3], #64\n\t" \
+                 "b 1b\n\t"                                                                                 \
+                 "9:\n\t"                                                                                   \
+                 "ldr x9, [%[a], #136]\n\t"                                                                 \
+                 "add x10, %[p1], x9\n\t add x11, %[p2], x9\n\t add x9, %[p0], x9\n\t"                      \
+                 "ldr %[m], [%[a], #128]\n\t"                                                               \
+                 "cmp %[m], #1\n\t b.lt 8f\n\t" TAIL(x9)                                                    \
+                 "cmp %[m], #2\n\t b.lt 8f\n\t" TAIL(x10)                                                   \
+                 "cmp %[m], #3\n\t b.lt 8f\n\t" TAIL(x11)                                                   \
+                 "8:\n\t"                                                                                   \
+                 "subs x14, x14, #1\n\t b.ne 10b\n\t"                                                       \
+                 /* 队列未走完（步数预算留了 10% 余量，正常不会）：在此排空，保证累加器不跨 asm 存活 */                \
+                 "76:\n\t cbz x15, 77f\n\t" EX_HALF "b 76b\n\t 77:\n\t"                                     \
+                 "str x15, [%[a], #336]\n\t str x17, [%[a], #344]\n\t"                                       \
+                 : [p0] "=&r"(p0), [p1] "=&r"(p1), [p2] "=&r"(p2), [p3] "=&r"(p3), [pb] "=&r"(pb), [m] "=&r"(m) \
+                 : [a] "r"(a)                                                                               \
+                 : "memory", "cc", VCLOB, "p0", "x9", "x10", "x11", "x12", "x13", "x14", "x15", "x16", "x17", \
+                   "x19", "x20", "x21", "x22", "x23", "x24", "x25", "x26", "x27", "x28")
+
+// 单独排空 sweep 队列（范围起点的"前半"、范围终点的"后半"没有可重叠的 pass）
+static void sweep_drain(pass_t* a)
+{
+    a->sw_dense = 1;
+    asm volatile("ptrue p0.s\n\t"
+                 "ldr x15, [%[a], #336]\n\t ldr x17, [%[a], #344]\n\t cbz x15, 89f\n\t ldr x9, [%[a], #400]\n\t" SW_LOAD "85:\n\t"
+                 "88:\n\t cbz x15, 89f\n\t" EX_HALF "b 88b\n\t 89:\n\t str x15, [%[a], #336]\n\t"
+                 : : [a] "r"(a) : "memory", "cc", VCLOB, "p0", "x9", "x10", "x11", "x15", "x17");
+}
+
+#ifdef CONV_DEBUG_BR
+// 合成数据的单 sweep 自检：plane_q[x] = 1000q + x（4 平面，PW=80），Kp = [0,0,0,1,2,..,9,0,...]，len 12
+static void br_selftest(void)
+{
+    static float planes[4 * 80] __attribute__((aligned(256)));
+    static float kp[16] __attribute__((aligned(64)));
+    static float acc[16][16] __attribute__((aligned(64)));
+    static swd_t q[2] __attribute__((aligned(64)));
+    for (int qq = 0; qq < 4; qq++) for (int x = 0; x < 80; x++) planes[qq * 80 + x] = 1000.0f * qq + x;
+    for (int z = 0; z < 16; z++) kp[z] = (z >= 3 && z < 12) ? (float)(z - 2) : 0.0f;    // k[ki] = ki+1
+    for (int L = 1; L <= 12; L += (L < 4 ? 1 : 8)) {
+        pass_t pa; memset(&pa, 0, sizeof(pa));
+        pa.PWb = 320; pa.sw_len = 4 * L; pa.inc[0] = pa.inc[1] = pa.inc[2] = 320; pa.inc[3] = -3 * 320 + 4;
+        q[0].abase = (char*)planes; q[0].kq = kp; q[0].src = NULL; q[0].dst = (char*)acc; q[0].kind = 0; q[0].ntile = 4; q[1].abase = NULL;
+        pa.swq = q; pa.sw_xc = q[0].abase; pa.sw_xk = (const char*)q[0].kq; pa.sw_kend = pa.sw_xk + pa.sw_len; pa.sw_half = 0;
+        memset(acc, 0, sizeof(acc));
+        asm volatile("smstart\n\t" ::: "memory", VCLOB, PCLOB);
+        sweep_drain(&pa);
+        asm volatile("smstop\n\t" ::: "memory", VCLOB, PCLOB);
+        // 参考：acc[t][i][r] = Σ_{X'} a_t(X')[r] * kp[X'+ic]，a_t(X')[r] = planes[(X'%4)*80 + X'/4 + 16t + r]，ic = 3-i
+        for (int t = 0; t < 2; t++) for (int i = 0; i < 4; i++) {
+            float ref[2] = {0, 0};
+            for (int X = 0; X < L; X++) for (int r = 0; r < 2; r++) ref[r] = __builtin_fmaf(planes[(X % 4) * 80 + X / 4 + 16 * t + r], kp[X + 3 - i], ref[r]);
+            fprintf(stderr, "  selftest len %2d t%d i%d: got %.1f %.1f  ref %.1f %.1f\n", L, t, i, acc[4 * t + i][0], acc[4 * t + i][1], ref[0], ref[1]);
+        }
+        fprintf(stderr, "  selftest state: xc %p swq %p\n", (void*)pa.sw_xc, (void*)pa.swq);
+    }
+}
+#endif
+
+// nt = 活跃 tile 数；l2 = DRAM 预取到 L2（否则 L1）
+static void pass_steps(int nt, pass_t* a, int l2)
+{
+    const float *p0, *p1, *p2, *p3, *pb;
+    long m;
+    if (l2) {
+        switch (nt) {
+        case 4: PASS_LOOP(STEP4X, TAIL4, "pldl2keep", "pstl2keep"); break;
+        case 3: PASS_LOOP(STEP3X, TAIL3, "pldl2keep", "pstl2keep"); break;
+        case 2: PASS_LOOP(STEP2X, TAIL2, "pldl2keep", "pstl2keep"); break;
+        default: PASS_LOOP(STEP1X, TAIL1, "pldl2keep", "pstl2keep"); break;
+        }
+    } else {
+        switch (nt) {
+        case 4: PASS_LOOP(STEP4X, TAIL4, "pldl1keep", "pstl1keep"); break;
+        case 3: PASS_LOOP(STEP3X, TAIL3, "pldl1keep", "pstl1keep"); break;
+        case 2: PASS_LOOP(STEP2X, TAIL2, "pldl1keep", "pstl1keep"); break;
+        default: PASS_LOOP(STEP1X, TAIL1, "pldl1keep", "pstl1keep"); break;
+        }
+    }
+    (void)p0; (void)p1; (void)p2; (void)p3; (void)pb; (void)m;
+}
+
+// 把 tile T 的输出行 jc（4 个竖切片 c=12+jc, 8+jc, 4+jc, jc）交织后存到 dst（64 个连续 float）
+#define STORE_TILE_ROW(T)                                                                   \
+    asm volatile("ptrue p0.s\n\t"                                                           \
+                 "add w12, %w[jc], #12\n\t"                                                 \
+                 "add w13, %w[jc], #8\n\t"                                                  \
+                 "add w14, %w[jc], #4\n\t"                                                  \
+                 "mov w15, %w[jc]\n\t"                                                      \
+                 "mova z0.s, p0/m, za" #T "v.s[w12, 0]\n\t"                                 \
+                 "mova z1.s, p0/m, za" #T "v.s[w13, 0]\n\t"                                 \
+                 "mova z2.s, p0/m, za" #T "v.s[w14, 0]\n\t"                                 \
+                 "mova z3.s, p0/m, za" #T "v.s[w15, 0]\n\t"                                 \
+                 "st4w {z0.s-z3.s}, p0, [%[d]]\n\t"                                        \
+                 : : [jc] "r"(jc), [d] "r"(dst) : "memory", "x12", "x13", "x14", "x15", "z0", "z1", "z2", "z3", "p0")
+
+static inline void store_tile_row(int t, int jc, float* dst)
+{
+    switch (t) {
+    case 0: STORE_TILE_ROW(0); break;
+    case 1: STORE_TILE_ROW(1); break;
+    case 2: STORE_TILE_ROW(2); break;
+    default: STORE_TILE_ROW(3); break;
+    }
+}
+
+// 去交织一行输入到 4 个平面：plane_q[x] = in[row][i0 + 4x + q]（x < PW；越界补 0）
+// 两种实现：ld4w（一条指令 256 B，串行化，行在 L2 时每条 ~40 周期）；ld1w×4 + uzp×8（载入相互独立，可并发发出）
+static int g_build_uzp = 1;
+static inline void build_planes(const float* src, long ncols, long PW, float* P)
+{
+    // ncols：从 i0 起该行剩余的列数（<=0 或行越界时 src=NULL → 全零）
+    svbool_t all = svptrue_b32();
+    long xfull = src ? (ncols > 0 ? ncols / 4 : 0) : 0;
+    long x = 0;
+    if (g_build_uzp && src) {
+        // 整块：x+16 <= xfull（64 个输入元素全部有效）；一次两块，8 条独立载入先发出（行在 L2，靠 MLP 遮延迟）
+        for (; x + 32 <= xfull && x + 32 <= PW; x += 32) {
+            const float* q = src + 4 * x;
+            svfloat32_t v0 = svld1_f32(all, q), v1 = svld1_f32(all, q + 16), v2 = svld1_f32(all, q + 32), v3 = svld1_f32(all, q + 48);
+            svfloat32_t w0 = svld1_f32(all, q + 64), w1 = svld1_f32(all, q + 80), w2 = svld1_f32(all, q + 96), w3 = svld1_f32(all, q + 112);
+            svfloat32_t e0 = svuzp1_f32(v0, v1), o0 = svuzp2_f32(v0, v1), e1 = svuzp1_f32(v2, v3), o1 = svuzp2_f32(v2, v3);
+            svfloat32_t f0 = svuzp1_f32(w0, w1), g0 = svuzp2_f32(w0, w1), f1 = svuzp1_f32(w2, w3), g1 = svuzp2_f32(w2, w3);
+            svst1_f32(all, P + x, svuzp1_f32(e0, e1));
+            svst1_f32(all, P + 2 * PW + x, svuzp2_f32(e0, e1));
+            svst1_f32(all, P + PW + x, svuzp1_f32(o0, o1));
+            svst1_f32(all, P + 3 * PW + x, svuzp2_f32(o0, o1));
+            svst1_f32(all, P + x + 16, svuzp1_f32(f0, f1));
+            svst1_f32(all, P + 2 * PW + x + 16, svuzp2_f32(f0, f1));
+            svst1_f32(all, P + PW + x + 16, svuzp1_f32(g0, g1));
+            svst1_f32(all, P + 3 * PW + x + 16, svuzp2_f32(g0, g1));
+        }
+        for (; x + 16 <= xfull && x < PW; x += 16) {
+            const float* q = src + 4 * x;
+            svfloat32_t v0 = svld1_f32(all, q), v1 = svld1_f32(all, q + 16), v2 = svld1_f32(all, q + 32), v3 = svld1_f32(all, q + 48);
+            svfloat32_t e0 = svuzp1_f32(v0, v1), o0 = svuzp2_f32(v0, v1), e1 = svuzp1_f32(v2, v3), o1 = svuzp2_f32(v2, v3);
+            svst1_f32(all, P + x, svuzp1_f32(e0, e1));            // 列 ≡ 0 (mod 4)
+            svst1_f32(all, P + 2 * PW + x, svuzp2_f32(e0, e1));   // ≡ 2
+            svst1_f32(all, P + PW + x, svuzp1_f32(o0, o1));       // ≡ 1
+            svst1_f32(all, P + 3 * PW + x, svuzp2_f32(o0, o1));   // ≡ 3
+        }
+    }
+    for (; x < PW; x += 16) {
+        svbool_t pg = svwhilelt_b32((int64_t)x, (int64_t)xfull);
+        svfloat32x4_t v = svld4_f32(pg, src ? src + 4 * x : (const float*)P);
+        svst1_f32(all, P + x, svget4_f32(v, 0));
+        svst1_f32(all, P + PW + x, svget4_f32(v, 1));
+        svst1_f32(all, P + 2 * PW + x, svget4_f32(v, 2));
+        svst1_f32(all, P + 3 * PW + x, svget4_f32(v, 3));
+    }
+    if (src && xfull < PW) {
+        long r = ncols - 4 * xfull;   // 0..3 个尾元素
+        for (long q = 0; q < r && q < 4; q++) P[q * PW + xfull] = src[4 * xfull + q];
+    }
+}
+
+// 构建一个 16 元素切片：plane_q[x0..x0+16) ← in[row][i0 + 4x .. )（含边界/越界补零）
+static inline void build_slice(const float* src, long ncols, long PW, float* P, long x0)
+{
+    svbool_t all = svptrue_b32();
+    long xfull = ncols > 0 ? ncols / 4 : 0;
+    svbool_t pg = svwhilelt_b32((int64_t)x0, (int64_t)xfull);
+    svfloat32x4_t v = svld4_f32(pg, src + 4 * x0);
+    svst1_f32(all, P + x0, svget4_f32(v, 0));
+    svst1_f32(all, P + PW + x0, svget4_f32(v, 1));
+    svst1_f32(all, P + 2 * PW + x0, svget4_f32(v, 2));
+    svst1_f32(all, P + 3 * PW + x0, svget4_f32(v, 3));
+    if (xfull >= x0 && xfull < x0 + 16) {
+        long r = ncols - 4 * xfull;
+        for (long q = 0; q < r && q < 4; q++) P[q * PW + xfull] = src[4 * xfull + q];
+    }
+}
+
+// ---------------------------------------------------------------- 缓冲
+static float* g_R = NULL;
+static size_t g_Rcap = 0;
+static float* g_Kp = NULL;          // 边界行 fmla 用的零填充 kernel 行：Kp[kj][z] = k[kj][z-3]（z∈[3,KW+3)），行距 KPS
+static size_t g_Kpcap = 0;
+typedef struct { uint64_t w; char pad[56]; } work_t;
+static work_t g_work[1024] __attribute__((aligned(64)));
+typedef struct { uint64_t v; char pad[56]; } padded_u64;
+static padded_u64 g_rcount __attribute__((aligned(64)));    // R 打包完成计数（每次调用前清零，到 nt 即全部完成）
+static uint64_t g_call = 0;
+static float* g_P = NULL;
+static size_t g_Pcap = 0;
+static uint64_t* g_tab = NULL;      // 每线程槽表（2NS+1 项环形展开）
+static size_t g_tab_cap = 0, g_tab_stride = 0;
+
+// 2 MB 对齐 + 整数个 2 MB + MADV_HUGEPAGE：让环形缓冲、打包 kernel、槽表落在透明大页上（节点 THP=always），
+// 否则 k81 的 R（84 行 × 2 KB = 42 个 4 KB 页）+ 环形缓冲每 pass 轮转的页数会压迫一级 DTLB
+#include <sys/mman.h>
+static void* alloc_aligned(size_t bytes)
+{
+    void* p = NULL;
+    const size_t HP = 2u << 20;
+    size_t sz = (bytes + HP - 1) & ~(HP - 1);
+    if (posix_memalign(&p, HP, sz) != 0) return NULL;
+#ifdef MADV_HUGEPAGE
+    madvise(p, sz, MADV_HUGEPAGE);
+#endif
+    return p;
+}
+
+// ≥ bytes 的最小 2 的幂（≤ 4096），超过 4 KB 时向上取整到 4 KB 的倍数
+static long pow2_stride(long bytes)
+{
+    long s = 64;
+    while (s < bytes && s < 4096) s <<= 1;
+    if (s < bytes) s = (bytes + 4095) & ~4095L;
+    return s;
+}
+
+// 线程工作范围：以 (块 b, 行组 g) 为单位，块内行组等价，块间按 tile 数加权
+typedef struct { long b, g; } pos_t;
+
+static pos_t locate(long s, long NB, long G, const int* TB)
+{
+    long cum = 0;
+    for (long b = 0; b < NB; b++) {
+        long bw = G * TB[b];
+        if (s < cum + bw) { pos_t p = {b, (s - cum) / TB[b]}; return p; }
+        cum += bw;
+    }
+    pos_t p = {NB, 0};
+    return p;
+}
+
+// ---------------------------------------------------------------- 工作线程主体（OpenMP 或自有线程池调用）
+typedef struct {
+    const CONVFLOAT* in; const CONVFLOAT* k; CONVFLOAT* out;
+    long H, W, KH, KW, outH, outW;
+    long BW, NB, G, NS, RS, m4, rem, PW, slot_floats, ring_stride, Wtot;
+    long KPS, br_pre, br_post;       // Kp 行距（float）；边界行方案去掉的首/尾行数（0 = 不用）
+    int SP, prof, pf_in, pf_out, pool, slice_ovl, postart_env, store_asm, pf_l2;
+    const int* TB; uint64_t c_pre; prof_t* prs; uint64_t call_id;
+} ctx_t;
+
+// ---- 边界行（BR）方案的辅助：sweep 队列、ZA 初值装入、ZA 抽取
+// 追加输出行 jc 的 sweep 序列：kernel 行 kj0..kj1 升序（保持累加顺序），输入行 = row0 + kj + 3 - jc；
+// 首个 sweep 初值 src0（NULL = 0），中间结果经 stash（16 向量）；末个 sweep：final_out 非空 → st4w 到输出，否则存 stash
+static int sw_add(swd_t* q, int n, long jc, long kj0, long kj1, long row0, const float* P, long NS, long slot_floats, long poff,
+                  const float* Kp, long KPS, const float* src0, float* stash, char* final_out, long ntile)
+{
+    for (long kj = kj0; kj <= kj1; kj++) {
+        q[n].ntile = ntile;
+        const long row = row0 + kj + 3 - jc;
+        q[n].abase = (char*)(P + (row % NS) * slot_floats) + poff;
+        q[n].kq = Kp + kj * KPS;
+        q[n].src = (kj == kj0) ? src0 : (const float*)1;      // 1 = 沿用上一 sweep 的累加器（链式，免暂存往返）
+        const int last = (kj == kj1);
+        q[n].dst = (last && final_out) ? final_out : (char*)stash;
+        q[n].kind = !last ? 2 : (final_out ? 1 : 0);          // 2 = 不存（下一 sweep 接着累加）
+        n++;
+    }
+    return n;
+}
+// 暂存区 16 向量的布局 [t][i]（i ↔ ic = 3-i，与 st4w 列序一致）；ZA 竖切片 c = 4*ic + jc = 4*(3-i) + jc
+#define ZA_INIT_TILE(T)                                                                                   \
+    asm volatile("ptrue p0.s\n\t add w12, %w[jc], #12\n\t add w13, %w[jc], #8\n\t add w14, %w[jc], #4\n\t mov w15, %w[jc]\n\t" \
+                 "ld1w {z0.s}, p0/z, [%[s]]\n\t ld1w {z1.s}, p0/z, [%[s], #1, mul vl]\n\t"                  \
+                 "ld1w {z2.s}, p0/z, [%[s], #2, mul vl]\n\t ld1w {z3.s}, p0/z, [%[s], #3, mul vl]\n\t"      \
+                 "mova za" #T "v.s[w12, 0], p0/m, z0.s\n\t mova za" #T "v.s[w13, 0], p0/m, z1.s\n\t"        \
+                 "mova za" #T "v.s[w14, 0], p0/m, z2.s\n\t mova za" #T "v.s[w15, 0], p0/m, z3.s\n\t"        \
+                 : : [jc] "r"(jc), [s] "r"(src) : "memory", "x12", "x13", "x14", "x15", "z0", "z1", "z2", "z3", "p0")
+static inline void za_init_row(int t, int jc, const float* src)
+{
+    switch (t) { case 0: ZA_INIT_TILE(0); break; case 1: ZA_INIT_TILE(1); break; case 2: ZA_INIT_TILE(2); break; default: ZA_INIT_TILE(3); break; }
+}
+#define ZA_EXTRACT_TILE(T)                                                                                \
+    asm volatile("ptrue p0.s\n\t add w12, %w[jc], #12\n\t add w13, %w[jc], #8\n\t add w14, %w[jc], #4\n\t mov w15, %w[jc]\n\t" \
+                 "mova z0.s, p0/m, za" #T "v.s[w12, 0]\n\t mova z1.s, p0/m, za" #T "v.s[w13, 0]\n\t"        \
+                 "mova z2.s, p0/m, za" #T "v.s[w14, 0]\n\t mova z3.s, p0/m, za" #T "v.s[w15, 0]\n\t"        \
+                 "st1w {z0.s}, p0, [%[d]]\n\t st1w {z1.s}, p0, [%[d], #1, mul vl]\n\t"                      \
+                 "st1w {z2.s}, p0, [%[d], #2, mul vl]\n\t st1w {z3.s}, p0, [%[d], #3, mul vl]\n\t"          \
+                 : : [jc] "r"(jc), [d] "r"(dst) : "memory", "x12", "x13", "x14", "x15", "z0", "z1", "z2", "z3", "p0")
+static inline void za_extract_row(int t, int jc, float* dst)
+{
+    switch (t) { case 0: ZA_EXTRACT_TILE(0); break; case 1: ZA_EXTRACT_TILE(1); break; case 2: ZA_EXTRACT_TILE(2); break; default: ZA_EXTRACT_TILE(3); break; }
+}
+
+static void conv_worker(int tid, int nt_, const ctx_t* c)
+{
+    const CONVFLOAT* in = c->in; const CONVFLOAT* k = c->k; CONVFLOAT* out = c->out;
+    const long H = c->H, W = c->W, KH = c->KH, KW = c->KW, outH = c->outH, outW = c->outW;
+    const long BW = c->BW, NB = c->NB, G = c->G, NS = c->NS, RS = c->RS, m4 = c->m4, rem = c->rem, PW = c->PW;
+    const long slot_floats = c->slot_floats, ring_stride = c->ring_stride, Wtot = c->Wtot;
+    const int prof = c->prof, pf_in = c->pf_in, pf_out = c->pf_out, pool = c->pool, slice_ovl = c->slice_ovl;
+    const int postart_env = c->postart_env;
+    const int store_asm = c->store_asm && m4 >= STORE_MIN_M4;   // 承载回写的块组每行都要执行到
+    const int pf_l2 = c->pf_l2;
+    const int* TB = c->TB; const uint64_t c_pre = c->c_pre; prof_t* prs = c->prs;
+    const long KPS = c->KPS, br_pre = c->br_pre, br_post = c->br_post;
+    (void)BW; (void)c_pre;
+    if (!pool) pin_self(tid);                     // 池线程创建时已绑核；OpenMP 线程每次重绑
+    prof_t pr = {0, 0, 0, 0, 0, 0, 0, 0};
+    uint64_t t0 = 0, t1 = 0, t_start = 0;
+    if (prof) pr.cpu = (uint64_t)sched_getcpu();
+    if (prof) { t_start = cyc(); pr.enter = t_start - c_pre; }
+
+    // 1) 主线程打包 kernel：R[Y][X'][jc] = kpad[Y-3+jc][X'-3]（30–60 µs，与其他线程的唤醒重叠；
+    //    不用 barrier：早到的线程等标志，晚到的线程的工作项会被别人偷走）
+    pos_t ps = locate(Wtot * tid / nt_, NB, G, TB);
+    pos_t pe = locate(Wtot * (tid + 1) / nt_, NB, G, TB);
+    {
+        uint64_t n0 = (uint64_t)(ps.b * G + ps.g), n1 = (uint64_t)(pe.b * G + pe.g);
+        __atomic_store_n(&g_work[tid].w, (n1 << 32) | n0, __ATOMIC_RELEASE);
+    }
+    {
+        // 各线程打包自己的一段 Y，然后计数屏障（自旋；池模式下所有线程都已就位，几 µs）
+        const long y0 = NS * tid / nt_, y1 = NS * (tid + 1) / nt_;
+        for (long Y = y0; Y < y1; Y++) {
+            float* r = g_R + Y * RS;
+            for (long Xp = 0; Xp < KW + 6; Xp++) {
+                long x = Xp - 3;
+                for (int jc = 0; jc < 4; jc++) {
+                    long y = Y - 3 + jc;
+                    r[Xp * 4 + jc] = (y >= 0 && y < KH && x >= 0 && x < KW) ? k[y * KW + x] : 0.0f;
+                }
+            }
+        }
+        if (br_pre) {   // Kp：零填充 kernel 行（fmla 扫描的 ld1rqw 读 Kp[kj][X'..X'+3]）
+            const long k0 = KH * tid / nt_, k1 = KH * (tid + 1) / nt_;
+            for (long kj = k0; kj < k1; kj++) {
+                float* r = g_Kp + kj * KPS;
+                for (long z = 0; z < KPS; z++) r[z] = (z >= 3 && z < KW + 3) ? k[kj * KW + z - 3] : 0.0f;
+            }
+        }
+        __atomic_fetch_add(&g_rcount.v, 1, __ATOMIC_ACQ_REL);
+        while (__atomic_load_n(&g_rcount.v, __ATOMIC_ACQUIRE) < (uint64_t)nt_) asm volatile("yield" ::: "memory");
+    }
+    float* P = g_P + (size_t)tid * ring_stride;
+    float tmp[4 * 64] __attribute__((aligned(256)));
+    char dummy[4 * 640 + 64] __attribute__((aligned(64)));   // 切片哑目标（4 个平面 × 最大 PWb）
+    // 槽表：tab[i] = 槽 (i mod NS) 的平面 0 字节地址，2NS+1 项，使从任意起点连续走 NS+1 项（含末行预载）无需取模
+    uint64_t* slot_tab = g_tab + (size_t)tid * g_tab_stride;
+    for (long i = 0; i < 2 * NS + 1; i++) slot_tab[i] = (uint64_t)(uintptr_t)(P + (i % NS) * slot_floats);
+    const float* R = g_R;
+    const long sht = (((m4 - 1) & 15) + 1) * 4;    // 尾步相对对齐基址的字节偏移
+    const long chunks = (m4 + 14) / 16;            // 每行执行切片的块组数（最后一块组若只含块 0 则不执行切片）
+    // pass 参数：不随 pass 变化的字段只填一次（pass 之间的 C 代码越少越好：fmopa 空转）
+    pass_t pa;
+    memset(&pa, 0, sizeof(pa));
+    pa.pbrow = R; pa.Y = NS;
+    pa.PWb = PW * 4; pa.PW2b = PW * 8; pa.PW3b = PW * 12; pa.RSB = RS * 4; pa.m4 = m4; pa.rem = rem; pa.sht = sht;
+    pa.istride = (long)W * 4; pa.ostride = outW * 4;
+    pa.sdummy = dummy; pa.sdcnt = chunks;
+    // 边界行方案：每线程暂存（按 pass 序号 p）——前半初值 pre_st[p][3-jc]、后半抽取 post_st[p][jc]，各 16 向量；
+    // sweep 描述符队列；上一组待续的后半（pend）；下一组前半是否已算好（pre_ok）
+    float pre_st[3][2][16][16] __attribute__((aligned(64)));
+    float post_st[3][2][16][16] __attribute__((aligned(64)));
+    swd_t swq[16] __attribute__((aligned(64)));
+    struct { long j0, c0, nt; int valid; } pend[3] = {{0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}};
+    int pre_ok[3] = {0, 0, 0};
+    const float* Kp = g_Kp;
+    pa.sw_len = 4 * (KW + 3);
+#define SW_ARM() do { pa.swq = swq; pa.sw_xc = swq[0].abase; pa.sw_xk = (const char*)swq[0].kq; \
+                      pa.sw_kend = pa.sw_xk + pa.sw_len; pa.sw_half = 0; } while (0)
+    pa.inc[0] = pa.inc[1] = pa.inc[2] = PW * 4; pa.inc[3] = -3 * PW * 4 + 4;
+    pa.swq = swq; swq[0].abase = NULL;
+    // 待续后半的独立排空（下一项不连续 / 没有下一项时）：环形缓冲此刻仍是上一组的内容
+#define DRAIN_PENDING()                                                                                        \
+    for (int p_ = 0; p_ < 3; p_++) if (pend[p_].valid) {                                                        \
+        int qn_ = 0; const long j0p_ = pend[p_].j0, c0p_ = pend[p_].c0;                                         \
+        if (br_post == 2) qn_ = sw_add(swq, qn_, 1, KH - 1, KH - 1, j0p_, P, NS, slot_floats, 256 * p_, Kp, KPS, \
+                                       post_st[p_][1][0], post_st[p_][1][0], (char*)(out + (j0p_ + 2) * outW + c0p_), pend[p_].nt); \
+        qn_ = sw_add(swq, qn_, 0, KH - br_post, KH - 1, j0p_, P, NS, slot_floats, 256 * p_, Kp, KPS,             \
+                     post_st[p_][0][0], post_st[p_][0][0], (char*)(out + (j0p_ + 3) * outW + c0p_), pend[p_].nt);      \
+        swq[qn_].abase = NULL; SW_ARM();                                                                     \
+        sweep_drain(&pa); pend[p_].valid = 0;                                                                   \
+    }
+
+    sme_start();
+    long last_b = -1, last_g = -2, built = 0;
+    int victim = tid;
+    for (;;) {
+        // 认领下一项：先从自己的范围，空了就去偷。
+        // 全部用 relaxed：工作项之间没有数据依赖（输入只读、环形缓冲每线程私有、输出区域不重叠），结果的可见性由
+        // 结束时的 g_done（acq_rel）保证；若这里用 release，CAS 要等前一 pass 刚发出的 st4w（输出线 RFO）全部落地
+        // 才能完成，每 pass 白等 ~200 周期（k81 上比整个回写相还贵）。
+        long n = -1;
+        for (;;) {
+            uint64_t w = __atomic_load_n(&g_work[tid].w, __ATOMIC_RELAXED);
+            uint64_t cur = w & 0xffffffffu, end = w >> 32;
+            if (cur >= end) break;
+            if (__atomic_compare_exchange_n(&g_work[tid].w, &w, w + 1, 0, __ATOMIC_RELAXED, __ATOMIC_RELAXED)) { n = (long)cur; break; }
+        }
+        if (n < 0) {
+            int found = 0;
+            for (int kk = 1; kk < nt_ && !found; kk++) {
+                int v = (victim + kk) % nt_;
+                for (;;) {
+                    uint64_t w = __atomic_load_n(&g_work[v].w, __ATOMIC_RELAXED);
+                    uint64_t cur = w & 0xffffffffu, end = w >> 32;
+                    if (end <= cur + 1) break;                 // 不足 2 项不偷
+                    uint64_t mid = (cur + end + 1) / 2;
+                    if (__atomic_compare_exchange_n(&g_work[v].w, &w, (mid << 32) | cur, 0, __ATOMIC_RELAXED, __ATOMIC_RELAXED)) {
+                        __atomic_store_n(&g_work[tid].w, (end << 32) | mid, __ATOMIC_RELAXED);
+                        victim = v; found = 1; if (prof) pr.steals++; break;
+                    }
+                }
+            }
+            if (!found) { DRAIN_PENDING(); break; }
+            continue;
+        }
+        const long b = n / G, g = n % G;
+        if (prof) pr.items++;
+        const long i0 = b * BW;
+        const long ntiles = TB[b];
+        const long npass = (ntiles + 3) / 4;
+        const long ncols = W - i0;                 // 该块可读的输入列数
+        const long j0 = 4 * g;
+        const int fresh = (b != last_b || g != last_g + 1);
+        if (fresh) {                               // 换块/不连续：先把上一组待续的后半算完（还要用旧环），再重建环形缓冲
+            DRAIN_PENDING();
+            pre_ok[0] = pre_ok[1] = pre_ok[2] = 0;
+            built = j0;
+        }
+        last_b = b; last_g = g;
+        // 构建本组需要的新输入行（环形槽 = row % NS）
+        if (prof) t0 = cyc();
+        if (fresh && g_pf_fresh) {
+            // 整环重建（范围起点/窃取后）要从 DRAM 读 NS 行：先把所有行的线都发出预取，靠 MLP 遮延迟（否则逐行串行取数）
+            const long bytes = (ncols < 4 * PW ? ncols : 4 * PW) * 4;
+            for (long rr = j0; rr < j0 + NS && rr < H; rr++) {
+                const char* q = (const char*)(in + rr * (long)W + i0);
+                for (long o = 0; o < bytes; o += 64) __builtin_prefetch(q + o, 0, 3);
+            }
+        }
+        for (; built < j0 + NS; built++) {
+            const float* src = (built < H) ? in + built * (long)W + i0 : NULL;
+            build_planes(src, ncols, PW, P + (built % NS) * slot_floats);
+        }
+        if (prof) { t1 = cyc(); pr.build += t1 - t0; }
+        // 预取规划（在 pass 的 asm 里用游标逐行发出）：下一组新增的 4 个原始输入行 + 本组输出行
+        const long rowb_in = (ncols < 4 * PW ? ncols : 4 * PW) * 4;   // 每输入行字节
+        // 切片重叠时，本组构建的是行 j0+NS..+3（应在上一组预取），所以本组预取再往后 4 行；范围起点补一轮
+        const long pfi_row0 = j0 + NS + (slice_ovl ? 4 : 0);
+        if (slice_ovl && pf_in && fresh) {
+            for (long rr = j0 + NS; rr < j0 + NS + 4 && rr < H; rr++) {
+                const char* q = (const char*)(in + rr * (long)W + i0);
+                for (long o = 0; o < rowb_in; o += 64) __builtin_prefetch(q + o, 0, 3);
+            }
+        }
+        const float* pfi = (pf_in && pfi_row0 < H) ? in + pfi_row0 * (long)W + i0 : NULL;
+        const long pfi_rows = pfi ? ((H - pfi_row0) < 4 ? (H - pfi_row0) : 4) : 0;
+        const long pfi_rowl = (rowb_in + 63) / 64 + 1;               // 起点按 64 B 向下取整，多取 1 线覆盖
+        const long orows = (outH - j0) < 4 ? (outH - j0) : 4;
+        pa.stab = slot_tab + (j0 % NS);            // 切片目标槽表（2NS 项）
+        for (long p = 0; p < npass; p++) {
+            const long nt = (ntiles - 4 * p) < 4 ? (ntiles - 4 * p) : 4;
+            const long c0 = i0 + 256 * p;
+            const long rowb_out = ((outW - c0) < 64 * nt ? (outW - c0) : 64 * nt) * 4;
+            const long pfo_rowl = pf_out ? (rowb_out + 63) / 64 + 1 : 0;
+            if (prof) t0 = cyc();
+            pa.poff = 256 * p;                        // 第 p 个 pass 的平面起点
+            // 边界行方案：4 个整 tile、4 行输出都有效时，Y 循环只跑 [br_pre, KH+2-br_post]；
+            // 去掉的首行由 fmla 算成 ZA 初值（jc=3/2 列），尾行在 pass 后抽出 jc=1/0 列用 fmla 续完
+            const int br = br_pre && c0 + 64 * nt <= outW && j0 + 3 < outH;   // nt 个 tile 都完整（nt<4 时 tile≥nt 的 sweep 结果不存）
+            const long Ymain = br ? NS - br_pre - br_post : NS;
+            pa.tab = slot_tab + (j0 % NS) + (br ? br_pre : 0);
+            pa.Y = Ymain; pa.pbrow = R + (br ? br_pre : 0) * RS; pa.jcoff = br ? br_post : 0;
+            // sweep 队列：上一组同 p 的后半（若连续）+ 下一组同 p 的前半（推测下一项连续；不连续则丢弃重算）
+            int qn = 0;
+            if (pend[p].valid) {
+                const long j0p = pend[p].j0, c0p = pend[p].c0;
+                if (br_post == 2) qn = sw_add(swq, qn, 1, KH - 1, KH - 1, j0p, P, NS, slot_floats, pa.poff, Kp, KPS,
+                                              post_st[p][1][0], post_st[p][1][0], (char*)(out + (j0p + 2) * outW + c0p), pend[p].nt);
+                qn = sw_add(swq, qn, 0, KH - br_post, KH - 1, j0p, P, NS, slot_floats, pa.poff, Kp, KPS,
+                            post_st[p][0][0], post_st[p][0][0], (char*)(out + (j0p + 3) * outW + c0p), pend[p].nt);
+                pend[p].valid = 0;
+            }
+            if (br && !pre_ok[p]) {   // 范围起点：本组的前半没人算过，先独立算好
+                int qf = qn;
+                qf = sw_add(swq, qf, 3, 0, br_pre - 1, j0, P, NS, slot_floats, pa.poff, Kp, KPS, NULL, pre_st[p][0][0], NULL, nt);
+                if (br_pre == 2) qf = sw_add(swq, qf, 2, 0, 0, j0, P, NS, slot_floats, pa.poff, Kp, KPS, NULL, pre_st[p][1][0], NULL, nt);
+                swq[qf].abase = NULL;
+                SW_ARM();
+                sweep_drain(&pa);        // 顺带把待续后半也排空了
+                qn = 0;
+#ifdef CONV_DEBUG_BR
+                if (tid == 0 && g_call == 1 && j0 == 0 && p == 0) {   // 对照：tile 0 的 jc=3 初值 vs C 参考
+                    for (int i = 0; i < 4; i++) for (int r = 0; r < 3; r++) {
+                        const int ic = 3 - i; const long col = c0 + 4 * r + 3 - ic;
+                        float ref = 0;
+                        for (long kj = 0; kj < br_pre; kj++) for (long ki = 0; ki < KW; ki++) ref = __builtin_fmaf(in[(j0 + kj) * W + col + ki], k[kj * KW + ki], ref);
+                        fprintf(stderr, "  pre jc3 t0 i%d r%d col %ld: got %.6f ref %.6f\n", i, r, col, pre_st[p][0][i][r], ref);
+                    }
+                    for (int i = 0; i < 4; i++) { const int ic = 3 - i; const long col = c0 + 3 - ic; float ref = 0;
+                        for (long ki = 0; ki < KW; ki++) ref = __builtin_fmaf(in[(j0 + 1) * W + col + ki], k[ki], ref);
+                        fprintf(stderr, "  pre jc2 t0 i%d r0 col %ld: got %.6f ref %.6f\n", i, col, pre_st[p][1][i][0], ref); }
+                    fprintf(stderr, "  abase0 %p slot0 %p PWb %ld inc %ld %ld %ld %ld kq %p Kp %p KPS %ld len %ld\n", (void*)swq[0].abase,
+                            (void*)P, pa.PWb, pa.inc[0], pa.inc[1], pa.inc[2], pa.inc[3], (void*)swq[0].kq, (void*)Kp, KPS, pa.sw_len);
+                }
+#endif
+            }
+            pre_ok[p] = 0;
+            if (br && g + 1 < G && j0 + 4 + 3 < outH) {
+                qn = sw_add(swq, qn, 3, 0, br_pre - 1, j0 + 4, P, NS, slot_floats, pa.poff, Kp, KPS, NULL, pre_st[p][0][0], NULL, nt);
+                if (br_pre == 2) qn = sw_add(swq, qn, 2, 0, 0, j0 + 4, P, NS, slot_floats, pa.poff, Kp, KPS, NULL, pre_st[p][1][0], NULL, nt);
+                pre_ok[p] = 1;
+            }
+            swq[qn].abase = NULL;
+            SW_ARM();
+            // 半步密度：稀疏（每块组 1 个，2 fmla/步）容量 = Ymain*m4/2 个 X'；放不下才用稠密（每 8 步 3 个）；放不完的由 pass 末排空兜底
+            pa.sw_dense = g_knobs.sw_dense >= 0 ? g_knobs.sw_dense : (2 * qn * (KW + 3) > Ymain * m4);
+            // ZA：清零后装入前半初值（jc=3 各 tile 的 4 个竖切片，br_pre=2 时还有 jc=2）
+            sme_zero_za();
+            if (br) {
+                for (int t = 0; t < 4; t++) za_init_row(t, 3, pre_st[p][0][4 * t]);
+                if (br_pre == 2) for (int t = 0; t < 4; t++) za_init_row(t, 2, pre_st[p][1][4 * t]);
+            }
+            // 输入预取游标：pfi_rows 行，每行 pfi_rowl 线，行距 W*4（只在第一个 pass 做）
+            pa.pi = pa.pie = (const char*)in; pa.pin = 0; pa.ijump = 0;
+            if (pfi && p == 0) {
+                pa.pi = (const char*)((uintptr_t)pfi & ~(uintptr_t)63);
+                pa.pie = pa.pi + pfi_rowl * 64;
+                pa.pin = pfi_rows * pfi_rowl;
+                pa.ijump = (long)W * 4 - pfi_rowl * 64;
+            }
+            // 输出预取游标：orows 行，每行 pfo_rowl 线，行距 outW*4
+            pa.po = pa.poe = (const char*)out; pa.pon = 0; pa.ojump = 0;
+            if (pfo_rowl) {
+                pa.po = (const char*)((uintptr_t)(out + j0 * outW + c0) & ~(uintptr_t)63);
+                pa.poe = pa.po + pfo_rowl * 64;
+                pa.pon = orows * pfo_rowl;
+                pa.ojump = outW * 4 - pfo_rowl * 64;
+            }
+            // 切片构建（最后一个 pass）：把下一组 4 个新行的整切片穿插进本 pass 的行循环；尾切片/越界行由 C 补。
+            // 每行有 ceil(m4/16) 个块组、每块组一片；Y=0 期间槽 j0 仍被读 → 前 ceil(m4/16) 片写哑区。
+            long s_nfull = 0, s_rows = 0;
+            if (p == npass - 1 && built == j0 + NS && slice_ovl) {
+                s_nfull = (W - i0) / 64; if (s_nfull > PW / 16) s_nfull = PW / 16;
+                s_rows = (H - (j0 + NS)) < 4 ? (H - (j0 + NS)) : 4;
+                if (s_rows < 0) s_rows = 0;
+                if (s_nfull < chunks || chunks < 1 || m4 < 2 || chunks + s_rows * s_nfull > Ymain * chunks ||
+                    3 * PW * 4 + 64 * chunks + 64 > (long)sizeof(dummy)) { s_nfull = 0; s_rows = 0; }
+            }
+            pa.snfull = s_nfull; pa.srows = s_rows ? s_rows + 1 : 0;
+            pa.sjump = (long)W * 4 - s_nfull * 256;
+            pa.ssrc = (const char*)(in + (j0 + NS) * (long)W + i0) - 256 * chunks - pa.sjump;
+            // 输出预取集中在最后 ~rows 行（每行 4 条）：lines/4 + 2 行，至少 4 行；不超过行数
+            { long rows = pa.pon / 4 + 2; if (rows < 4) rows = 4; if (rows > Ymain) rows = Ymain; pa.postart = postart_env > 0 ? postart_env : rows; }
+            // asm 内回写：目标 = 输出行 j0 起点（整 tile）或 tmp（末尾不满 64 列的 tile，行距 256 B）；
+            // 行组末尾有越界行（j0+3 ≥ outH）时不用（一块只有一组，走 C 路径）。
+            // 经典：jc=3/2/1 在 pass 内、jc=0 由 C；边界行：jc=3..br_post+1 在 pass 内、jc=br_post 由 C、jc<br_post 走 sweep
+            const int asm_rows = (store_asm && j0 + 3 < outH) ? 3 : 0;
+            for (long t = 0; t < 4; t++) {
+                const long col0 = c0 + 64 * t;
+                const int full = (col0 + 64 <= outW);
+                char* base = full ? (char*)(out + j0 * outW + col0) : (char*)tmp;
+                pa.sdst[t] = (t < nt && asm_rows) ? base : NULL;
+                pa.sstr[t] = full ? outW * 4 : 256;
+                pa.pfst[t] = (t < nt && full && j0 + 3 < outH) ? base : NULL;   // 回写前一行的 L1 预取（tmp 不必预取）
+            }
+            pass_steps((int)nt, &pa, pf_l2);
+            if (s_rows) {
+                // 补：每行的尾切片（列 ≥ 64*s_nfull）与越界行的清零；然后这 4 行算已构建
+                for (long i = 0; i < 4; i++) {
+                    const long rr = j0 + NS + i;
+                    float* slot = P + (rr % NS) * slot_floats;
+                    if (i < s_rows) {
+                        const float* src = in + rr * (long)W + i0;
+                        for (long x0 = s_nfull * 16; x0 < PW; x0 += 16) build_slice(src, ncols, PW, slot, x0);
+                    } else {
+                        build_planes(NULL, 0, PW, slot);
+                    }
+                }
+                built = j0 + NS + 4;
+            }
+            if (prof) { t1 = cyc(); pr.kern += t1 - t0; t0 = t1; }
+            // 边界行：抽出 jc<br_post 的列（4 竖切片/tile）到暂存区，留给下一 pass 期间的 sweep 续完
+            const int jc_lo = br ? (int)br_post : 0;
+            if (br) {
+                for (int t = 0; t < 4; t++) za_extract_row(t, 0, post_st[p][0][4 * t]);
+                if (br_post == 2) for (int t = 0; t < 4; t++) za_extract_row(t, 1, post_st[p][1][4 * t]);
+                pend[p].valid = 1; pend[p].j0 = j0; pend[p].c0 = c0; pend[p].nt = nt;
+            }
+            // 回写：tile t 行 j0+3-jc，列 c0+64t（pass 内已存出的行不再存）
+            for (long t = 0; t < nt; t++) {
+                const long col0 = c0 + 64 * t;
+                const int full = (col0 + 64 <= outW);
+                for (int jc = asm_rows ? jc_lo : 3; jc >= jc_lo; jc--) {
+                    const long row = j0 + 3 - jc;
+                    if (row >= outH) continue;
+                    float* dst = full ? out + row * outW + col0 : tmp + (3 - jc) * 64;
+                    store_tile_row((int)t, jc, dst);
+                }
+
+                if (!full) {
+                    const long nvalid = outW - col0;
+                    for (int jc = 0; jc < 4; jc++) {
+                        const long row = j0 + 3 - jc;
+                        if (row >= outH) continue;
+                        float* dst = out + row * outW + col0;
+                        const float* srcp = tmp + (3 - jc) * 64;
+                        for (long x = 0; x < nvalid; x += 16) {
+                            svbool_t pg = svwhilelt_b32((int64_t)x, (int64_t)nvalid);
+                            svst1_f32(pg, dst + x, svld1_f32(pg, srcp + x));
+                        }
+                    }
+                }
+            }
+            if (prof) { t1 = cyc(); pr.store += t1 - t0; }
+        }
+    }
+    sme_stop();
+    if (prof) { pr.total = cyc() - t_start; prs[tid] = pr; }
+}
+
+// ---------------------------------------------------------------- 自有线程池（可选）：调用之间自旋等待，省去 OpenMP 唤醒 ~0.1–0.2 ms
+#include <pthread.h>
+static padded_u64 g_go __attribute__((aligned(64)));
+static padded_u64 g_done __attribute__((aligned(64)));
+static const ctx_t* volatile g_pool_ctx;
+static int g_pool_nth = 0;      // 池线程数（含主线程）；0 = 未建立
+static int g_main_pinned = 0;
+static pthread_t g_pool_thr[1024];
+
+static int g_pool_wfe = 0;      // 1: 用 ldaxr+wfe 等待（主线程 sev 唤醒）；0: 纯自旋
+static void* pool_worker(void* arg)
+{
+    const int tid = (int)(intptr_t)arg;
+    pin_self(tid);
+    uint64_t seen = 0;
+    for (;;) {
+        uint64_t g;
+        if (g_pool_wfe) {
+            for (;;) {
+                asm volatile("ldaxr %0, [%1]" : "=r"(g) : "r"(&g_go.v) : "memory");
+                if (g != seen) break;
+                asm volatile("wfe" ::: "memory");
+            }
+        } else {
+            while ((g = __atomic_load_n(&g_go.v, __ATOMIC_ACQUIRE)) == seen) asm volatile("yield" ::: "memory");
+        }
+        seen = g;
+        conv_worker(tid, g_pool_nth, g_pool_ctx);
+        __atomic_fetch_add(&g_done.v, 1, __ATOMIC_ACQ_REL);
+    }
+    return NULL;
+}
+
+static int pool_start(int nth)
+{
+    if (g_pool_nth == nth) return 1;
+    if (g_pool_nth != 0) return 0;               // 线程数变化：不重建，回退 OpenMP
+    for (int t = 1; t < nth; t++) {
+        if (pthread_create(&g_pool_thr[t], NULL, pool_worker, (void*)(intptr_t)t) != 0) { g_pool_nth = -1; return 0; }
+    }
+    g_pool_nth = nth;
+    return 1;
+}
+
+static void run_parallel(int nth, const ctx_t* c, int use_pool)
+{
+    if (use_pool && nth > 1 && nth <= 1024 && pool_start(nth)) {
+        ((ctx_t*)c)->pool = 1;
+        g_pool_ctx = c;
+        __atomic_store_n(&g_done.v, 0, __ATOMIC_RELEASE);
+        __atomic_fetch_add(&g_go.v, 1, __ATOMIC_ACQ_REL);
+        if (g_pool_wfe) asm volatile("sev" ::: "memory");
+        if (!g_main_pinned) { pin_self(0); g_main_pinned = 1; }
+        conv_worker(0, nth, c);
+        while (__atomic_load_n(&g_done.v, __ATOMIC_ACQUIRE) != (uint64_t)(nth - 1)) asm volatile("yield" ::: "memory");
+        return;
+    }
+#pragma omp parallel num_threads(nth)
+    {
+        conv_worker(omp_get_thread_num(), omp_get_num_threads(), c);
+    }
+}
+
+static void conv2d_sme(const CONVFLOAT* in, CONVINT H, CONVINT W, const CONVFLOAT* k, CONVINT KH, CONVINT KW,
+                       CONVFLOAT* out, int nth)
+{
+    const long outH = H - KH + 1, outW = W - KW + 1;
+    const double t_entry = omp_get_wtime();
+    // 块宽 256*SP：SP=2 时每个输入行只需去交织一次即可服务 512 列（构建开销减半），但环形缓冲翻倍；
+    // 自动规则：环形缓冲(SP=2) + 打包 kernel 能放进 ~400 KB L2 预算时取 2，否则 1（可用 CONV_SP 覆盖）
+    read_knobs();
+    const int slice_ovl = g_knobs.slice;              // 下一组的平面构建以 ld4w 切片形式穿插进 pass 的 asm 行循环
+    int SP = g_knobs.sp;
+    if (SP <= 0) {
+        // 自动规则：取满足 (a) 环形缓冲 + 打包 kernel ≤ ~400 KB L2 预算，(b) 切片构建能在一个 pass 内完成
+        //（每行 ceil((m4-1)/16) 片，需 chunks + 4*PW/16 ≤ (KH+3)*chunks）的最大 SP
+        const long m4a = (KW + 3) / 4;
+        const long chunks = (m4a + 14) / 16;
+        const long rbytes = (KH + 4) * pow2_stride(16L * (KW + 6));
+        SP = 1;
+        for (int sp = 2; sp <= 3; sp++) {
+            long PWs = 16 * ((m4a - 1) / 16) + 80 + 64L * (sp - 1);
+            if (PWs < m4a + 64 + 64L * (sp - 1)) PWs = m4a + 64 + 64L * (sp - 1);
+            PWs = (PWs + 15) & ~15L;
+            const long ring = (KH + 3) * pow2_stride(16L * PWs);
+            const int fits_l2 = ring + rbytes <= 400L * 1024;
+            const int fits_slice = !slice_ovl || chunks < 1 || (chunks + 4 * (PWs / 16) <= (KH + 3) * chunks);
+            if (fits_l2 && fits_slice) SP = sp;
+        }
+    }
+    const long BW = 256L * SP;
+    const long NB = (outW + BW - 1) / BW;              // 列块数
+    const long G = (outH + 3) / 4;                     // 行组数（每组 4 行输出）
+    const long NS = KH + 3;                            // 环形缓冲槽数 = 每组需要的输入行数 = Y 步数
+    // 关键（alias 探针）：一条载入流在一行内跨越 4 KB 边界会让整行慢 20–100%。因此 R 的行距与环形缓冲的槽距
+    // 都取 2 的幂（≤4 KB 时整除 4 KB），保证 b 流（一行 R）与 a 流（一个槽内的 4 个平面）都不跨页。
+    const long RSB = pow2_stride(16L * (KW + 6));       // 打包 kernel 每个 Y 的字节数（≥ 16(KW+6)）
+    const long RS = RSB / 4;                           // 每个 Y 的 float 数（含填充）
+    // 每平面宽度（元素）：对齐载入读到 16*floor((m4-1)/16)+80（+64(SP-1)）；尾步读到 m4+64
+    const long m4 = (KW + 3) / 4, rem = (KW + 3) % 4;
+    long PW = 16 * ((m4 - 1) / 16) + 80 + 64L * (SP - 1);
+    if (PW < m4 + 64 + 64L * (SP - 1)) PW = m4 + 64 + 64L * (SP - 1);
+    PW = (PW + 15) & ~15L;
+    const long SB = pow2_stride(16L * PW);             // 槽距（字节，4 个平面 + 填充）
+    const long slot_floats = SB / 4;
+    const long ring_floats = NS * slot_floats;
+    const long ring_stride = (ring_floats + 1023) & ~1023L;    // 线程间 4 KB 对齐
+    const int prof = g_knobs.prof;
+    const int pf_in = g_knobs.pf_in;                  // 预取下一行组的原始输入行
+    const int pf_out = g_knobs.pf_out;                // 预取本行组的输出行（写）
+    const int postart_env = g_knobs.postart;          // >0 覆盖输出预取起始行数（调参用）
+    // 按 pass 长度特化：长 pass（KH+3 > 64，即 k81）每 pass 流过 L1 的平面+R 数据远超 L1 容量 →
+    // DRAM 预取只进 L2（不挤热线），且 pass 内回写不划算（预取的输出线到回写时已被挤出）；短 pass 反之。
+    const int long_pass = (KH + 3) > 64;
+    const int store_asm = g_knobs.store_asm >= 0 ? g_knobs.store_asm : !long_pass;   // jc=3/2/1 行回写与 pass 末三行重叠
+    const int pf_l2 = g_knobs.pf_l2 >= 0 ? g_knobs.pf_l2 : long_pass;               // DRAM 预取目标层级
+    g_build_uzp = g_knobs.uzp;                        // 平面构建用 ld1w+uzp（1）或 ld4w（0）
+
+    // 边界行（BR）方案：Y 循环少跑 br_pre 个首行、br_post 个尾行，对应的 (输出行, kernel 行) 对由 fmla 扫描完成，
+    // 半步（8 条 fmla）插在步之间：每行 m4 + ceil(m4/2) 个半步 = 一半那么多 X' 步。要求 sweep 总步数 ≤ 0.9 × 容量。
+    long br_pre = 0, br_post = 0, KPS = 0;
+    if (g_knobs.br && KH >= 8 && m4 >= 2) {
+        const long cand[3][3] = {{2, 2, 6}, {2, 1, 4}, {1, 1, 2}};   // {首行数, 尾行数, 对数}
+        const long halves = m4 + (m4 + 1) / 2;                         // 每行半步数（偶数块组 2 个、奇数 1 个）
+        for (int i = 0; i < 3 && !br_pre; i++) {
+            const long rows = NS - cand[i][0] - cand[i][1];
+            if (rows >= 2 && 20 * cand[i][2] * (KW + 3) <= 9 * rows * halves) { br_pre = cand[i][0]; br_post = cand[i][1]; }
+        }
+        if (br_pre) { KPS = 16; while (KPS < KW + 7) KPS <<= 1; }
+    }
+    if (br_pre) {
+        size_t Kneed = (size_t)KH * KPS;
+        if (g_Kpcap < Kneed) { free(g_Kp); g_Kp = alloc_aligned(Kneed * sizeof(float)); g_Kpcap = Kneed; }
+        if (!g_Kp) br_pre = br_post = 0;
+    }
+    // 打包 kernel（含 X' 方向的零填充；行末留有对齐填充，prfm 越界无害）
+    size_t Rneed = (size_t)(NS + 1) * RS;
+    if (g_Rcap < Rneed) { free(g_R); g_R = alloc_aligned(Rneed * sizeof(float)); g_Rcap = Rneed; if (g_R) memset(g_R, 0, Rneed * sizeof(float)); }
+    size_t Pneed = (size_t)ring_stride * nth;
+    if (g_Pcap < Pneed) { free(g_P); g_P = alloc_aligned(Pneed * sizeof(float)); g_Pcap = Pneed; }
+    {
+        size_t stride = ((size_t)2 * NS + 8) & ~(size_t)7;   // 2NS+1 项（pass 末行会预载"下一行"的表项，不使用）
+        size_t need = stride * nth + 8;
+        if (g_tab_cap < need) { free(g_tab); g_tab = alloc_aligned(need * sizeof(uint64_t)); g_tab_cap = need; }
+        g_tab_stride = stride;
+    }
+    if (!g_R || !g_P || !g_tab) { conv2d_generic(in, H, W, k, KH, KW, out); return; }
+
+    // 每块 tile 数（64 列一个 tile）；按 (outW, BW) 缓存
+    static int* TBc = NULL; static long TBc_w = -1, TBc_bw = -1, TBc_sum = 0;
+    if (TBc_w != outW || TBc_bw != BW) {
+        free(TBc); TBc = malloc(sizeof(int) * NB); TBc_sum = 0;
+        for (long b = 0; b < NB; b++) {
+            long w = outW - b * BW; if (w > BW) w = BW;
+            TBc[b] = (int)((w + 63) / 64);
+            TBc_sum += TBc[b];
+        }
+        TBc_w = outW; TBc_bw = BW;
+    }
+    int* TB = TBc;
+    const long Wtot = G * TBc_sum;
+
+#ifdef CONV_DEBUG_BR
+    { static int once = 0; if (!once) { once = 1; br_selftest(); } }
+#endif
+    double t_pre = prof ? omp_get_wtime() : 0;
+    uint64_t c_pre = prof ? cyc() : 0;
+    prof_t* prs = prof ? calloc(nth, sizeof(prof_t)) : NULL;
+    const uint64_t call_id = ++g_call;
+
+    ctx_t ctx = { in, k, out, H, W, KH, KW, outH, outW, BW, NB, G, NS, RS, m4, rem, PW, slot_floats, ring_stride, Wtot,
+                  KPS, br_pre, br_post,
+                  SP, prof, pf_in, pf_out, 0, slice_ovl, postart_env, store_asm, pf_l2, TB, c_pre, prs, call_id };
+    __atomic_store_n(&g_rcount.v, 0, __ATOMIC_RELEASE);
+    g_pool_wfe = g_knobs.poolwfe;
+    run_parallel(nth, &ctx, g_knobs.pool);
+    if (prof) {
+        double ms = 1e3 / (double)cyc_hz();
+        prof_t mn = prs[0], mx = prs[0], sum = {0, 0, 0, 0, 0, 0, 0, 0};
+        for (int t = 0; t < nth; t++) {
+            prof_t* p = &prs[t];
+#define ACC(f) do { if (p->f < mn.f) mn.f = p->f; if (p->f > mx.f) mx.f = p->f; sum.f += p->f; } while (0)
+            ACC(build); ACC(kern); ACC(store); ACC(total); ACC(enter);
+#undef ACC
+        }
+        fprintf(stderr, "[conv prof] SP %d br %ld/%ld | pre %.3f ms | region %.3f ms | enter max %.3f | thread total min/avg/max %.3f/%.3f/%.3f | "
+                        "build %.3f/%.3f | kern %.3f/%.3f | store %.3f/%.3f (avg/max ms)\n",
+                SP, br_pre, br_post,
+                (t_pre - t_entry) * 1e3, (omp_get_wtime() - t_pre) * 1e3, mx.enter * ms, mn.total * ms, sum.total * ms / nth, mx.total * ms,
+                sum.build * ms / nth, mx.build * ms, sum.kern * ms / nth, mx.kern * ms, sum.store * ms / nth, mx.store * ms);
+        if (prof > 1) {
+            for (int t = 0; t < nth; t++)
+                fprintf(stderr, "  t%02d cpu%3d enter %.4f total %.3f kern %.3f build %.3f store %.3f items %lu steals %lu\n", t, (int)prs[t].cpu,
+                        prs[t].enter * ms, prs[t].total * ms, prs[t].kern * ms, prs[t].build * ms, prs[t].store * ms, (unsigned long)prs[t].items, (unsigned long)prs[t].steals);
+        }
+        free(prs);
+    }
+}
+#endif // CONV_SME
+
+// ==================== 入口 ====================
+void conv2d(const CONVFLOAT* input, CONVINT inputHeight, CONVINT inputWidth,
+            const CONVFLOAT* kernel, CONVINT kernelHeight, CONVINT kernelWidth, CONVFLOAT* output)
+{
+    const long outH = inputHeight - kernelHeight + 1;
+    const long outW = inputWidth - kernelWidth + 1;
+    if (outH <= 0 || outW <= 0 || kernelHeight <= 0 || kernelWidth <= 0) return;
+#ifdef CONV_SME
+    if (sme_available()) {
+        discover_cpus();
+        int nth = omp_get_max_threads();
+        if (g_ncpu > 0 && nth > g_ncpu) nth = g_ncpu;
+        if (nth < 1) nth = 1;
+        conv2d_sme(input, inputHeight, inputWidth, kernel, kernelHeight, kernelWidth, output, nth);
+        return;
+    }
+#endif
+    conv2d_generic(input, inputHeight, inputWidth, kernel, kernelHeight, kernelWidth, output);
+}
