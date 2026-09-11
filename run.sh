@@ -32,6 +32,7 @@ d "host $(hostname 2>/dev/null) | kernel $(uname -r 2>/dev/null) | $(date '+%F %
 d "nproc $(nproc 2>/dev/null) | online $(cat /sys/devices/system/cpu/online 2>/dev/null) | $(grep -m1 'CPU implementer' /proc/cpuinfo 2>/dev/null | tr -s ' ') | $(grep -m1 'CPU part' /proc/cpuinfo 2>/dev/null | tr -s ' ') | $(grep -m1 'CPU variant' /proc/cpuinfo 2>/dev/null | tr -s ' ')"
 lscpu 2>/dev/null | grep -E "Model name|Thread\(s\)|Core\(s\)|Socket|NUMA node|L1d|L1i|L2|L3|MHz" | sed 's/  */ /g' | while read -r l; do d "lscpu: $l"; done
 numactl -H 2>/dev/null | grep -E "^available|^node 1 cpus|^node 1 size|^node 1 free" | while read -r l; do d "numa: $l"; done
+d "memory-only nodes (size MB / free MB / dist from node1): $(read -ra dist < /sys/devices/system/node/node1/distance 2>/dev/null; for n in $(ls -d /sys/devices/system/node/node* 2>/dev/null | sed 's/.*node//' | sort -n); do [ -z "$(cat /sys/devices/system/node/node$n/cpulist 2>/dev/null)" ] || continue; printf 'n%s:%s/%s/%s ' "$n" "$(awk '/MemTotal:/{print int($4/1024)}' /sys/devices/system/node/node$n/meminfo 2>/dev/null)" "$(awk '/MemFree:/{print int($4/1024)}' /sys/devices/system/node/node$n/meminfo 2>/dev/null)" "${dist[$n]}"; done)"
 c1=$(numactl -H 2>/dev/null | grep '^node 1 cpus' | awk '{print $4}'); c1=${c1:-0}
 for c in $c1 $((c1 + 1)); do
     b=/sys/devices/system/cpu/cpu$c/cpufreq
@@ -52,7 +53,28 @@ export OMP_PLACES=cores
 export OMP_DYNAMIC=FALSE
 unset GOMP_CPU_AFFINITY OMP_THREAD_LIMIT 2>/dev/null || true
 
+# 内存放置：若 CPU 节点 1 旁挂有纯内存节点（HBM，本机/判题机均为 node 17：无 CPU、4 GB、距离 61），用 --preferred 让基准程序的
+# 输入/输出矩阵（四例合计 < 600 MB）落进 HBM：读改写 ~330 GB/s 且与别人抢的 DDR 通道分开（共享判题机上 TC1/TC2 期间 DDR 读带宽
+# 只剩 33 GB/s）。--preferred 放不下时自动回落本地 DDR；探测失败则不加该参数（行为与以前完全相同）。CONV_HBM=0 可关。
+hbm=""
+if [[ "${CONV_HBM:-1}" != "0" && -r /sys/devices/system/node/node1/distance ]]; then
+    read -ra dist < /sys/devices/system/node/node1/distance
+    best=999
+    for n in "${!dist[@]}"; do
+        [[ -d /sys/devices/system/node/node$n ]] || continue
+        [[ -z "$(cat /sys/devices/system/node/node$n/cpulist 2>/dev/null)" ]] || continue     # 只考虑无 CPU 的纯内存节点
+        totkb=$(awk '/MemTotal:/{print $4}' /sys/devices/system/node/node$n/meminfo 2>/dev/null)
+        [[ "$totkb" =~ ^[0-9]+$ ]] || continue
+        (( totkb >= 1048576 && totkb <= 33554432 )) || continue                              # 1～32 GB 才像 HBM
+        if (( dist[n] < best )); then best=${dist[n]}; hbm=$n; fi
+    done
+    (( best > 70 )) && hbm=""
+fi
+MEMOPT=""
+if [[ -n "$hbm" ]] && numactl -N 1 --preferred=$hbm true >/dev/null 2>&1; then MEMOPT="--preferred=$hbm"; fi
+d "run: numactl -N 1 $MEMOPT ./conv2d_test (hbm node ${hbm:-none})"
+
 for args in "4096 6144 39 39 1" "6144 4096 41 41 1" "4256 6390 55 55 1" "6390 4256 81 81 1"; do
     d "case $args start $(date '+%T.%N' 2>/dev/null | cut -c1-12) | cpu$c1 cur $(cat /sys/devices/system/cpu/cpu$c1/cpufreq/scaling_cur_freq 2>/dev/null) | load $(cut -d' ' -f1 /proc/loadavg 2>/dev/null)"
-    numactl -N 1 ./conv2d_test $args
+    numactl -N 1 $MEMOPT ./conv2d_test $args
 done

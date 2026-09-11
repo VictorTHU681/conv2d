@@ -2,7 +2,7 @@
 # 两个提交包验收：conv.zip（v43 语义）与 conv_zva.zip（对照）
 cd "$(dirname "$0")/.." || exit 1
 echo "=== HOST"; hostname; date
-for Z in conv_diag.zip conv_diag_zva.zip; do
+for Z in conv_diag.zip conv.zip; do
   echo "##### $Z ($(md5sum submissions/$Z | cut -c1-8))"
   T=$(mktemp -d /tmp/convzip.XXXX); Z0="$PWD/submissions/$Z"
   (cd "$T" && unzip -q "$Z0"; cd conv && unset OMP_NUM_THREADS OMP_PROC_BIND OMP_PLACES OMP_DYNAMIC && bash ./run.sh 2>&1 | grep -E "PASS|FAIL|Error|run.sh|conv-diag|run-diag")
