@@ -285,16 +285,37 @@ printf 浮点格式化 + 写 stdout 要 ~0.1 ms（k39 −1.5%），已挪走。
 - 本地验收 v1（cn20486，1.55 GHz）：`conv_diag.zip` 解压 `bash run.sh` 12809 / 12706 / 13820 / 14037，判题命令
   12806 / 12702 / 13818 / 14004 —— 与 v43 相同，诊断在计时调用里零开销；`conv_diag_zva.zip` 12679 / 12660 / 13722 / 13974。
   v2（加全核满载探针、热身）：`conv_diag.zip` md5 303855a1、`conv_diag_zva.zip` md5 c72b89d5，验收（cn20482，当时节点在 1.2 GHz 档）
-  9902 / 9859 / 10700 / 10867 与 9833 / 9838 / 10634 / 10833，全 PASS，探针读 1.200 GHz / 2.00 周期、无降频，折算 1.55 GHz 与 v43 一致。默认构建（无诊断）官方 bench 12826 / 12741 / 13852 / 14044，泛化 11 组全过。
+  9902 / 9859 / 10700 / 10867 与 9833 / 9838 / 10634 / 10833，全 PASS，探针读 1.200 GHz / 2.00 周期、无降频，折算 1.55 GHz 与 v43 一致。
+  v3（再加一半 / 四分之一核满载的 fmopa 速率与主频——评测机若按活跃核数提频，少线程可能反而快）：`conv_diag.zip` md5 7b6c750e、
+  `conv_diag_zva.zip` md5 72c6ace1；内核 = v43 + asm 序言初值 + 增量解码（等速）。验收（cn20481，1.55 GHz）：12759 / 12666 / 13797 / 14024 与 12658 / 12564 / 13701 / 13942，全 PASS。
+  默认构建全量验证（cn20488，节点在 1.2 GHz 档）：泛化 11 组全过，官方 bench 9932 / 9894 / 10732 / 10887（×1.29 ≈ 12812 / 12763 / 13844 / 14044，= v43）。默认构建（无诊断）官方 bench 12826 / 12741 / 13852 / 14044，泛化 11 组全过。
 - 一次误判与更正：v1 包里 `ghz@end`（各线程算完时测，冷链路 8192 周期）读 1.47–1.54，一度以为满载降频 3–5%。v2 加了
   **全核 barrier 对齐的 15 ms fmopa 满载探针**：fmopa 1.290 ns（恰 2 周期 @1.55）、紧接着测主频 1.549，降频 −0.4%，即本机
   **不降频**；`ghz@end` 偏低是冷启动（I-cache/分支预热 ~300 周期占 4%）的假象，v2 先热身再测 16384 周期。19 线程每线程
   +1.3% 因此不是频率，是 L3/DRAM 争用。cppc：nominal_perf 1400、highest_perf 2000、lowest 1200——评测机若跑 2.0 GHz 就是
   highest_perf（boost 档），全核满载能否保住由这条探针回答。
 - 本地节点白天被调到 1.2 GHz 时，探针读 ghz 1.199 / fmopa 1.666 ns，带宽不变；之前当作"节点波动"的 −21% 就是频率。
-- 两个包：`conv_diag.zip`（v43 + 诊断）、`conv_diag_zva.zip`（+ dc zva 预清零对照）。线上对照要看的：ghz@end vs ghz@start（是否
+- 两个包：`conv_diag.zip`（v43 + 诊断）、`conv_diag_zva.zip`（+ dc zva 预清零对照）。线上对照要看的（另加 `partial-core bursts` 一行：半核/四分之一核满载时的 GHz 是否高于全核）：ghz@end vs ghz@start（是否
   降频）、fmopa 周期（评测机 SME 吞吐）、带宽四项（尤其 pstl2keep+st1w 与 st1w 的比值）、call 3 的 thr total 与
   conv2d() 总时长（kern 外损耗）、以及两包 TC1/TC2 分数之差。
+
+### pass 内逐行时间戳（`-DCONV_ROWPROF`，线程 0，行首 `cntvct`，pass 末/前后加标记）
+
+k39（38 行/pass，理想 336 周期/行）每行平均周期：干净行 349–361（+4–7%；BR=0 时 344–351，半步骨架 ≈ 10 周期/行）；
+**慢行以 ~6 行为周期**（3、8/10、17、23、28/29、34/35：+50…+185），6 行 = 一个 sweep（42 X' ÷ 7 X'/行）→ **每次 sweep
+切换 60–100 周期**，每 pass 6 次 ≈ 450 周期（3%）——与 NOHALF 诊断量到的 433 一致，即 sweep 的代价几乎全在切换点
+而不是散在半步里。首行 +76（pass 冷启动）。pass 间隙 ~400 ns（620 周期，4.2%）：pass 后 C（抽取 + jc=2 行回写）153 ns、
+pass 前 C（认领 / 队列 / ZA 初值）211 ns、asm 序言到首行 38 ns；BR=0 时 118 / 179 / 37。
+
+据此试过并否定（都位精确、同节点 3 轮 A/B）：
+- ZA 初值搬进 asm 序言：中性（初值装载的 mova 代价搬到哪儿都一样）；ZA 抽取搬进 asm 尾声：**k41 −0.6%**（紧跟末尾
+  fmopa 的 mova 要等 SME 流水排空，在 C 里反而能与别的 C 代码重叠）。保留序言初值 + C 抽取（= v43 等速），并把工作项
+  解码的两次整数除法改成增量（每 pass ~40 周期，量不出差别）。
+- sweep 收尾少分支（链式路径不动；非链式无条件存 stash + 谓词 st4w + 无条件装载初值，g_zeros 代零）：k39 −0.8%，切换行
+  依旧 +100 周期 → 切换的代价是描述符 → abase/kq/src → 16 向量装载 → 首个 ld1rqw/ld1w 这条相依链（~30 周期）加上
+  SME 队列被抽空，不是分支预测。
+- 结论：pass 间隙与 sweep 切换都已接近结构下限；本机上 TC1/TC2 内核侧剩余可得 ≤ 1%。+6% 只能来自评测机侧
+  （带宽 / 频率 / 活跃核数提频），由线上诊断日志决定方向。
 
 剩余损耗清单（k39，占比）与判断：偏移浪费 11.4%（(KH−1)(KW+3) 形态下限，不可去）；sweep 3.1%（其中误预测 ~1.7%，
 其余是半步处 33 条/8 周期的发射压力）；行/块骨架 + 尾步 ~3%（无对应 PMU 事件，可能是 SME 队列深度与行边界的交互）；
@@ -330,7 +351,8 @@ kern 外 C 与汇合 3.7%。可再试的方向（各 ≤1%）：sweep 收尾只�
 - `probe/` 微基准（fmopa/载入/ext/fmla 并发、行距混叠、PMU）；`jobs/` Donau 作业脚本（验收、fbench、探针）。
 - 提交包 `submissions/conv.zip`（bench_conv.c、conv2d.c、run.sh、README.md、NOTES.md），解压后 `bash run.sh` 即可。
 - 环境变量（默认即最优）：`CONV_BR`（边界行方案，1 自动/0 关）、`CONV_SWDENSE`（半步密度 1/0/-1 自动）、`CONV_STORE`、
-  `CONV_PFL2`、`CONV_SP`、`CONV_SLICE`、`CONV_PFIN/PFOUT/PFFRESH`、`CONV_POOL`、`CONV_PROFILE`；
+  `CONV_PFL2`、`CONV_SP`、`CONV_SLICE`、`CONV_PFIN/PFOUT/PFFRESH`、`CONV_POOL`、`CONV_PROFILE`、`CONV_DIAG`（线上诊断输出）；
   归因诊断（结果错误）：`CONV_DIAG_L1=1/2`（a / a+b 数据 L1 驻留）、编译期 `-DCONV_NOHALF`（不排 sweep）。
   编译期实验：`-DCONV_ZVA_CURSOR`（输出线 dc zva 预清零，省 RFO 读；`CONV_ZVA=0` 关）、`-DCONV_NTSTORE`（非时序流式回写）。
+  诊断构建：`-DCONV_DIAG_ONLINE`（或运行期 `CONV_DIAG=1`）线上诊断输出；`-DCONV_ROWPROF` pass 内逐行时间戳（线程 0，第 2 次调用）。
 - `submissions/conv_zva.zip`：同一源码在文件头加 `#define CONV_ZVA_CURSOR` 的对照包，用于线上验证评测机是否带宽受限。

@@ -85,6 +85,11 @@ static int env_int(const char* name, int def)
 typedef struct { int inited, slice, sp, prof, pf_in, pf_out, postart, uzp, poolwfe, pool, store_asm, pf_fresh, pf_l2, br, sw_dense, diag_l1, pf_st, zva; } knobs_t;
 static knobs_t g_knobs;
 static int g_diag_on = 0;   // 线上诊断输出（见 diag_*）
+#ifdef CONV_ROWPROF
+static uint64_t* g_rowts = NULL;      // 线程 0 的逐行时间戳：行首 cntvct；pass 末追加 (cyc | 1<<63) 作结束标记
+static uint64_t* g_rowts_cur = NULL;
+static uint64_t* g_rowts_end = NULL;
+#endif
 static int g_pf_fresh = 1;
 static void read_knobs(void)
 {
@@ -204,7 +209,7 @@ static inline void sme_zero_za(void) { asm volatile("zero {za}\n\t" ::: "memory"
 // ---- 线上诊断（编译期 -DCONV_DIAG_ONLINE 或环境 CONV_DIAG=1；输出到 stdout，供评测机日志回看）
 //  每次调用：分相计时 + 各线程末尾的主频（8 条相依 add 链，cntvct 计时）；第 2 次调用（基准的预热，不计时）另测：
 //  起始主频、fmopa 吞吐（4 tile 轮转，期望 2 周期/条）、38 线程 DRAM 带宽（读 / 整线写 / pstl2keep 预取+写 / stnt1w）
-typedef struct { double ghz0, ghz1, ghz_fm, fmopa_ns, fmopa_ns2, t_rd, t_wr, t_pfwr, t_nt; uint64_t c0, c1; } diag_t;
+typedef struct { double ghz0, ghz1, ghz_fm, fmopa_ns, fmopa_ns2, fm_half, fm_quarter, ghz_half, t_rd, t_wr, t_pfwr, t_nt; uint64_t c0, c1; } diag_t;
 static diag_t g_diag[1024];
 static volatile uint64_t g_diag_bar __attribute__((aligned(64)));
 static inline double diag_ghz(long iters)   // 每次迭代 8 条相依 add = 8 周期
@@ -241,21 +246,21 @@ static void diag_bw(int nth, diag_t* d, char* buf)
 {
     const long n = DIAG_BW_BYTES;
     const double tick = 1.0 / (double)cyc_hz();
-    if (!buf) { d->t_rd = d->t_wr = d->t_pfwr = d->t_nt = 0; for (int ph = 2; ph <= 5; ph++) diag_barrier(nth, ph); return; }
+    if (!buf) { d->t_rd = d->t_wr = d->t_pfwr = d->t_nt = 0; for (int ph = 4; ph <= 7; ph++) diag_barrier(nth, ph); return; }
     double t0, t1;
-    diag_barrier(nth, 2); t0 = (double)cyc() * tick;
+    diag_barrier(nth, 4); t0 = (double)cyc() * tick;
     { volatile long acc = 0; long sacc = 0; for (long i = 0; i < n; i += 64) sacc += *(volatile long*)(buf + i); acc = sacc; (void)acc; }
     t1 = (double)cyc() * tick; d->t_rd = t1 - t0;
-    diag_barrier(nth, 3); t0 = (double)cyc() * tick;
+    diag_barrier(nth, 5); t0 = (double)cyc() * tick;
     for (long i = 0; i < n; i += 256)
         asm volatile("ptrue p0.s\n\t st1w {z0.s}, p0, [%0]\n\t st1w {z0.s}, p0, [%0, #1, mul vl]\n\t st1w {z0.s}, p0, [%0, #2, mul vl]\n\t st1w {z0.s}, p0, [%0, #3, mul vl]\n\t" :: "r"(buf + i) : "memory", "p0");
     t1 = (double)cyc() * tick; d->t_wr = t1 - t0;
-    diag_barrier(nth, 4); t0 = (double)cyc() * tick;
+    diag_barrier(nth, 6); t0 = (double)cyc() * tick;
     for (long i = 0; i < n; i += 256)
         asm volatile("ptrue p0.s\n\t prfm pstl2keep, [%0, #4096]\n\t prfm pstl2keep, [%0, #4160]\n\t prfm pstl2keep, [%0, #4224]\n\t prfm pstl2keep, [%0, #4288]\n\t"
                      "st1w {z0.s}, p0, [%0]\n\t st1w {z0.s}, p0, [%0, #1, mul vl]\n\t st1w {z0.s}, p0, [%0, #2, mul vl]\n\t st1w {z0.s}, p0, [%0, #3, mul vl]\n\t" :: "r"(buf + i) : "memory", "p0");
     t1 = (double)cyc() * tick; d->t_pfwr = t1 - t0;
-    diag_barrier(nth, 5); t0 = (double)cyc() * tick;
+    diag_barrier(nth, 7); t0 = (double)cyc() * tick;
     for (long i = 0; i < n; i += 256)
         asm volatile("ptrue p0.s\n\t stnt1w {z0.s}, p0, [%0]\n\t stnt1w {z0.s}, p0, [%0, #1, mul vl]\n\t stnt1w {z0.s}, p0, [%0, #2, mul vl]\n\t stnt1w {z0.s}, p0, [%0, #3, mul vl]\n\t" :: "r"(buf + i) : "memory", "p0");
     t1 = (double)cyc() * tick; d->t_nt = t1 - t0;
@@ -425,6 +430,9 @@ typedef struct {
     long sw_half;              // 432 半步标志：0 → 下一半步做 tile 0/1（并载四元组），1 → tile 2/3 并推进 X'
     uint64_t* scur;            // 440 切片目标槽表游标（原 x17）
     const char* sw_kend;       // 448 当前 sweep 的四元组结束地址 = kq + sw_len
+    uint64_t* rowts;           // 456 逐行时间戳缓冲游标（-DCONV_ROWPROF，线程 0；NULL = 不记）
+    const float* zi[2];        // 464/472 ZA 初值（序言装入）：jc=3 / jc=2 的 16 向量 [4t+i][16]，NULL = 无
+    float* zx[2];              // 480/488 ZA 抽取（尾声存出）：jc=0 / jc=1 → 16 向量，NULL = 无
 } pass_t;
 // sweep 描述符：abase = 行 Y' 的平面 0 地址（含 pass 偏移）；kq = Kp[kj]；src = 累加器初值（16 向量，NULL = 0）；
 // dst：kind 0 → 16 向量存回暂存区；kind 1 → 4 tile 的输出行（st4w，tile t 在 dst + 256t）
@@ -435,7 +443,8 @@ _Static_assert(offsetof(pass_t, pon) == 80 && offsetof(pass_t, PWb) == 104 && of
                offsetof(pass_t, pfst) == 296 && offsetof(pass_t, jcoff) == 328 && offsetof(pass_t, sw_xc) == 336 &&
                offsetof(pass_t, sw_xk) == 344 && offsetof(pass_t, sw_len) == 360 &&
                offsetof(pass_t, inc) == 368 && offsetof(pass_t, swq) == 400 && offsetof(pass_t, sw_half) == 432 &&
-               offsetof(pass_t, scur) == 440 && offsetof(pass_t, sw_kend) == 448 && sizeof(swd_t) == 48 && offsetof(swd_t, ntile) == 40 &&
+               offsetof(pass_t, scur) == 440 && offsetof(pass_t, sw_kend) == 448 && offsetof(pass_t, zi) == 464 && offsetof(pass_t, zx) == 480 &&
+               sizeof(swd_t) == 48 && offsetof(swd_t, ntile) == 40 &&
                offsetof(swd_t, kq) == 8 && offsetof(swd_t, src) == 16 && offsetof(swd_t, dst) == 24 && offsetof(swd_t, kind) == 32, "pass_t 布局");
 
 // 预取游标（每次 2 线）：P = 下一线地址，E = 当前段末，N = 剩余线数；到段末则 P += jump，E += stride（跳转量从结构体取）
@@ -593,12 +602,30 @@ _Static_assert(offsetof(pass_t, pon) == 80 && offsetof(pass_t, PWb) == 104 && of
     "sub x28, x28, #1\n\t"                                                                               \
     "41:\n\t"
 
+// ZA 初值装入 / 抽取（pass 序言 / 尾声，直线代码；此前是 C 里 8 个独立 asm 块，每 pass 多 ~100 周期）：
+// 16 向量布局 [4t+i][16]，tile t 的 4 个竖切片 c = w12..w15（i=0 ↔ w12），x9 = 基址
+#define ZI_TILE(T, X) "ld1w {z0.s}, p0/z, [" X "]\n\t ld1w {z1.s}, p0/z, [" X ", #1, mul vl]\n\t ld1w {z2.s}, p0/z, [" X ", #2, mul vl]\n\t ld1w {z3.s}, p0/z, [" X ", #3, mul vl]\n\t" \
+    "mova za" #T "v.s[w12, 0], p0/m, z0.s\n\t mova za" #T "v.s[w13, 0], p0/m, z1.s\n\t mova za" #T "v.s[w14, 0], p0/m, z2.s\n\t mova za" #T "v.s[w15, 0], p0/m, z3.s\n\t"
+#define ZX_TILE(T, X) "mova z0.s, p0/m, za" #T "v.s[w12, 0]\n\t mova z1.s, p0/m, za" #T "v.s[w13, 0]\n\t mova z2.s, p0/m, za" #T "v.s[w14, 0]\n\t mova z3.s, p0/m, za" #T "v.s[w15, 0]\n\t" \
+    "st1w {z0.s}, p0, [" X "]\n\t st1w {z1.s}, p0, [" X ", #1, mul vl]\n\t st1w {z2.s}, p0, [" X ", #2, mul vl]\n\t st1w {z3.s}, p0, [" X ", #3, mul vl]\n\t"
+#define ZA_ROW(MACRO, JC, OFF, L) \
+    "ldr x9, [%[a], #" #OFF "]\n\t cbz x9, " #L "f\n\t" \
+    "mov w12, #" #JC "+12\n\t mov w13, #" #JC "+8\n\t mov w14, #" #JC "+4\n\t mov w15, #" #JC "\n\t" \
+    "add x10, x9, #256\n\t add x11, x9, #512\n\t add x16, x9, #768\n\t" \
+    MACRO(0, "x9") MACRO(1, "x10") MACRO(2, "x11") MACRO(3, "x16") \
+    #L ":\n\t"
+#ifdef CONV_ROWPROF   // 剖析：每行行首记一次 cntvct（线程 0），事后按行号统计每行时长
+#define ROWTS "ldr x10, [%[a], #456]\n\t cbz x10, 11f\n\t mrs x9, cntvct_el0\n\t str x9, [x10], #8\n\t str x10, [%[a], #456]\n\t 11:\n\t"
+#else
+#define ROWTS
+#endif
 // 行首软流水：本行平面 0 基址已在 x16（上一行末/序言算好：槽表项 + pass 偏移），行首只需 mov，随后立刻取下一行的项。
 // 行首链 ldr→add→ld1w→ext→fmopa 会抽空 SME 队列：去掉链头的 ldr 后 k39 +1.4%（v29 的"预载"仍留着 ldr+add 在链上，所以无效）
 #define ROW_P0 "mov %[p0], x16\n\t ldr x16, [x12], #8\n\t ldr x9, [%[a], #288]\n\t add x16, x16, x9\n\t"
 #define ROW_P0_INIT "ldr x16, [x12], #8\n\t ldr x9, [%[a], #288]\n\t add x16, x16, x9\n\t"
 #define PASS_LOOP(STEP, TAIL, HI, HO)                                                                       \
-    asm volatile("ptrue p0.s\n\t"                                                                           \
+    asm volatile("ptrue p0.s\n\t zero {za}\n\t"                                                             \
+                 ZA_ROW(ZI_TILE, 3, 464, 60) ZA_ROW(ZI_TILE, 2, 472, 61)                                    \
                  "ldr x12, [%[a], #0]\n\t ldr x13, [%[a], #8]\n\t ldr x14, [%[a], #16]\n\t"                 \
                  "ldr x19, [%[a], #24]\n\t ldr x20, [%[a], #32]\n\t ldr x21, [%[a], #40]\n\t"               \
                  "ldr x24, [%[a], #64]\n\t ldr x25, [%[a], #72]\n\t ldr x26, [%[a], #80]\n\t"               \
@@ -610,6 +637,7 @@ _Static_assert(offsetof(pass_t, pon) == 80 && offsetof(pass_t, PWb) == 104 && of
                  "cbz x15, 85f\n\t ldr x9, [%[a], #400]\n\t" SW_LOAD "85:\n\t"                        \
                  ROW_P0_INIT                                                                                \
                  "10:\n\t"                                                                                  \
+                 ROWTS                                                                                      \
                  /* 行首：平面基址 = 槽表项 + pass 偏移；PWb/2PWb/3PWb 互不依赖 */                                 \
                  ROW_P0                                                                                     \
                  "ldr x9, [%[a], #104]\n\t ldr x10, [%[a], #272]\n\t ldr x11, [%[a], #280]\n\t"             \
@@ -636,6 +664,7 @@ _Static_assert(offsetof(pass_t, pon) == 80 && offsetof(pass_t, PWb) == 104 && of
                  /* 队列未走完（步数预算留了 10% 余量，正常不会）：在此排空，保证累加器不跨 asm 存活 */                \
                  "76:\n\t cbz x15, 77f\n\t" EX_HALF "b 76b\n\t 77:\n\t"                                     \
                  "str x15, [%[a], #336]\n\t str x17, [%[a], #344]\n\t"                                       \
+                 ZA_ROW(ZX_TILE, 0, 480, 62) ZA_ROW(ZX_TILE, 1, 488, 63)                                    \
                  : [p0] "=&r"(p0), [p1] "=&r"(p1), [p2] "=&r"(p2), [p3] "=&r"(p3), [pb] "=&r"(pb), [m] "=&r"(m) \
                  : [a] "r"(a)                                                                               \
                  : "memory", "cc", VCLOB, "p0", "x9", "x10", "x11", "x12", "x13", "x14", "x15", "x16", "x17", \
@@ -989,7 +1018,7 @@ static void conv_worker(int tid, int nt_, const ctx_t* c)
     // pass 参数：不随 pass 变化的字段只填一次（pass 之间的 C 代码越少越好：fmopa 空转）
     pass_t pa;
     memset(&pa, 0, sizeof(pa));
-    pa.pbrow = R; pa.Y = NS;
+    pa.pbrow = R; pa.Y = NS; pa.rowts = NULL; pa.zi[0] = pa.zi[1] = NULL; pa.zx[0] = pa.zx[1] = NULL;
     pa.PWb = PW * 4; pa.PW2b = PW * 8; pa.PW3b = PW * 12; pa.RSB = g_knobs.diag_l1 >= 2 ? 0 : RS * 4; /* 诊断 2：b 只读 R 行 0 */ pa.m4 = m4; pa.rem = rem; pa.sht = sht;
     pa.istride = (long)W * 4; pa.ostride = outW * 4;
     pa.sdummy = dummy; pa.sdcnt = chunks;
@@ -1019,7 +1048,7 @@ static void conv_worker(int tid, int nt_, const ctx_t* c)
     }
 
     sme_start();
-    long last_b = -1, last_g = -2, built = 0;
+    long last_b = -1, last_g = -2, built = 0, last_n = -2;
     int victim = tid;
     for (;;) {
         // 认领下一项：先从自己的范围，空了就去偷。
@@ -1051,7 +1080,9 @@ static void conv_worker(int tid, int nt_, const ctx_t* c)
             if (!found) { DRAIN_PENDING(); break; }
             continue;
         }
-        const long b = n / G, g = n % G;
+        long b, g;   // n = b*G + g；静态范围连续递增时免除法（两次整数除法 ~40 周期/pass）
+        if (n == last_n + 1) { g = last_g + 1; b = last_b; if (g == G) { g = 0; b++; } } else { b = n / G; g = n % G; }
+        last_n = n;
         if (prof) pr.items++;
         const long i0 = b * BW;
         const long ntiles = TB[b];
@@ -1164,11 +1195,10 @@ static void conv_worker(int tid, int nt_, const ctx_t* c)
             // 半步密度：稀疏（每块组 1 个，2 fmla/步）容量 = Ymain*m4/2 个 X'；放不下才用稠密（每 8 步 3 个）；放不完的由 pass 末排空兜底
             pa.sw_dense = g_knobs.sw_dense >= 0 ? g_knobs.sw_dense : (2 * qn * (KW + 3) > Ymain * m4);
             // ZA：清零后装入前半初值（jc=3 各 tile 的 4 个竖切片，br_pre=2 时还有 jc=2）
-            sme_zero_za();
-            if (br) {
-                for (int t = 0; t < 4; t++) za_init_row(t, 3, pre_st[p][0][4 * t]);
-                if (br_pre == 2) for (int t = 0; t < 4; t++) za_init_row(t, 2, pre_st[p][1][4 * t]);
-            }
+            // ZA：序言里清零后装入前半初值（jc=3 各 tile 的 4 个竖切片，br_pre=2 时还有 jc=2）；尾声抽出 jc<br_post 的行到暂存区
+            // ZA 初值在 asm 序言装入（与 C 里装入等速，代码更直）；抽取仍在 C（放进 asm 尾声实测 k41 −0.6%：紧跟末尾 fmopa 的 mova 要等流水排空）
+            pa.zi[0] = br ? pre_st[p][0][0] : NULL; pa.zi[1] = (br && br_pre == 2) ? pre_st[p][1][0] : NULL;
+            pa.zx[0] = pa.zx[1] = NULL;
             // 输入预取游标：pfi_rows 行，每行 pfi_rowl 线，行距 W*4（只在第一个 pass 做）
             pa.pi = pa.pie = (const char*)in; pa.pin = 0; pa.ijump = 0;
             if (pfi && p == 0) {
@@ -1220,7 +1250,14 @@ static void conv_worker(int tid, int nt_, const ctx_t* c)
                 pa.sstr[t] = full ? outW * 4 : 256;
                 pa.pfst[t] = (g_knobs.pf_st && t < nt && full && j0 + 3 < outH) ? base : NULL;   // 回写前一行的 L1 预取（tmp 不必预取）
             }
+#ifdef CONV_ROWPROF
+            pa.rowts = (tid == 0 && c->call_id == 2 && g_rowts_cur && g_rowts_cur + NS + 4 < g_rowts_end) ? g_rowts_cur : NULL;
+            if (pa.rowts) *pa.rowts++ = cyc() | (2ull << 60);   // 标记 2：pass 前 C 准备完毕，进入 pass_steps
+#endif
             pass_steps((int)nt, &pa, pf_l2);
+#ifdef CONV_ROWPROF
+            if (pa.rowts) { *pa.rowts++ = cyc() | (1ull << 63); g_rowts_cur = pa.rowts; }
+#endif
             if (s_rows) {
                 // 补：每行的尾切片（列 ≥ 64*s_nfull）与越界行的清零；然后这 4 行算已构建
                 for (long i = 0; i < 4; i++) {
@@ -1269,6 +1306,9 @@ static void conv_worker(int tid, int nt_, const ctx_t* c)
                 }
             }
             if (prof) { t1 = cyc(); pr.store += t1 - t0; }
+#ifdef CONV_ROWPROF
+            if (pa.rowts) { *pa.rowts++ = cyc() | (1ull << 60); g_rowts_cur = pa.rowts; }   // 标记 1：抽取 + 回写完成
+#endif
         }
     }
     sme_stop();
@@ -1289,6 +1329,12 @@ static void conv_worker_diag(int tid, int nt_, const ctx_t* c)
         diag_barrier(nt_, 1);                          // 全部核同时做 ~15 ms 的 fmopa 满载，再测主频：功耗降频在这里现形
         dg->fmopa_ns2 = diag_fmopa_ns(1500000);
         diag_ghz(256); dg->ghz_fm = diag_ghz(2048);
+        // 只有一半 / 四分之一的核满载时的 fmopa 速率与主频：若评测机按活跃核数提频，少线程可能反而更快
+        dg->fm_half = dg->fm_quarter = dg->ghz_half = 0;
+        diag_barrier(nt_, 2);
+        if (tid < nt_ / 2) { dg->fm_half = diag_fmopa_ns(1500000); diag_ghz(256); dg->ghz_half = diag_ghz(2048); }
+        diag_barrier(nt_, 3);
+        if (tid < nt_ / 4) dg->fm_quarter = diag_fmopa_ns(1500000);
         diag_bw(nt_, dg, dbuf);
         sme_stop();
         if (dbuf) munmap(dbuf, DIAG_BW_BYTES);
@@ -1486,7 +1532,48 @@ static void conv2d_sme(const CONVFLOAT* in, CONVINT H, CONVINT W, const CONVFLOA
                   SP, prof, pf_in, pf_out, 0, slice_ovl, postart_env, store_asm, pf_l2, TB, c_pre, prs, call_id };
     __atomic_store_n(&g_rcount.v, 0, __ATOMIC_RELEASE);
     g_pool_wfe = g_knobs.poolwfe;
+#ifdef CONV_ROWPROF
+    if (call_id == 2) { size_t n = 1u << 22; g_rowts = malloc(n * sizeof(uint64_t)); g_rowts_cur = g_rowts; g_rowts_end = g_rowts ? g_rowts + n : NULL; }
+#endif
     run_parallel(nth, &ctx, g_knobs.pool);
+#ifdef CONV_ROWPROF
+    if (call_id == 2 && g_rowts) {
+        // 按 pass 切分：每 pass = Ymain 个行首戳 + 1 个结束戳（bit63）。统计每个行号的平均时长、pass 末行、pass 间隙
+        const double ns = 1e9 / (double)cyc_hz();
+        long Ym = -1; double rowsum[128] = {0}; long rowcnt[128] = {0}; double gapsum = 0, passsum = 0; long npass = 0, ngap = 0;
+        uint64_t* q = g_rowts; uint64_t prev_end = 0, prev_t1 = 0; double pro = 0, postc = 0, prec = 0; long npro = 0, npostc = 0, nprec = 0;
+        const uint64_t TMASK = ~(0xfull << 60);
+        while (q < g_rowts_cur) {
+            if ((*q >> 60) == 2) {   // 标记 2 → 下一项是首行戳
+                uint64_t t2 = *q & TMASK; q++;
+                if (q < g_rowts_cur && (*q >> 60) == 0) { pro += (double)(*q - t2); npro++; }
+                if (prev_t1) { prec += (double)(t2 - prev_t1); nprec++; }
+                continue;
+            }
+            if ((*q >> 60) == 1) { prev_t1 = *q & TMASK; if (prev_end) { postc += (double)(prev_t1 - prev_end); npostc++; } q++; continue; }
+            uint64_t* e = q; while (e < g_rowts_cur && !(*e >> 63)) e++;
+            if (e >= g_rowts_cur) break;
+            long rows = e - q; if (rows > 0 && rows < 128) {
+                if (Ym < 0) Ym = rows;
+                if (rows == Ym) {
+                    for (long i = 0; i < rows; i++) { uint64_t t1 = (i + 1 < rows) ? q[i + 1] : (*e & TMASK); rowsum[i] += (double)(t1 - q[i]); rowcnt[i]++; }
+                    passsum += (double)((*e & TMASK) - q[0]); npass++;
+                    if (prev_end) { gapsum += (double)(q[0] - prev_end); ngap++; }
+                }
+            }
+            prev_end = *e & TMASK; q = e + 1;
+        }
+        if (npass > 0) printf("[rowprof] gap breakdown (ns): post-pass C (extract+store) %.0f | pre-pass C (claim/queue/ZA init) %.0f | asm prologue to row 0 %.0f\n",
+                              npostc ? postc / npostc * (1e9 / (double)cyc_hz()) : 0, nprec ? prec / nprec * (1e9 / (double)cyc_hz()) : 0, npro ? pro / npro * (1e9 / (double)cyc_hz()) : 0);
+        if (npass > 0) {
+            printf("[rowprof] %ldx%ld k%ldx%ld thread0: %ld passes of %ld rows | pass avg %.0f ns | inter-pass gap avg %.0f ns (%.1f%%) | per-row avg ns (cycles@1.55GHz):\n",
+                   (long)H, (long)W, (long)KH, (long)KW, npass, Ym, passsum / npass * ns, ngap ? gapsum / ngap * ns : 0, ngap ? 100.0 * (gapsum / ngap) / (passsum / npass) : 0);
+            for (long i = 0; i < Ym; i++) printf("%s%ld:%.0f(%.0f)", i ? " " : "  ", i, rowsum[i] / rowcnt[i] * ns, rowsum[i] / rowcnt[i] * ns * 1.55);
+            printf("\n");
+        }
+        free(g_rowts); g_rowts = g_rowts_cur = g_rowts_end = NULL;
+    }
+#endif
     if (g_diag_on) {
         static int env_done = 0;
         if (!env_done) { env_done = 1; diag_print_env(nth); struct sigaction sa; memset(&sa, 0, sizeof sa); sa.sa_sigaction = diag_sigill; sa.sa_flags = SA_SIGINFO; sigaction(SIGILL, &sa, NULL); sigaction(SIGSEGV, &sa, NULL); sigaction(SIGBUS, &sa, NULL); atexit(diag_atexit); }
@@ -1534,6 +1621,10 @@ static void conv2d_sme(const CONVFLOAT* in, CONVINT H, CONVINT W, const CONVFLOA
                        trd > 0 ? bytes / trd / 1e9 : 0, twr > 0 ? bytes / twr / 1e9 : 0, tpf > 0 ? bytes / tpf / 1e9 : 0, tnt > 0 ? bytes / tnt / 1e9 : 0);
                 printf("[conv-diag] all-core fmopa burst 15 ms: fmopa ns avg/max %.3f/%.3f (= %.2f GHz if 2 cyc) | ghz right after burst min/avg/max %.3f/%.3f/%.3f | "
                        "droop vs start %.1f%%\n", f2s / nth, f2x, 2.0 / (f2s / nth), gfn, gfs / nth, gfx, 100.0 * (1.0 - (gfs / nth) / (g0s / nth)));
+                { double hs = 0, qs = 0, gh = 0; int hn = 0, qn2 = 0;
+                  for (int t = 0; t < nth; t++) { if (g_diag[t].fm_half > 0) { hs += g_diag[t].fm_half; gh += g_diag[t].ghz_half; hn++; } if (g_diag[t].fm_quarter > 0) { qs += g_diag[t].fm_quarter; qn2++; } }
+                  printf("[conv-diag] partial-core bursts: half (%d cores) fmopa ns %.3f (= %.2f GHz) ghz %.3f | quarter (%d cores) fmopa ns %.3f (= %.2f GHz)\n",
+                         hn, hn ? hs / hn : 0, hn ? 2.0 / (hs / hn) : 0, hn ? gh / hn : 0, qn2, qn2 ? qs / qn2 : 0, qn2 ? 2.0 / (qs / qn2) : 0); }
             }
             fflush(stdout);
         }
