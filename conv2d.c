@@ -83,7 +83,7 @@ static int env_int(const char* name, int def)
 }
 
 // 可调参数只在首次调用时读环境（getenv 每次要扫整个环境表，~2 µs/次，一次调用 9 次就是 ~0.3%）
-typedef struct { int inited, slice, sp, prof, pf_in, pf_out, postart, uzp, poolwfe, pool, store_asm, pf_fresh, pf_l2, br, sw_dense, diag_l1, pf_st, zva, cpuprobe; } knobs_t;
+typedef struct { int inited, slice, sp, prof, pf_in, pf_out, postart, uzp, poolwfe, pool, store_asm, pf_fresh, pf_l2, br, sw_dense, diag_l1, pf_st, zva; } knobs_t;
 static knobs_t g_knobs;
 static int g_diag_on = 0;   // 线上诊断输出（见 diag_*）
 #ifdef CONV_ROWPROF
@@ -114,7 +114,6 @@ static void read_knobs(void)
     g_knobs.pf_fresh = env_int("CONV_PFFRESH", 1); // 整环重建前先预取全部行
     g_knobs.br = env_int("CONV_BR", 1);            // 边界行 fmla 方案（0 关；1 自动选去掉的行数）
     g_knobs.sw_dense = env_int("CONV_SWDENSE", -1); // 半步密度：1 稠密 / 0 稀疏 / -1 按容量自动
-    g_knobs.cpuprobe = env_int("CONV_CPUPROBE", 1); // 首次调用探测被别的进程分时的核并剔除（共享判题机；zgemm 同法）
 #ifdef CONV_DIAG_ONLINE
     g_diag_on = env_int("CONV_DIAG", 1);
 #else
@@ -209,62 +208,11 @@ static inline void sme_start(void) { asm volatile("smstart\n\t" ::: "memory", VC
 static inline void sme_stop(void) { asm volatile("smstop\n\t" ::: "memory", VCLOB, PCLOB); }
 static inline void sme_zero_za(void) { asm volatile("zero {za}\n\t" ::: "memory"); }
 
-// 忙核探测（共享判题机：线上出现过一个线程 6.6 ms 干完、另一个 33.8 ms 的情形——被别的进程分时的核拖住全体）。
-// 首次（不计时）调用里每线程在自己的核上跑 20M 周期的相依加法链（1.55 GHz ≈ 13 ms，长过一个调度时间片），
-// 用时 > 1.25× 中位数的核判为被占用，从可用集剔除、线程数收缩（剩余不足一半则不剔除）。多余的池线程改 wfe 停车。
-static double g_probe_ms[1024];
-static int g_probe_done = 0;
-static int g_nth_eff = 0;            // 探测后的有效线程数（0 = 未探测）
-static volatile int g_pin_gen = 0;   // 可用 CPU 表变更代数：工作线程在下次进入时重新绑核
-static double busy_probe_ms(void)
-{
-    uint64_t t0 = cyc(); long n = 2500000, acc = 0;
-    asm volatile("1:\n\t add %0, %0, #1\n\t add %0, %0, #1\n\t add %0, %0, #1\n\t add %0, %0, #1\n\t"
-                 "add %0, %0, #1\n\t add %0, %0, #1\n\t add %0, %0, #1\n\t add %0, %0, #1\n\t subs %1, %1, #1\n\t b.ne 1b\n\t"
-                 : "+r"(acc), "+r"(n) : : "cc");
-    (void)acc;
-    return (double)(cyc() - t0) * 1e3 / (double)cyc_hz();
-}
-// 线程的运行队列等待时间（内核统计，纳秒）：/proc/self/task/<tid>/schedstat = "run_ns wait_ns timeslices"
-#include <sys/syscall.h>
-static void sched_stat(uint64_t* run_ns, uint64_t* wait_ns)
-{
-    char path[64], buf[128]; int n;
-    snprintf(path, sizeof path, "/proc/self/task/%ld/schedstat", (long)syscall(SYS_gettid));
-    int fd = open(path, O_RDONLY); *run_ns = *wait_ns = 0; if (fd < 0) return;
-    n = (int)read(fd, buf, sizeof buf - 1); close(fd); if (n <= 0) return; buf[n] = 0;
-    unsigned long long a = 0, b = 0; if (sscanf(buf, "%llu %llu", &a, &b) == 2) { *run_ns = a; *wait_ns = b; }
-}
-static uint64_t g_wait_ns[1024], g_run_ns[1024];   // 首次调用期间各线程的等待/运行纳秒
-static int g_dropped_cpus[1024], g_ndropped = 0;    // 被剔除的核：多余的池线程改绑到这些核上 futex 睡眠（不占我们的核）
-static int g_probe_dropped = 0; static double g_probe_med = 0;
-static void cpuprobe_decide(int nth)   // 主线程，首次调用结束后
-{
-    g_probe_done = 1;
-    int n = nth < 1024 ? nth : 1024; if (n < 4 || !g_knobs.cpuprobe) return;
-    double tmp[1024]; for (int t = 0; t < n; t++) tmp[t] = g_probe_ms[t];
-    for (int i = 0; i < n; i++) for (int j = i + 1; j < n; j++) if (tmp[j] < tmp[i]) { double x = tmp[i]; tmp[i] = tmp[j]; tmp[j] = x; }
-    const double med = tmp[n / 2]; g_probe_med = med;
-    int keep[1024], nk = 0, dropped = 0, drop[1024];
-    for (int t = 0; t < n; t++) {
-        const double tot = (double)g_run_ns[t] + (double)g_wait_ns[t];
-        const int busy = g_probe_ms[t] > med * 1.25 || (tot > 0 && (double)g_wait_ns[t] > 0.10 * tot);   // 加法链慢 25% 或在运行队列上等了 >10%
-        if (!busy) keep[nk++] = g_cpus[t]; else drop[dropped++] = g_cpus[t];
-    }
-    if (dropped > 0 && nk >= n / 2) {
-        for (int t = n; t < g_ncpu; t++) keep[nk++] = g_cpus[t];
-        for (int t = 0; t < nk; t++) g_cpus[t] = keep[t];
-        for (int t = 0; t < dropped; t++) g_dropped_cpus[t] = drop[t];
-        g_ndropped = dropped;
-        g_ncpu = nk; g_nth_eff = nk < nth ? nk : nth; g_probe_dropped = dropped;
-        __atomic_store_n(&g_pin_gen, g_pin_gen + 1, __ATOMIC_RELEASE);
-    }
-}
 
 // ---- 线上诊断（编译期 -DCONV_DIAG_ONLINE 或环境 CONV_DIAG=1；输出到 stdout，供评测机日志回看）
 //  每次调用：分相计时 + 各线程末尾的主频（8 条相依 add 链，cntvct 计时）；第 2 次调用（基准的预热，不计时）另测：
 //  起始主频、fmopa 吞吐（4 tile 轮转，期望 2 周期/条）、38 线程 DRAM 带宽（读 / 整线写 / pstl2keep 预取+写 / stnt1w）
-typedef struct { double ghz0, ghz1, ghz_fm, fmopa_ns, fmopa_ns2, fm_half, fm_quarter, ghz_half, t_rd, t_wr, t_pfwr, t_nt; uint64_t c0, c1, run_ns, wait_ns; } diag_t;
+typedef struct { double ghz0, ghz1, ghz_fm, fmopa_ns, fmopa_ns2, fm_half, fm_quarter, ghz_half, t_rd, t_wr, t_pfwr, t_nt; uint64_t c0, c1; } diag_t;
 static diag_t g_diag[1024];
 static volatile uint64_t g_diag_bar __attribute__((aligned(64)));
 static inline double diag_ghz(long iters)   // 每次迭代 8 条相依 add = 8 周期
@@ -333,10 +281,10 @@ static void diag_sigill(int sig, siginfo_t* si, void* uc_)
 typedef struct { unsigned long call; long H, W, KH, KW; double region, pre, tn, ta, tx, g1n, g1a, g1x, total; } diag_sum_t;
 static diag_sum_t g_diag_deferred[8];
 static int g_diag_deferred_n = 0;
-static double g_diag_thr_ms[1024], g_diag_thr_run[1024], g_diag_thr_wait[1024]; static int g_diag_thr_n = 0;
+static double g_diag_thr_ms[1024]; static int g_diag_thr_n = 0;
 static void diag_atexit(void)
 {
-    if (g_diag_thr_n) { printf("[conv-diag] thr total/run/wait ms: "); for (int t = 0; t < g_diag_thr_n; t++) printf("%d:%.1f/%.1f/%.1f ", t, g_diag_thr_ms[t], g_diag_thr_run[t], g_diag_thr_wait[t]); printf("\n"); }
+    if (g_diag_thr_n) { printf("[conv-diag] thr total ms: "); for (int t = 0; t < g_diag_thr_n; t++) printf("%d:%.1f ", t, g_diag_thr_ms[t]); printf("\n"); }
     for (int i = 0; i < g_diag_deferred_n; i++) {
         const diag_sum_t* d = &g_diag_deferred[i];
         printf("[conv-diag] call %lu %ldx%ld k%ldx%ld: region %.3f ms | pre %.3f | thr total min/avg/max %.3f/%.3f/%.3f ms | ghz@end min/avg/max %.3f/%.3f/%.3f | conv2d() total %.3f ms\n",
@@ -1375,18 +1323,9 @@ static void conv_worker(int tid, int nt_, const ctx_t* c)
 }
 
 // 诊断包装：探针都放在 conv_worker 之外（不改变热路径的代码生成）；系统调用在流式模式外做
-static __thread int t_pin_gen = 0;
 static void conv_worker_diag(int tid, int nt_, const ctx_t* c)
 {
-    if (t_pin_gen != g_pin_gen) { t_pin_gen = g_pin_gen; pin_self(tid); }           // 可用 CPU 表变了：重新绑核
-    const int probe_call = !g_probe_done && g_knobs.cpuprobe && c->call_id == 1 && tid < 1024;
-    uint64_t r0 = 0, w0 = 0;
-    if (probe_call) { g_probe_ms[tid] = busy_probe_ms(); sched_stat(&r0, &w0); }
-    if (!g_diag_on) {
-        conv_worker(tid, nt_, c);
-        if (probe_call) { uint64_t r1, w1; sched_stat(&r1, &w1); g_run_ns[tid] = r1 - r0; g_wait_ns[tid] = w1 - w0; }
-        return;
-    }
+    if (!g_diag_on) { conv_worker(tid, nt_, c); return; }
     diag_t* dg = &g_diag[tid];
     dg->ghz0 = dg->fmopa_ns = 0;
     if (c->call_id == 2) {
@@ -1407,13 +1346,9 @@ static void conv_worker_diag(int tid, int nt_, const ctx_t* c)
         sme_stop();
         if (dbuf) munmap(dbuf, DIAG_BW_BYTES);
     }
-    uint64_t rr0 = 0, ww0 = 0; const int thr_stat = getenv("CONV_DIAG_THR") != NULL;
-    if (thr_stat) sched_stat(&rr0, &ww0);
     dg->c0 = cyc();
     conv_worker(tid, nt_, c);
     dg->c1 = cyc();
-    if (probe_call) { uint64_t r1, w1; sched_stat(&r1, &w1); g_run_ns[tid] = r1 - r0; g_wait_ns[tid] = w1 - w0; }
-    if (thr_stat) { uint64_t r1, w1; sched_stat(&r1, &w1); dg->run_ns = r1 - rr0; dg->wait_ns = w1 - ww0; }
     diag_ghz(256); dg->ghz1 = diag_ghz(2048);   // 负载下主频（其他线程多半还在算）：先热身（冷链路 ~4% 偏低），再 16384 周期 ≈ 10 µs
 }
 
@@ -1431,7 +1366,6 @@ static int g_main_pinned = 0;
 static pthread_t g_pool_thr[1024];
 
 static int g_pool_wfe = 0;      // 1: 用 ldaxr+wfe 等待（主线程 sev 唤醒）；0: 纯自旋
-static int g_run_nth = 0;       // 本次调用实际参与的线程数（≤ 池线程数）
 static void* pool_worker(void* arg)
 {
     const int tid = (int)(intptr_t)arg;
@@ -1440,29 +1374,17 @@ static void* pool_worker(void* arg)
     volatile uint64_t* go = &g_go_t[tid].v;
     for (;;) {
         uint64_t g;
-        if (g_nth_eff && tid >= g_nth_eff) {          // 剔核后多余的线程：改绑到被剔除的核上，futex 睡眠（不占我们的核、不自旋）
-            if (g_ndropped > 0) { cpu_set_t s; CPU_ZERO(&s); CPU_SET(g_dropped_cpus[(tid - g_nth_eff) % g_ndropped], &s); sched_setaffinity(0, sizeof(s), &s); }
-            for (;;) {
-                g = __atomic_load_n(go, __ATOMIC_ACQUIRE);
-                if (g != seen) break;
-                syscall(SYS_futex, (uint32_t*)go, 128 /* FUTEX_WAIT_PRIVATE */, (uint32_t)seen, NULL, NULL, 0);
-            }
-        } else if (g_pool_wfe) {
+        if (g_pool_wfe) {
             for (;;) {
                 asm volatile("ldaxr %0, [%1]" : "=r"(g) : "r"(go) : "memory");
                 if (g != seen) break;
                 asm volatile("wfe" ::: "memory");
             }
         } else {
-            // 自旋等 go；剔核决定可能在自旋期间做出（本线程不再被叫醒），所以循环里也要检查是否该去停车
-            while ((g = __atomic_load_n(go, __ATOMIC_ACQUIRE)) == seen) {
-                if (g_nth_eff && tid >= g_nth_eff) break;
-                asm volatile("yield" ::: "memory");
-            }
-            if (g == seen) continue;                  // 转去停车分支
+            while ((g = __atomic_load_n(go, __ATOMIC_ACQUIRE)) == seen) asm volatile("yield" ::: "memory");
         }
         seen = g;
-        conv_worker_diag(tid, g_run_nth, g_pool_ctx);
+        conv_worker_diag(tid, g_pool_nth, g_pool_ctx);
         __atomic_fetch_add(&g_done.v, 1, __ATOMIC_ACQ_REL);
     }
     return NULL;
@@ -1470,8 +1392,8 @@ static void* pool_worker(void* arg)
 
 static int pool_start(int nth)
 {
-    if (g_pool_nth >= nth) return 1;             // 池线程数够用（探测剔核后只用前 nth 个）
-    if (g_pool_nth != 0) return 0;               // 线程数变多：不重建，回退 OpenMP
+    if (g_pool_nth == nth) return 1;
+    if (g_pool_nth != 0) return 0;               // 线程数变化：不重建，回退 OpenMP
     for (int t = 1; t < nth; t++) {
         if (pthread_create(&g_pool_thr[t], NULL, pool_worker, (void*)(intptr_t)t) != 0) { g_pool_nth = -1; return 0; }
     }
@@ -1483,13 +1405,13 @@ static void run_parallel(int nth, const ctx_t* c, int use_pool)
 {
     if (use_pool && nth > 1 && nth <= 1024 && pool_start(nth)) {
         ((ctx_t*)c)->pool = 1;
-        g_pool_ctx = c; g_run_nth = nth;
+        g_pool_ctx = c;
         __atomic_store_n(&g_done.v, 0, __ATOMIC_RELEASE);
         const uint64_t gen = ++g_go_gen;
         if (c->prof) g_prof_c_go = cyc();
         for (int t = 1; t < nth; t++) __atomic_store_n(&g_go_t[t].v, gen, __ATOMIC_RELEASE);
         if (c->prof) g_prof_c_go2 = cyc();
-        if (g_pool_wfe || g_nth_eff) asm volatile("sev" ::: "memory");
+        if (g_pool_wfe) asm volatile("sev" ::: "memory");
         if (!g_main_pinned) { pin_self(0); g_main_pinned = 1; }
         conv_worker_diag(0, nth, c);
         while (__atomic_load_n(&g_done.v, __ATOMIC_ACQUIRE) != (uint64_t)(nth - 1)) asm volatile("yield" ::: "memory");
@@ -1696,7 +1618,7 @@ static void conv2d_sme(const CONVFLOAT* in, CONVINT H, CONVINT W, const CONVFLOA
                    ds.call, ds.H, ds.W, ds.KH, ds.KW, ds.region, ds.pre, ds.tn, ds.ta, ds.tx, ds.g1n, ds.g1a, ds.g1x);
         } else if (g_diag_deferred_n < 8) {
             g_diag_deferred[g_diag_deferred_n++] = ds;
-            if (getenv("CONV_DIAG_THR")) { for (int t = 0; t < nth; t++) { g_diag_thr_ms[t] = (g_diag[t].c1 - g_diag[t].c0) * tick_ms; g_diag_thr_run[t] = g_diag[t].run_ns * 1e-6; g_diag_thr_wait[t] = g_diag[t].wait_ns * 1e-6; } g_diag_thr_n = nth; }
+            if (getenv("CONV_DIAG_THR")) { for (int t = 0; t < nth; t++) g_diag_thr_ms[t] = (g_diag[t].c1 - g_diag[t].c0) * tick_ms; g_diag_thr_n = nth; }
         }
     }
     if (prof) {
@@ -1763,19 +1685,8 @@ void conv2d(const CONVFLOAT* input, CONVINT inputHeight, CONVINT inputWidth,
         discover_cpus();
         int nth = omp_get_max_threads();
         if (g_ncpu > 0 && nth > g_ncpu) nth = g_ncpu;
-        if (g_nth_eff > 0 && nth > g_nth_eff) nth = g_nth_eff;
         if (nth < 1) nth = 1;
         conv2d_sme(input, inputHeight, inputWidth, kernel, kernelHeight, kernelWidth, output, nth);
-        if (!g_probe_done) {
-            cpuprobe_decide(nth);
-            if (g_diag_on) {
-                double mn = 1e9, mx = 0; for (int t = 0; t < nth; t++) { if (g_probe_ms[t] < mn) mn = g_probe_ms[t]; if (g_probe_ms[t] > mx) mx = g_probe_ms[t]; }
-                double wmax = 0, wsum = 0; for (int t = 0; t < nth; t++) { double w = g_wait_ns[t] * 1e-6; wsum += w; if (w > wmax) wmax = w; }
-                printf("[conv-diag] cpu probe: chain ms min/med/max %.2f/%.2f/%.2f (= %.2f GHz) | runqueue wait ms avg/max %.2f/%.2f | busy cores dropped %d | threads next calls %d\n",
-                       mn, g_probe_med, mx, g_probe_med > 0 ? 20.0 / g_probe_med : 0, wsum / nth, wmax, g_probe_dropped, g_nth_eff ? g_nth_eff : nth);
-                fflush(stdout);
-            }
-        }
         if (g_diag_on && g_diag_deferred_n > 0) g_diag_deferred[g_diag_deferred_n - 1].total = (omp_get_wtime() - t_in) * 1e3;   // 函数级总时长
         return;
     }

@@ -26,39 +26,27 @@ if ! gcc -O3 -march=armv9-a+sme+sve2 -fopenmp bench_conv.c conv2d.c -o conv2d_te
     fi
 fi
 
-# 环境诊断（仅打印，供回看评测机日志；全部容错）
-d() { echo "[run-diag] $*"; }
-d "host $(hostname 2>/dev/null) | kernel $(uname -r 2>/dev/null) | $(date '+%F %T' 2>/dev/null) | gcc $(gcc -dumpversion 2>/dev/null)"
-d "nproc $(nproc 2>/dev/null) | online $(cat /sys/devices/system/cpu/online 2>/dev/null) | $(grep -m1 'CPU implementer' /proc/cpuinfo 2>/dev/null | tr -s ' ') | $(grep -m1 'CPU part' /proc/cpuinfo 2>/dev/null | tr -s ' ') | $(grep -m1 'CPU variant' /proc/cpuinfo 2>/dev/null | tr -s ' ')"
-lscpu 2>/dev/null | grep -E "Model name|Thread\(s\)|Core\(s\)|Socket|NUMA node|L1d|L1i|L2|L3|MHz" | sed 's/  */ /g' | while read -r l; do d "lscpu: $l"; done
-numactl -H 2>/dev/null | grep -E "^available|^node 1 cpus|^node 1 size|^node 1 free" | while read -r l; do d "numa: $l"; done
-d "memory-only nodes (size MB / free MB / dist from node1): $(read -ra dist < /sys/devices/system/node/node1/distance 2>/dev/null; for n in $(ls -d /sys/devices/system/node/node* 2>/dev/null | sed 's/.*node//' | sort -n); do [ -z "$(cat /sys/devices/system/node/node$n/cpulist 2>/dev/null)" ] || continue; printf 'n%s:%s/%s/%s ' "$n" "$(awk '/MemTotal:/{print int($4/1024)}' /sys/devices/system/node/node$n/meminfo 2>/dev/null)" "$(awk '/MemFree:/{print int($4/1024)}' /sys/devices/system/node/node$n/meminfo 2>/dev/null)" "${dist[$n]}"; done)"
-c1=$(numactl -H 2>/dev/null | grep '^node 1 cpus' | awk '{print $4}'); c1=${c1:-0}
-for c in $c1 $((c1 + 1)); do
-    b=/sys/devices/system/cpu/cpu$c/cpufreq
-    d "cpu$c cpufreq: gov $(cat $b/scaling_governor 2>/dev/null) | cur $(cat $b/scaling_cur_freq 2>/dev/null) | hw_cur $(cat $b/cpuinfo_cur_freq 2>/dev/null) | min $(cat $b/cpuinfo_min_freq 2>/dev/null) | max $(cat $b/cpuinfo_max_freq 2>/dev/null) | setspeed $(cat $b/scaling_setspeed 2>/dev/null) | avail $(cat $b/scaling_available_frequencies 2>/dev/null) | drv $(cat $b/scaling_driver 2>/dev/null) | boost $(cat /sys/devices/system/cpu/cpufreq/boost 2>/dev/null)"
-done
-d "cache cpu$c1: $(for i in 0 1 2 3; do b=/sys/devices/system/cpu/cpu$c1/cache/index$i; [ -d $b ] && printf '%s%s=%s ' "$(cat $b/level 2>/dev/null)" "$(cat $b/type 2>/dev/null | cut -c1)" "$(cat $b/size 2>/dev/null)"; done)"
-d "thp $(cat /sys/kernel/mm/transparent_hugepage/enabled 2>/dev/null) | perf_paranoid $(cat /proc/sys/kernel/perf_event_paranoid 2>/dev/null) | product $(cat /sys/devices/virtual/dmi/id/product_name 2>/dev/null) | bios $(cat /sys/devices/virtual/dmi/id/bios_version 2>/dev/null)"
-d "mem: $(grep -E 'MemTotal|MemFree|HugePages_Total|Hugepagesize' /proc/meminfo 2>/dev/null | tr -s ' ' | tr '\n' ';')"
-d "load: $(cat /proc/loadavg 2>/dev/null) | uptime $(awk '{print int($1/3600)"h"}' /proc/uptime 2>/dev/null)"
-d "thermal: $(for t in /sys/class/thermal/thermal_zone*; do [ -d $t ] && printf '%s=%s ' "$(cat $t/type 2>/dev/null)" "$(cat $t/temp 2>/dev/null)"; done 2>/dev/null | cut -c1-200)"
-d "cppc cpu$c1: $(for f in highest_perf nominal_perf lowest_perf reference_perf nominal_freq lowest_freq; do printf '%s=%s ' $f "$(cat /sys/devices/system/cpu/cpu$c1/acpi_cppc/$f 2>/dev/null)"; done)"
-
-# 判题口径：38 线程、单一 NUMA（CPU 节点 1）。绑核在 conv2d.c 内部完成；
+# 判题口径：38 线程、单一 NUMA 节点。CPU 节点取 5（不存在或无 CPU 时依次回退 1、0）。绑核在 conv2d.c 内部完成；
 # 这里的 OMP 变量只让基准程序自带的参考实现也能用满核，不影响被测函数。
-export OMP_NUM_THREADS=38
+cpunode=5
+for n in 5 1 0; do
+    if [[ -n "$(cat /sys/devices/system/node/node$n/cpulist 2>/dev/null)" ]] && numactl -N $n true >/dev/null 2>&1; then cpunode=$n; break; fi
+done
+NCPU=$(numactl -N $cpunode nproc 2>/dev/null || nproc 2>/dev/null || echo 38)
+NT=38
+if [[ "$NCPU" =~ ^[0-9]+$ ]] && (( NCPU > 0 && NCPU < NT )); then NT=$NCPU; fi   # 节点 CPU 不足时不超订
+export OMP_NUM_THREADS=$NT
 export OMP_PROC_BIND=close
 export OMP_PLACES=cores
 export OMP_DYNAMIC=FALSE
 unset GOMP_CPU_AFFINITY OMP_THREAD_LIMIT 2>/dev/null || true
 
-# 内存放置：若 CPU 节点 1 旁挂有纯内存节点（HBM，本机/判题机均为 node 17：无 CPU、4 GB、距离 61），用 --preferred 让基准程序的
-# 输入/输出矩阵（四例合计 < 600 MB）落进 HBM：读改写 ~330 GB/s 且与别人抢的 DDR 通道分开（共享判题机上 TC1/TC2 期间 DDR 读带宽
-# 只剩 33 GB/s）。--preferred 放不下时自动回落本地 DDR；探测失败则不加该参数（行为与以前完全相同）。CONV_HBM=0 可关。
+# 内存放置：若 CPU 节点旁挂有纯内存节点（HBM：无 CPU、1～32 GB、距离 ≤ 70；本机/判题机为 node 16+t），用 --preferred 让
+# 基准程序的输入/输出矩阵（四例合计 < 600 MB）落进 HBM（读改写 ~330 GB/s，且与 DDR 通道分开）。放不下时内核自动回落本地 DDR；
+# 探测不到则不加该参数。CONV_HBM=0 可关。
 hbm=""
-if [[ "${CONV_HBM:-1}" != "0" && -r /sys/devices/system/node/node1/distance ]]; then
-    read -ra dist < /sys/devices/system/node/node1/distance
+if [[ "${CONV_HBM:-1}" != "0" && -r /sys/devices/system/node/node$cpunode/distance ]]; then
+    read -ra dist < /sys/devices/system/node/node$cpunode/distance
     best=999
     for n in "${!dist[@]}"; do
         [[ -d /sys/devices/system/node/node$n ]] || continue
@@ -71,10 +59,17 @@ if [[ "${CONV_HBM:-1}" != "0" && -r /sys/devices/system/node/node1/distance ]]; 
     (( best > 70 )) && hbm=""
 fi
 MEMOPT=""
-if [[ -n "$hbm" ]] && numactl -N 1 --preferred=$hbm true >/dev/null 2>&1; then MEMOPT="--preferred=$hbm"; fi
-d "run: numactl -N 1 $MEMOPT ./conv2d_test (hbm node ${hbm:-none})"
+if [[ -n "$hbm" ]] && numactl -N $cpunode --preferred=$hbm true >/dev/null 2>&1; then MEMOPT="--preferred=$hbm"; fi
 
-for args in "4096 6144 39 39 1" "6144 4096 41 41 1" "4256 6390 55 55 1" "6390 4256 81 81 1"; do
-    d "case $args start $(date '+%T.%N' 2>/dev/null | cut -c1-12) | cpu$c1 cur $(cat /sys/devices/system/cpu/cpu$c1/cpufreq/scaling_cur_freq 2>/dev/null) | load $(cut -d' ' -f1 /proc/loadavg 2>/dev/null)"
-    numactl -N 1 $MEMOPT ./conv2d_test $args
-done
+if command -v numactl >/dev/null 2>&1 && numactl -N $cpunode true >/dev/null 2>&1; then
+    RUN="numactl -N $cpunode $MEMOPT"
+else
+    echo "[run.sh] numactl 不可用或节点 $cpunode 不可用，直接运行" >&2
+    RUN=""
+fi
+echo "[run.sh] host=$(hostname 2>/dev/null) node=$cpunode cpus=$NCPU threads=$NT run='$RUN ./conv2d_test'" >&2
+
+$RUN ./conv2d_test 4096 6144 39 39 1
+$RUN ./conv2d_test 6144 4096 41 41 1
+$RUN ./conv2d_test 4256 6390 55 55 1
+$RUN ./conv2d_test 6390 4256 81 81 1
