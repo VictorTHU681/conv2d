@@ -78,7 +78,7 @@ static int env_int(const char* name, int def)
 }
 
 // 可调参数只在首次调用时读环境（getenv 每次要扫整个环境表，~2 µs/次，一次调用 9 次就是 ~0.3%）
-typedef struct { int inited, slice, sp, prof, pf_in, pf_out, postart, uzp, poolwfe, pool, store_asm, pf_fresh, pf_l2, br, sw_dense, diag_l1; } knobs_t;
+typedef struct { int inited, slice, sp, prof, pf_in, pf_out, postart, uzp, poolwfe, pool, store_asm, pf_fresh, pf_l2, br, sw_dense, diag_l1, pf_st, zva; } knobs_t;
 static knobs_t g_knobs;
 static int g_pf_fresh = 1;
 static void read_knobs(void)
@@ -89,6 +89,10 @@ static void read_knobs(void)
     g_knobs.prof = env_int("CONV_PROFILE", 0);
     g_knobs.pf_in = env_int("CONV_PFIN", 1);
     g_knobs.pf_out = env_int("CONV_PFOUT", 1);
+    g_knobs.pf_st = env_int("CONV_PFST", 1);
+    // -DCONV_ZVA_CURSOR 实验用：输出线 dc zva 预清零（不从 DRAM 读 RFO，每次调用少读 ~100 MB），需 zva 块 64 B 且允许
+    { uint64_t dczid; asm volatile("mrs %0, dczid_el0" : "=r"(dczid));
+      g_knobs.zva = env_int("CONV_ZVA", 1) && !(dczid & 0x10) && (4L << (dczid & 0xf)) == 64; }
     g_knobs.postart = env_int("CONV_POSTART", 0);
     g_knobs.uzp = env_int("CONV_UZP", 1);
     g_knobs.poolwfe = env_int("CONV_POOLWFE", 0);
@@ -338,13 +342,45 @@ _Static_assert(offsetof(pass_t, pon) == 80 && offsetof(pass_t, PWb) == 104 && of
 // 预取目标层级是立即数 → 两种实例（L1 / L2 提示）运行期按 pass 长度选择：短 pass（k39/k41/k55）预取到 L1 更快；
 // 长 pass（k81：每 pass 经 L1 的平面+R 数据 ~240 KB）预取进 L1 只会把热的平面/R 线挤掉，L2 提示快 0.3–0.9%。
 #define EX_PFI(HI) PFCUR(HI, "x19", "x20", "x21", 48, 56, 21)
+// 输出线游标：dc zva 预清零（见 read_knobs），同一游标结构；每次 2 线，因此每行线数取偶数
+#define PFCUR_ZVA(P, E, N, OJ, OS, L)                                                                    \
+    "cbz " P ", " #L "f\n\t"                                                                             \
+    "dc zva, " P "\n\t add x9, " P ", #64\n\t dc zva, x9\n\t"                                          \
+    "add " P ", " P ", #128\n\t"                                                                         \
+    "subs " N ", " N ", #2\n\t"                                                                          \
+    "csel " P ", xzr, " P ", le\n\t"                                                                     \
+    "ldr x9, [%[a], #" #OJ "]\n\t ldr x10, [%[a], #" #OS "]\n\t"                                          \
+    "cmp " P ", " E "\n\t"                                                                               \
+    "csel x9, x9, xzr, hs\n\t csel x10, x10, xzr, hs\n\t"                                                \
+    "add " P ", " P ", x9\n\t add " E ", " E ", x10\n\t"                                                 \
+    #L ":\n\t"
+// 实验（-DCONV_ZVA_CURSOR）：输出线用 dc zva 预清零代替预取。位精确，但本地 −1%（zva 要走一致性拿所有权、并发有限），
+// 只在带宽饥饿（远端内存代理）时 k39 +5%/k41 +2%；默认仍是 pstl 预取（RFO 读）
+#ifdef CONV_ZVA_CURSOR
+#define EX_PFO(HO) "ldr x9, [%[a], #200]\n\t cmp x14, x9\n\t b.hi 29f\n\t" PFCUR_ZVA("x24", "x25", "x26", 88, 96, 23) "29:\n\t"
+#else
 #define EX_PFO(HO) "ldr x9, [%[a], #200]\n\t cmp x14, x9\n\t b.hi 29f\n\t" PFCUR(HO, "x24", "x25", "x26", 88, 96, 23) "29:\n\t"
+#endif
 // 回写重叠：剩余行数 x14 ∈ {3,2,1} 的行内，把 tile T 已完成的输出行 jc = x14（竖切片 c = jc, jc+4, jc+8, jc+12，
 // 即 ic = 0..3）用 mova 取出并 st4w 交织成 64 个连续 float；目标 = sdst[T] + (3-jc)*sstr[T]；sdst[T]=0 则跳过。
 // 放在块 6..9（每块一个 tile），要求每行至少 10 个块组（m4 ≥ 10，即 KW ≥ 37），否则由 C 回写全部四行。
 // 另外在 x14 = 4..1 的行里把该 tile 下一步要写的输出行（j0 + 4 - x14）的 4 线预取进 L1：早先的 pstl 预取（postart 行前）
 // 只保证线在 L2，到回写时早被平面/R 数据挤出 L1，st4w 就要等 RFO。
 // 回写行 jc' = x14 + jcoff（经典 jcoff=0；边界行方案的 Y 循环少跑 jcoff 个尾行）；jc'=4 只预取 j0 行
+// 4 路交织 + 非时序存储：与 st4w {Z0-Z3} 等价（out[4r+k] = Zk[r]），8 条 zip 用 3 个临时寄存器，Z0..Z3 被破坏。
+// 输出线只写一次、再不读，stnt1w 让它不占 L2 也不触发 RFO 读（整线顺序写走写流模式）
+#define ZIP4_STNT(Z0, Z1, Z2, Z3, T0, T1, T2, X) \
+    "zip1 z" #T0 ".s, z" #Z0 ".s, z" #Z2 ".s\n\t zip2 z" #T1 ".s, z" #Z0 ".s, z" #Z2 ".s\n\t" \
+    "zip1 z" #Z0 ".s, z" #Z1 ".s, z" #Z3 ".s\n\t zip2 z" #T2 ".s, z" #Z1 ".s, z" #Z3 ".s\n\t" \
+    "zip1 z" #Z1 ".s, z" #T0 ".s, z" #Z0 ".s\n\t zip2 z" #Z3 ".s, z" #T0 ".s, z" #Z0 ".s\n\t" \
+    "zip1 z" #T0 ".s, z" #T1 ".s, z" #T2 ".s\n\t zip2 z" #Z0 ".s, z" #T1 ".s, z" #T2 ".s\n\t" \
+    "stnt1w {z" #Z1 ".s}, p0, [" X "]\n\t stnt1w {z" #Z3 ".s}, p0, [" X ", #1, mul vl]\n\t" \
+    "stnt1w {z" #T0 ".s}, p0, [" X ", #2, mul vl]\n\t stnt1w {z" #Z0 ".s}, p0, [" X ", #3, mul vl]\n\t"
+#ifdef CONV_NTSTORE   // 实验：非时序流式回写（不预取时本地 −1.3..−4.2%，远端内存 +2..+6%）
+#define OUT_ST4(Z0, Z1, Z2, Z3, X) ZIP4_STNT(Z0, Z1, Z2, Z3, 3, 4, 15, X)
+#else
+#define OUT_ST4(Z0, Z1, Z2, Z3, X) "st4w {z" #Z0 ".s-z" #Z3 ".s}, p0, [" X "]\n\t"
+#endif
 #define EX_STORE(T, L, L2)                                                                               \
     "ldr x11, [%[a], #328]\n\t add x9, x14, x11\n\t"                                                     \
     "cmp x9, #4\n\t b.hi " #L "f\n\t"                                                                     \
@@ -361,7 +397,7 @@ _Static_assert(offsetof(pass_t, pon) == 80 && offsetof(pass_t, PWb) == 104 && of
     "mova z13.s, p0/m, za" #T "v.s[w14, 0]\n\t add w14, w14, #4\n\t"                                     \
     "mova z12.s, p0/m, za" #T "v.s[w14, 0]\n\t add w14, w14, #4\n\t"                                     \
     "mova z11.s, p0/m, za" #T "v.s[w14, 0]\n\t sub w14, w14, #12\n\t sub w14, w14, w10\n\t"              \
-    "st4w {z11.s-z14.s}, p0, [x11]\n\t"                                                                  \
+    OUT_ST4(11, 12, 13, 14, "x11")                                                                       \
     #L ":\n\t"
 
 // 边界行 fmla 步（每个块组末尾）：有活动 sweep 时走一步 X'；sweep 结束时把 16 个累加器存出（暂存区或输出行），
@@ -408,10 +444,10 @@ _Static_assert(offsetof(pass_t, pon) == 80 && offsetof(pass_t, PWb) == 104 && of
     /* sweep 结束：存累加器 */ \
     "ldr x9, [%[a], #400]\n\t ldr x10, [x9, #24]\n\t ldr x11, [x9, #32]\n\t cbz x11, 81f\n\t cmp x11, #2\n\t b.eq 82f\n\t" \
     "ldr x11, [x9, #40]\n\t"                                                   /* 只存前 ntile 个 tile */ \
-    "st4w {z16.s-z19.s}, p0, [x10]\n\t add x10, x10, #256\n\t cmp x11, #2\n\t b.lo 82f\n\t" \
-    "st4w {z20.s-z23.s}, p0, [x10]\n\t add x10, x10, #256\n\t cmp x11, #3\n\t b.lo 82f\n\t" \
-    "st4w {z24.s-z27.s}, p0, [x10]\n\t add x10, x10, #256\n\t cmp x11, #4\n\t b.lo 82f\n\t" \
-    "st4w {z28.s-z31.s}, p0, [x10]\n\t b 82f\n\t" \
+    OUT_ST4(16, 17, 18, 19, "x10") "add x10, x10, #256\n\t cmp x11, #2\n\t b.lo 82f\n\t" \
+    OUT_ST4(20, 21, 22, 23, "x10") "add x10, x10, #256\n\t cmp x11, #3\n\t b.lo 82f\n\t" \
+    OUT_ST4(24, 25, 26, 27, "x10") "add x10, x10, #256\n\t cmp x11, #4\n\t b.lo 82f\n\t" \
+    OUT_ST4(28, 29, 30, 31, "x10") "b 82f\n\t" \
     "81:\n\t" ST8("x10", 16, 17, 18, 19, 20, 21, 22, 23) "add x10, x10, #512\n\t" ST8("x10", 24, 25, 26, 27, 28, 29, 30, 31) \
     "82:\n\t" SW_NEXT \
     "85:\n\t"
@@ -574,6 +610,27 @@ static inline void store_tile_row(int t, int jc, float* dst)
     case 2: STORE_TILE_ROW(2); break;
     default: STORE_TILE_ROW(3); break;
     }
+}
+// 同上，但落到输出行时用非时序存储（临时 z4..z6）
+#define STORE_TILE_ROW_NT(T)                                                                \
+    asm volatile("ptrue p0.s\n\t"                                                           \
+                 "add w12, %w[jc], #12\n\t add w13, %w[jc], #8\n\t add w14, %w[jc], #4\n\t mov w15, %w[jc]\n\t" \
+                 "mova z0.s, p0/m, za" #T "v.s[w12, 0]\n\t mova z1.s, p0/m, za" #T "v.s[w13, 0]\n\t" \
+                 "mova z2.s, p0/m, za" #T "v.s[w14, 0]\n\t mova z3.s, p0/m, za" #T "v.s[w15, 0]\n\t" \
+                 ZIP4_STNT(0, 1, 2, 3, 4, 5, 6, "%[d]")                                     \
+                 : : [jc] "r"(jc), [d] "r"(dst) : "memory", "x12", "x13", "x14", "x15", "z0", "z1", "z2", "z3", "z4", "z5", "z6", "p0")
+static inline void store_tile_row_out(int t, int jc, float* dst)
+{
+#ifndef CONV_NTSTORE
+    store_tile_row(t, jc, dst);
+#else
+    switch (t) {
+    case 0: STORE_TILE_ROW_NT(0); break;
+    case 1: STORE_TILE_ROW_NT(1); break;
+    case 2: STORE_TILE_ROW_NT(2); break;
+    default: STORE_TILE_ROW_NT(3); break;
+    }
+#endif
 }
 
 // 去交织一行输入到 4 个平面：plane_q[x] = in[row][i0 + 4x + q]（x < PW；越界补 0）
@@ -927,7 +984,17 @@ static void conv_worker(int tid, int nt_, const ctx_t* c)
             const long nt = (ntiles - 4 * p) < 4 ? (ntiles - 4 * p) : 4;
             const long c0 = i0 + 256 * p;
             const long rowb_out = ((outW - c0) < 64 * nt ? (outW - c0) : 64 * nt) * 4;
-            const long pfo_rowl = pf_out ? (rowb_out + 63) / 64 + 1 : 0;
+#ifdef CONV_ZVA_CURSOR
+            const int zva = g_knobs.zva;
+#else
+            const int zva = 0;
+#endif
+            // zva：只清本 pass 独占的整线。行段 [A_r, A_r+rowb)，A_r = A_0 + r*outW*4 未必 64 B 对齐（行距不是 64 的倍数时
+            // 逐行漂移），游标按固定行距推进，所以两端各留 1 线余量：起点 ceil64(A_0)+64，每行 floor(rowb/64)-2 线（取偶）
+            long pfo_rowl = pf_out ? (rowb_out + 63) / 64 + 1 : 0;
+#ifdef CONV_ZVA_CURSOR   // asm 里游标固定是 dc zva：不能清零时（CONV_ZVA=0 / 硬件禁止）整个游标关掉
+            pfo_rowl = (pf_out && zva) ? (rowb_out / 64 - 2) & ~1L : 0; if (pfo_rowl < 2) pfo_rowl = 0;
+#endif
             if (prof) t0 = cyc();
             pa.poff = 256 * p;                        // 第 p 个 pass 的平面起点
             // 边界行方案：4 个整 tile、4 行输出都有效时，Y 循环只跑 [br_pre, KH+2-br_post]；
@@ -997,7 +1064,8 @@ static void conv_worker(int tid, int nt_, const ctx_t* c)
             // 输出预取游标：orows 行，每行 pfo_rowl 线，行距 outW*4
             pa.po = pa.poe = (const char*)out; pa.pon = 0; pa.ojump = 0;
             if (pfo_rowl) {
-                pa.po = (const char*)((uintptr_t)(out + j0 * outW + c0) & ~(uintptr_t)63);
+                pa.po = zva ? (const char*)((((uintptr_t)(out + j0 * outW + c0) + 63) & ~(uintptr_t)63) + 64)
+                            : (const char*)((uintptr_t)(out + j0 * outW + c0) & ~(uintptr_t)63);
                 pa.poe = pa.po + pfo_rowl * 64;
                 pa.pon = orows * pfo_rowl;
                 pa.ojump = outW * 4 - pfo_rowl * 64;
@@ -1017,6 +1085,13 @@ static void conv_worker(int tid, int nt_, const ctx_t* c)
             pa.ssrc = (const char*)(in + (j0 + NS) * (long)W + i0) - 256 * chunks - pa.sjump;
             // 输出预取集中在最后 ~rows 行（每行 4 条）：lines/4 + 2 行，至少 4 行；不超过行数
             { long rows = pa.pon / 4 + 2; if (rows < 4) rows = 4; if (rows > Ymain) rows = Ymain; pa.postart = postart_env > 0 ? postart_env : rows; }
+            if (zva && pa.pon) {
+                // 清零必须先于同一线的存储：pass 内最早的回写是 jc'=3 行（剩余行数 x14 = 3 - jcoff），游标每行 4 线，
+                // 要求全部 pon 线在那之前清完：postart ≥ pon/4 + (3 - jcoff) + 1；pass 太短放不下 → 本 pass 不清零（普通 RFO）
+                const long need = (pa.pon + 3) / 4 + (3 - pa.jcoff) + 1;
+                if (need > Ymain) { pa.pon = 0; pa.po = NULL; }
+                else pa.postart = (postart_env >= need && postart_env <= Ymain) ? postart_env : need;
+            }
             // asm 内回写：目标 = 输出行 j0 起点（整 tile）或 tmp（末尾不满 64 列的 tile，行距 256 B）；
             // 行组末尾有越界行（j0+3 ≥ outH）时不用（一块只有一组，走 C 路径）。
             // 经典：jc=3/2/1 在 pass 内、jc=0 由 C；边界行：jc=3..br_post+1 在 pass 内、jc=br_post 由 C、jc<br_post 走 sweep
@@ -1027,7 +1102,7 @@ static void conv_worker(int tid, int nt_, const ctx_t* c)
                 char* base = full ? (char*)(out + j0 * outW + col0) : (char*)tmp;
                 pa.sdst[t] = (t < nt && asm_rows) ? base : NULL;
                 pa.sstr[t] = full ? outW * 4 : 256;
-                pa.pfst[t] = (t < nt && full && j0 + 3 < outH) ? base : NULL;   // 回写前一行的 L1 预取（tmp 不必预取）
+                pa.pfst[t] = (g_knobs.pf_st && t < nt && full && j0 + 3 < outH) ? base : NULL;   // 回写前一行的 L1 预取（tmp 不必预取）
             }
             pass_steps((int)nt, &pa, pf_l2);
             if (s_rows) {
@@ -1059,8 +1134,8 @@ static void conv_worker(int tid, int nt_, const ctx_t* c)
                 for (int jc = asm_rows ? jc_lo : 3; jc >= jc_lo; jc--) {
                     const long row = j0 + 3 - jc;
                     if (row >= outH) continue;
-                    float* dst = full ? out + row * outW + col0 : tmp + (3 - jc) * 64;
-                    store_tile_row((int)t, jc, dst);
+                    if (full) store_tile_row_out((int)t, jc, out + row * outW + col0);
+                    else store_tile_row((int)t, jc, tmp + (3 - jc) * 64);
                 }
 
                 if (!full) {

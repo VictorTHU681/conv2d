@@ -52,7 +52,11 @@ static int run_case(int H, int W, int KH, int KW, int seed, int verbose)
     double maxerr = 0;
     for (long i = 0; i < outH * outW; i++) {
         double e = fabs((double)o1[i] - (double)o2[i]);
-        if (!(e <= 1e-5)) { if (nbad < 3 && verbose) printf("    mismatch @%ld (%ld,%ld): ref %.8g got %.8g\n", i, i / outW, i % outW, o1[i], o2[i]); nbad++; }
+        if (!(e <= 1e-5)) {
+            static long nshow = -1; if (nshow < 0) { const char* e2 = getenv("TEST_SHOW"); nshow = e2 ? atol(e2) : 3; }
+            if (nbad < nshow && verbose) printf("    mismatch @%ld (%ld,%ld): ref %.8g got %.8g\n", i, i / outW, i % outW, o1[i], o2[i]);
+            nbad++;
+        }
         if (e > maxerr) maxerr = e;
     }
     if (nbad || verbose)
