@@ -204,7 +204,7 @@ static inline void sme_zero_za(void) { asm volatile("zero {za}\n\t" ::: "memory"
 // ---- 线上诊断（编译期 -DCONV_DIAG_ONLINE 或环境 CONV_DIAG=1；输出到 stdout，供评测机日志回看）
 //  每次调用：分相计时 + 各线程末尾的主频（8 条相依 add 链，cntvct 计时）；第 2 次调用（基准的预热，不计时）另测：
 //  起始主频、fmopa 吞吐（4 tile 轮转，期望 2 周期/条）、38 线程 DRAM 带宽（读 / 整线写 / pstl2keep 预取+写 / stnt1w）
-typedef struct { double ghz0, ghz1, fmopa_ns, t_rd, t_wr, t_pfwr, t_nt; uint64_t c0, c1; } diag_t;
+typedef struct { double ghz0, ghz1, ghz_fm, fmopa_ns, fmopa_ns2, t_rd, t_wr, t_pfwr, t_nt; uint64_t c0, c1; } diag_t;
 static diag_t g_diag[1024];
 static volatile uint64_t g_diag_bar __attribute__((aligned(64)));
 static inline double diag_ghz(long iters)   // 每次迭代 8 条相依 add = 8 周期
@@ -241,21 +241,21 @@ static void diag_bw(int nth, diag_t* d, char* buf)
 {
     const long n = DIAG_BW_BYTES;
     const double tick = 1.0 / (double)cyc_hz();
-    if (!buf) { d->t_rd = d->t_wr = d->t_pfwr = d->t_nt = 0; for (int ph = 1; ph <= 4; ph++) diag_barrier(nth, ph); return; }
+    if (!buf) { d->t_rd = d->t_wr = d->t_pfwr = d->t_nt = 0; for (int ph = 2; ph <= 5; ph++) diag_barrier(nth, ph); return; }
     double t0, t1;
-    diag_barrier(nth, 1); t0 = (double)cyc() * tick;
+    diag_barrier(nth, 2); t0 = (double)cyc() * tick;
     { volatile long acc = 0; long sacc = 0; for (long i = 0; i < n; i += 64) sacc += *(volatile long*)(buf + i); acc = sacc; (void)acc; }
     t1 = (double)cyc() * tick; d->t_rd = t1 - t0;
-    diag_barrier(nth, 2); t0 = (double)cyc() * tick;
+    diag_barrier(nth, 3); t0 = (double)cyc() * tick;
     for (long i = 0; i < n; i += 256)
         asm volatile("ptrue p0.s\n\t st1w {z0.s}, p0, [%0]\n\t st1w {z0.s}, p0, [%0, #1, mul vl]\n\t st1w {z0.s}, p0, [%0, #2, mul vl]\n\t st1w {z0.s}, p0, [%0, #3, mul vl]\n\t" :: "r"(buf + i) : "memory", "p0");
     t1 = (double)cyc() * tick; d->t_wr = t1 - t0;
-    diag_barrier(nth, 3); t0 = (double)cyc() * tick;
+    diag_barrier(nth, 4); t0 = (double)cyc() * tick;
     for (long i = 0; i < n; i += 256)
         asm volatile("ptrue p0.s\n\t prfm pstl2keep, [%0, #4096]\n\t prfm pstl2keep, [%0, #4160]\n\t prfm pstl2keep, [%0, #4224]\n\t prfm pstl2keep, [%0, #4288]\n\t"
                      "st1w {z0.s}, p0, [%0]\n\t st1w {z0.s}, p0, [%0, #1, mul vl]\n\t st1w {z0.s}, p0, [%0, #2, mul vl]\n\t st1w {z0.s}, p0, [%0, #3, mul vl]\n\t" :: "r"(buf + i) : "memory", "p0");
     t1 = (double)cyc() * tick; d->t_pfwr = t1 - t0;
-    diag_barrier(nth, 4); t0 = (double)cyc() * tick;
+    diag_barrier(nth, 5); t0 = (double)cyc() * tick;
     for (long i = 0; i < n; i += 256)
         asm volatile("ptrue p0.s\n\t stnt1w {z0.s}, p0, [%0]\n\t stnt1w {z0.s}, p0, [%0, #1, mul vl]\n\t stnt1w {z0.s}, p0, [%0, #2, mul vl]\n\t stnt1w {z0.s}, p0, [%0, #3, mul vl]\n\t" :: "r"(buf + i) : "memory", "p0");
     t1 = (double)cyc() * tick; d->t_nt = t1 - t0;
@@ -1285,14 +1285,18 @@ static void conv_worker_diag(int tid, int nt_, const ctx_t* c)
         char* dbuf = mmap(NULL, DIAG_BW_BYTES, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
         if (dbuf == MAP_FAILED) dbuf = NULL; else memset(dbuf, 1, DIAG_BW_BYTES);
         sme_start();
-        dg->ghz0 = diag_ghz(4096); dg->fmopa_ns = diag_fmopa_ns(20000); diag_bw(nt_, dg, dbuf);
+        diag_ghz(256); dg->ghz0 = diag_ghz(4096); diag_fmopa_ns(2000); dg->fmopa_ns = diag_fmopa_ns(20000);
+        diag_barrier(nt_, 1);                          // 全部核同时做 ~15 ms 的 fmopa 满载，再测主频：功耗降频在这里现形
+        dg->fmopa_ns2 = diag_fmopa_ns(1500000);
+        diag_ghz(256); dg->ghz_fm = diag_ghz(2048);
+        diag_bw(nt_, dg, dbuf);
         sme_stop();
         if (dbuf) munmap(dbuf, DIAG_BW_BYTES);
     }
     dg->c0 = cyc();
     conv_worker(tid, nt_, c);
     dg->c1 = cyc();
-    dg->ghz1 = diag_ghz(1024);   // 负载下主频（其他线程多半还在算）：8192 周期 ≈ 5 µs
+    diag_ghz(256); dg->ghz1 = diag_ghz(2048);   // 负载下主频（其他线程多半还在算）：先热身（冷链路 ~4% 偏低），再 16384 周期 ≈ 10 µs
 }
 
 // ---------------------------------------------------------------- 自有线程池（可选）：调用之间自旋等待，省去 OpenMP 唤醒 ~0.1–0.2 ms
@@ -1516,17 +1520,20 @@ static void conv2d_sme(const CONVFLOAT* in, CONVINT H, CONVINT W, const CONVFLOA
                    (unsigned long)call_id, sum.kern * ms / nth, mx.kern * ms, sum.build * ms / nth, mx.build * ms, sum.store * ms / nth, mx.store * ms, mx.enter * ms,
                    (double)Wtot / nth);
             if (call_id == 2) {
-                double g0n = 1e9, g0x = 0, g0s = 0, fn = 1e9, fx = 0, fs = 0, trd = 0, twr = 0, tpf = 0, tnt = 0;
+                double g0n = 1e9, g0x = 0, g0s = 0, fn = 1e9, fx = 0, fs = 0, trd = 0, twr = 0, tpf = 0, tnt = 0, gfn = 1e9, gfx = 0, gfs = 0, f2s = 0, f2x = 0;
                 for (int t = 0; t < nth; t++) {
                     const diag_t* d = &g_diag[t];
                     g0n = d->ghz0 < g0n ? d->ghz0 : g0n; g0x = d->ghz0 > g0x ? d->ghz0 : g0x; g0s += d->ghz0;
                     fn = d->fmopa_ns < fn ? d->fmopa_ns : fn; fx = d->fmopa_ns > fx ? d->fmopa_ns : fx; fs += d->fmopa_ns;
                     trd = d->t_rd > trd ? d->t_rd : trd; twr = d->t_wr > twr ? d->t_wr : twr; tpf = d->t_pfwr > tpf ? d->t_pfwr : tpf; tnt = d->t_nt > tnt ? d->t_nt : tnt;
+                    gfn = d->ghz_fm < gfn ? d->ghz_fm : gfn; gfx = d->ghz_fm > gfx ? d->ghz_fm : gfx; gfs += d->ghz_fm; f2s += d->fmopa_ns2; f2x = d->fmopa_ns2 > f2x ? d->fmopa_ns2 : f2x;
                 }
                 const double bytes = (double)nth * (double)DIAG_BW_BYTES;
                 printf("[conv-diag] probes: ghz@start min/avg/max %.3f/%.3f/%.3f | fmopa ns min/avg/max %.3f/%.3f/%.3f (= %.2f cyc @ avg ghz) | "
                        "bw GB/s read %.1f, st1w %.1f, pstl2keep+st1w %.1f, stnt1w %.1f\n", g0n, g0s / nth, g0x, fn, fs / nth, fx, (fs / nth) * (g0s / nth),
                        trd > 0 ? bytes / trd / 1e9 : 0, twr > 0 ? bytes / twr / 1e9 : 0, tpf > 0 ? bytes / tpf / 1e9 : 0, tnt > 0 ? bytes / tnt / 1e9 : 0);
+                printf("[conv-diag] all-core fmopa burst 15 ms: fmopa ns avg/max %.3f/%.3f (= %.2f GHz if 2 cyc) | ghz right after burst min/avg/max %.3f/%.3f/%.3f | "
+                       "droop vs start %.1f%%\n", f2s / nth, f2x, 2.0 / (f2s / nth), gfn, gfs / nth, gfx, 100.0 * (1.0 - (gfs / nth) / (g0s / nth)));
             }
             fflush(stdout);
         }
