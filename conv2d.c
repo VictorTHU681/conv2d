@@ -1784,29 +1784,23 @@ static void roll_prepare(const float* k, long H, long W, long KH, long KW, int n
         const long ovh = KH - 1;
         int need = 2 * P->nit + 2 * nth + 4;
         if (P->pcap < need) { free(P->pieces); free(P->pstart); P->pieces = malloc(need * sizeof(rpiece_t)); P->pstart = malloc((nth + 1) * sizeof(int)); P->pcap = need; }
-        double remain = 0;
-        for (int i = 0; i < P->nit; i++) { double w = P->cost[i] / outH; remain += w * (outH + ovh); }
+        double total = 0, wsum = 0;
+        for (int i = 0; i < P->nit; i++) { double w = P->cost[i] / outH; total += w * (outH + ovh); wsum += w; }
+        total += (nth - 1) * (wsum / P->nit) * ovh;
+        const double target = total / nth;
         int np = 0, i = 0; long r = 0;
         for (int t = 0; t < nth; t++) {
             P->pstart[t] = np; double acc = 0;
-            const double target = remain / (nth - t);          // 滚动目标：凑整误差摊到所有剩余线程，而不是堆给最后一个
             while (i < P->nit) {
                 double w = P->cost[i] / outH; long R = outH - r;
                 double full = w * (R + ovh);
-                if (acc + full <= target * 1.0005 || t == nth - 1) {
-                    long mid = r + (outH - r) / 2;
-                    if (outH - r >= 512) { P->pieces[np++] = (rpiece_t){i, r, mid}; P->pieces[np++] = (rpiece_t){i, mid, outH}; }   // 拆成两片：窃取粒度减半
-                    else P->pieces[np++] = (rpiece_t){i, r, outH};
-                    acc += full + (outH - r >= 512 ? (P->cost[i] / outH) * ovh : 0); i++; r = 0; continue;
-                }
+                if (acc + full <= target * 1.0005 || t == nth - 1) { P->pieces[np++] = (rpiece_t){i, r, outH}; acc += full; i++; r = 0; continue; }
                 long rows = (long)((target - acc) / w) - ovh;
-                if (rows >= 8) {
-                    if (rows > R - 8) rows = R - 8;            // 剩余太少就整项给下一个线程
-                    P->pieces[np++] = (rpiece_t){i, r, r + rows}; acc += w * (rows + ovh); r += rows;
-                }
+                if (rows < 8) break;
+                if (rows > R - 8) rows = R - 8;                // 剩余太少就整项给下一个线程
+                P->pieces[np++] = (rpiece_t){i, r, r + rows}; acc += w * (rows + ovh); r += rows;
                 break;
             }
-            remain -= acc;
         }
         P->pstart[nth] = np; P->npieces = np; P->pnth = nth;
     }
