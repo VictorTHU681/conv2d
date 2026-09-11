@@ -26,6 +26,22 @@ if ! gcc -O3 -march=armv9-a+sme+sve2 -fopenmp bench_conv.c conv2d.c -o conv2d_te
     fi
 fi
 
+# 环境诊断（仅打印，供回看评测机日志；全部容错）
+d() { echo "[run-diag] $*"; }
+d "host $(hostname 2>/dev/null) | kernel $(uname -r 2>/dev/null) | $(date '+%F %T' 2>/dev/null) | gcc $(gcc -dumpversion 2>/dev/null)"
+d "nproc $(nproc 2>/dev/null) | online $(cat /sys/devices/system/cpu/online 2>/dev/null) | $(grep -m1 'CPU implementer' /proc/cpuinfo 2>/dev/null | tr -s ' ') | $(grep -m1 'CPU part' /proc/cpuinfo 2>/dev/null | tr -s ' ') | $(grep -m1 'CPU variant' /proc/cpuinfo 2>/dev/null | tr -s ' ')"
+lscpu 2>/dev/null | grep -E "Model name|Thread\(s\)|Core\(s\)|Socket|NUMA node|L1d|L1i|L2|L3|MHz" | sed 's/  */ /g' | while read -r l; do d "lscpu: $l"; done
+numactl -H 2>/dev/null | grep -E "^available|^node 1 cpus|^node 1 size|^node 1 free" | while read -r l; do d "numa: $l"; done
+c1=$(numactl -H 2>/dev/null | grep '^node 1 cpus' | awk '{print $4}'); c1=${c1:-0}
+for c in $c1 $((c1 + 1)); do
+    b=/sys/devices/system/cpu/cpu$c/cpufreq
+    d "cpu$c cpufreq: gov $(cat $b/scaling_governor 2>/dev/null) | cur $(cat $b/scaling_cur_freq 2>/dev/null) | min $(cat $b/cpuinfo_min_freq 2>/dev/null) | max $(cat $b/cpuinfo_max_freq 2>/dev/null) | avail $(cat $b/scaling_available_frequencies 2>/dev/null) | drv $(cat $b/scaling_driver 2>/dev/null)"
+done
+d "cache cpu$c1: $(for i in 0 1 2 3; do b=/sys/devices/system/cpu/cpu$c1/cache/index$i; [ -d $b ] && printf '%s%s=%s ' "$(cat $b/level 2>/dev/null)" "$(cat $b/type 2>/dev/null | cut -c1)" "$(cat $b/size 2>/dev/null)"; done)"
+d "thp $(cat /sys/kernel/mm/transparent_hugepage/enabled 2>/dev/null) | perf_paranoid $(cat /proc/sys/kernel/perf_event_paranoid 2>/dev/null) | product $(cat /sys/devices/virtual/dmi/id/product_name 2>/dev/null) | bios $(cat /sys/devices/virtual/dmi/id/bios_version 2>/dev/null)"
+d "mem: $(grep -E 'MemTotal|MemFree|HugePages_Total|Hugepagesize' /proc/meminfo 2>/dev/null | tr -s ' ' | tr '\n' ';')"
+d "load: $(cat /proc/loadavg 2>/dev/null) | uptime $(awk '{print int($1/3600)"h"}' /proc/uptime 2>/dev/null)"
+
 # 判题口径：38 线程、单一 NUMA（CPU 节点 1）。绑核在 conv2d.c 内部完成；
 # 这里的 OMP 变量只让基准程序自带的参考实现也能用满核，不影响被测函数。
 export OMP_NUM_THREADS=38
@@ -34,7 +50,7 @@ export OMP_PLACES=cores
 export OMP_DYNAMIC=FALSE
 unset GOMP_CPU_AFFINITY OMP_THREAD_LIMIT 2>/dev/null || true
 
-numactl -N 1 ./conv2d_test 4096 6144 39 39 1
-numactl -N 1 ./conv2d_test 6144 4096 41 41 1
-numactl -N 1 ./conv2d_test 4256 6390 55 55 1
-numactl -N 1 ./conv2d_test 6390 4256 81 81 1
+for args in "4096 6144 39 39 1" "6144 4096 41 41 1" "4256 6390 55 55 1" "6390 4256 81 81 1"; do
+    d "case $args start $(date '+%T.%N' 2>/dev/null | cut -c1-12) | cpu$c1 cur $(cat /sys/devices/system/cpu/cpu$c1/cpufreq/scaling_cur_freq 2>/dev/null) | load $(cut -d' ' -f1 /proc/loadavg 2>/dev/null)"
+    numactl -N 1 ./conv2d_test $args
+done

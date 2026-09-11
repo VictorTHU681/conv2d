@@ -268,6 +268,26 @@ k39 单线程全尺寸每 pass（理想 12768 周期）实测与归因：
 - 其余否定：哑 sweep 填满 pass（消除半步 `cbz x15` 每 pass 翻转）−0.9..−1.1%；预取游标去 cbz 改谓词 `prfw` −0.2%
   （直接 `prfm [xzr]` 会让未映射地址走页表遍历，慢 2×）；两者都说明每 pass 十几次"翻转"误预测并不是主要损耗。
 
+### 线上诊断包（`-DCONV_DIAG_ONLINE`，stdout 前缀 `[conv-diag]` / `[run-diag]`）
+
+评测机日志可见 stdout，于是把"评测机长什么样"直接打出来。基准每例是独立进程、3 次调用（校验 / 预热 / 计时），
+探针都放在前两次（不计时）里，第 3 次只记每线程总时长 + 末尾主频，汇总在进程退出时（atexit）打印——在函数内做
+printf 浮点格式化 + 写 stdout 要 ~0.1 ms（k39 −1.5%），已挪走。
+- `run.sh`：主机名/内核/gcc、CPU part、lscpu、numactl -H、cpufreq（governor/cur/min/max/available）、cache 大小、THP、
+  perf_event_paranoid、meminfo、loadavg；每例开始前再打一次 cur 频率与负载。
+- `env`：线程数、CPU part、亲和、SVL、DCZID、cntfrq、页大小、THP、cpufreq。`params`：SP/NS/PW/BR/密度/长 pass/预取层级。
+- 第 2 次调用开头（各线程、barrier 对齐）：主频（8 条相依 add 链 ÷ cntvct，本机读 1.549 = 锁频值）、fmopa 吞吐
+  （4 tile 轮转 8 条/迭代，本机 1.290 ns = 2.00 周期）、38 线程 DRAM 带宽（读 / 整线 st1w / pstl2keep+st1w / stnt1w：
+  本机 151 / 150 / 62 / 140 GB/s）。每次调用末尾各线程再测一次主频（负载下）。
+- 分相：第 1/2 次调用 kern/build/store/enter 的 avg/max；第 3 次每线程总时长 min/avg/max、region、conv2d() 总时长。
+- 第一次试跑就抓到一件事：白天集群计算节点被调到 **1.2 GHz**（ghz 1.199、fmopa 1.666 ns），带宽不变——之前当作
+  "节点波动"的 −21% 其实是频率。
+- 坑：Linux 在**系统调用**时退出流式模式并清 ZA，探针里的 mmap/memset/munmap 必须放在 smstart/smstop 之外，否则下一条
+  mova/fmopa SIGILL；探针也不放进 conv_worker（避免改变热路径代码生成，conv_worker 大小两种构建一致）。
+- 两个包：`conv.zip`（v43 + 诊断）、`conv_zva.zip`（+ dc zva 预清零对照）。线上对照要看的：ghz@end vs ghz@start（是否
+  降频）、fmopa 周期（评测机 SME 吞吐）、带宽四项（尤其 pstl2keep+st1w 与 st1w 的比值）、call 3 的 thr total 与
+  conv2d() 总时长（kern 外损耗）、以及两包 TC1/TC2 分数之差。
+
 剩余损耗清单（k39，占比）与判断：偏移浪费 11.4%（(KH−1)(KW+3) 形态下限，不可去）；sweep 3.1%（其中误预测 ~1.7%，
 其余是半步处 33 条/8 周期的发射压力）；行/块骨架 + 尾步 ~3%（无对应 PMU 事件，可能是 SME 队列深度与行边界的交互）；
 kern 外 C 与汇合 3.7%。可再试的方向（各 ≤1%）：sweep 收尾只去掉 ntile 分支、把 ZA 抽取并入 asm 尾、窃取粒度/整环重建的
