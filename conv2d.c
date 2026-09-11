@@ -83,7 +83,7 @@ static int env_int(const char* name, int def)
 }
 
 // 可调参数只在首次调用时读环境（getenv 每次要扫整个环境表，~2 µs/次，一次调用 9 次就是 ~0.3%）
-typedef struct { int inited, slice, sp, prof, pf_in, pf_out, postart, uzp, poolwfe, pool, store_asm, pf_fresh, pf_l2, br, sw_dense, diag_l1, pf_st, zva; } knobs_t;
+typedef struct { int inited, slice, sp, prof, pf_in, pf_out, postart, uzp, poolwfe, pool, store_asm, pf_fresh, pf_l2, br, sw_dense, diag_l1, pf_st, zva, roll, roll_pd; } knobs_t;
 static knobs_t g_knobs;
 static int g_diag_on = 0;   // 线上诊断输出（见 diag_*）
 #ifdef CONV_ROWPROF
@@ -101,6 +101,8 @@ static void read_knobs(void)
     g_knobs.pf_in = env_int("CONV_PFIN", 1);
     g_knobs.pf_out = env_int("CONV_PFOUT", 1);
     g_knobs.pf_st = env_int("CONV_PFST", 1);
+    g_knobs.roll = env_int("CONV_ROLL", -1);        // 滚动 16×1 形态：-1 按形状自动，0 关，1 强制
+    g_knobs.roll_pd = env_int("CONV_ROLL_PD", 3);   // 滚动形态的行预取提前量
     // -DCONV_ZVA_CURSOR 实验用：输出线 dc zva 预清零（不从 DRAM 读 RFO，每次调用少读 ~100 MB），需 zva 块 64 B 且允许
     { uint64_t dczid; asm volatile("mrs %0, dczid_el0" : "=r"(dczid));
       g_knobs.zva = env_int("CONV_ZVA", 1) && !(dczid & 0x10) && (4L << (dczid & 0xf)) == 64; }
@@ -913,6 +915,7 @@ typedef struct {
     int SP, prof, pf_in, pf_out, pool, slice_ovl, postart_env, store_asm, pf_l2;
     int rpacked;               // 1 = R/Kp 已由主线程打包（kernel 与上次相同，缓存命中），工作线程不打包、无起始屏障
     const int* TB; uint64_t c_pre; prof_t* prs; uint64_t call_id;
+    int mode; const void* rp;  // mode 1 = 滚动形态（rp 指向 rplan_t）
 } ctx_t;
 
 // ---- 边界行（BR）方案的辅助：sweep 队列、ZA 初值装入、ZA 抽取
@@ -1323,8 +1326,570 @@ static void conv_worker(int tid, int nt_, const ctx_t* c)
 }
 
 // 诊断包装：探针都放在 conv_worker 之外（不改变热路径的代码生成）；系统调用在流式模式外做
+
+// ================================================================ 滚动形态（16×1 为主）
+// 思路：tile 行 r ↔ 连续 16 个输入列（a 直接非对齐载入，无 stride-4 平面、无环形缓冲行轮转），tile 列 c ↔ 输出行残差
+// (s_base+c) mod KH：每列是一条独立的 fma 链（kj 升序、ki 升序，位精确），链结束时 mova 竖切片直接 st1w 成 16 个连续
+// 输出 float，再把该列清零开始下一输出行。步数 = KW（X 方向零浪费），没有 pass 边界、没有边界行 sweep。
+// 残差按 KH 的二进制分组：16×1 对（A/B 两组共用 32 列 a）、16×1 单（4 tile 64 列）、8×2（ld2w，4 tile 128 列，
+// 步数 KW+1）、1×16（1 个残差 × 16 个 X 偏移，2 计算 tile + 2 转置 tile，步数 KW+15）。
+static long g_roll_pd = 3;
+static void roll_copy_row(float* dst, const float* src, long n)   // n 个 float，SVE 循环
+{
+    asm volatile(
+        "mov x9, #0\n\t"
+        "whilelo p0.s, x9, %[n]\n\t"
+        "1:\n\t"
+        "ld1w {z0.s}, p0/z, [%[s], x9, lsl #2]\n\t"
+        "st1w {z0.s}, p0, [%[d], x9, lsl #2]\n\t"
+        "incw x9\n\t"
+        "whilelo p0.s, x9, %[n]\n\t"
+        "b.first 1b\n\t"
+        : : [s]"r"(src), [d]"r"(dst), [n]"r"(n) : "x9", "z0", "p0", "memory", "cc");
+}
+// 内核参数（asm 内从结构体装载，避免操作数过多）
+//  行数据先由 prfm pldl2keep 提前 PD 行进 L2，再在处理第 Y 行时把第 Y+1 行的段拷进 L1 环（2 槽），a 从环取：
+//  避免行距 16/24 KB 与 L1 组混叠（每行落在同一组，PD 行同时在 L1 会互相逐出）。
+typedef struct {
+    int64_t in_row, rsb, R, Rend, bA, bB, KH, steps, nrows, out, scr, cA0, cB0, va, nvA, nvB, pf, it, PD, ring, slot, ncp_full, ncp_tail, n2, e2, TSB, T, nlines, osb, pfo, sh4;
+} ka_t;
+typedef struct {
+    const float* in_row; long rsb; const float* R; long RSB; long KH, steps, nrows;
+    float* out_row0; float* scratch; long cA0, cB0, yA0, yB0, nvA, nvB; float* ring; long KW; long osb;   // osb: 输出行距（字节）
+} kp_t;
+static void fill_args(ka_t* A, const kp_t* P, long div, long slot_unused, long ncp)
+{
+    (void)slot_unused;
+    // 拷贝源对齐到 64 B：ld1w/st1w 两侧全对齐（否则跨 4 KB 页的非对齐 L2 载入每行 +40 周期，
+    // 且非对齐 L2 命中 2.5 周期/条）；a 基址 = 槽 + sh4。
+    const long sh = ncp ? (((uintptr_t)P->in_row >> 2) & 15) : 0;
+    const float* src = P->in_row - sh;
+    ncp += sh;
+    const long slot = ncp ? ((ncp * 4 + 63) & ~63L) : 0;
+    A->ncp_full = ncp / 16; A->ncp_tail = ncp % 16;
+    A->sh4 = sh * 4;
+    A->in_row = (int64_t)src; A->rsb = P->rsb; A->R = (int64_t)P->R; A->Rend = (int64_t)(P->R + P->KH * P->RSB / 4);
+    A->bA = (int64_t)(P->R + P->yA0 * P->RSB / 4); A->bB = (int64_t)(P->R + P->yB0 * P->RSB / 4);
+    A->KH = P->KH; A->steps = P->steps; A->nrows = P->nrows; A->out = (int64_t)P->out_row0; A->scr = (int64_t)P->scratch;
+    A->cA0 = P->cA0; A->cB0 = P->cB0; A->va = P->KH - 1; A->nvA = P->nvA; A->nvB = P->nvB; A->pf = g_roll_pd * P->rsb; A->it = P->steps / div; A->PD = g_roll_pd;
+    A->ring = (int64_t)P->ring; A->slot = slot; A->osb = P->osb; A->pfo = g_roll_pd * P->osb;
+    if (ncp) roll_copy_row(P->ring, src, ncp);   // 第 0 行进槽 0；K4 自己做去交织拷贝
+}
+// 寄存器约定：x0 行指针(输入) x1 rsb x2 bA x3 bB x4 R x5 Rend x6 KH x7 steps/it x8 行计数 x9 out 行 x10 scr x11 Y x12/x13 切片号
+//  x14 va x15 步计数 x16 a 指针(环槽) x17 环槽当前 x19 cB x20 out/scr 选择 x21 预取地址 x22/x23 临时 x24 nvA x25 nvB x26 pf x27 cA x28 环基址
+#define LOAD_ARGS \
+        "ldr x0, [%[A], #0]\n\t" "ldr x1, [%[A], #8]\n\t" "ldr x4, [%[A], #16]\n\t" "ldr x5, [%[A], #24]\n\t" \
+        "ldr x2, [%[A], #32]\n\t" "ldr x3, [%[A], #40]\n\t" "ldr x6, [%[A], #48]\n\t" "ldr x7, [%[A], #56]\n\t" \
+        "ldr x8, [%[A], #64]\n\t" "ldr x9, [%[A], #72]\n\t" "ldr x10, [%[A], #80]\n\t" "ldr x27, [%[A], #88]\n\t" \
+        "ldr x19, [%[A], #224]\n\t" "ldr x14, [%[A], #104]\n\t" "ldr x24, [%[A], #112]\n\t" "ldr x25, [%[A], #120]\n\t" \
+        "ldr x26, [%[A], #128]\n\t" "ldr x17, [%[A], #152]\n\t" "ldr x22, [%[A], #160]\n\t" "add x28, x17, x17\n\t" "add x28, x28, x22\n\t" \
+        "ldr x22, [%[A], #176]\n\t" "whilelo p3.s, xzr, x22\n\t" "mov x11, #0\n\t" "ptrue p0.s\n\t"
+#define XCLOB "x0","x1","x2","x3","x4","x5","x6","x7","x8","x9","x10","x11","x12","x13","x14","x15","x16","x17","x19","x20","x21","x22","x23","x24","x25","x26","x27","x28"
+#define ROW_TAIL \
+        "add x0, x0, x1\n\t" "add x9, x9, x19\n\t" "add x11, x11, #1\n\t" "subs x8, x8, #1\n\t" "b.ne 1b\n\t"
+#define WRAP_B(xb) "cmp " #xb ", x5\n\t" "csel " #xb ", x4, " #xb ", eq\n\t"
+#define SEL_OUT "cmp x11, x14\n\t" "csel x20, x9, x10, hs\n\t"
+#define ADV_CNT(xc) "add " #xc ", " #xc ", #1\n\t" "cmp " #xc ", x6\n\t" "csel " #xc ", xzr, " #xc ", eq\n\t"
+// 行首：L2 预取第 Y+PD 行、把第 Y+1 行（最后一行时拷本行，避免越界）拷到另一槽：ncp_full 个整向量 + 1 个谓词尾向量；x16 = 当前槽
+#define ROW_HEAD_COMMON \
+        "add x21, x0, x26\n\t" \
+        "ldr x12, [%[A], #240]\n\t" \
+        "add x16, x17, x12\n\t" \
+        "sub x17, x28, x17\n\t" \
+        "add x22, x0, x1\n\t" "cmp x8, #1\n\t" "csel x22, x0, x22, eq\n\t" "mov x23, x17\n\t" \
+        "ldr x12, [%[A], #168]\n\t" \
+        "cbz x12, 7f\n\t" \
+        "3:\n\t" \
+        "prfm pldl2keep, [x21]\n\t" \
+        "ld1w {z24.s}, p0/z, [x22]\n\t" \
+        "st1w {z24.s}, p0, [x23]\n\t" \
+        "add x21, x21, #64\n\t" "add x22, x22, #64\n\t" "add x23, x23, #64\n\t" \
+        "subs x12, x12, #1\n\t" \
+        "b.ne 3b\n\t" \
+        "7:\n\t" \
+        "prfm pldl2keep, [x21]\n\t" \
+        "ld1w {z24.s}, p3/z, [x22]\n\t" \
+        "st1w {z24.s}, p3, [x23]\n\t"
+
+
+// ---------------- 16×1 对：A 用 za0/za1（列 0..15 / 16..31），B 用 za2/za3 ----------------
+static void k16pair(const kp_t* P)
+{
+    ka_t A; fill_args(&A, P, 1, 512, 31 + P->steps);
+    asm volatile(
+        LOAD_ARGS
+        "ldr x25, [%[A], #232]\n\t"
+        "fmov z31.s, #0.0\n\t"
+        "1:\n\t"
+        ROW_HEAD_COMMON
+        "add x21, x9, x25\n\t"
+        "prfm pstl2keep, [x21]\n\t" "prfm pstl2keep, [x21, #64]\n\t"
+        "mov x15, x7\n\t"
+        "2:\n\t"
+        "ld1w {z0.s}, p0/z, [x16]\n\t"
+        "ld1w {z1.s}, p0/z, [x16, #1, mul vl]\n\t"
+        "ld1w {z2.s}, p0/z, [x2]\n\t"
+        "ld1w {z3.s}, p0/z, [x3]\n\t"
+        "fmopa za0.s, p0/m, p0/m, z0.s, z2.s\n\t"
+        "fmopa za1.s, p0/m, p0/m, z1.s, z2.s\n\t"
+        "fmopa za2.s, p0/m, p0/m, z0.s, z3.s\n\t"
+        "fmopa za3.s, p0/m, p0/m, z1.s, z3.s\n\t"
+        "add x16, x16, #4\n\t"
+        "add x2, x2, #64\n\t"
+        "add x3, x3, #64\n\t"
+        "subs x15, x15, #1\n\t"
+        "b.ne 2b\n\t"
+        WRAP_B(x2) WRAP_B(x3) SEL_OUT
+        // 事件：cA<16 → A 组（za0/za1，切片 cA）；16≤cA<32 → B 组（za2/za3，切片 cA−16）；否则无（KH≥32 时二者互斥）
+        "cmp x27, #32\n\t" "b.hs 5f\n\t"
+        "cmp x27, #16\n\t" "b.hs 6f\n\t"
+        "mov w12, w27\n\t"
+        "mova z8.s, p0/m, za0v.s[w12, 0]\n\t"
+        "mova z9.s, p0/m, za1v.s[w12, 0]\n\t"
+        "st1w {z8.s}, p0, [x20]\n\t"
+        "st1w {z9.s}, p0, [x20, #1, mul vl]\n\t"
+        "mova za0v.s[w12, 0], p0/m, z31.s\n\t"
+        "mova za1v.s[w12, 0], p0/m, z31.s\n\t"
+        "b 5f\n\t"
+        "6:\n\t"
+        "sub w13, w27, #16\n\t"
+        "mova z8.s, p0/m, za2v.s[w13, 0]\n\t"
+        "mova z9.s, p0/m, za3v.s[w13, 0]\n\t"
+        "st1w {z8.s}, p0, [x20]\n\t"
+        "st1w {z9.s}, p0, [x20, #1, mul vl]\n\t"
+        "mova za2v.s[w13, 0], p0/m, z31.s\n\t"
+        "mova za3v.s[w13, 0], p0/m, z31.s\n\t"
+        "5:\n\t"
+        ADV_CNT(x27)
+        ROW_TAIL
+        :
+        : [A]"r"(&A)
+        : XCLOB, "z0", "z1", "z2", "z3", "z8", "z9", "z24", "z31", "p0", "p3", "memory", "cc");
+}
+
+// ---------------- 16×1 单组：4 tile = 64 列；槽 640 B ----------------
+static void k16single(const kp_t* P)
+{
+    ka_t A; fill_args(&A, P, 1, 640, 63 + P->steps);
+    asm volatile(
+        LOAD_ARGS
+        "fmov z31.s, #0.0\n\t"
+        "1:\n\t"
+        ROW_HEAD_COMMON
+        "ldr x21, [%[A], #232]\n\t" "add x21, x9, x21\n\t"
+        "prfm pstl2keep, [x21]\n\t" "prfm pstl2keep, [x21, #64]\n\t" "prfm pstl2keep, [x21, #128]\n\t" "prfm pstl2keep, [x21, #192]\n\t"
+        "mov x15, x7\n\t"
+        "2:\n\t"
+        "ld1w {z0.s}, p0/z, [x16]\n\t"
+        "ld1w {z1.s}, p0/z, [x16, #1, mul vl]\n\t"
+        "ld1w {z2.s}, p0/z, [x16, #2, mul vl]\n\t"
+        "ld1w {z3.s}, p0/z, [x16, #3, mul vl]\n\t"
+        "ld1w {z4.s}, p0/z, [x2]\n\t"
+        "fmopa za0.s, p0/m, p0/m, z0.s, z4.s\n\t"
+        "fmopa za1.s, p0/m, p0/m, z1.s, z4.s\n\t"
+        "fmopa za2.s, p0/m, p0/m, z2.s, z4.s\n\t"
+        "fmopa za3.s, p0/m, p0/m, z3.s, z4.s\n\t"
+        "add x16, x16, #4\n\t"
+        "add x2, x2, #64\n\t"
+        "subs x15, x15, #1\n\t"
+        "b.ne 2b\n\t"
+        WRAP_B(x2) SEL_OUT
+        "cmp x27, x24\n\t" "b.hs 4f\n\t"
+        "and w12, w27, #15\n\t"
+        "mova z5.s, p0/m, za0v.s[w12, 0]\n\t"
+        "mova z6.s, p0/m, za1v.s[w12, 0]\n\t"
+        "mova z7.s, p0/m, za2v.s[w12, 0]\n\t"
+        "mova z8.s, p0/m, za3v.s[w12, 0]\n\t"
+        "st1w {z5.s}, p0, [x20]\n\t"
+        "st1w {z6.s}, p0, [x20, #1, mul vl]\n\t"
+        "st1w {z7.s}, p0, [x20, #2, mul vl]\n\t"
+        "st1w {z8.s}, p0, [x20, #3, mul vl]\n\t"
+        "mova za0v.s[w12, 0], p0/m, z31.s\n\t"
+        "mova za1v.s[w12, 0], p0/m, z31.s\n\t"
+        "mova za2v.s[w12, 0], p0/m, z31.s\n\t"
+        "mova za3v.s[w12, 0], p0/m, z31.s\n\t"
+        "4:\n\t"
+        ADV_CNT(x27)
+        ROW_TAIL
+        :
+        : [A]"r"(&A)
+        : XCLOB, "z0", "z1", "z2", "z3", "z4", "z5", "z6", "z7", "z8", "z24", "z31", "p0", "p3", "memory", "cc");
+}
+
+// ---------------- 8×2：4 tile = 128 列，列 c = 2s+ic；槽 896 B ----------------
+static void k8(const kp_t* P)
+{
+    ka_t A; fill_args(&A, P, 2, 896, 126 + P->steps);
+    asm volatile(
+        LOAD_ARGS
+        "ldr x7, [%[A], #136]\n\t"      // it = steps/2
+        "fmov z31.s, #0.0\n\t"
+        "1:\n\t"
+        ROW_HEAD_COMMON
+        // 输出预取：PD 行后是否有事件（(cA+PD) mod KH < nv）
+        "ldr x23, [%[A], #144]\n\t"
+        "add x22, x27, x23\n\t" "cmp x22, x6\n\t" "sub x21, x22, x6\n\t" "csel x22, x21, x22, hs\n\t"
+        "cmp x22, x24\n\t" "b.hs 6f\n\t"
+        "ldr x21, [%[A], #232]\n\t" "add x21, x9, x21\n\t"
+        "prfm pstl2keep, [x21]\n\t" "prfm pstl2keep, [x21, #64]\n\t" "prfm pstl2keep, [x21, #128]\n\t" "prfm pstl2keep, [x21, #192]\n\t"
+        "prfm pstl2keep, [x21, #256]\n\t" "prfm pstl2keep, [x21, #320]\n\t" "prfm pstl2keep, [x21, #384]\n\t" "prfm pstl2keep, [x21, #448]\n\t"
+        "6:\n\t"
+        "mov x15, x7\n\t"
+        "2:\n\t"
+        "ld2w {z0.s, z1.s}, p0/z, [x16]\n\t"
+        "ld2w {z2.s, z3.s}, p0/z, [x16, #2, mul vl]\n\t"
+        "ld2w {z4.s, z5.s}, p0/z, [x16, #4, mul vl]\n\t"
+        "ld2w {z6.s, z7.s}, p0/z, [x16, #6, mul vl]\n\t"
+        "ld1w {z8.s}, p0/z, [x2]\n\t"
+        "ld1w {z9.s}, p0/z, [x2, #1, mul vl]\n\t"
+        "fmopa za0.s, p0/m, p0/m, z0.s, z8.s\n\t"
+        "fmopa za1.s, p0/m, p0/m, z2.s, z8.s\n\t"
+        "fmopa za2.s, p0/m, p0/m, z4.s, z8.s\n\t"
+        "fmopa za3.s, p0/m, p0/m, z6.s, z8.s\n\t"
+        "fmopa za0.s, p0/m, p0/m, z1.s, z9.s\n\t"
+        "fmopa za1.s, p0/m, p0/m, z3.s, z9.s\n\t"
+        "fmopa za2.s, p0/m, p0/m, z5.s, z9.s\n\t"
+        "fmopa za3.s, p0/m, p0/m, z7.s, z9.s\n\t"
+        "add x16, x16, #8\n\t"
+        "add x2, x2, #128\n\t"
+        "subs x15, x15, #1\n\t"
+        "b.ne 2b\n\t"
+        WRAP_B(x2) SEL_OUT
+        "cmp x27, x24\n\t" "b.hs 4f\n\t"
+        "and w12, w27, #7\n\t" "lsl w12, w12, #1\n\t"
+        "mova z8.s, p0/m, za0v.s[w12, 0]\n\t"
+        "mova z9.s, p0/m, za0v.s[w12, 1]\n\t"
+        "mova z10.s, p0/m, za1v.s[w12, 0]\n\t"
+        "mova z11.s, p0/m, za1v.s[w12, 1]\n\t"
+        "mova z12.s, p0/m, za2v.s[w12, 0]\n\t"
+        "mova z13.s, p0/m, za2v.s[w12, 1]\n\t"
+        "mova z14.s, p0/m, za3v.s[w12, 0]\n\t"
+        "mova z15.s, p0/m, za3v.s[w12, 1]\n\t"
+        "st2w {z8.s, z9.s}, p0, [x20]\n\t"
+        "st2w {z10.s, z11.s}, p0, [x20, #2, mul vl]\n\t"
+        "st2w {z12.s, z13.s}, p0, [x20, #4, mul vl]\n\t"
+        "st2w {z14.s, z15.s}, p0, [x20, #6, mul vl]\n\t"
+        "mova za0v.s[w12, 0], p0/m, z31.s\n\t"
+        "mova za0v.s[w12, 1], p0/m, z31.s\n\t"
+        "mova za1v.s[w12, 0], p0/m, z31.s\n\t"
+        "mova za1v.s[w12, 1], p0/m, z31.s\n\t"
+        "mova za2v.s[w12, 0], p0/m, z31.s\n\t"
+        "mova za2v.s[w12, 1], p0/m, z31.s\n\t"
+        "mova za3v.s[w12, 0], p0/m, z31.s\n\t"
+        "mova za3v.s[w12, 1], p0/m, z31.s\n\t"
+        "4:\n\t"
+        ADV_CNT(x27)
+        ROW_TAIL
+        :
+        : [A]"r"(&A)
+        : XCLOB, "z0", "z1", "z2", "z3", "z4", "z5", "z6", "z7", "z8", "z9", "z10", "z11", "z12", "z13", "z14", "z15", "z24", "z31", "p0", "p3", "memory", "cc");
+}
+
+// ---------------- 4×4：≤4 个残差 × 4 个 X 偏移；4 tile 横排 = 256 列；步数 pad 到 4 的倍数（多出的步 b=0，fma(a,0,acc) 位不变）----------------
+// 列 c = 4s+ic：残差 s_base+s 的输出列 i = base + 64t + 4r + ic。a_t(X)[r] = row[base+64t+4r+X] = plane_{X&3}[(X>>2)+16t+r]，
+// planes 由单级 ld4w 去交织得到（stride 4，与经典内核同构）；事件时 mova 4 竖切片 + st4w 交织出 64 个连续 float（同经典抽取）。
+#define K4_CP(DST) /* 源 x22 → 槽 DST 的 4 个平面（距 x3）；预取游标 x21；用 x12 x13 x23 x24 */ \
+        "mov x12, x22\n\t" "mov x13, " #DST "\n\t" \
+        "ldr x24, [%[A], #168]\n\t" \
+        "cbz x24, 11f\n\t" \
+        "10:\n\t" \
+        "prfm pldl2keep, [x21]\n\t" "prfm pldl2keep, [x21, #64]\n\t" "prfm pldl2keep, [x21, #128]\n\t" "prfm pldl2keep, [x21, #192]\n\t" \
+        "ld4w {z0.s, z1.s, z2.s, z3.s}, p0/z, [x12]\n\t" \
+        "st1w {z0.s}, p0, [x13]\n\t" "add x23, x13, x3\n\t" "st1w {z1.s}, p0, [x23]\n\t" \
+        "add x23, x23, x3\n\t" "st1w {z2.s}, p0, [x23]\n\t" "add x23, x23, x3\n\t" "st1w {z3.s}, p0, [x23]\n\t" \
+        "add x12, x12, #256\n\t" "add x13, x13, #64\n\t" "add x21, x21, #256\n\t" "subs x24, x24, #1\n\t" "b.ne 10b\n\t" \
+        "11:\n\t" \
+        "prfm pldl2keep, [x21]\n\t" "prfm pldl2keep, [x21, #64]\n\t" "prfm pldl2keep, [x21, #128]\n\t" "prfm pldl2keep, [x21, #192]\n\t" \
+        "ldr x24, [%[A], #176]\n\t" \
+        "whilelo p4.s, xzr, x24\n\t" \
+        "ld4w {z0.s, z1.s, z2.s, z3.s}, p4/z, [x12]\n\t" \
+        "st1w {z0.s}, p4, [x13]\n\t" "add x23, x13, x3\n\t" "st1w {z1.s}, p4, [x23]\n\t" \
+        "add x23, x23, x3\n\t" "st1w {z2.s}, p4, [x23]\n\t" "add x23, x23, x3\n\t" "st1w {z3.s}, p4, [x23]\n\t" \
+        "ldr x24, [%[A], #112]\n\t"
+#define K4_STEP(PQ, BOFF) \
+        "ld1w {z0.s}, p0/z, [" #PQ "]\n\t" \
+        "ld1w {z1.s}, p0/z, [" #PQ ", #1, mul vl]\n\t" \
+        "ld1w {z2.s}, p0/z, [" #PQ ", #2, mul vl]\n\t" \
+        "ld1w {z3.s}, p0/z, [" #PQ ", #3, mul vl]\n\t" \
+        "ld1w {z4.s}, p0/z, [x2, #" #BOFF ", mul vl]\n\t" \
+        "fmopa za0.s, p0/m, p0/m, z0.s, z4.s\n\t" \
+        "fmopa za1.s, p0/m, p0/m, z1.s, z4.s\n\t" \
+        "fmopa za2.s, p0/m, p0/m, z2.s, z4.s\n\t" \
+        "fmopa za3.s, p0/m, p0/m, z3.s, z4.s\n\t"
+#define K4_EV(T) \
+        "mova z0.s, p0/m, za" #T "v.s[w12, 0]\n\t" \
+        "mova z1.s, p0/m, za" #T "v.s[w12, 1]\n\t" \
+        "mova z2.s, p0/m, za" #T "v.s[w12, 2]\n\t" \
+        "mova z3.s, p0/m, za" #T "v.s[w12, 3]\n\t" \
+        "st4w {z0.s, z1.s, z2.s, z3.s}, p0, [x20, #4*" #T ", mul vl]\n\t" \
+        "mova za" #T "v.s[w12, 0], p0/m, z31.s\n\t" \
+        "mova za" #T "v.s[w12, 1], p0/m, z31.s\n\t" \
+        "mova za" #T "v.s[w12, 2], p0/m, z31.s\n\t" \
+        "mova za" #T "v.s[w12, 3], p0/m, z31.s\n\t"
+static void k4(const kp_t* P)
+{
+    const long steps4 = P->steps;                                  // 已 pad 到 4 的倍数
+    const long sh = ((uintptr_t)P->in_row >> 2) & 15;              // 对齐拷贝源到 64 B；平面起点相应排列
+    const long ncp = steps4 + 252 + sh;                            // a 跨度：192 + 60 + (steps4-1) + 1 + 偏移
+    const long TSB = (((ncp + 3) / 4 + 15) & ~15L) * 4;            // 平面距（字节）
+    ka_t A; fill_args(&A, P, 1, 0, 0);
+    A.in_row = (int64_t)(P->in_row - sh);
+    A.slot = 4 * TSB;
+    A.it = steps4 / 4;
+    A.ncp_full = ncp / 64; A.ncp_tail = ((ncp % 64) + 3) / 4;      // ld4w 整块数、尾块每平面元素数
+    A.TSB = TSB;
+    A.n2 = TSB * ((sh + 0) & 3) + 4 * ((sh + 0) >> 2);             // 子步 i 的平面起点偏移（相对槽基址）
+    A.e2 = TSB * ((sh + 1) & 3) + 4 * ((sh + 1) >> 2);
+    A.T  = TSB * ((sh + 2) & 3) + 4 * ((sh + 2) >> 2);
+    A.nlines = TSB * ((sh + 3) & 3) + 4 * ((sh + 3) >> 2);
+    asm volatile(
+        LOAD_ARGS
+        "ldr x3, [%[A], #200]\n\t"      // TSB（覆盖 bB）
+        "ldr x7, [%[A], #136]\n\t"      // it = steps4/4
+        "fmov z31.s, #0.0\n\t"
+        // 序言：行 0 → 槽 0
+        "mov x22, x0\n\t"
+        "add x21, x0, x26\n\t"
+        K4_CP(x17)
+        "1:\n\t"
+        // 换槽 + 拷下一行（末行时拷本行）
+        "mov x16, x17\n\t"
+        "sub x17, x28, x17\n\t"
+        "add x22, x0, x1\n\t" "cmp x8, #1\n\t" "csel x22, x0, x22, eq\n\t"
+        "add x21, x0, x26\n\t"
+        K4_CP(x17)
+        // 平面指针 p0..p3 = x16, x22, x23, x25（起点按 sh 排列）
+        "ldr x22, [%[A], #192]\n\t" "add x22, x22, x16\n\t"
+        "ldr x23, [%[A], #208]\n\t" "add x23, x23, x16\n\t"
+        "ldr x25, [%[A], #216]\n\t" "add x25, x25, x16\n\t"
+        "ldr x12, [%[A], #184]\n\t" "add x16, x16, x12\n\t"
+        "mov x15, x7\n\t"
+        "2:\n\t"
+        K4_STEP(x16, 0)
+        K4_STEP(x22, 1)
+        K4_STEP(x23, 2)
+        K4_STEP(x25, 3)
+        "add x16, x16, #4\n\t"
+        "add x22, x22, #4\n\t"
+        "add x23, x23, #4\n\t"
+        "add x25, x25, #4\n\t"
+        "add x2, x2, #256\n\t"
+        "subs x15, x15, #1\n\t"
+        "b.ne 2b\n\t"
+        WRAP_B(x2) SEL_OUT
+        "cmp x27, x24\n\t" "b.hs 4f\n\t"
+        "lsl w12, w27, #2\n\t"
+        K4_EV(0)
+        K4_EV(1)
+        K4_EV(2)
+        K4_EV(3)
+        "4:\n\t"
+        ADV_CNT(x27)
+        ROW_TAIL
+        :
+        : [A]"r"(&A)
+        : XCLOB, "z0", "z1", "z2", "z3", "z4", "z31", "p0", "p3", "p4", "memory", "cc");
+}
+// b 表：kind 16: R[y][X][c] = k[(y-c) mod KH][X]（残差 s_base+c ≥ KH → 0）；kind 8: c=2s+ic → k[(y-s) mod KH][X-ic]；kind 4: c=4s+ic
+static void roll_build_R(float* R, const float* k, long KH, long KW, long steps, long s_base, int kind)
+{
+    for (long y = 0; y < KH; y++)
+        for (long X = 0; X < steps; X++)
+            for (long c = 0; c < 16; c++) {
+                long sidx, ic;
+                if (kind == 16) { sidx = c; ic = 0; } else if (kind == 8) { sidx = c >> 1; ic = c & 1; } else { sidx = c >> 2; ic = c & 3; }
+                long ki = X - ic, kj = ((y - sidx) % KH + KH) % KH;
+                R[(y * steps + X) * 16 + c] = (ki >= 0 && ki < KW && s_base + sidx < KH) ? k[kj * KW + ki] : 0.f;
+            }
+}
+typedef struct { int kind; long s_base, nvA, nvB, width, steps, RSB; float* R; size_t Rcap; } rgrp_t;   // kind 32=pair,16=single,8,1
+typedef struct { int g; long base; } ritem_t;
+typedef struct { int item; long ja, jb; } rpiece_t;
+typedef struct {
+    rgrp_t G[12]; int ng;
+    ritem_t* items; double* cost; int nit, itcap; double C;
+    rpiece_t* pieces; int* pstart; int npieces, pcap, pnth;      // 静态划分：线程 t 的片段 pieces[pstart[t] .. pstart[t+1])
+    float* rings; float* scratch; int nthr_alloc;
+    float* kcopy; size_t kcopy_n; long KH, KW, outW;
+} rplan_t;
+static rplan_t g_rp;
+static padded_u64 g_rwork[1024] __attribute__((aligned(64)));   // 每线程片段游标 (end<<32 | cur)，CAS 认领 + 空了从别人尾部偷
+static int g_roll_diag = 0;
+typedef struct { uint64_t tk[4]; long ts[4]; uint64_t tot; } rdiag_t;   // 每线程：各类内核的 cntvct 计时与 tile-步数
+static rdiag_t g_rdiag[1024];
+static inline int roll_kind_idx(int kind) { return kind == 32 ? 0 : kind == 16 ? 1 : kind == 8 ? 2 : 3; }
+
+// 分组：16 组成对；单 16；余 ≥3 → 8×2（≤8 个）；余 1–2 → 每个残差一个 1×16
+static int roll_groups(long KH, long KW, rgrp_t* G)
+{
+    int ng = 0; long s = 0, n16 = KH / 16, rem = KH - n16 * 16;
+    while (n16 >= 2) { G[ng++] = (rgrp_t){32, s, 16, 16, 32, KW, 0, NULL, 0}; s += 32; n16 -= 2; }
+    if (n16 == 1) { G[ng++] = (rgrp_t){16, s, 16, 0, 64, KW, 0, NULL, 0}; s += 16; }
+    while (rem >= 5) { long nv = rem > 8 ? 8 : rem; G[ng++] = (rgrp_t){8, s, nv, 0, 128, (KW & 1) ? KW + 1 : KW + 2, 0, NULL, 0}; s += nv; rem -= nv; }
+    if (rem > 0) { G[ng++] = (rgrp_t){4, s, rem, 0, 256, (KW + 3 + 3) & ~3L, 0, NULL, 0}; s += rem; rem = 0; }
+    for (int g = 0; g < ng; g++) G[g].RSB = G[g].steps * 64;
+    return ng;
+}
+// 形状是否适合滚动形态：KW 奇数（8×2 的步数 KW+1 为偶数且末条带读不越界）、最宽组的条带放得下、行数足够
+static int roll_shape_ok(long H, long W, long KH, long KW)
+{
+    if (KH < 16 || KW < 3 || KW > 400) return 0;
+    rgrp_t G[12]; int ng = roll_groups(KH, KW, G);
+    long outW = W - KW + 1, outH = H - KH + 1;
+    for (int g = 0; g < ng; g++) if (outW < G[g].width) return 0;
+    if (outH < 1) return 0;
+    return 1;
+}
+static int roll_auto(long H, long W, long KH, long KW)
+{
+    (void)H; (void)W;
+    return KH == 39 && KW == 39;     // 只在 TC1 形状上启用（k41 的残差分组结构性吃亏，经典更快；k55/k81 经典更快）
+}
+
+static void roll_prepare(const float* k, long H, long W, long KH, long KW, int nth)
+{
+    rplan_t* P = &g_rp;
+    const long outW = W - KW + 1, outH = H - KH + 1;
+    const size_t kn = (size_t)KH * KW;
+    int same = P->kcopy && P->kcopy_n == kn && P->KH == KH && P->KW == KW && P->outW == outW && memcmp(P->kcopy, k, kn * 4) == 0;
+    if (!same) {
+        P->ng = roll_groups(KH, KW, P->G);
+        for (int g = 0; g < P->ng; g++) {
+            rgrp_t* G = &P->G[g];
+            size_t need = (size_t)KH * G->RSB;
+            if (G->Rcap < need) { free(G->R); G->R = alloc_aligned(need); G->Rcap = G->R ? need : 0; }
+            roll_build_R(G->R, k, KH, KW, G->steps, G->s_base, G->kind == 32 ? 16 : G->kind);
+        }
+        int nit = 0;
+        for (int g = 0; g < P->ng; g++) nit += (int)((outW + P->G[g].width - 1) / P->G[g].width);
+        if (P->itcap < nit) { free(P->items); free(P->cost); P->items = malloc(nit * sizeof(ritem_t)); P->cost = malloc(nit * sizeof(double)); P->itcap = nit; }
+        P->nit = 0; P->C = 0;
+        for (int g = 0; g < P->ng; g++) {
+            const rgrp_t* G = &P->G[g];
+            long nstrip = (outW + G->width - 1) / G->width;
+            for (long st = 0; st < nstrip; st++) {
+                long base = st * G->width; if (base + G->width > outW) base = outW - G->width;
+                P->items[P->nit] = (ritem_t){g, base};
+                double w = G->kind == 8 ? env_int("CONV_ROLL_W8", 104) / 100.0 : G->kind == 4 ? env_int("CONV_ROLL_W4", 123) / 100.0 : G->kind == 16 ? env_int("CONV_ROLL_W16", 102) / 100.0 : 1.0;
+                P->cost[P->nit] = (double)G->steps * outH * w;   // ∝ tile-步数（各类都是 4 tile）× 相对慢速权重
+                P->C += P->cost[P->nit]; P->nit++;
+            }
+        }
+        if (P->kcopy_n < kn) { free(P->kcopy); P->kcopy = malloc(kn * 4); P->kcopy_n = P->kcopy ? kn : 0; }
+        if (P->kcopy) memcpy(P->kcopy, k, kn * 4);
+        P->KH = KH; P->KW = KW; P->outW = outW;
+    }
+    if (!same || P->pnth != nth) {
+        // 精确静态划分：片段代价 = 权重 × 步数 × (行数 + KH-1)，贪心填到目标，整项放不下就按行切开
+        const long ovh = KH - 1;
+        int need = 2 * P->nit + 2 * nth + 4;
+        if (P->pcap < need) { free(P->pieces); free(P->pstart); P->pieces = malloc(need * sizeof(rpiece_t)); P->pstart = malloc((nth + 1) * sizeof(int)); P->pcap = need; }
+        double remain = 0;
+        for (int i = 0; i < P->nit; i++) { double w = P->cost[i] / outH; remain += w * (outH + ovh); }
+        int np = 0, i = 0; long r = 0;
+        for (int t = 0; t < nth; t++) {
+            P->pstart[t] = np; double acc = 0;
+            const double target = remain / (nth - t);          // 滚动目标：凑整误差摊到所有剩余线程，而不是堆给最后一个
+            while (i < P->nit) {
+                double w = P->cost[i] / outH; long R = outH - r;
+                double full = w * (R + ovh);
+                if (acc + full <= target * 1.0005 || t == nth - 1) {
+                    long mid = r + (outH - r) / 2;
+                    if (outH - r >= 512) { P->pieces[np++] = (rpiece_t){i, r, mid}; P->pieces[np++] = (rpiece_t){i, mid, outH}; }   // 拆成两片：窃取粒度减半
+                    else P->pieces[np++] = (rpiece_t){i, r, outH};
+                    acc += full + (outH - r >= 512 ? (P->cost[i] / outH) * ovh : 0); i++; r = 0; continue;
+                }
+                long rows = (long)((target - acc) / w) - ovh;
+                if (rows >= 8) {
+                    if (rows > R - 8) rows = R - 8;            // 剩余太少就整项给下一个线程
+                    P->pieces[np++] = (rpiece_t){i, r, r + rows}; acc += w * (rows + ovh); r += rows;
+                }
+                break;
+            }
+            remain -= acc;
+        }
+        P->pstart[nth] = np; P->npieces = np; P->pnth = nth;
+    }
+    if (P->nthr_alloc < nth) {
+        free(P->rings); free(P->scratch);
+        P->rings = alloc_aligned((size_t)nth * 32768); P->scratch = alloc_aligned((size_t)nth * 8192);
+        P->nthr_alloc = nth;
+    }
+}
+
+static void roll_worker(int tid, int nth, const ctx_t* c)
+{
+    const rplan_t* P = (const rplan_t*)c->rp;
+    const long KH = c->KH, KW = c->KW, W = c->W;
+    float* ring = P->rings + (size_t)tid * 8192; float* scr = P->scratch + (size_t)tid * 2048;
+    rdiag_t* D = &g_rdiag[tid]; uint64_t t_start = 0;
+    if (g_roll_diag) { memset(D, 0, sizeof(*D)); t_start = cyc(); }
+    if (tid >= nth || tid >= P->pnth) return;
+    sme_start();
+    int victim = tid;
+    for (;;) {
+        // 认领：先取自己的下一片；空了就从"剩得最多"的线程尾部偷一片（relaxed CAS，与经典内核同理）
+        int pi = -1;
+        for (;;) {
+            uint64_t w = __atomic_load_n(&g_rwork[victim].v, __ATOMIC_RELAXED);
+            uint32_t cur = (uint32_t)w, end = (uint32_t)(w >> 32);
+            if (cur >= end) break;
+            uint64_t nw = (victim == tid) ? w + 1 : w - ((uint64_t)1 << 32);
+            if (__atomic_compare_exchange_n(&g_rwork[victim].v, &w, nw, 1, __ATOMIC_RELAXED, __ATOMIC_RELAXED)) { pi = (victim == tid) ? (int)cur : (int)end - 1; break; }
+        }
+        if (pi < 0) {
+            if (victim == tid) {
+                int best = -1; uint32_t most = 0;
+                for (int t = 0; t < nth; t++) {
+                    uint64_t w = __atomic_load_n(&g_rwork[t].v, __ATOMIC_RELAXED);
+                    uint32_t rem = (uint32_t)(w >> 32) - (uint32_t)w;
+                    if ((int32_t)rem > 0 && rem > most) { most = rem; best = t; }
+                }
+                if (best < 0) break;
+                victim = best; continue;
+            }
+            victim = tid; continue;                       // 偷失败/偷空了：回自己再扫一遍
+        }
+        const rpiece_t* pc = &P->pieces[pi];
+        const long ja = pc->ja, jb = pc->jb;
+        const rgrp_t* g = &P->G[P->items[pc->item].g];
+        const long base = P->items[pc->item].base;
+        uint64_t t0 = g_roll_diag ? cyc() : 0;
+        kp_t K = { c->in + ja * W + base, W * 4, g->R, g->RSB, KH, g->steps, jb - ja + KH - 1,
+                   c->out + (ja - KH + 1) * c->outW + base, scr,
+                   ((ja + 1 - g->s_base) % KH + KH) % KH, ((ja + 1 - g->s_base - 16) % KH + KH) % KH,
+                   ((ja - g->s_base) % KH + KH) % KH, ((ja - g->s_base - 16) % KH + KH) % KH, g->nvA, g->nvB, ring, KW, c->outW * 4 };
+        sme_zero_za();
+        if (g->kind == 32) k16pair(&K); else if (g->kind == 16) k16single(&K); else if (g->kind == 8) k8(&K); else k4(&K);
+        if (g_roll_diag) { int ki = roll_kind_idx(g->kind); D->tk[ki] += cyc() - t0; D->ts[ki] += 4L * g->steps * (jb - ja + KH - 1); }
+    }
+    sme_stop();
+    if (g_roll_diag) D->tot = cyc() - t_start;
+}
+static void roll_diag_print(int nth)
+{
+    const double tick_cyc = 1.55e9 / 1e8;    // cntvct 100 MHz → 1.55 GHz 周期
+    uint64_t tk[4] = {0}; long ts[4] = {0}; double mn = 1e9, mx = 0, av = 0;
+    for (int t = 0; t < nth; t++) {
+        for (int k = 0; k < 4; k++) { tk[k] += g_rdiag[t].tk[k]; ts[k] += g_rdiag[t].ts[k]; }
+        double ms = g_rdiag[t].tot / 1e5; if (ms < mn) mn = ms; if (ms > mx) mx = ms; av += ms / nth;
+    }
+    fprintf(stderr, "[roll] thr ms min/avg/max %.3f/%.3f/%.3f | 周期/tile步: pair %.2f single %.2f 8x2 %.2f 4x4 %.2f | 份额 %%: %.1f %.1f %.1f %.1f\n", mn, av, mx,
+            ts[0] ? tk[0] * tick_cyc / ts[0] : 0, ts[1] ? tk[1] * tick_cyc / ts[1] : 0, ts[2] ? tk[2] * tick_cyc / ts[2] : 0, ts[3] ? tk[3] * tick_cyc / ts[3] : 0,
+            100.0 * tk[0] / (tk[0] + tk[1] + tk[2] + tk[3] + 1), 100.0 * tk[1] / (tk[0] + tk[1] + tk[2] + tk[3] + 1), 100.0 * tk[2] / (tk[0] + tk[1] + tk[2] + tk[3] + 1), 100.0 * tk[3] / (tk[0] + tk[1] + tk[2] + tk[3] + 1));
+    if (getenv("CONV_ROLL_DIAG_THR")) {
+        for (int t = 0; t < nth; t++) {
+            uint64_t tks = g_rdiag[t].tk[0] + g_rdiag[t].tk[1] + g_rdiag[t].tk[2] + g_rdiag[t].tk[3];
+            long tss = g_rdiag[t].ts[0] + g_rdiag[t].ts[1] + g_rdiag[t].ts[2] + g_rdiag[t].ts[3];
+            fprintf(stderr, " %d:%.2f/%.1fM/%.2f", t, g_rdiag[t].tot / 1e5, tss / 1e6, tss ? tks * tick_cyc / tss : 0);   // 总ms/百万tile步/周期每步
+        }
+        fprintf(stderr, "\n");
+    }
+}
+
 static void conv_worker_diag(int tid, int nt_, const ctx_t* c)
 {
+    if (c->mode == 1) { roll_worker(tid, nt_, c); return; }
     if (!g_diag_on) { conv_worker(tid, nt_, c); return; }
     diag_t* dg = &g_diag[tid];
     dg->ghz0 = dg->fmopa_ns = 0;
@@ -1421,6 +1986,21 @@ static void run_parallel(int nth, const ctx_t* c, int use_pool)
     {
         conv_worker_diag(omp_get_thread_num(), omp_get_num_threads(), c);
     }
+}
+
+static void conv2d_roll(const CONVFLOAT* in, CONVINT H, CONVINT W, const CONVFLOAT* k, CONVINT KH, CONVINT KW,
+                        CONVFLOAT* out, int nth)
+{
+    read_knobs();
+    g_roll_pd = g_knobs.roll_pd;
+    g_roll_diag = env_int("CONV_ROLL_DIAG", 0);
+    roll_prepare(k, H, W, KH, KW, nth);
+    ctx_t ctx; memset(&ctx, 0, sizeof(ctx));
+    ctx.in = in; ctx.k = k; ctx.out = out; ctx.H = H; ctx.W = W; ctx.KH = KH; ctx.KW = KW; ctx.outH = H - KH + 1; ctx.outW = W - KW + 1;
+    ctx.mode = 1; ctx.rp = &g_rp;
+    for (int t = 0; t < nth; t++) g_rwork[t].v = ((uint64_t)g_rp.pstart[t + 1] << 32) | (uint32_t)g_rp.pstart[t];
+    run_parallel(nth, &ctx, g_knobs.pool);
+    if (g_roll_diag) roll_diag_print(nth);
 }
 
 static void conv2d_sme(const CONVFLOAT* in, CONVINT H, CONVINT W, const CONVFLOAT* k, CONVINT KH, CONVINT KW,
@@ -1686,7 +2266,12 @@ void conv2d(const CONVFLOAT* input, CONVINT inputHeight, CONVINT inputWidth,
         int nth = omp_get_max_threads();
         if (g_ncpu > 0 && nth > g_ncpu) nth = g_ncpu;
         if (nth < 1) nth = 1;
-        conv2d_sme(input, inputHeight, inputWidth, kernel, kernelHeight, kernelWidth, output, nth);
+        read_knobs();
+        int use_roll = g_knobs.roll > 0 || (g_knobs.roll < 0 && roll_auto(inputHeight, inputWidth, kernelHeight, kernelWidth));
+        if (use_roll && roll_shape_ok(inputHeight, inputWidth, kernelHeight, kernelWidth))
+            conv2d_roll(input, inputHeight, inputWidth, kernel, kernelHeight, kernelWidth, output, nth);
+        else
+            conv2d_sme(input, inputHeight, inputWidth, kernel, kernelHeight, kernelWidth, output, nth);
         if (g_diag_on && g_diag_deferred_n > 0) g_diag_deferred[g_diag_deferred_n - 1].total = (omp_get_wtime() - t_in) * 1e3;   // 函数级总时长
         return;
     }
