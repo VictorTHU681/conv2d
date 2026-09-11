@@ -284,7 +284,13 @@ printf 浮点格式化 + 写 stdout 要 ~0.1 ms（k39 −1.5%），已挪走。
   "节点波动"的 −21% 其实是频率。
 - 坑：Linux 在**系统调用**时退出流式模式并清 ZA，探针里的 mmap/memset/munmap 必须放在 smstart/smstop 之外，否则下一条
   mova/fmopa SIGILL；探针也不放进 conv_worker（避免改变热路径代码生成，conv_worker 大小两种构建一致）。
-- 两个包：`conv.zip`（v43 + 诊断）、`conv_zva.zip`（+ dc zva 预清零对照）。线上对照要看的：ghz@end vs ghz@start（是否
+- 本地验收（cn20486，1.55 GHz）：`conv_diag.zip`（md5 df574cfd）解压 `bash run.sh` 12809 / 12706 / 13820 / 14037，判题命令
+  12806 / 12702 / 13818 / 14004 —— 与 v43 相同，诊断在计时调用里零开销；`conv_diag_zva.zip`（md5 43f0475a）12679 / 12660 /
+  13722 / 13974。默认构建（无诊断）官方 bench 12826 / 12741 / 13852 / 14044，泛化 11 组全过。
+- 本地已经看到一件事：`ghz@end`（各线程算完时测）平均 1.47–1.54、最低 1.31，而 `ghz@start` 1.546——governor 锁 1.55 GHz
+  （cppc_cpufreq）时，满载 fmopa 期间核实际慢 3–5%。这意味着此前按 1.55 GHz 算的 fmopa 下限高估了 ~4%，"每 pass 多出的
+  周期"里有一部分其实是降频；若评测机在 2.0 GHz 档位下降频更多（功耗 ∝ f·V²），就是那种随内核效率提高而放大的"速率型"损耗。
+- 两个包：`conv_diag.zip`（v43 + 诊断）、`conv_diag_zva.zip`（+ dc zva 预清零对照）。线上对照要看的：ghz@end vs ghz@start（是否
   降频）、fmopa 周期（评测机 SME 吞吐）、带宽四项（尤其 pstl2keep+st1w 与 st1w 的比值）、call 3 的 thr total 与
   conv2d() 总时长（kern 外损耗）、以及两包 TC1/TC2 分数之差。
 
