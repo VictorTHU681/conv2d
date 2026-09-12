@@ -1,0 +1,1032 @@
+HOST cn20483 2026-09-13T03:59:34+08:00
+pid 660959's current affinity list: 37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+PLACEMENT cpu_node=1 hbm_node=17
+Cpus_allowed_list:	37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+Mems_allowed_list:	0-31
+1548017
+policy: default
+preferred node: current
+physcpubind: 37 75 113 151 189 227 265 303 341 379 417 455 493 531 569 607 
+cpubind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+nodebind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 
+preferred: 
+EFFECTIVE_PLACEMENT
+policy: preferred
+preferred node: 17
+physcpubind: 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 
+cpubind: 1 
+nodebind: 1 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 
+preferred: 17 
+4a3fe2101e9a5695c58291cf5db0544db8947ebbcd03ce4b291dd8d83eae43e7  build/v56/experiments/kf-share/baseline_profile.c
+30c90943e61dc568957419d0277df55bcdb1e29ddea44b50f5992ccf98358448  build/v56/experiments/kf-share/merged_profile.c
+PROFILE memory=DDR round=1 variant=baseline shape=6390 4256 81 81
+K5_PHASE call=1 prepare_us=942.910 dispatch_us=4.590 workers_us=31441.730 pack_mean_us=11.263 pack_max_us=422.040
+K5_COST call=1 bucket=0 tile_steps=543263760 kernel_mean_us=19326.991 ns_per_tile_step=1.351877
+K5_COST call=1 bucket=2 tile_steps=69296560 kernel_mean_us=2749.091 ns_per_tile_step=1.507513
+TABLE_WORK call=1 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 11.404/22.173/28.559 | 周期/tile步: pair 2.10 single 0.00 8x2 2.34 4x4 0.00 | 份额 %: 87.5 0.0 12.5 0.0
+K5_PHASE call=2 prepare_us=15.160 dispatch_us=0.390 workers_us=22320.020 pack_mean_us=3.450 pack_max_us=103.000
+K5_COST call=2 bucket=0 tile_steps=543263760 kernel_mean_us=19289.062 ns_per_tile_step=1.349224
+K5_COST call=2 bucket=2 tile_steps=69296560 kernel_mean_us=2744.138 ns_per_tile_step=1.504797
+TABLE_WORK call=2 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.046/22.174/22.313 | 周期/tile步: pair 2.09 single 0.00 8x2 2.33 4x4 0.00 | 份额 %: 87.5 0.0 12.5 0.0
+K5_PHASE call=3 prepare_us=18.880 dispatch_us=1.250 workers_us=22590.440 pack_mean_us=4.001 pack_max_us=150.080
+K5_COST call=3 bucket=0 tile_steps=543263760 kernel_mean_us=19270.290 ns_per_tile_step=1.347911
+K5_COST call=3 bucket=2 tile_steps=69296560 kernel_mean_us=2750.970 ns_per_tile_step=1.508543
+TABLE_WORK call=3 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.080/22.201/22.584 | 周期/tile步: pair 2.09 single 0.00 8x2 2.34 4x4 0.00 | 份额 %: 87.5 0.0 12.5 0.0
+K5_PHASE call=4 prepare_us=14.140 dispatch_us=0.850 workers_us=22303.960 pack_mean_us=3.544 pack_max_us=104.690
+K5_COST call=4 bucket=0 tile_steps=543263760 kernel_mean_us=19282.823 ns_per_tile_step=1.348787
+K5_COST call=4 bucket=2 tile_steps=69296560 kernel_mean_us=2749.032 ns_per_tile_step=1.507481
+TABLE_WORK call=4 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.057/22.173/22.298 | 周期/tile步: pair 2.09 single 0.00 8x2 2.34 4x4 0.00 | 份额 %: 87.5 0.0 12.5 0.0
+K5_PHASE call=5 prepare_us=13.910 dispatch_us=0.850 workers_us=22288.730 pack_mean_us=3.873 pack_max_us=103.600
+K5_COST call=5 bucket=0 tile_steps=543263760 kernel_mean_us=19286.197 ns_per_tile_step=1.349023
+K5_COST call=5 bucket=2 tile_steps=69296560 kernel_mean_us=2739.229 ns_per_tile_step=1.502105
+TABLE_WORK call=5 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.063/22.167/22.287 | 周期/tile步: pair 2.09 single 0.00 8x2 2.33 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=6 prepare_us=15.330 dispatch_us=1.220 workers_us=22286.040 pack_mean_us=3.613 pack_max_us=102.860
+K5_COST call=6 bucket=0 tile_steps=543263760 kernel_mean_us=19288.374 ns_per_tile_step=1.349176
+K5_COST call=6 bucket=2 tile_steps=69296560 kernel_mean_us=2747.085 ns_per_tile_step=1.506413
+TABLE_WORK call=6 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.054/22.176/22.283 | 周期/tile步: pair 2.09 single 0.00 8x2 2.33 4x4 0.00 | 份额 %: 87.5 0.0 12.5 0.0
+K5_PHASE call=7 prepare_us=14.860 dispatch_us=0.860 workers_us=22284.310 pack_mean_us=3.782 pack_max_us=102.980
+K5_COST call=7 bucket=0 tile_steps=543263760 kernel_mean_us=19279.582 ns_per_tile_step=1.348561
+K5_COST call=7 bucket=2 tile_steps=69296560 kernel_mean_us=2738.797 ns_per_tile_step=1.501868
+TABLE_WORK call=7 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.047/22.159/22.282 | 周期/tile步: pair 2.09 single 0.00 8x2 2.33 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+  6390 x  4256     81 x    81 run0   22.862 ms    15124.0 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.620 ms    15286.0 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.561 ms    15326.0 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.631 ms    15278.4 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.575 ms    15316.8 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.561 ms    15326.0 GFLOPS | avg   22.650 ms    15265.9 GFLOPS  PASS
+PROFILE memory=DDR round=1 variant=merged shape=6390 4256 81 81
+K5_PHASE call=1 prepare_us=871.270 dispatch_us=6.650 workers_us=31535.430 pack_mean_us=9.352 pack_max_us=350.630
+K5_COST call=1 bucket=0 tile_steps=543263760 kernel_mean_us=19329.669 ns_per_tile_step=1.352064
+K5_COST call=1 bucket=2 tile_steps=69296560 kernel_mean_us=2749.595 ns_per_tile_step=1.507789
+TABLE_WORK call=1 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 10.889/22.175/28.943 | 周期/tile步: pair 2.10 single 0.00 8x2 2.34 4x4 0.00 | 份额 %: 87.5 0.0 12.5 0.0
+K5_PHASE call=2 prepare_us=11.790 dispatch_us=0.300 workers_us=22490.480 pack_mean_us=2.816 pack_max_us=95.060
+K5_COST call=2 bucket=0 tile_steps=543263760 kernel_mean_us=19288.703 ns_per_tile_step=1.349199
+K5_COST call=2 bucket=2 tile_steps=69296560 kernel_mean_us=2743.058 ns_per_tile_step=1.504204
+TABLE_WORK call=2 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.058/22.169/22.487 | 周期/tile步: pair 2.09 single 0.00 8x2 2.33 4x4 0.00 | 份额 %: 87.5 0.0 12.5 0.0
+K5_PHASE call=3 prepare_us=13.980 dispatch_us=0.490 workers_us=22308.540 pack_mean_us=3.147 pack_max_us=119.140
+K5_COST call=3 bucket=0 tile_steps=543263760 kernel_mean_us=19271.661 ns_per_tile_step=1.348007
+K5_COST call=3 bucket=2 tile_steps=69296560 kernel_mean_us=2756.884 ns_per_tile_step=1.511786
+TABLE_WORK call=3 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.064/22.191/22.304 | 周期/tile步: pair 2.09 single 0.00 8x2 2.34 4x4 0.00 | 份额 %: 87.5 0.0 12.5 0.0
+K5_PHASE call=4 prepare_us=10.580 dispatch_us=0.270 workers_us=22295.280 pack_mean_us=2.637 pack_max_us=96.000
+K5_COST call=4 bucket=0 tile_steps=543263760 kernel_mean_us=19277.241 ns_per_tile_step=1.348397
+K5_COST call=4 bucket=2 tile_steps=69296560 kernel_mean_us=2753.778 ns_per_tile_step=1.510083
+TABLE_WORK call=4 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.050/22.169/22.291 | 周期/tile步: pair 2.09 single 0.00 8x2 2.34 4x4 0.00 | 份额 %: 87.5 0.0 12.5 0.0
+K5_PHASE call=5 prepare_us=11.230 dispatch_us=0.320 workers_us=22492.480 pack_mean_us=2.755 pack_max_us=95.150
+K5_COST call=5 bucket=0 tile_steps=543263760 kernel_mean_us=19281.763 ns_per_tile_step=1.348713
+K5_COST call=5 bucket=2 tile_steps=69296560 kernel_mean_us=2749.090 ns_per_tile_step=1.507512
+TABLE_WORK call=5 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.057/22.169/22.489 | 周期/tile步: pair 2.09 single 0.00 8x2 2.34 4x4 0.00 | 份额 %: 87.5 0.0 12.5 0.0
+K5_PHASE call=6 prepare_us=11.110 dispatch_us=0.240 workers_us=22296.170 pack_mean_us=2.908 pack_max_us=94.970
+K5_COST call=6 bucket=0 tile_steps=543263760 kernel_mean_us=19281.207 ns_per_tile_step=1.348674
+K5_COST call=6 bucket=2 tile_steps=69296560 kernel_mean_us=2741.452 ns_per_tile_step=1.503324
+TABLE_WORK call=6 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.058/22.160/22.291 | 周期/tile步: pair 2.09 single 0.00 8x2 2.33 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=7 prepare_us=10.500 dispatch_us=0.320 workers_us=22346.640 pack_mean_us=2.838 pack_max_us=96.110
+K5_COST call=7 bucket=0 tile_steps=543263760 kernel_mean_us=19290.828 ns_per_tile_step=1.349347
+K5_COST call=7 bucket=2 tile_steps=69296560 kernel_mean_us=2762.290 ns_per_tile_step=1.514751
+TABLE_WORK call=7 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.078/22.192/22.343 | 周期/tile步: pair 2.09 single 0.00 8x2 2.35 4x4 0.00 | 份额 %: 87.5 0.0 12.5 0.0
+  6390 x  4256     81 x    81 run0   22.583 ms    15311.1 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.598 ms    15301.0 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.763 ms    15189.8 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.630 ms    15279.7 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.645 ms    15269.6 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.583 ms    15311.1 GFLOPS | avg   22.644 ms    15270.1 GFLOPS  PASS
+PROFILE memory=DDR round=2 variant=merged shape=6390 4256 81 81
+K5_PHASE call=1 prepare_us=880.960 dispatch_us=5.380 workers_us=30819.800 pack_mean_us=9.426 pack_max_us=352.450
+K5_COST call=1 bucket=0 tile_steps=543263760 kernel_mean_us=19365.552 ns_per_tile_step=1.354574
+K5_COST call=1 bucket=2 tile_steps=69296560 kernel_mean_us=2734.889 ns_per_tile_step=1.499725
+TABLE_WORK call=1 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 0.016/22.201/28.838 | 周期/tile步: pair 2.10 single 0.00 8x2 2.32 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=2 prepare_us=11.080 dispatch_us=0.310 workers_us=22299.590 pack_mean_us=2.660 pack_max_us=96.140
+K5_COST call=2 bucket=0 tile_steps=543263760 kernel_mean_us=19306.245 ns_per_tile_step=1.350426
+K5_COST call=2 bucket=2 tile_steps=69296560 kernel_mean_us=2732.189 ns_per_tile_step=1.498245
+TABLE_WORK call=2 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.053/22.177/22.296 | 周期/tile步: pair 2.09 single 0.00 8x2 2.32 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=3 prepare_us=13.470 dispatch_us=0.480 workers_us=22295.300 pack_mean_us=3.124 pack_max_us=118.180
+K5_COST call=3 bucket=0 tile_steps=543263760 kernel_mean_us=19293.157 ns_per_tile_step=1.349510
+K5_COST call=3 bucket=2 tile_steps=69296560 kernel_mean_us=2725.863 ns_per_tile_step=1.494775
+TABLE_WORK call=3 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.061/22.179/22.290 | 周期/tile步: pair 2.09 single 0.00 8x2 2.32 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=4 prepare_us=10.980 dispatch_us=0.280 workers_us=22431.960 pack_mean_us=2.814 pack_max_us=95.720
+K5_COST call=4 bucket=0 tile_steps=543263760 kernel_mean_us=19312.414 ns_per_tile_step=1.350857
+K5_COST call=4 bucket=2 tile_steps=69296560 kernel_mean_us=2737.465 ns_per_tile_step=1.501138
+TABLE_WORK call=4 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.058/22.189/22.429 | 周期/tile步: pair 2.09 single 0.00 8x2 2.33 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=5 prepare_us=11.300 dispatch_us=0.280 workers_us=22294.960 pack_mean_us=2.855 pack_max_us=95.730
+K5_COST call=5 bucket=0 tile_steps=543263760 kernel_mean_us=19301.812 ns_per_tile_step=1.350116
+K5_COST call=5 bucket=2 tile_steps=69296560 kernel_mean_us=2731.013 ns_per_tile_step=1.497599
+TABLE_WORK call=5 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.050/22.171/22.291 | 周期/tile步: pair 2.09 single 0.00 8x2 2.32 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=6 prepare_us=11.590 dispatch_us=0.290 workers_us=22304.900 pack_mean_us=2.616 pack_max_us=95.340
+K5_COST call=6 bucket=0 tile_steps=543263760 kernel_mean_us=19311.920 ns_per_tile_step=1.350823
+K5_COST call=6 bucket=2 tile_steps=69296560 kernel_mean_us=2729.457 ns_per_tile_step=1.496746
+TABLE_WORK call=6 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.057/22.180/22.298 | 周期/tile步: pair 2.09 single 0.00 8x2 2.32 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=7 prepare_us=11.210 dispatch_us=0.270 workers_us=22296.750 pack_mean_us=2.980 pack_max_us=95.950
+K5_COST call=7 bucket=0 tile_steps=543263760 kernel_mean_us=19311.529 ns_per_tile_step=1.350795
+K5_COST call=7 bucket=2 tile_steps=69296560 kernel_mean_us=2727.336 ns_per_tile_step=1.495583
+TABLE_WORK call=7 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.053/22.177/22.295 | 周期/tile步: pair 2.09 single 0.00 8x2 2.32 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+  6390 x  4256     81 x    81 run0   22.571 ms    15319.5 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.739 ms    15206.2 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.576 ms    15315.6 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.644 ms    15270.0 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.568 ms    15321.4 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.568 ms    15321.4 GFLOPS | avg   22.620 ms    15286.4 GFLOPS  PASS
+PROFILE memory=DDR round=2 variant=baseline shape=6390 4256 81 81
+K5_PHASE call=1 prepare_us=964.620 dispatch_us=6.850 workers_us=31422.330 pack_mean_us=11.462 pack_max_us=428.600
+K5_COST call=1 bucket=0 tile_steps=543263760 kernel_mean_us=19326.515 ns_per_tile_step=1.351843
+K5_COST call=1 bucket=2 tile_steps=69296560 kernel_mean_us=2773.450 ns_per_tile_step=1.520870
+TABLE_WORK call=1 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 10.872/22.198/29.206 | 周期/tile步: pair 2.10 single 0.00 8x2 2.36 4x4 0.00 | 份额 %: 87.5 0.0 12.5 0.0
+K5_PHASE call=2 prepare_us=15.520 dispatch_us=0.870 workers_us=22316.690 pack_mean_us=3.599 pack_max_us=102.980
+K5_COST call=2 bucket=0 tile_steps=543263760 kernel_mean_us=19272.940 ns_per_tile_step=1.348096
+K5_COST call=2 bucket=2 tile_steps=69296560 kernel_mean_us=2757.657 ns_per_tile_step=1.512210
+TABLE_WORK call=2 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.035/22.172/22.313 | 周期/tile步: pair 2.09 single 0.00 8x2 2.34 4x4 0.00 | 份额 %: 87.5 0.0 12.5 0.0
+K5_PHASE call=3 prepare_us=16.650 dispatch_us=1.490 workers_us=22325.330 pack_mean_us=3.743 pack_max_us=139.920
+K5_COST call=3 bucket=0 tile_steps=543263760 kernel_mean_us=19256.255 ns_per_tile_step=1.346929
+K5_COST call=3 bucket=2 tile_steps=69296560 kernel_mean_us=2764.538 ns_per_tile_step=1.515983
+TABLE_WORK call=3 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.041/22.191/22.323 | 周期/tile步: pair 2.09 single 0.00 8x2 2.35 4x4 0.00 | 份额 %: 87.4 0.0 12.6 0.0
+K5_PHASE call=4 prepare_us=14.570 dispatch_us=0.790 workers_us=22530.550 pack_mean_us=3.425 pack_max_us=103.260
+K5_COST call=4 bucket=0 tile_steps=543263760 kernel_mean_us=19275.507 ns_per_tile_step=1.348276
+K5_COST call=4 bucket=2 tile_steps=69296560 kernel_mean_us=2760.448 ns_per_tile_step=1.513741
+TABLE_WORK call=4 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.035/22.179/22.526 | 周期/tile步: pair 2.09 single 0.00 8x2 2.35 4x4 0.00 | 份额 %: 87.5 0.0 12.5 0.0
+K5_PHASE call=5 prepare_us=15.020 dispatch_us=0.840 workers_us=22276.590 pack_mean_us=3.342 pack_max_us=104.060
+K5_COST call=5 bucket=0 tile_steps=543263760 kernel_mean_us=19270.865 ns_per_tile_step=1.347951
+K5_COST call=5 bucket=2 tile_steps=69296560 kernel_mean_us=2760.382 ns_per_tile_step=1.513704
+TABLE_WORK call=5 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.040/22.173/22.272 | 周期/tile步: pair 2.09 single 0.00 8x2 2.35 4x4 0.00 | 份额 %: 87.5 0.0 12.5 0.0
+K5_PHASE call=6 prepare_us=14.930 dispatch_us=1.130 workers_us=22535.660 pack_mean_us=3.354 pack_max_us=103.530
+K5_COST call=6 bucket=0 tile_steps=543263760 kernel_mean_us=19271.057 ns_per_tile_step=1.347964
+K5_COST call=6 bucket=2 tile_steps=69296560 kernel_mean_us=2763.256 ns_per_tile_step=1.515280
+TABLE_WORK call=6 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.033/22.177/22.532 | 周期/tile步: pair 2.09 single 0.00 8x2 2.35 4x4 0.00 | 份额 %: 87.5 0.0 12.5 0.0
+K5_PHASE call=7 prepare_us=13.700 dispatch_us=0.850 workers_us=22280.660 pack_mean_us=3.692 pack_max_us=103.010
+K5_COST call=7 bucket=0 tile_steps=543263760 kernel_mean_us=19273.320 ns_per_tile_step=1.348123
+K5_COST call=7 bucket=2 tile_steps=69296560 kernel_mean_us=2757.125 ns_per_tile_step=1.511919
+TABLE_WORK call=7 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.048/22.172/22.276 | 周期/tile步: pair 2.09 single 0.00 8x2 2.34 4x4 0.00 | 份额 %: 87.5 0.0 12.5 0.0
+  6390 x  4256     81 x    81 run0   22.587 ms    15308.4 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.843 ms    15137.0 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.536 ms    15343.3 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.859 ms    15126.4 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.568 ms    15321.1 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.536 ms    15343.3 GFLOPS | avg   22.679 ms    15246.6 GFLOPS  PASS
+PROFILE memory=DDR round=3 variant=baseline shape=6390 4256 81 81
+K5_PHASE call=1 prepare_us=996.120 dispatch_us=5.440 workers_us=30762.740 pack_mean_us=11.717 pack_max_us=435.370
+K5_COST call=1 bucket=0 tile_steps=543263760 kernel_mean_us=19336.677 ns_per_tile_step=1.352554
+K5_COST call=1 bucket=2 tile_steps=69296560 kernel_mean_us=2722.981 ns_per_tile_step=1.493195
+TABLE_WORK call=1 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 10.451/22.160/27.753 | 周期/tile步: pair 2.10 single 0.00 8x2 2.31 4x4 0.00 | 份额 %: 87.7 0.0 12.3 0.0
+K5_PHASE call=2 prepare_us=13.800 dispatch_us=1.200 workers_us=22257.590 pack_mean_us=3.621 pack_max_us=103.750
+K5_COST call=2 bucket=0 tile_steps=543263760 kernel_mean_us=19285.275 ns_per_tile_step=1.348959
+K5_COST call=2 bucket=2 tile_steps=69296560 kernel_mean_us=2719.593 ns_per_tile_step=1.491337
+TABLE_WORK call=2 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.014/22.148/22.251 | 周期/tile步: pair 2.09 single 0.00 8x2 2.31 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=3 prepare_us=15.460 dispatch_us=1.190 workers_us=22508.330 pack_mean_us=4.178 pack_max_us=156.230
+K5_COST call=3 bucket=0 tile_steps=543263760 kernel_mean_us=19275.721 ns_per_tile_step=1.348291
+K5_COST call=3 bucket=2 tile_steps=69296560 kernel_mean_us=2714.006 ns_per_tile_step=1.488273
+TABLE_WORK call=3 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.043/22.177/22.504 | 周期/tile步: pair 2.09 single 0.00 8x2 2.31 4x4 0.00 | 份额 %: 87.7 0.0 12.3 0.0
+K5_PHASE call=4 prepare_us=14.040 dispatch_us=0.690 workers_us=22261.630 pack_mean_us=3.720 pack_max_us=103.620
+K5_COST call=4 bucket=0 tile_steps=543263760 kernel_mean_us=19287.552 ns_per_tile_step=1.349118
+K5_COST call=4 bucket=2 tile_steps=69296560 kernel_mean_us=2718.782 ns_per_tile_step=1.490892
+TABLE_WORK call=4 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.018/22.150/22.258 | 周期/tile步: pair 2.09 single 0.00 8x2 2.31 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=5 prepare_us=14.520 dispatch_us=0.790 workers_us=22467.980 pack_mean_us=3.186 pack_max_us=102.930
+K5_COST call=5 bucket=0 tile_steps=543263760 kernel_mean_us=19287.540 ns_per_tile_step=1.349117
+K5_COST call=5 bucket=2 tile_steps=69296560 kernel_mean_us=2718.868 ns_per_tile_step=1.490939
+TABLE_WORK call=5 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.012/22.149/22.464 | 周期/tile步: pair 2.09 single 0.00 8x2 2.31 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=6 prepare_us=14.190 dispatch_us=1.120 workers_us=22477.850 pack_mean_us=3.702 pack_max_us=102.950
+K5_COST call=6 bucket=0 tile_steps=543263760 kernel_mean_us=19284.780 ns_per_tile_step=1.348924
+K5_COST call=6 bucket=2 tile_steps=69296560 kernel_mean_us=2717.909 ns_per_tile_step=1.490414
+TABLE_WORK call=6 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.012/22.145/22.475 | 周期/tile步: pair 2.09 single 0.00 8x2 2.31 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=7 prepare_us=14.450 dispatch_us=0.820 workers_us=22470.250 pack_mean_us=3.940 pack_max_us=104.120
+K5_COST call=7 bucket=0 tile_steps=543263760 kernel_mean_us=19277.293 ns_per_tile_step=1.348401
+K5_COST call=7 bucket=2 tile_steps=69296560 kernel_mean_us=2719.489 ns_per_tile_step=1.491280
+TABLE_WORK call=7 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.015/22.140/22.467 | 周期/tile步: pair 2.09 single 0.00 8x2 2.31 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+  6390 x  4256     81 x    81 run0   22.788 ms    15173.3 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.563 ms    15324.5 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.752 ms    15197.5 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.832 ms    15144.0 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.759 ms    15192.8 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.563 ms    15324.5 GFLOPS | avg   22.739 ms    15206.2 GFLOPS  PASS
+PROFILE memory=DDR round=3 variant=merged shape=6390 4256 81 81
+K5_PHASE call=1 prepare_us=886.260 dispatch_us=5.770 workers_us=30263.910 pack_mean_us=9.193 pack_max_us=345.970
+K5_COST call=1 bucket=0 tile_steps=543263760 kernel_mean_us=19349.165 ns_per_tile_step=1.353428
+K5_COST call=1 bucket=2 tile_steps=69296560 kernel_mean_us=2708.963 ns_per_tile_step=1.485508
+TABLE_WORK call=1 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 15.309/22.152/27.865 | 周期/tile步: pair 2.10 single 0.00 8x2 2.30 4x4 0.00 | 份额 %: 87.7 0.0 12.3 0.0
+K5_PHASE call=2 prepare_us=11.400 dispatch_us=0.170 workers_us=22401.650 pack_mean_us=3.021 pack_max_us=95.260
+K5_COST call=2 bucket=0 tile_steps=543263760 kernel_mean_us=19311.496 ns_per_tile_step=1.350793
+K5_COST call=2 bucket=2 tile_steps=69296560 kernel_mean_us=2712.662 ns_per_tile_step=1.487536
+TABLE_WORK call=2 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.053/22.161/22.398 | 周期/tile步: pair 2.09 single 0.00 8x2 2.31 4x4 0.00 | 份额 %: 87.7 0.0 12.3 0.0
+K5_PHASE call=3 prepare_us=14.410 dispatch_us=0.420 workers_us=22279.700 pack_mean_us=3.131 pack_max_us=118.880
+K5_COST call=3 bucket=0 tile_steps=543263760 kernel_mean_us=19290.660 ns_per_tile_step=1.349336
+K5_COST call=3 bucket=2 tile_steps=69296560 kernel_mean_us=2701.551 ns_per_tile_step=1.481443
+TABLE_WORK call=3 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.036/22.153/22.275 | 周期/tile步: pair 2.09 single 0.00 8x2 2.30 4x4 0.00 | 份额 %: 87.7 0.0 12.3 0.0
+K5_PHASE call=4 prepare_us=11.320 dispatch_us=0.300 workers_us=22259.760 pack_mean_us=2.721 pack_max_us=94.970
+K5_COST call=4 bucket=0 tile_steps=543263760 kernel_mean_us=19295.714 ns_per_tile_step=1.349689
+K5_COST call=4 bucket=2 tile_steps=69296560 kernel_mean_us=2705.784 ns_per_tile_step=1.483765
+TABLE_WORK call=4 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.031/22.138/22.258 | 周期/tile步: pair 2.09 single 0.00 8x2 2.30 4x4 0.00 | 份额 %: 87.7 0.0 12.3 0.0
+K5_PHASE call=5 prepare_us=11.070 dispatch_us=0.270 workers_us=22586.990 pack_mean_us=3.154 pack_max_us=95.330
+K5_COST call=5 bucket=0 tile_steps=543263760 kernel_mean_us=19299.043 ns_per_tile_step=1.349922
+K5_COST call=5 bucket=2 tile_steps=69296560 kernel_mean_us=2798.492 ns_per_tile_step=1.534603
+TABLE_WORK call=5 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.081/22.235/22.584 | 周期/tile步: pair 2.09 single 0.00 8x2 2.38 4x4 0.00 | 份额 %: 87.3 0.0 12.7 0.0
+K5_PHASE call=6 prepare_us=10.550 dispatch_us=0.290 workers_us=22259.360 pack_mean_us=2.992 pack_max_us=94.700
+K5_COST call=6 bucket=0 tile_steps=543263760 kernel_mean_us=19298.748 ns_per_tile_step=1.349901
+K5_COST call=6 bucket=2 tile_steps=69296560 kernel_mean_us=2703.074 ns_per_tile_step=1.482279
+TABLE_WORK call=6 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.019/22.139/22.257 | 周期/tile步: pair 2.09 single 0.00 8x2 2.30 4x4 0.00 | 份额 %: 87.7 0.0 12.3 0.0
+K5_PHASE call=7 prepare_us=11.330 dispatch_us=0.310 workers_us=22271.940 pack_mean_us=3.153 pack_max_us=94.850
+K5_COST call=7 bucket=0 tile_steps=543263760 kernel_mean_us=19298.774 ns_per_tile_step=1.349903
+K5_COST call=7 bucket=2 tile_steps=69296560 kernel_mean_us=2703.887 ns_per_tile_step=1.482724
+TABLE_WORK call=7 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.025/22.140/22.270 | 周期/tile步: pair 2.09 single 0.00 8x2 2.30 4x4 0.00 | 份额 %: 87.7 0.0 12.3 0.0
+  6390 x  4256     81 x    81 run0   22.547 ms    15335.8 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.552 ms    15332.5 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.844 ms    15136.2 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.587 ms    15308.3 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.536 ms    15343.4 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.536 ms    15343.4 GFLOPS | avg   22.613 ms    15290.8 GFLOPS  PASS
+PROFILE memory=DDR round=4 variant=merged shape=6390 4256 81 81
+K5_PHASE call=1 prepare_us=909.390 dispatch_us=6.560 workers_us=29855.390 pack_mean_us=11.083 pack_max_us=413.830
+K5_COST call=1 bucket=0 tile_steps=543263760 kernel_mean_us=19309.858 ns_per_tile_step=1.350678
+K5_COST call=1 bucket=2 tile_steps=69296560 kernel_mean_us=2691.779 ns_per_tile_step=1.476085
+TABLE_WORK call=1 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 14.946/22.096/27.299 | 周期/tile步: pair 2.09 single 0.00 8x2 2.29 4x4 0.00 | 份额 %: 87.8 0.0 12.2 0.0
+K5_PHASE call=2 prepare_us=11.380 dispatch_us=0.260 workers_us=22290.810 pack_mean_us=2.944 pack_max_us=95.900
+K5_COST call=2 bucket=0 tile_steps=543263760 kernel_mean_us=19261.132 ns_per_tile_step=1.347270
+K5_COST call=2 bucket=2 tile_steps=69296560 kernel_mean_us=2694.721 ns_per_tile_step=1.477698
+TABLE_WORK call=2 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 21.987/22.093/22.288 | 周期/tile步: pair 2.09 single 0.00 8x2 2.29 4x4 0.00 | 份额 %: 87.7 0.0 12.3 0.0
+K5_PHASE call=3 prepare_us=14.010 dispatch_us=0.440 workers_us=22237.100 pack_mean_us=3.167 pack_max_us=119.500
+K5_COST call=3 bucket=0 tile_steps=543263760 kernel_mean_us=19253.211 ns_per_tile_step=1.346716
+K5_COST call=3 bucket=2 tile_steps=69296560 kernel_mean_us=2688.313 ns_per_tile_step=1.474184
+TABLE_WORK call=3 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 21.996/22.101/22.235 | 周期/tile步: pair 2.09 single 0.00 8x2 2.28 4x4 0.00 | 份额 %: 87.7 0.0 12.3 0.0
+K5_PHASE call=4 prepare_us=10.340 dispatch_us=0.320 workers_us=22250.350 pack_mean_us=3.084 pack_max_us=95.760
+K5_COST call=4 bucket=0 tile_steps=543263760 kernel_mean_us=19259.026 ns_per_tile_step=1.347123
+K5_COST call=4 bucket=2 tile_steps=69296560 kernel_mean_us=2723.709 ns_per_tile_step=1.493594
+TABLE_WORK call=4 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.007/22.119/22.246 | 周期/tile步: pair 2.09 single 0.00 8x2 2.32 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=5 prepare_us=11.300 dispatch_us=0.300 workers_us=22246.290 pack_mean_us=2.966 pack_max_us=95.380
+K5_COST call=5 bucket=0 tile_steps=543263760 kernel_mean_us=19260.152 ns_per_tile_step=1.347202
+K5_COST call=5 bucket=2 tile_steps=69296560 kernel_mean_us=2699.566 ns_per_tile_step=1.480355
+TABLE_WORK call=5 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 21.998/22.095/22.243 | 周期/tile步: pair 2.09 single 0.00 8x2 2.29 4x4 0.00 | 份额 %: 87.7 0.0 12.3 0.0
+K5_PHASE call=6 prepare_us=10.760 dispatch_us=0.290 workers_us=22488.070 pack_mean_us=3.147 pack_max_us=95.260
+K5_COST call=6 bucket=0 tile_steps=543263760 kernel_mean_us=19256.269 ns_per_tile_step=1.346930
+K5_COST call=6 bucket=2 tile_steps=69296560 kernel_mean_us=2699.786 ns_per_tile_step=1.480476
+TABLE_WORK call=6 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 21.989/22.092/22.484 | 周期/tile步: pair 2.09 single 0.00 8x2 2.29 4x4 0.00 | 份额 %: 87.7 0.0 12.3 0.0
+K5_PHASE call=7 prepare_us=11.370 dispatch_us=0.200 workers_us=22280.080 pack_mean_us=2.908 pack_max_us=94.940
+K5_COST call=7 bucket=0 tile_steps=543263760 kernel_mean_us=19263.394 ns_per_tile_step=1.347428
+K5_COST call=7 bucket=2 tile_steps=69296560 kernel_mean_us=2695.307 ns_per_tile_step=1.478019
+TABLE_WORK call=7 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 21.997/22.094/22.276 | 周期/tile步: pair 2.09 single 0.00 8x2 2.29 4x4 0.00 | 份额 %: 87.7 0.0 12.3 0.0
+  6390 x  4256     81 x    81 run0   22.483 ms    15379.1 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.559 ms    15327.5 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.517 ms    15356.1 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.857 ms    15127.9 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.572 ms    15318.6 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.483 ms    15379.1 GFLOPS | avg   22.598 ms    15301.3 GFLOPS  PASS
+PROFILE memory=DDR round=4 variant=baseline shape=6390 4256 81 81
+K5_PHASE call=1 prepare_us=952.900 dispatch_us=6.650 workers_us=31640.110 pack_mean_us=11.741 pack_max_us=437.130
+K5_COST call=1 bucket=0 tile_steps=543263760 kernel_mean_us=19334.062 ns_per_tile_step=1.352371
+K5_COST call=1 bucket=2 tile_steps=69296560 kernel_mean_us=2752.128 ns_per_tile_step=1.509178
+TABLE_WORK call=1 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 11.122/22.186/28.771 | 周期/tile步: pair 2.10 single 0.00 8x2 2.34 4x4 0.00 | 份额 %: 87.5 0.0 12.5 0.0
+K5_PHASE call=2 prepare_us=14.820 dispatch_us=0.910 workers_us=22279.170 pack_mean_us=3.146 pack_max_us=103.230
+K5_COST call=2 bucket=0 tile_steps=543263760 kernel_mean_us=19285.956 ns_per_tile_step=1.349006
+K5_COST call=2 bucket=2 tile_steps=69296560 kernel_mean_us=2746.562 ns_per_tile_step=1.506126
+TABLE_WORK call=2 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.034/22.175/22.276 | 周期/tile步: pair 2.09 single 0.00 8x2 2.33 4x4 0.00 | 份额 %: 87.5 0.0 12.5 0.0
+K5_PHASE call=3 prepare_us=16.040 dispatch_us=0.990 workers_us=22572.740 pack_mean_us=3.961 pack_max_us=148.340
+K5_COST call=3 bucket=0 tile_steps=543263760 kernel_mean_us=19272.696 ns_per_tile_step=1.348079
+K5_COST call=3 bucket=2 tile_steps=69296560 kernel_mean_us=2745.924 ns_per_tile_step=1.505776
+TABLE_WORK call=3 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.063/22.197/22.567 | 周期/tile步: pair 2.09 single 0.00 8x2 2.33 4x4 0.00 | 份额 %: 87.5 0.0 12.5 0.0
+K5_PHASE call=4 prepare_us=14.420 dispatch_us=0.800 workers_us=22315.890 pack_mean_us=3.625 pack_max_us=104.040
+K5_COST call=4 bucket=0 tile_steps=543263760 kernel_mean_us=19281.904 ns_per_tile_step=1.348723
+K5_COST call=4 bucket=2 tile_steps=69296560 kernel_mean_us=2764.127 ns_per_tile_step=1.515758
+TABLE_WORK call=4 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.070/22.190/22.308 | 周期/tile步: pair 2.09 single 0.00 8x2 2.35 4x4 0.00 | 份额 %: 87.5 0.0 12.5 0.0
+K5_PHASE call=5 prepare_us=14.340 dispatch_us=0.860 workers_us=22292.900 pack_mean_us=3.738 pack_max_us=103.850
+K5_COST call=5 bucket=0 tile_steps=543263760 kernel_mean_us=19284.527 ns_per_tile_step=1.348907
+K5_COST call=5 bucket=2 tile_steps=69296560 kernel_mean_us=2746.778 ns_per_tile_step=1.506244
+TABLE_WORK call=5 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.057/22.174/22.288 | 周期/tile步: pair 2.09 single 0.00 8x2 2.33 4x4 0.00 | 份额 %: 87.5 0.0 12.5 0.0
+K5_PHASE call=6 prepare_us=13.730 dispatch_us=0.840 workers_us=22307.440 pack_mean_us=3.789 pack_max_us=104.350
+K5_COST call=6 bucket=0 tile_steps=543263760 kernel_mean_us=19279.112 ns_per_tile_step=1.348528
+K5_COST call=6 bucket=2 tile_steps=69296560 kernel_mean_us=2756.826 ns_per_tile_step=1.511755
+TABLE_WORK call=6 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.067/22.179/22.304 | 周期/tile步: pair 2.09 single 0.00 8x2 2.34 4x4 0.00 | 份额 %: 87.5 0.0 12.5 0.0
+K5_PHASE call=7 prepare_us=13.970 dispatch_us=0.850 workers_us=22531.420 pack_mean_us=3.482 pack_max_us=102.430
+K5_COST call=7 bucket=0 tile_steps=543263760 kernel_mean_us=19276.931 ns_per_tile_step=1.348375
+K5_COST call=7 bucket=2 tile_steps=69296560 kernel_mean_us=2744.385 ns_per_tile_step=1.504932
+TABLE_WORK call=7 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.047/22.163/22.527 | 周期/tile步: pair 2.09 single 0.00 8x2 2.33 4x4 0.00 | 份额 %: 87.5 0.0 12.5 0.0
+  6390 x  4256     81 x    81 run0   22.845 ms    15135.6 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.623 ms    15284.2 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.561 ms    15326.1 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.624 ms    15283.3 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.814 ms    15156.2 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.561 ms    15326.1 GFLOPS | avg   22.693 ms    15236.7 GFLOPS  PASS
+PROFILE memory=DDR round=5 variant=baseline shape=6390 4256 81 81
+K5_PHASE call=1 prepare_us=985.160 dispatch_us=6.920 workers_us=31080.750 pack_mean_us=11.670 pack_max_us=438.230
+K5_COST call=1 bucket=0 tile_steps=543263760 kernel_mean_us=19343.771 ns_per_tile_step=1.353050
+K5_COST call=1 bucket=2 tile_steps=69296560 kernel_mean_us=2743.754 ns_per_tile_step=1.504586
+TABLE_WORK call=1 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 11.584/22.187/29.381 | 周期/tile步: pair 2.10 single 0.00 8x2 2.33 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=2 prepare_us=13.690 dispatch_us=1.180 workers_us=22302.520 pack_mean_us=3.400 pack_max_us=104.600
+K5_COST call=2 bucket=0 tile_steps=543263760 kernel_mean_us=19299.123 ns_per_tile_step=1.349927
+K5_COST call=2 bucket=2 tile_steps=69296560 kernel_mean_us=2742.662 ns_per_tile_step=1.503987
+TABLE_WORK call=2 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.057/22.186/22.296 | 周期/tile步: pair 2.09 single 0.00 8x2 2.33 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=3 prepare_us=15.480 dispatch_us=1.280 workers_us=22294.750 pack_mean_us=3.651 pack_max_us=136.860
+K5_COST call=3 bucket=0 tile_steps=543263760 kernel_mean_us=19281.148 ns_per_tile_step=1.348670
+K5_COST call=3 bucket=2 tile_steps=69296560 kernel_mean_us=2738.753 ns_per_tile_step=1.501844
+TABLE_WORK call=3 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.063/22.188/22.291 | 周期/tile步: pair 2.09 single 0.00 8x2 2.33 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=4 prepare_us=15.870 dispatch_us=0.790 workers_us=22294.390 pack_mean_us=3.189 pack_max_us=104.090
+K5_COST call=4 bucket=0 tile_steps=543263760 kernel_mean_us=19294.665 ns_per_tile_step=1.349616
+K5_COST call=4 bucket=2 tile_steps=69296560 kernel_mean_us=2737.217 ns_per_tile_step=1.501002
+TABLE_WORK call=4 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.052/22.174/22.291 | 周期/tile步: pair 2.09 single 0.00 8x2 2.33 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=5 prepare_us=16.050 dispatch_us=0.930 workers_us=22337.880 pack_mean_us=3.388 pack_max_us=104.110
+K5_COST call=5 bucket=0 tile_steps=543263760 kernel_mean_us=19305.769 ns_per_tile_step=1.350392
+K5_COST call=5 bucket=2 tile_steps=69296560 kernel_mean_us=2774.599 ns_per_tile_step=1.521501
+TABLE_WORK call=5 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.092/22.223/22.332 | 周期/tile步: pair 2.09 single 0.00 8x2 2.36 4x4 0.00 | 份额 %: 87.4 0.0 12.6 0.0
+K5_PHASE call=6 prepare_us=14.010 dispatch_us=0.850 workers_us=22279.940 pack_mean_us=4.424 pack_max_us=103.840
+K5_COST call=6 bucket=0 tile_steps=543263760 kernel_mean_us=19281.520 ns_per_tile_step=1.348696
+K5_COST call=6 bucket=2 tile_steps=69296560 kernel_mean_us=2744.639 ns_per_tile_step=1.505072
+TABLE_WORK call=6 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.054/22.170/22.276 | 周期/tile步: pair 2.09 single 0.00 8x2 2.33 4x4 0.00 | 份额 %: 87.5 0.0 12.5 0.0
+K5_PHASE call=7 prepare_us=14.520 dispatch_us=0.850 workers_us=22497.170 pack_mean_us=4.176 pack_max_us=103.510
+K5_COST call=7 bucket=0 tile_steps=543263760 kernel_mean_us=19297.089 ns_per_tile_step=1.349785
+K5_COST call=7 bucket=2 tile_steps=69296560 kernel_mean_us=2728.791 ns_per_tile_step=1.496381
+TABLE_WORK call=7 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.043/22.169/22.494 | 周期/tile步: pair 2.09 single 0.00 8x2 2.32 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+  6390 x  4256     81 x    81 run0   22.575 ms    15316.7 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.601 ms    15298.7 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.632 ms    15278.1 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.647 ms    15268.1 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.785 ms    15175.2 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.575 ms    15316.7 GFLOPS | avg   22.648 ms    15267.2 GFLOPS  PASS
+PROFILE memory=DDR round=5 variant=merged shape=6390 4256 81 81
+K5_PHASE call=1 prepare_us=889.770 dispatch_us=5.180 workers_us=29764.270 pack_mean_us=10.947 pack_max_us=410.370
+K5_COST call=1 bucket=0 tile_steps=543263760 kernel_mean_us=19338.930 ns_per_tile_step=1.352712
+K5_COST call=1 bucket=2 tile_steps=69296560 kernel_mean_us=2719.989 ns_per_tile_step=1.491554
+TABLE_WORK call=1 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 15.150/22.153/27.489 | 周期/tile步: pair 2.10 single 0.00 8x2 2.31 4x4 0.00 | 份额 %: 87.7 0.0 12.3 0.0
+K5_PHASE call=2 prepare_us=11.560 dispatch_us=0.280 workers_us=22495.870 pack_mean_us=2.782 pack_max_us=95.300
+K5_COST call=2 bucket=0 tile_steps=543263760 kernel_mean_us=19300.171 ns_per_tile_step=1.350001
+K5_COST call=2 bucket=2 tile_steps=69296560 kernel_mean_us=2725.186 ns_per_tile_step=1.494404
+TABLE_WORK call=2 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.045/22.161/22.493 | 周期/tile步: pair 2.09 single 0.00 8x2 2.32 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=3 prepare_us=14.500 dispatch_us=0.620 workers_us=22299.290 pack_mean_us=3.135 pack_max_us=118.540
+K5_COST call=3 bucket=0 tile_steps=543263760 kernel_mean_us=19285.031 ns_per_tile_step=1.348942
+K5_COST call=3 bucket=2 tile_steps=69296560 kernel_mean_us=2712.960 ns_per_tile_step=1.487700
+TABLE_WORK call=3 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.030/22.158/22.296 | 周期/tile步: pair 2.09 single 0.00 8x2 2.31 4x4 0.00 | 份额 %: 87.7 0.0 12.3 0.0
+K5_PHASE call=4 prepare_us=11.580 dispatch_us=0.290 workers_us=22287.320 pack_mean_us=2.743 pack_max_us=95.280
+K5_COST call=4 bucket=0 tile_steps=543263760 kernel_mean_us=19299.996 ns_per_tile_step=1.349989
+K5_COST call=4 bucket=2 tile_steps=69296560 kernel_mean_us=2715.058 ns_per_tile_step=1.488850
+TABLE_WORK call=4 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.044/22.152/22.285 | 周期/tile步: pair 2.09 single 0.00 8x2 2.31 4x4 0.00 | 份额 %: 87.7 0.0 12.3 0.0
+K5_PHASE call=5 prepare_us=11.940 dispatch_us=0.320 workers_us=22524.200 pack_mean_us=2.728 pack_max_us=95.670
+K5_COST call=5 bucket=0 tile_steps=543263760 kernel_mean_us=19300.474 ns_per_tile_step=1.350022
+K5_COST call=5 bucket=2 tile_steps=69296560 kernel_mean_us=2714.455 ns_per_tile_step=1.488520
+TABLE_WORK call=5 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.042/22.152/22.521 | 周期/tile步: pair 2.09 single 0.00 8x2 2.31 4x4 0.00 | 份额 %: 87.7 0.0 12.3 0.0
+K5_PHASE call=6 prepare_us=10.660 dispatch_us=0.270 workers_us=22286.680 pack_mean_us=2.843 pack_max_us=94.900
+K5_COST call=6 bucket=0 tile_steps=543263760 kernel_mean_us=19302.084 ns_per_tile_step=1.350135
+K5_COST call=6 bucket=2 tile_steps=69296560 kernel_mean_us=2712.826 ns_per_tile_step=1.487626
+TABLE_WORK call=6 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.038/22.151/22.285 | 周期/tile步: pair 2.09 single 0.00 8x2 2.31 4x4 0.00 | 份额 %: 87.7 0.0 12.3 0.0
+K5_PHASE call=7 prepare_us=11.260 dispatch_us=0.320 workers_us=22290.360 pack_mean_us=2.860 pack_max_us=94.820
+K5_COST call=7 bucket=0 tile_steps=543263760 kernel_mean_us=19296.482 ns_per_tile_step=1.349743
+K5_COST call=7 bucket=2 tile_steps=69296560 kernel_mean_us=2726.956 ns_per_tile_step=1.495375
+TABLE_WORK call=7 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.055/22.160/22.285 | 周期/tile步: pair 2.09 single 0.00 8x2 2.32 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+  6390 x  4256     81 x    81 run0   22.570 ms    15320.0 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.596 ms    15302.5 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.790 ms    15172.0 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.632 ms    15278.0 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.573 ms    15317.7 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.570 ms    15320.0 GFLOPS | avg   22.632 ms    15277.8 GFLOPS  PASS
+PROFILE memory=DDR round=6 variant=merged shape=6390 4256 81 81
+K5_PHASE call=1 prepare_us=861.350 dispatch_us=4.930 workers_us=30197.690 pack_mean_us=9.416 pack_max_us=352.980
+K5_COST call=1 bucket=0 tile_steps=543263760 kernel_mean_us=19264.854 ns_per_tile_step=1.347530
+K5_COST call=1 bucket=2 tile_steps=69296560 kernel_mean_us=2791.336 ns_per_tile_step=1.530678
+TABLE_WORK call=1 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 1.124/22.155/26.763 | 周期/tile步: pair 2.09 single 0.00 8x2 2.37 4x4 0.00 | 份额 %: 87.3 0.0 12.7 0.0
+K5_PHASE call=2 prepare_us=11.000 dispatch_us=0.260 workers_us=22287.890 pack_mean_us=2.798 pack_max_us=97.360
+K5_COST call=2 bucket=0 tile_steps=543263760 kernel_mean_us=19223.445 ns_per_tile_step=1.344634
+K5_COST call=2 bucket=2 tile_steps=69296560 kernel_mean_us=2787.006 ns_per_tile_step=1.528304
+TABLE_WORK call=2 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.042/22.149/22.285 | 周期/tile步: pair 2.08 single 0.00 8x2 2.37 4x4 0.00 | 份额 %: 87.3 0.0 12.7 0.0
+K5_PHASE call=3 prepare_us=14.760 dispatch_us=0.540 workers_us=22312.310 pack_mean_us=3.127 pack_max_us=118.480
+K5_COST call=3 bucket=0 tile_steps=543263760 kernel_mean_us=19208.891 ns_per_tile_step=1.343616
+K5_COST call=3 bucket=2 tile_steps=69296560 kernel_mean_us=2792.856 ns_per_tile_step=1.531512
+TABLE_WORK call=3 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.041/22.161/22.306 | 周期/tile步: pair 2.08 single 0.00 8x2 2.37 4x4 0.00 | 份额 %: 87.3 0.0 12.7 0.0
+K5_PHASE call=4 prepare_us=11.670 dispatch_us=0.250 workers_us=22327.850 pack_mean_us=3.023 pack_max_us=96.580
+K5_COST call=4 bucket=0 tile_steps=543263760 kernel_mean_us=19219.369 ns_per_tile_step=1.344349
+K5_COST call=4 bucket=2 tile_steps=69296560 kernel_mean_us=2791.519 ns_per_tile_step=1.530779
+TABLE_WORK call=4 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.029/22.149/22.325 | 周期/tile步: pair 2.08 single 0.00 8x2 2.37 4x4 0.00 | 份额 %: 87.3 0.0 12.7 0.0
+K5_PHASE call=5 prepare_us=11.360 dispatch_us=0.280 workers_us=22338.140 pack_mean_us=3.084 pack_max_us=97.970
+K5_COST call=5 bucket=0 tile_steps=543263760 kernel_mean_us=19219.018 ns_per_tile_step=1.344324
+K5_COST call=5 bucket=2 tile_steps=69296560 kernel_mean_us=2790.829 ns_per_tile_step=1.530401
+TABLE_WORK call=5 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.035/22.149/22.336 | 周期/tile步: pair 2.08 single 0.00 8x2 2.37 4x4 0.00 | 份额 %: 87.3 0.0 12.7 0.0
+K5_PHASE call=6 prepare_us=11.250 dispatch_us=0.270 workers_us=22293.480 pack_mean_us=2.943 pack_max_us=96.810
+K5_COST call=6 bucket=0 tile_steps=543263760 kernel_mean_us=19217.110 ns_per_tile_step=1.344191
+K5_COST call=6 bucket=2 tile_steps=69296560 kernel_mean_us=2815.581 ns_per_tile_step=1.543974
+TABLE_WORK call=6 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.054/22.170/22.289 | 周期/tile步: pair 2.08 single 0.00 8x2 2.39 4x4 0.00 | 份额 %: 87.2 0.0 12.8 0.0
+K5_PHASE call=7 prepare_us=12.410 dispatch_us=0.290 workers_us=22288.830 pack_mean_us=2.909 pack_max_us=97.120
+K5_COST call=7 bucket=0 tile_steps=543263760 kernel_mean_us=19218.924 ns_per_tile_step=1.344318
+K5_COST call=7 bucket=2 tile_steps=69296560 kernel_mean_us=2792.882 ns_per_tile_step=1.531526
+TABLE_WORK call=7 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.044/22.150/22.285 | 周期/tile步: pair 2.08 single 0.00 8x2 2.37 4x4 0.00 | 份额 %: 87.3 0.0 12.7 0.0
+  6390 x  4256     81 x    81 run0   22.572 ms    15318.9 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.619 ms    15287.0 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.594 ms    15303.7 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.623 ms    15284.2 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.553 ms    15331.8 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.553 ms    15331.8 GFLOPS | avg   22.592 ms    15305.1 GFLOPS  PASS
+PROFILE memory=DDR round=6 variant=baseline shape=6390 4256 81 81
+K5_PHASE call=1 prepare_us=911.160 dispatch_us=5.140 workers_us=30916.480 pack_mean_us=11.552 pack_max_us=430.660
+K5_COST call=1 bucket=0 tile_steps=543263760 kernel_mean_us=19316.842 ns_per_tile_step=1.351167
+K5_COST call=1 bucket=2 tile_steps=69296560 kernel_mean_us=2750.247 ns_per_tile_step=1.508147
+TABLE_WORK call=1 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 11.702/22.164/28.094 | 周期/tile步: pair 2.09 single 0.00 8x2 2.34 4x4 0.00 | 份额 %: 87.5 0.0 12.5 0.0
+K5_PHASE call=2 prepare_us=14.300 dispatch_us=0.700 workers_us=22457.770 pack_mean_us=3.722 pack_max_us=106.100
+K5_COST call=2 bucket=0 tile_steps=543263760 kernel_mean_us=19273.028 ns_per_tile_step=1.348102
+K5_COST call=2 bucket=2 tile_steps=69296560 kernel_mean_us=2741.657 ns_per_tile_step=1.503436
+TABLE_WORK call=2 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 21.995/22.159/22.454 | 周期/tile步: pair 2.09 single 0.00 8x2 2.33 4x4 0.00 | 份额 %: 87.5 0.0 12.5 0.0
+K5_PHASE call=3 prepare_us=16.490 dispatch_us=1.210 workers_us=22491.210 pack_mean_us=3.703 pack_max_us=138.540
+K5_COST call=3 bucket=0 tile_steps=543263760 kernel_mean_us=19259.557 ns_per_tile_step=1.347160
+K5_COST call=3 bucket=2 tile_steps=69296560 kernel_mean_us=2739.510 ns_per_tile_step=1.502259
+TABLE_WORK call=3 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.003/22.168/22.487 | 周期/tile步: pair 2.09 single 0.00 8x2 2.33 4x4 0.00 | 份额 %: 87.5 0.0 12.5 0.0
+K5_PHASE call=4 prepare_us=14.790 dispatch_us=0.790 workers_us=22265.800 pack_mean_us=3.398 pack_max_us=103.950
+K5_COST call=4 bucket=0 tile_steps=543263760 kernel_mean_us=19262.507 ns_per_tile_step=1.347366
+K5_COST call=4 bucket=2 tile_steps=69296560 kernel_mean_us=2746.549 ns_per_tile_step=1.506119
+TABLE_WORK call=4 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 21.996/22.151/22.262 | 周期/tile步: pair 2.09 single 0.00 8x2 2.33 4x4 0.00 | 份额 %: 87.5 0.0 12.5 0.0
+K5_PHASE call=5 prepare_us=14.340 dispatch_us=0.900 workers_us=22268.910 pack_mean_us=3.337 pack_max_us=105.130
+K5_COST call=5 bucket=0 tile_steps=543263760 kernel_mean_us=19272.315 ns_per_tile_step=1.348052
+K5_COST call=5 bucket=2 tile_steps=69296560 kernel_mean_us=2744.504 ns_per_tile_step=1.504998
+TABLE_WORK call=5 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.006/22.160/22.266 | 周期/tile步: pair 2.09 single 0.00 8x2 2.33 4x4 0.00 | 份额 %: 87.5 0.0 12.5 0.0
+K5_PHASE call=6 prepare_us=14.620 dispatch_us=0.840 workers_us=22240.520 pack_mean_us=3.664 pack_max_us=103.770
+K5_COST call=6 bucket=0 tile_steps=543263760 kernel_mean_us=19270.239 ns_per_tile_step=1.347907
+K5_COST call=6 bucket=2 tile_steps=69296560 kernel_mean_us=2746.379 ns_per_tile_step=1.506026
+TABLE_WORK call=6 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 21.993/22.159/22.236 | 周期/tile步: pair 2.09 single 0.00 8x2 2.33 4x4 0.00 | 份额 %: 87.5 0.0 12.5 0.0
+K5_PHASE call=7 prepare_us=14.380 dispatch_us=0.830 workers_us=22255.700 pack_mean_us=4.224 pack_max_us=103.350
+K5_COST call=7 bucket=0 tile_steps=543263760 kernel_mean_us=19280.370 ns_per_tile_step=1.348616
+K5_COST call=7 bucket=2 tile_steps=69296560 kernel_mean_us=2732.474 ns_per_tile_step=1.498401
+TABLE_WORK call=7 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.010/22.154/22.253 | 周期/tile步: pair 2.09 single 0.00 8x2 2.32 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+  6390 x  4256     81 x    81 run0   22.761 ms    15191.1 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.570 ms    15319.8 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.534 ms    15344.5 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.589 ms    15306.8 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.569 ms    15320.7 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.534 ms    15344.5 GFLOPS | avg   22.605 ms    15296.4 GFLOPS  PASS
+PROFILE memory=HBM round=1 variant=baseline shape=6390 4256 81 81
+K5_PHASE call=1 prepare_us=894.490 dispatch_us=6.200 workers_us=29905.620 pack_mean_us=11.305 pack_max_us=419.490
+K5_COST call=1 bucket=0 tile_steps=543263760 kernel_mean_us=19345.384 ns_per_tile_step=1.353163
+K5_COST call=1 bucket=2 tile_steps=69296560 kernel_mean_us=2728.973 ns_per_tile_step=1.496481
+TABLE_WORK call=1 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 14.982/22.164/27.950 | 周期/tile步: pair 2.10 single 0.00 8x2 2.32 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=2 prepare_us=14.130 dispatch_us=0.820 workers_us=22287.710 pack_mean_us=3.649 pack_max_us=103.890
+K5_COST call=2 bucket=0 tile_steps=543263760 kernel_mean_us=19313.676 ns_per_tile_step=1.350945
+K5_COST call=2 bucket=2 tile_steps=69296560 kernel_mean_us=2726.928 ns_per_tile_step=1.495359
+TABLE_WORK call=2 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.053/22.178/22.284 | 周期/tile步: pair 2.09 single 0.00 8x2 2.32 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=3 prepare_us=16.770 dispatch_us=0.880 workers_us=22321.870 pack_mean_us=4.148 pack_max_us=154.270
+K5_COST call=3 bucket=0 tile_steps=543263760 kernel_mean_us=19301.674 ns_per_tile_step=1.350106
+K5_COST call=3 bucket=2 tile_steps=69296560 kernel_mean_us=2724.357 ns_per_tile_step=1.493950
+TABLE_WORK call=3 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.078/22.207/22.318 | 周期/tile步: pair 2.09 single 0.00 8x2 2.32 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=4 prepare_us=13.970 dispatch_us=0.650 workers_us=22310.030 pack_mean_us=3.446 pack_max_us=102.970
+K5_COST call=4 bucket=0 tile_steps=543263760 kernel_mean_us=19312.656 ns_per_tile_step=1.350874
+K5_COST call=4 bucket=2 tile_steps=69296560 kernel_mean_us=2735.479 ns_per_tile_step=1.500049
+TABLE_WORK call=4 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.067/22.185/22.306 | 周期/tile步: pair 2.09 single 0.00 8x2 2.33 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=5 prepare_us=14.530 dispatch_us=1.360 workers_us=22313.000 pack_mean_us=3.362 pack_max_us=103.490
+K5_COST call=5 bucket=0 tile_steps=543263760 kernel_mean_us=19314.209 ns_per_tile_step=1.350983
+K5_COST call=5 bucket=2 tile_steps=69296560 kernel_mean_us=2722.939 ns_per_tile_step=1.493172
+TABLE_WORK call=5 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.063/22.174/22.309 | 周期/tile步: pair 2.09 single 0.00 8x2 2.31 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=6 prepare_us=14.000 dispatch_us=0.830 workers_us=22289.450 pack_mean_us=3.826 pack_max_us=103.710
+K5_COST call=6 bucket=0 tile_steps=543263760 kernel_mean_us=19310.451 ns_per_tile_step=1.350720
+K5_COST call=6 bucket=2 tile_steps=69296560 kernel_mean_us=2724.944 ns_per_tile_step=1.494272
+TABLE_WORK call=6 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.047/22.173/22.287 | 周期/tile步: pair 2.09 single 0.00 8x2 2.32 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=7 prepare_us=14.650 dispatch_us=0.900 workers_us=22292.490 pack_mean_us=3.724 pack_max_us=103.870
+K5_COST call=7 bucket=0 tile_steps=543263760 kernel_mean_us=19312.482 ns_per_tile_step=1.350862
+K5_COST call=7 bucket=2 tile_steps=69296560 kernel_mean_us=2724.574 ns_per_tile_step=1.494068
+TABLE_WORK call=7 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.043/22.175/22.289 | 周期/tile步: pair 2.09 single 0.00 8x2 2.32 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+  6390 x  4256     81 x    81 run0   22.611 ms    15292.2 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.625 ms    15282.4 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.584 ms    15310.8 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.643 ms    15270.4 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.581 ms    15312.4 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.581 ms    15312.4 GFLOPS | avg   22.609 ms    15293.6 GFLOPS  PASS
+PROFILE memory=HBM round=1 variant=merged shape=6390 4256 81 81
+K5_PHASE call=1 prepare_us=804.980 dispatch_us=4.970 workers_us=30023.270 pack_mean_us=8.913 pack_max_us=333.590
+K5_COST call=1 bucket=0 tile_steps=543263760 kernel_mean_us=19347.817 ns_per_tile_step=1.353333
+K5_COST call=1 bucket=2 tile_steps=69296560 kernel_mean_us=2739.673 ns_per_tile_step=1.502349
+TABLE_WORK call=1 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 0.012/22.177/27.560 | 周期/tile步: pair 2.10 single 0.00 8x2 2.33 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=2 prepare_us=11.270 dispatch_us=0.280 workers_us=22556.420 pack_mean_us=2.984 pack_max_us=95.320
+K5_COST call=2 bucket=0 tile_steps=543263760 kernel_mean_us=19306.845 ns_per_tile_step=1.350468
+K5_COST call=2 bucket=2 tile_steps=69296560 kernel_mean_us=2751.746 ns_per_tile_step=1.508969
+TABLE_WORK call=2 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.066/22.189/22.553 | 周期/tile步: pair 2.09 single 0.00 8x2 2.34 4x4 0.00 | 份额 %: 87.5 0.0 12.5 0.0
+K5_PHASE call=3 prepare_us=14.780 dispatch_us=0.410 workers_us=22363.070 pack_mean_us=3.149 pack_max_us=118.960
+K5_COST call=3 bucket=0 tile_steps=543263760 kernel_mean_us=19292.611 ns_per_tile_step=1.349472
+K5_COST call=3 bucket=2 tile_steps=69296560 kernel_mean_us=2734.561 ns_per_tile_step=1.499545
+TABLE_WORK call=3 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.071/22.182/22.356 | 周期/tile步: pair 2.09 single 0.00 8x2 2.32 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=4 prepare_us=10.470 dispatch_us=0.260 workers_us=22294.940 pack_mean_us=3.027 pack_max_us=95.530
+K5_COST call=4 bucket=0 tile_steps=543263760 kernel_mean_us=19296.527 ns_per_tile_step=1.349746
+K5_COST call=4 bucket=2 tile_steps=69296560 kernel_mean_us=2732.874 ns_per_tile_step=1.498620
+TABLE_WORK call=4 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.057/22.161/22.291 | 周期/tile步: pair 2.09 single 0.00 8x2 2.32 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=5 prepare_us=11.420 dispatch_us=0.160 workers_us=22293.570 pack_mean_us=2.927 pack_max_us=95.420
+K5_COST call=5 bucket=0 tile_steps=543263760 kernel_mean_us=19301.732 ns_per_tile_step=1.350110
+K5_COST call=5 bucket=2 tile_steps=69296560 kernel_mean_us=2733.234 ns_per_tile_step=1.498818
+TABLE_WORK call=5 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.059/22.165/22.291 | 周期/tile步: pair 2.09 single 0.00 8x2 2.32 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=6 prepare_us=10.720 dispatch_us=0.360 workers_us=22294.750 pack_mean_us=2.853 pack_max_us=95.050
+K5_COST call=6 bucket=0 tile_steps=543263760 kernel_mean_us=19300.137 ns_per_tile_step=1.349998
+K5_COST call=6 bucket=2 tile_steps=69296560 kernel_mean_us=2734.765 ns_per_tile_step=1.499657
+TABLE_WORK call=6 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.059/22.166/22.292 | 周期/tile步: pair 2.09 single 0.00 8x2 2.32 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=7 prepare_us=11.010 dispatch_us=0.280 workers_us=22540.190 pack_mean_us=2.819 pack_max_us=95.580
+K5_COST call=7 bucket=0 tile_steps=543263760 kernel_mean_us=19301.351 ns_per_tile_step=1.350083
+K5_COST call=7 bucket=2 tile_steps=69296560 kernel_mean_us=2731.301 ns_per_tile_step=1.497757
+TABLE_WORK call=7 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.052/22.163/22.537 | 周期/tile步: pair 2.09 single 0.00 8x2 2.32 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+  6390 x  4256     81 x    81 run0   22.606 ms    15295.4 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.561 ms    15326.1 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.552 ms    15332.1 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.617 ms    15288.1 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.798 ms    15166.9 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.552 ms    15332.1 GFLOPS | avg   22.627 ms    15281.5 GFLOPS  PASS
+PROFILE memory=HBM round=2 variant=merged shape=6390 4256 81 81
+K5_PHASE call=1 prepare_us=802.580 dispatch_us=4.960 workers_us=31085.760 pack_mean_us=8.903 pack_max_us=333.530
+K5_COST call=1 bucket=0 tile_steps=543263760 kernel_mean_us=19304.656 ns_per_tile_step=1.350314
+K5_COST call=1 bucket=2 tile_steps=69296560 kernel_mean_us=2833.205 ns_per_tile_step=1.553638
+TABLE_WORK call=1 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 11.813/22.227/28.425 | 周期/tile步: pair 2.09 single 0.00 8x2 2.41 4x4 0.00 | 份额 %: 87.2 0.0 12.8 0.0
+K5_PHASE call=2 prepare_us=11.260 dispatch_us=0.270 workers_us=22587.910 pack_mean_us=2.857 pack_max_us=96.160
+K5_COST call=2 bucket=0 tile_steps=543263760 kernel_mean_us=19274.121 ns_per_tile_step=1.348179
+K5_COST call=2 bucket=2 tile_steps=69296560 kernel_mean_us=2836.840 ns_per_tile_step=1.555632
+TABLE_WORK call=2 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.087/22.243/22.584 | 周期/tile步: pair 2.09 single 0.00 8x2 2.41 4x4 0.00 | 份额 %: 87.2 0.0 12.8 0.0
+K5_PHASE call=3 prepare_us=14.300 dispatch_us=0.480 workers_us=22333.070 pack_mean_us=3.132 pack_max_us=118.530
+K5_COST call=3 bucket=0 tile_steps=543263760 kernel_mean_us=19265.638 ns_per_tile_step=1.347585
+K5_COST call=3 bucket=2 tile_steps=69296560 kernel_mean_us=2827.888 ns_per_tile_step=1.550723
+TABLE_WORK call=3 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.102/22.249/22.332 | 周期/tile步: pair 2.09 single 0.00 8x2 2.40 4x4 0.00 | 份额 %: 87.2 0.0 12.8 0.0
+K5_PHASE call=4 prepare_us=11.750 dispatch_us=0.170 workers_us=22358.070 pack_mean_us=3.115 pack_max_us=95.220
+K5_COST call=4 bucket=0 tile_steps=543263760 kernel_mean_us=19276.318 ns_per_tile_step=1.348332
+K5_COST call=4 bucket=2 tile_steps=69296560 kernel_mean_us=2848.438 ns_per_tile_step=1.561992
+TABLE_WORK call=4 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.147/22.257/22.354 | 周期/tile步: pair 2.09 single 0.00 8x2 2.42 4x4 0.00 | 份额 %: 87.1 0.0 12.9 0.0
+K5_PHASE call=5 prepare_us=11.900 dispatch_us=0.280 workers_us=22350.420 pack_mean_us=3.102 pack_max_us=95.050
+K5_COST call=5 bucket=0 tile_steps=543263760 kernel_mean_us=19278.048 ns_per_tile_step=1.348453
+K5_COST call=5 bucket=2 tile_steps=69296560 kernel_mean_us=2830.572 ns_per_tile_step=1.552194
+TABLE_WORK call=5 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.119/22.240/22.349 | 周期/tile步: pair 2.09 single 0.00 8x2 2.41 4x4 0.00 | 份额 %: 87.2 0.0 12.8 0.0
+K5_PHASE call=6 prepare_us=11.960 dispatch_us=0.300 workers_us=22584.700 pack_mean_us=3.004 pack_max_us=95.470
+K5_COST call=6 bucket=0 tile_steps=543263760 kernel_mean_us=19270.332 ns_per_tile_step=1.347914
+K5_COST call=6 bucket=2 tile_steps=69296560 kernel_mean_us=2832.569 ns_per_tile_step=1.553290
+TABLE_WORK call=6 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.087/22.235/22.583 | 周期/tile步: pair 2.09 single 0.00 8x2 2.41 4x4 0.00 | 份额 %: 87.2 0.0 12.8 0.0
+K5_PHASE call=7 prepare_us=11.680 dispatch_us=0.300 workers_us=22435.930 pack_mean_us=3.114 pack_max_us=96.070
+K5_COST call=7 bucket=0 tile_steps=543263760 kernel_mean_us=19274.946 ns_per_tile_step=1.348236
+K5_COST call=7 bucket=2 tile_steps=69296560 kernel_mean_us=2831.446 ns_per_tile_step=1.552674
+TABLE_WORK call=7 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.081/22.239/22.429 | 周期/tile步: pair 2.09 single 0.00 8x2 2.41 4x4 0.00 | 份额 %: 87.2 0.0 12.8 0.0
+  6390 x  4256     81 x    81 run0   22.580 ms    15313.4 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.629 ms    15279.8 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.598 ms    15301.0 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.909 ms    15093.3 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.697 ms    15234.3 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.580 ms    15313.4 GFLOPS | avg   22.683 ms    15243.9 GFLOPS  PASS
+PROFILE memory=HBM round=2 variant=baseline shape=6390 4256 81 81
+K5_PHASE call=1 prepare_us=914.190 dispatch_us=4.840 workers_us=30986.370 pack_mean_us=10.982 pack_max_us=409.840
+K5_COST call=1 bucket=0 tile_steps=543263760 kernel_mean_us=19286.597 ns_per_tile_step=1.349051
+K5_COST call=1 bucket=2 tile_steps=69296560 kernel_mean_us=2746.974 ns_per_tile_step=1.506352
+TABLE_WORK call=1 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 11.471/22.126/29.261 | 周期/tile步: pair 2.09 single 0.00 8x2 2.33 4x4 0.00 | 份额 %: 87.5 0.0 12.5 0.0
+K5_PHASE call=2 prepare_us=14.140 dispatch_us=0.370 workers_us=22559.210 pack_mean_us=3.250 pack_max_us=103.440
+K5_COST call=2 bucket=0 tile_steps=543263760 kernel_mean_us=19251.453 ns_per_tile_step=1.346593
+K5_COST call=2 bucket=2 tile_steps=69296560 kernel_mean_us=2743.134 ns_per_tile_step=1.504246
+TABLE_WORK call=2 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.051/22.131/22.553 | 周期/tile步: pair 2.09 single 0.00 8x2 2.33 4x4 0.00 | 份额 %: 87.5 0.0 12.5 0.0
+K5_PHASE call=3 prepare_us=18.610 dispatch_us=0.860 workers_us=22380.550 pack_mean_us=3.704 pack_max_us=138.740
+K5_COST call=3 bucket=0 tile_steps=543263760 kernel_mean_us=19233.704 ns_per_tile_step=1.345352
+K5_COST call=3 bucket=2 tile_steps=69296560 kernel_mean_us=2749.430 ns_per_tile_step=1.507699
+TABLE_WORK call=3 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.061/22.146/22.376 | 周期/tile步: pair 2.09 single 0.00 8x2 2.34 4x4 0.00 | 份额 %: 87.5 0.0 12.5 0.0
+K5_PHASE call=4 prepare_us=14.420 dispatch_us=0.840 workers_us=22277.310 pack_mean_us=3.256 pack_max_us=103.790
+K5_COST call=4 bucket=0 tile_steps=543263760 kernel_mean_us=19242.073 ns_per_tile_step=1.345937
+K5_COST call=4 bucket=2 tile_steps=69296560 kernel_mean_us=2746.137 ns_per_tile_step=1.505893
+TABLE_WORK call=4 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.041/22.124/22.274 | 周期/tile步: pair 2.09 single 0.00 8x2 2.33 4x4 0.00 | 份额 %: 87.5 0.0 12.5 0.0
+K5_PHASE call=5 prepare_us=14.550 dispatch_us=1.130 workers_us=22293.270 pack_mean_us=3.264 pack_max_us=103.520
+K5_COST call=5 bucket=0 tile_steps=543263760 kernel_mean_us=19242.597 ns_per_tile_step=1.345974
+K5_COST call=5 bucket=2 tile_steps=69296560 kernel_mean_us=2769.127 ns_per_tile_step=1.518500
+TABLE_WORK call=5 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.049/22.148/22.288 | 周期/tile步: pair 2.09 single 0.00 8x2 2.35 4x4 0.00 | 份额 %: 87.4 0.0 12.6 0.0
+K5_PHASE call=6 prepare_us=15.030 dispatch_us=0.820 workers_us=22535.530 pack_mean_us=3.710 pack_max_us=103.230
+K5_COST call=6 bucket=0 tile_steps=543263760 kernel_mean_us=19246.022 ns_per_tile_step=1.346213
+K5_COST call=6 bucket=2 tile_steps=69296560 kernel_mean_us=2740.322 ns_per_tile_step=1.502704
+TABLE_WORK call=6 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.029/22.123/22.531 | 周期/tile步: pair 2.09 single 0.00 8x2 2.33 4x4 0.00 | 份额 %: 87.5 0.0 12.5 0.0
+K5_PHASE call=7 prepare_us=14.690 dispatch_us=0.820 workers_us=22271.460 pack_mean_us=3.626 pack_max_us=103.820
+K5_COST call=7 bucket=0 tile_steps=543263760 kernel_mean_us=19245.549 ns_per_tile_step=1.346180
+K5_COST call=7 bucket=2 tile_steps=69296560 kernel_mean_us=2742.772 ns_per_tile_step=1.504048
+TABLE_WORK call=7 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.029/22.125/22.267 | 周期/tile步: pair 2.09 single 0.00 8x2 2.33 4x4 0.00 | 份额 %: 87.5 0.0 12.5 0.0
+  6390 x  4256     81 x    81 run0   22.657 ms    15261.3 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.582 ms    15311.7 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.553 ms    15331.6 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.865 ms    15122.1 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.553 ms    15331.6 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.553 ms    15331.6 GFLOPS | avg   22.642 ms    15271.3 GFLOPS  PASS
+PROFILE memory=HBM round=3 variant=baseline shape=6390 4256 81 81
+K5_PHASE call=1 prepare_us=918.990 dispatch_us=5.810 workers_us=30109.440 pack_mean_us=10.816 pack_max_us=403.640
+K5_COST call=1 bucket=0 tile_steps=543263760 kernel_mean_us=19330.879 ns_per_tile_step=1.352149
+K5_COST call=1 bucket=2 tile_steps=69296560 kernel_mean_us=2702.214 ns_per_tile_step=1.481807
+TABLE_WORK call=1 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 8.335/22.128/27.066 | 周期/tile步: pair 2.10 single 0.00 8x2 2.30 4x4 0.00 | 份额 %: 87.7 0.0 12.3 0.0
+K5_PHASE call=2 prepare_us=16.740 dispatch_us=1.110 workers_us=22250.110 pack_mean_us=3.372 pack_max_us=105.420
+K5_COST call=2 bucket=0 tile_steps=543263760 kernel_mean_us=19285.698 ns_per_tile_step=1.348988
+K5_COST call=2 bucket=2 tile_steps=69296560 kernel_mean_us=2702.797 ns_per_tile_step=1.482127
+TABLE_WORK call=2 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.006/22.129/22.245 | 周期/tile步: pair 2.09 single 0.00 8x2 2.30 4x4 0.00 | 份额 %: 87.7 0.0 12.3 0.0
+K5_PHASE call=3 prepare_us=16.340 dispatch_us=1.050 workers_us=22273.050 pack_mean_us=4.147 pack_max_us=155.490
+K5_COST call=3 bucket=0 tile_steps=543263760 kernel_mean_us=19268.881 ns_per_tile_step=1.347812
+K5_COST call=3 bucket=2 tile_steps=69296560 kernel_mean_us=2701.388 ns_per_tile_step=1.481354
+TABLE_WORK call=3 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.023/22.151/22.269 | 周期/tile步: pair 2.09 single 0.00 8x2 2.30 4x4 0.00 | 份额 %: 87.7 0.0 12.3 0.0
+K5_PHASE call=4 prepare_us=15.690 dispatch_us=1.090 workers_us=22250.780 pack_mean_us=3.667 pack_max_us=103.880
+K5_COST call=4 bucket=0 tile_steps=543263760 kernel_mean_us=19283.677 ns_per_tile_step=1.348847
+K5_COST call=4 bucket=2 tile_steps=69296560 kernel_mean_us=2706.422 ns_per_tile_step=1.484115
+TABLE_WORK call=4 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.003/22.128/22.248 | 周期/tile步: pair 2.09 single 0.00 8x2 2.30 4x4 0.00 | 份额 %: 87.7 0.0 12.3 0.0
+K5_PHASE call=5 prepare_us=13.910 dispatch_us=0.850 workers_us=22512.730 pack_mean_us=3.354 pack_max_us=103.930
+K5_COST call=5 bucket=0 tile_steps=543263760 kernel_mean_us=19287.056 ns_per_tile_step=1.349083
+K5_COST call=5 bucket=2 tile_steps=69296560 kernel_mean_us=2699.289 ns_per_tile_step=1.480203
+TABLE_WORK call=5 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.005/22.125/22.509 | 周期/tile步: pair 2.09 single 0.00 8x2 2.29 4x4 0.00 | 份额 %: 87.7 0.0 12.3 0.0
+K5_PHASE call=6 prepare_us=17.790 dispatch_us=0.830 workers_us=22254.500 pack_mean_us=3.490 pack_max_us=103.060
+K5_COST call=6 bucket=0 tile_steps=543263760 kernel_mean_us=19288.031 ns_per_tile_step=1.349152
+K5_COST call=6 bucket=2 tile_steps=69296560 kernel_mean_us=2703.058 ns_per_tile_step=1.482270
+TABLE_WORK call=6 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.012/22.129/22.251 | 周期/tile步: pair 2.09 single 0.00 8x2 2.30 4x4 0.00 | 份额 %: 87.7 0.0 12.3 0.0
+K5_PHASE call=7 prepare_us=15.350 dispatch_us=0.660 workers_us=22239.960 pack_mean_us=3.887 pack_max_us=103.340
+K5_COST call=7 bucket=0 tile_steps=543263760 kernel_mean_us=19286.303 ns_per_tile_step=1.349031
+K5_COST call=7 bucket=2 tile_steps=69296560 kernel_mean_us=2699.745 ns_per_tile_step=1.480453
+TABLE_WORK call=7 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 21.991/22.124/22.235 | 周期/tile步: pair 2.09 single 0.00 8x2 2.29 4x4 0.00 | 份额 %: 87.7 0.0 12.3 0.0
+  6390 x  4256     81 x    81 run0   22.557 ms    15328.5 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.562 ms    15325.7 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.781 ms    15178.0 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.603 ms    15297.6 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.512 ms    15359.4 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.512 ms    15359.4 GFLOPS | avg   22.603 ms    15297.6 GFLOPS  PASS
+PROFILE memory=HBM round=3 variant=merged shape=6390 4256 81 81
+K5_PHASE call=1 prepare_us=829.040 dispatch_us=5.120 workers_us=30120.860 pack_mean_us=9.036 pack_max_us=335.750
+K5_COST call=1 bucket=0 tile_steps=543263760 kernel_mean_us=19355.555 ns_per_tile_step=1.353875
+K5_COST call=1 bucket=2 tile_steps=69296560 kernel_mean_us=2729.875 ns_per_tile_step=1.496975
+TABLE_WORK call=1 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 9.119/22.177/27.908 | 周期/tile步: pair 2.10 single 0.00 8x2 2.32 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=2 prepare_us=12.260 dispatch_us=0.210 workers_us=22308.620 pack_mean_us=2.853 pack_max_us=97.350
+K5_COST call=2 bucket=0 tile_steps=543263760 kernel_mean_us=19314.114 ns_per_tile_step=1.350976
+K5_COST call=2 bucket=2 tile_steps=69296560 kernel_mean_us=2728.363 ns_per_tile_step=1.496146
+TABLE_WORK call=2 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.061/22.177/22.303 | 周期/tile步: pair 2.09 single 0.00 8x2 2.32 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=3 prepare_us=13.350 dispatch_us=0.490 workers_us=22523.160 pack_mean_us=3.167 pack_max_us=119.360
+K5_COST call=3 bucket=0 tile_steps=543263760 kernel_mean_us=19306.837 ns_per_tile_step=1.350467
+K5_COST call=3 bucket=2 tile_steps=69296560 kernel_mean_us=2732.042 ns_per_tile_step=1.498164
+TABLE_WORK call=3 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.077/22.195/22.520 | 周期/tile步: pair 2.09 single 0.00 8x2 2.32 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=4 prepare_us=11.440 dispatch_us=0.280 workers_us=22314.720 pack_mean_us=2.906 pack_max_us=97.010
+K5_COST call=4 bucket=0 tile_steps=543263760 kernel_mean_us=19319.981 ns_per_tile_step=1.351386
+K5_COST call=4 bucket=2 tile_steps=69296560 kernel_mean_us=2726.688 ns_per_tile_step=1.495228
+TABLE_WORK call=4 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.074/22.180/22.308 | 周期/tile步: pair 2.09 single 0.00 8x2 2.32 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=5 prepare_us=11.650 dispatch_us=0.310 workers_us=22522.690 pack_mean_us=3.246 pack_max_us=97.550
+K5_COST call=5 bucket=0 tile_steps=543263760 kernel_mean_us=19311.851 ns_per_tile_step=1.350818
+K5_COST call=5 bucket=2 tile_steps=69296560 kernel_mean_us=2727.183 ns_per_tile_step=1.495499
+TABLE_WORK call=5 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.044/22.174/22.519 | 周期/tile步: pair 2.09 single 0.00 8x2 2.32 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=6 prepare_us=11.120 dispatch_us=0.340 workers_us=22302.400 pack_mean_us=2.924 pack_max_us=96.450
+K5_COST call=6 bucket=0 tile_steps=543263760 kernel_mean_us=19315.876 ns_per_tile_step=1.351099
+K5_COST call=6 bucket=2 tile_steps=69296560 kernel_mean_us=2727.368 ns_per_tile_step=1.495601
+TABLE_WORK call=6 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.065/22.177/22.300 | 周期/tile步: pair 2.09 single 0.00 8x2 2.32 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=7 prepare_us=11.810 dispatch_us=0.280 workers_us=22312.040 pack_mean_us=3.255 pack_max_us=97.330
+K5_COST call=7 bucket=0 tile_steps=543263760 kernel_mean_us=19316.502 ns_per_tile_step=1.351143
+K5_COST call=7 bucket=2 tile_steps=69296560 kernel_mean_us=2728.756 ns_per_tile_step=1.496362
+TABLE_WORK call=7 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.065/22.179/22.309 | 周期/tile步: pair 2.09 single 0.00 8x2 2.32 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+  6390 x  4256     81 x    81 run0   22.794 ms    15169.6 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.613 ms    15291.1 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.777 ms    15180.5 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.638 ms    15273.7 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.591 ms    15305.8 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.591 ms    15305.8 GFLOPS | avg   22.683 ms    15243.9 GFLOPS  PASS
+PROFILE memory=HBM round=4 variant=merged shape=6390 4256 81 81
+K5_PHASE call=1 prepare_us=803.490 dispatch_us=6.300 workers_us=29226.110 pack_mean_us=8.979 pack_max_us=333.060
+K5_COST call=1 bucket=0 tile_steps=543263760 kernel_mean_us=19316.893 ns_per_tile_step=1.351170
+K5_COST call=1 bucket=2 tile_steps=69296560 kernel_mean_us=2725.634 ns_per_tile_step=1.494650
+TABLE_WORK call=1 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 15.131/22.128/27.044 | 周期/tile步: pair 2.09 single 0.00 8x2 2.32 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=2 prepare_us=11.520 dispatch_us=0.160 workers_us=22488.930 pack_mean_us=3.077 pack_max_us=95.330
+K5_COST call=2 bucket=0 tile_steps=543263760 kernel_mean_us=19286.207 ns_per_tile_step=1.349024
+K5_COST call=2 bucket=2 tile_steps=69296560 kernel_mean_us=2724.387 ns_per_tile_step=1.493966
+TABLE_WORK call=2 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.012/22.142/22.486 | 周期/tile步: pair 2.09 single 0.00 8x2 2.32 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=3 prepare_us=14.870 dispatch_us=0.510 workers_us=22261.150 pack_mean_us=3.147 pack_max_us=118.570
+K5_COST call=3 bucket=0 tile_steps=543263760 kernel_mean_us=19270.331 ns_per_tile_step=1.347914
+K5_COST call=3 bucket=2 tile_steps=69296560 kernel_mean_us=2722.459 ns_per_tile_step=1.492909
+TABLE_WORK call=3 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.015/22.147/22.258 | 周期/tile步: pair 2.09 single 0.00 8x2 2.31 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=4 prepare_us=11.800 dispatch_us=0.190 workers_us=22485.070 pack_mean_us=3.180 pack_max_us=95.550
+K5_COST call=4 bucket=0 tile_steps=543263760 kernel_mean_us=19287.186 ns_per_tile_step=1.349092
+K5_COST call=4 bucket=2 tile_steps=69296560 kernel_mean_us=2721.939 ns_per_tile_step=1.492624
+TABLE_WORK call=4 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.004/22.141/22.482 | 周期/tile步: pair 2.09 single 0.00 8x2 2.31 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=5 prepare_us=10.660 dispatch_us=0.200 workers_us=22264.570 pack_mean_us=2.736 pack_max_us=96.070
+K5_COST call=5 bucket=0 tile_steps=543263760 kernel_mean_us=19289.613 ns_per_tile_step=1.349262
+K5_COST call=5 bucket=2 tile_steps=69296560 kernel_mean_us=2723.876 ns_per_tile_step=1.493686
+TABLE_WORK call=5 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.022/22.144/22.262 | 周期/tile步: pair 2.09 single 0.00 8x2 2.32 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=6 prepare_us=11.810 dispatch_us=0.270 workers_us=22474.320 pack_mean_us=2.798 pack_max_us=95.130
+K5_COST call=6 bucket=0 tile_steps=543263760 kernel_mean_us=19284.621 ns_per_tile_step=1.348913
+K5_COST call=6 bucket=2 tile_steps=69296560 kernel_mean_us=2727.579 ns_per_tile_step=1.495716
+TABLE_WORK call=6 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.010/22.144/22.471 | 周期/tile步: pair 2.09 single 0.00 8x2 2.32 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=7 prepare_us=12.010 dispatch_us=0.320 workers_us=22492.980 pack_mean_us=2.899 pack_max_us=95.210
+K5_COST call=7 bucket=0 tile_steps=543263760 kernel_mean_us=19290.223 ns_per_tile_step=1.349305
+K5_COST call=7 bucket=2 tile_steps=69296560 kernel_mean_us=2725.632 ns_per_tile_step=1.494649
+TABLE_WORK call=7 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.011/22.147/22.489 | 周期/tile步: pair 2.09 single 0.00 8x2 2.32 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+  6390 x  4256     81 x    81 run0   22.529 ms    15348.2 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.769 ms    15185.9 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.514 ms    15357.8 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.781 ms    15177.8 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.760 ms    15192.4 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.514 ms    15357.8 GFLOPS | avg   22.671 ms    15251.9 GFLOPS  PASS
+PROFILE memory=HBM round=4 variant=baseline shape=6390 4256 81 81
+K5_PHASE call=1 prepare_us=892.650 dispatch_us=4.750 workers_us=30933.490 pack_mean_us=10.767 pack_max_us=403.360
+K5_COST call=1 bucket=0 tile_steps=543263760 kernel_mean_us=19344.463 ns_per_tile_step=1.353099
+K5_COST call=1 bucket=2 tile_steps=69296560 kernel_mean_us=2708.534 ns_per_tile_step=1.485273
+TABLE_WORK call=1 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 9.760/22.145/28.127 | 周期/tile步: pair 2.10 single 0.00 8x2 2.30 4x4 0.00 | 份额 %: 87.7 0.0 12.3 0.0
+K5_PHASE call=2 prepare_us=14.410 dispatch_us=1.170 workers_us=22327.440 pack_mean_us=4.088 pack_max_us=104.880
+K5_COST call=2 bucket=0 tile_steps=543263760 kernel_mean_us=19306.887 ns_per_tile_step=1.350471
+K5_COST call=2 bucket=2 tile_steps=69296560 kernel_mean_us=2711.092 ns_per_tile_step=1.486675
+TABLE_WORK call=2 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.026/22.157/22.324 | 周期/tile步: pair 2.09 single 0.00 8x2 2.30 4x4 0.00 | 份额 %: 87.7 0.0 12.3 0.0
+K5_PHASE call=3 prepare_us=17.590 dispatch_us=1.160 workers_us=22272.530 pack_mean_us=3.744 pack_max_us=140.450
+K5_COST call=3 bucket=0 tile_steps=543263760 kernel_mean_us=19289.283 ns_per_tile_step=1.349239
+K5_COST call=3 bucket=2 tile_steps=69296560 kernel_mean_us=2707.241 ns_per_tile_step=1.484564
+TABLE_WORK call=3 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.048/22.163/22.268 | 周期/tile步: pair 2.09 single 0.00 8x2 2.30 4x4 0.00 | 份额 %: 87.7 0.0 12.3 0.0
+K5_PHASE call=4 prepare_us=14.480 dispatch_us=0.660 workers_us=22268.850 pack_mean_us=3.479 pack_max_us=103.820
+K5_COST call=4 bucket=0 tile_steps=543263760 kernel_mean_us=19303.286 ns_per_tile_step=1.350219
+K5_COST call=4 bucket=2 tile_steps=69296560 kernel_mean_us=2707.439 ns_per_tile_step=1.484673
+TABLE_WORK call=4 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.025/22.148/22.264 | 周期/tile步: pair 2.09 single 0.00 8x2 2.30 4x4 0.00 | 份额 %: 87.7 0.0 12.3 0.0
+K5_PHASE call=5 prepare_us=15.570 dispatch_us=1.000 workers_us=22280.890 pack_mean_us=3.882 pack_max_us=104.180
+K5_COST call=5 bucket=0 tile_steps=543263760 kernel_mean_us=19302.248 ns_per_tile_step=1.350146
+K5_COST call=5 bucket=2 tile_steps=69296560 kernel_mean_us=2719.364 ns_per_tile_step=1.491211
+TABLE_WORK call=5 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.043/22.159/22.277 | 周期/tile步: pair 2.09 single 0.00 8x2 2.31 4x4 0.00 | 份额 %: 87.7 0.0 12.3 0.0
+K5_PHASE call=6 prepare_us=14.560 dispatch_us=1.190 workers_us=22328.690 pack_mean_us=3.753 pack_max_us=103.660
+K5_COST call=6 bucket=0 tile_steps=543263760 kernel_mean_us=19297.670 ns_per_tile_step=1.349826
+K5_COST call=6 bucket=2 tile_steps=69296560 kernel_mean_us=2711.139 ns_per_tile_step=1.486701
+TABLE_WORK call=6 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.036/22.147/22.324 | 周期/tile步: pair 2.09 single 0.00 8x2 2.30 4x4 0.00 | 份额 %: 87.7 0.0 12.3 0.0
+K5_PHASE call=7 prepare_us=14.440 dispatch_us=1.110 workers_us=22267.970 pack_mean_us=3.410 pack_max_us=103.540
+K5_COST call=7 bucket=0 tile_steps=543263760 kernel_mean_us=19306.502 ns_per_tile_step=1.350444
+K5_COST call=7 bucket=2 tile_steps=69296560 kernel_mean_us=2712.842 ns_per_tile_step=1.487635
+TABLE_WORK call=7 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.025/22.157/22.264 | 周期/tile步: pair 2.09 single 0.00 8x2 2.31 4x4 0.00 | 份额 %: 87.7 0.0 12.3 0.0
+  6390 x  4256     81 x    81 run0   22.543 ms    15338.2 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.571 ms    15319.4 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.554 ms    15330.7 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.666 ms    15255.4 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.544 ms    15337.8 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.543 ms    15338.2 GFLOPS | avg   22.576 ms    15316.2 GFLOPS  PASS
+PROFILE memory=HBM round=5 variant=baseline shape=6390 4256 81 81
+K5_PHASE call=1 prepare_us=920.540 dispatch_us=4.750 workers_us=31655.430 pack_mean_us=11.015 pack_max_us=409.420
+K5_COST call=1 bucket=0 tile_steps=543263760 kernel_mean_us=19339.200 ns_per_tile_step=1.352731
+K5_COST call=1 bucket=2 tile_steps=69296560 kernel_mean_us=2764.608 ns_per_tile_step=1.516022
+TABLE_WORK call=1 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 11.620/22.197/29.534 | 周期/tile步: pair 2.10 single 0.00 8x2 2.35 4x4 0.00 | 份额 %: 87.5 0.0 12.5 0.0
+K5_PHASE call=2 prepare_us=14.940 dispatch_us=1.110 workers_us=22490.800 pack_mean_us=3.831 pack_max_us=104.010
+K5_COST call=2 bucket=0 tile_steps=543263760 kernel_mean_us=19308.421 ns_per_tile_step=1.350578
+K5_COST call=2 bucket=2 tile_steps=69296560 kernel_mean_us=2764.564 ns_per_tile_step=1.515998
+TABLE_WORK call=2 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.080/22.211/22.487 | 周期/tile步: pair 2.09 single 0.00 8x2 2.35 4x4 0.00 | 份额 %: 87.5 0.0 12.5 0.0
+K5_PHASE call=3 prepare_us=17.740 dispatch_us=1.270 workers_us=22330.010 pack_mean_us=3.762 pack_max_us=140.560
+K5_COST call=3 bucket=0 tile_steps=543263760 kernel_mean_us=19288.431 ns_per_tile_step=1.349180
+K5_COST call=3 bucket=2 tile_steps=69296560 kernel_mean_us=2760.527 ns_per_tile_step=1.513784
+TABLE_WORK call=3 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.085/22.216/22.325 | 周期/tile步: pair 2.09 single 0.00 8x2 2.35 4x4 0.00 | 份额 %: 87.5 0.0 12.5 0.0
+K5_PHASE call=4 prepare_us=14.970 dispatch_us=0.630 workers_us=22353.740 pack_mean_us=3.949 pack_max_us=104.150
+K5_COST call=4 bucket=0 tile_steps=543263760 kernel_mean_us=19311.060 ns_per_tile_step=1.350762
+K5_COST call=4 bucket=2 tile_steps=69296560 kernel_mean_us=2765.628 ns_per_tile_step=1.516581
+TABLE_WORK call=4 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.085/22.216/22.346 | 周期/tile步: pair 2.09 single 0.00 8x2 2.35 4x4 0.00 | 份额 %: 87.5 0.0 12.5 0.0
+K5_PHASE call=5 prepare_us=15.190 dispatch_us=0.830 workers_us=22487.190 pack_mean_us=3.411 pack_max_us=104.430
+K5_COST call=5 bucket=0 tile_steps=543263760 kernel_mean_us=19301.585 ns_per_tile_step=1.350100
+K5_COST call=5 bucket=2 tile_steps=69296560 kernel_mean_us=2760.412 ns_per_tile_step=1.513721
+TABLE_WORK call=5 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.058/22.201/22.483 | 周期/tile步: pair 2.09 single 0.00 8x2 2.35 4x4 0.00 | 份额 %: 87.5 0.0 12.5 0.0
+K5_PHASE call=6 prepare_us=14.570 dispatch_us=0.850 workers_us=22320.380 pack_mean_us=3.584 pack_max_us=103.930
+K5_COST call=6 bucket=0 tile_steps=543263760 kernel_mean_us=19304.403 ns_per_tile_step=1.350297
+K5_COST call=6 bucket=2 tile_steps=69296560 kernel_mean_us=2759.668 ns_per_tile_step=1.513313
+TABLE_WORK call=6 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.073/22.203/22.314 | 周期/tile步: pair 2.09 single 0.00 8x2 2.35 4x4 0.00 | 份额 %: 87.5 0.0 12.5 0.0
+K5_PHASE call=7 prepare_us=15.550 dispatch_us=0.930 workers_us=22312.670 pack_mean_us=3.464 pack_max_us=104.240
+K5_COST call=7 bucket=0 tile_steps=543263760 kernel_mean_us=19298.961 ns_per_tile_step=1.349916
+K5_COST call=7 bucket=2 tile_steps=69296560 kernel_mean_us=2761.545 ns_per_tile_step=1.514342
+TABLE_WORK call=7 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.064/22.200/22.306 | 周期/tile步: pair 2.09 single 0.00 8x2 2.35 4x4 0.00 | 份额 %: 87.5 0.0 12.5 0.0
+  6390 x  4256     81 x    81 run0   22.591 ms    15305.8 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.650 ms    15265.8 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.747 ms    15200.9 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.653 ms    15263.9 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.569 ms    15320.8 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.569 ms    15320.8 GFLOPS | avg   22.642 ms    15271.3 GFLOPS  PASS
+PROFILE memory=HBM round=5 variant=merged shape=6390 4256 81 81
+K5_PHASE call=1 prepare_us=834.470 dispatch_us=6.100 workers_us=31119.330 pack_mean_us=8.962 pack_max_us=336.360
+K5_COST call=1 bucket=0 tile_steps=543263760 kernel_mean_us=19288.939 ns_per_tile_step=1.349215
+K5_COST call=1 bucket=2 tile_steps=69296560 kernel_mean_us=2734.899 ns_per_tile_step=1.499730
+TABLE_WORK call=1 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 0.011/22.117/29.182 | 周期/tile步: pair 2.09 single 0.00 8x2 2.32 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=2 prepare_us=11.590 dispatch_us=0.200 workers_us=22248.440 pack_mean_us=2.769 pack_max_us=96.330
+K5_COST call=2 bucket=0 tile_steps=543263760 kernel_mean_us=19233.826 ns_per_tile_step=1.345360
+K5_COST call=2 bucket=2 tile_steps=69296560 kernel_mean_us=2721.294 ns_per_tile_step=1.492270
+TABLE_WORK call=2 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.003/22.088/22.246 | 周期/tile步: pair 2.09 single 0.00 8x2 2.31 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=3 prepare_us=14.880 dispatch_us=0.380 workers_us=22261.020 pack_mean_us=3.132 pack_max_us=118.660
+K5_COST call=3 bucket=0 tile_steps=543263760 kernel_mean_us=19223.793 ns_per_tile_step=1.344658
+K5_COST call=3 bucket=2 tile_steps=69296560 kernel_mean_us=2718.828 ns_per_tile_step=1.490918
+TABLE_WORK call=3 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.018/22.098/22.255 | 周期/tile步: pair 2.08 single 0.00 8x2 2.31 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=4 prepare_us=11.230 dispatch_us=0.250 workers_us=22249.730 pack_mean_us=3.072 pack_max_us=96.200
+K5_COST call=4 bucket=0 tile_steps=543263760 kernel_mean_us=19239.939 ns_per_tile_step=1.345788
+K5_COST call=4 bucket=2 tile_steps=69296560 kernel_mean_us=2715.555 ns_per_tile_step=1.489123
+TABLE_WORK call=4 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.006/22.088/22.245 | 周期/tile步: pair 2.09 single 0.00 8x2 2.31 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=5 prepare_us=11.230 dispatch_us=0.290 workers_us=22234.710 pack_mean_us=2.867 pack_max_us=96.040
+K5_COST call=5 bucket=0 tile_steps=543263760 kernel_mean_us=19239.462 ns_per_tile_step=1.345754
+K5_COST call=5 bucket=2 tile_steps=69296560 kernel_mean_us=2716.433 ns_per_tile_step=1.489604
+TABLE_WORK call=5 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.002/22.088/22.228 | 周期/tile步: pair 2.09 single 0.00 8x2 2.31 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=6 prepare_us=11.290 dispatch_us=0.260 workers_us=22286.480 pack_mean_us=2.829 pack_max_us=95.920
+K5_COST call=6 bucket=0 tile_steps=543263760 kernel_mean_us=19239.044 ns_per_tile_step=1.345725
+K5_COST call=6 bucket=2 tile_steps=69296560 kernel_mean_us=2716.082 ns_per_tile_step=1.489412
+TABLE_WORK call=6 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.001/22.088/22.283 | 周期/tile步: pair 2.09 single 0.00 8x2 2.31 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=7 prepare_us=11.040 dispatch_us=0.300 workers_us=22240.150 pack_mean_us=2.748 pack_max_us=95.060
+K5_COST call=7 bucket=0 tile_steps=543263760 kernel_mean_us=19237.002 ns_per_tile_step=1.345582
+K5_COST call=7 bucket=2 tile_steps=69296560 kernel_mean_us=2717.806 ns_per_tile_step=1.490357
+TABLE_WORK call=7 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.025/22.087/22.234 | 周期/tile步: pair 2.09 single 0.00 8x2 2.31 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+  6390 x  4256     81 x    81 run0   22.507 ms    15362.7 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.527 ms    15349.1 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.474 ms    15385.4 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.600 ms    15299.4 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.498 ms    15369.2 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.474 ms    15385.4 GFLOPS | avg   22.521 ms    15353.1 GFLOPS  PASS
+PROFILE memory=HBM round=6 variant=merged shape=6390 4256 81 81
+K5_PHASE call=1 prepare_us=831.870 dispatch_us=6.970 workers_us=30491.990 pack_mean_us=8.808 pack_max_us=329.930
+K5_COST call=1 bucket=0 tile_steps=543263760 kernel_mean_us=19351.753 ns_per_tile_step=1.353609
+K5_COST call=1 bucket=2 tile_steps=69296560 kernel_mean_us=2744.272 ns_per_tile_step=1.504871
+TABLE_WORK call=1 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 0.012/22.189/26.906 | 周期/tile步: pair 2.10 single 0.00 8x2 2.33 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=2 prepare_us=11.680 dispatch_us=0.220 workers_us=22320.820 pack_mean_us=2.870 pack_max_us=95.480
+K5_COST call=2 bucket=0 tile_steps=543263760 kernel_mean_us=19316.313 ns_per_tile_step=1.351130
+K5_COST call=2 bucket=2 tile_steps=69296560 kernel_mean_us=2740.941 ns_per_tile_step=1.503044
+TABLE_WORK call=2 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.053/22.190/22.318 | 周期/tile步: pair 2.09 single 0.00 8x2 2.33 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=3 prepare_us=14.890 dispatch_us=0.490 workers_us=22439.390 pack_mean_us=3.123 pack_max_us=118.240
+K5_COST call=3 bucket=0 tile_steps=543263760 kernel_mean_us=19306.354 ns_per_tile_step=1.350433
+K5_COST call=3 bucket=2 tile_steps=69296560 kernel_mean_us=2739.714 ns_per_tile_step=1.502371
+TABLE_WORK call=3 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.058/22.201/22.436 | 周期/tile步: pair 2.09 single 0.00 8x2 2.33 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=4 prepare_us=11.100 dispatch_us=0.270 workers_us=22308.710 pack_mean_us=3.204 pack_max_us=95.860
+K5_COST call=4 bucket=0 tile_steps=543263760 kernel_mean_us=19321.590 ns_per_tile_step=1.351499
+K5_COST call=4 bucket=2 tile_steps=69296560 kernel_mean_us=2740.196 ns_per_tile_step=1.502635
+TABLE_WORK call=4 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.064/22.195/22.306 | 周期/tile步: pair 2.09 single 0.00 8x2 2.33 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=5 prepare_us=10.950 dispatch_us=0.240 workers_us=22308.830 pack_mean_us=2.908 pack_max_us=95.750
+K5_COST call=5 bucket=0 tile_steps=543263760 kernel_mean_us=19310.600 ns_per_tile_step=1.350730
+K5_COST call=5 bucket=2 tile_steps=69296560 kernel_mean_us=2742.266 ns_per_tile_step=1.503770
+TABLE_WORK call=5 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.061/22.185/22.305 | 周期/tile步: pair 2.09 single 0.00 8x2 2.33 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=6 prepare_us=11.090 dispatch_us=0.250 workers_us=22314.550 pack_mean_us=2.693 pack_max_us=95.660
+K5_COST call=6 bucket=0 tile_steps=543263760 kernel_mean_us=19315.268 ns_per_tile_step=1.351057
+K5_COST call=6 bucket=2 tile_steps=69296560 kernel_mean_us=2741.183 ns_per_tile_step=1.503177
+TABLE_WORK call=6 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.054/22.190/22.308 | 周期/tile步: pair 2.09 single 0.00 8x2 2.33 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=7 prepare_us=11.770 dispatch_us=0.280 workers_us=22437.460 pack_mean_us=3.068 pack_max_us=95.130
+K5_COST call=7 bucket=0 tile_steps=543263760 kernel_mean_us=19315.119 ns_per_tile_step=1.351046
+K5_COST call=7 bucket=2 tile_steps=69296560 kernel_mean_us=2742.083 ns_per_tile_step=1.503670
+TABLE_WORK call=7 r_bytes=844992 kf_bytes=104976 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.065/22.190/22.434 | 周期/tile步: pair 2.09 single 0.00 8x2 2.33 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+  6390 x  4256     81 x    81 run0   22.695 ms    15235.8 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.595 ms    15303.0 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.552 ms    15332.3 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.614 ms    15289.9 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.723 ms    15216.7 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.552 ms    15332.3 GFLOPS | avg   22.636 ms    15275.4 GFLOPS  PASS
+PROFILE memory=HBM round=6 variant=baseline shape=6390 4256 81 81
+K5_PHASE call=1 prepare_us=919.930 dispatch_us=6.830 workers_us=31007.900 pack_mean_us=11.198 pack_max_us=418.850
+K5_COST call=1 bucket=0 tile_steps=543263760 kernel_mean_us=19343.805 ns_per_tile_step=1.353053
+K5_COST call=1 bucket=2 tile_steps=69296560 kernel_mean_us=2729.656 ns_per_tile_step=1.496855
+TABLE_WORK call=1 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 10.721/22.165/27.944 | 周期/tile步: pair 2.10 single 0.00 8x2 2.32 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=2 prepare_us=15.300 dispatch_us=0.930 workers_us=22452.260 pack_mean_us=3.249 pack_max_us=108.540
+K5_COST call=2 bucket=0 tile_steps=543263760 kernel_mean_us=19293.336 ns_per_tile_step=1.349523
+K5_COST call=2 bucket=2 tile_steps=69296560 kernel_mean_us=2820.756 ns_per_tile_step=1.546812
+TABLE_WORK call=2 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.128/22.253/22.445 | 周期/tile步: pair 2.09 single 0.00 8x2 2.40 4x4 0.00 | 份额 %: 87.2 0.0 12.8 0.0
+K5_PHASE call=3 prepare_us=15.250 dispatch_us=0.820 workers_us=22301.000 pack_mean_us=3.950 pack_max_us=147.160
+K5_COST call=3 bucket=0 tile_steps=543263760 kernel_mean_us=19288.678 ns_per_tile_step=1.349197
+K5_COST call=3 bucket=2 tile_steps=69296560 kernel_mean_us=2725.526 ns_per_tile_step=1.494591
+TABLE_WORK call=3 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.069/22.184/22.298 | 周期/tile步: pair 2.09 single 0.00 8x2 2.32 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=4 prepare_us=15.050 dispatch_us=1.350 workers_us=22302.730 pack_mean_us=3.373 pack_max_us=108.170
+K5_COST call=4 bucket=0 tile_steps=543263760 kernel_mean_us=19286.967 ns_per_tile_step=1.349077
+K5_COST call=4 bucket=2 tile_steps=69296560 kernel_mean_us=2727.380 ns_per_tile_step=1.495607
+TABLE_WORK call=4 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.034/22.154/22.299 | 周期/tile步: pair 2.09 single 0.00 8x2 2.32 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=5 prepare_us=14.750 dispatch_us=0.840 workers_us=22283.850 pack_mean_us=3.407 pack_max_us=107.670
+K5_COST call=5 bucket=0 tile_steps=543263760 kernel_mean_us=19293.741 ns_per_tile_step=1.349551
+K5_COST call=5 bucket=2 tile_steps=69296560 kernel_mean_us=2731.170 ns_per_tile_step=1.497685
+TABLE_WORK call=5 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.049/22.164/22.281 | 周期/tile步: pair 2.09 single 0.00 8x2 2.32 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=6 prepare_us=14.820 dispatch_us=0.850 workers_us=22286.560 pack_mean_us=3.600 pack_max_us=107.230
+K5_COST call=6 bucket=0 tile_steps=543263760 kernel_mean_us=19293.368 ns_per_tile_step=1.349525
+K5_COST call=6 bucket=2 tile_steps=69296560 kernel_mean_us=2728.687 ns_per_tile_step=1.496324
+TABLE_WORK call=6 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.047/22.161/22.284 | 周期/tile步: pair 2.09 single 0.00 8x2 2.32 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+K5_PHASE call=7 prepare_us=14.520 dispatch_us=0.850 workers_us=22543.000 pack_mean_us=3.737 pack_max_us=108.250
+K5_COST call=7 bucket=0 tile_steps=543263760 kernel_mean_us=19295.619 ns_per_tile_step=1.349682
+K5_COST call=7 bucket=2 tile_steps=69296560 kernel_mean_us=2727.034 ns_per_tile_step=1.495418
+TABLE_WORK call=7 r_bytes=844992 kf_bytes=209952 logical_kf_bytes=209952
+[roll] thr ms min/avg/max 22.035/22.163/22.541 | 周期/tile步: pair 2.09 single 0.00 8x2 2.32 4x4 0.00 | 份额 %: 87.6 0.0 12.4 0.0
+  6390 x  4256     81 x    81 run0   22.568 ms    15321.5 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.592 ms    15305.3 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.550 ms    15333.7 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.615 ms    15289.3 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.815 ms    15155.7 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.550 ms    15333.7 GFLOPS | avg   22.628 ms    15280.9 GFLOPS  PASS
+KF_PROFILE_DONE 2026-09-13T04:00:05+08:00

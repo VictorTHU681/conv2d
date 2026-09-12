@@ -3,14 +3,18 @@
 from pathlib import Path
 import shutil
 import subprocess
+import argparse
 
-root=Path('build/v56/experiments/upstream-gate');stage=root/'package'
+parser=argparse.ArgumentParser()
+parser.add_argument('--experiment',choices=['upstream-gate','kf-share'],default='upstream-gate')
+args=parser.parse_args()
+root=Path('build/v56/experiments')/args.experiment;stage=root/'package'
 (stage/'tools').mkdir(parents=True,exist_ok=True)
 (stage/'submissions').mkdir(exist_ok=True)
 shutil.copyfile(root/'merged.c',stage/'conv2d.c')
 for name in ['bench_conv.c','run.sh','run_diag.sh','tools/mkdiag.py','tools/package_v56.py']:
     shutil.copyfile(name,stage/name)
-(stage/'README.md').write_text('''# Local v56 upstream F4 gate integration candidate
+readme='''# Local v56 upstream F4 gate integration candidate
 
 Integrates upstream 87fa5d7's long-row F4 copy overlap and alignment gate.
 Retains local K9 reuse, bounded input copies, unique coefficient-pack writers,
@@ -26,5 +30,10 @@ conv_diag.zip contains call-stage/environment probes and is diagnostic-only.
 This unpublished integration is undergoing acceptance, not yet adopted.
 External concurrent callers, allocation failures and other SVL hardware remain
 outside the validated scope. K5 experiments are not included.
-''')
+'''
+if args.experiment=='kf-share':
+    readme=readme.replace('upstream F4 gate integration candidate','shared folded coefficient tables candidate').replace(
+        "Integrates upstream 87fa5d7's long-row F4 copy overlap and alignment gate.",
+        "Integrates upstream 76ec03d's within-call sharing of equal folded coefficient tables.\nOnly each table owner writes; consumers wait for its group to publish completion.\nThe accepted F4 gate remains in place; the K9 weight default stays 140.")
+(stage/'README.md').write_text(readme)
 subprocess.run(['python3',str(stage/'tools/package_v56.py')],check=True)

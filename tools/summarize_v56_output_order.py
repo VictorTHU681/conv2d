@@ -6,9 +6,13 @@ import re,sys
 
 s=Path(sys.argv[1]).read_text()
 pipeline='OUTPUT_PIPELINE_DONE' in s
-upstream='UPSTREAM_GATE_DONE' in s
+shared='KF_SHARE_DONE' in s
+upstream='UPSTREAM_GATE_DONE' in s or shared
 candidate='merged' if upstream else 'pipelined' if pipeline else 'ordered'
-assert ('UPSTREAM_GATE_DONE' if upstream else 'OUTPUT_PIPELINE_DONE' if pipeline else 'OUTPUT_ORDER_DONE') in s and 'FAIL' not in s
+assert ('KF_SHARE_DONE' if shared else 'UPSTREAM_GATE_DONE' if upstream else 'OUTPUT_PIPELINE_DONE' if pipeline else 'OUTPUT_ORDER_DONE') in s and 'FAIL' not in s
+if shared:
+    assert 'KF_SHARE_PASS cases=288 shared_groups=144 nonowner_rows=23184 values=26023296 gate_checks=2' in s
+    assert 'KF_GATE_POSITIVE detected_missing_dependency=1' in s
 if pipeline or upstream:
     assert re.search(r'OUTPUT_OVERLAP PASS cases=54 calls=\d+ active_conflicts=0 positive_control=0',s)
 assert s.count('STATE_SWEEP PASS cases=261')==5
@@ -34,6 +38,7 @@ assert set(data)=={(m,r,v,k) for m in memories for r in range(4)
 for (m,r,k),v in order.items():
     assert v==(['baseline',candidate] if r%2==0 else [candidate,'baseline'])
 print(f'1,305 state cases, {guards} guard cases, {len(data)} official full-reference checks PASS; official maximum errors zero.')
+if shared: print('Additional 288 table ownership/content cases and the missing-dependency positive control PASS.')
 print('Four rounds alternate process order. Five timings per process; median of four process-average GFLOPS.')
 if pipeline or upstream: print('Additional 54 signed bitwise runtime overlap-audit cases PASS, zero observed active conflicts.')
 if len(memories)==1: print('HBM unavailable in this allocation; no HBM result is claimed.')
