@@ -1,0 +1,1 @@
+PIECE_PHASE_EQUIVALENCE PASS cases=14407200 plans=34704 piece_size=32 ja_offset=8 dep_offset=24

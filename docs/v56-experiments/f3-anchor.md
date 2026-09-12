@@ -22,8 +22,23 @@ that break them require renewed analysis. Padding/body address effects on other
 inlined kernels remain possible and require the full four-shape comparison.
 See [derivation](../../results/v56/experiments/f3-anchor/derivation.txt).
 
-Job **1583890**, requested cn20481, is pending/running. Planned 1,044 signed
-state cases with step1 plus 640 timed hashes in four Williams orders. No runtime
-result or root/package adoption is yet claimed. This matched test is distinct
-from adopting the earlier coarse 32/64/96-byte padding sweep, which never tested
-the exact accepted 48/80 loop-offset pair.
+Job **1583890**, cn20481 05:36:44–05:39:40, succeeded: all 1,044 signed
+state cases and 640 timed hashes pass. [Disassembly](../../results/v56/experiments/f3-anchor/f3_code.txt)
+confirms both anchored sources have the intended 48/80 offsets and unchanged
+F3 arithmetic words. Phase_anchor's two arithmetic blocks even have the same
+absolute addresses as the accepted baseline in these screening binaries; this
+does not hold the whole worker fixed.
+
+[Screen](../../results/v56/experiments/f3-anchor/summary.md): phase_anchor/base
+still changes KH55 -0.15% DDR / -0.19% HBM, and KH41 -0.04% / -0.16%.
+KH39 changes +0.19% / -0.28%; KH81 +0.04% / -0.02%. The matched
+phase_anchor/baseline_anchor KH55 comparison is -0.27% / -0.16%.
+Anchoring recovers part of phase's larger KH55 regression but does not yield
+a consistent overall improvement; **neither anchored variant is adopted**.
+This control never establishes one alignment as the sole cause or a universal
+optimum. Full worker layout, setup code and remaining kernels still differ.
+
+The coarse 32/64/96-byte padding sweep did not test accepted 48/80 positions;
+this matched follow-up does, with the limited outcome reported above. Further
+work moves from layout probes to [per-piece phase preparation](piece-phases.md),
+which avoids recomputing phases during each continuation chunk.
