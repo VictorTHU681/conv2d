@@ -76,6 +76,28 @@ def full_unroll(source):
     return source
 
 
+def output_prefetch(source, mode):
+    for name in ('k16pair', 'k16pairf', 'k16pairf3', 'k16pairf4', 'k16single'):
+        start = source.index('static void ' + name + '(')
+        end = source.index('\n}\n', start) + 3
+        f = source[start:end]
+        if mode == 'none':
+            f, count = re.subn(r'"prfm pstl2keep, \[x21(?:, #\d+)?\]\\n\\t"', '""', f)
+            assert count in (2, 4), (name, count)
+        elif mode == 'l1':
+            assert f.count('prfm pstl2keep') in (2, 4)
+            f = f.replace('prfm pstl2keep', 'prfm pstl1keep')
+        elif mode == 'extra':
+            last = 192 if name == 'k16single' else 64
+            old = f'"prfm pstl2keep, [x21, #{last}]\\n\\t"'
+            assert f.count(old) == 1
+            f = f.replace(old, old + f' "prfm pstl2keep, [x21, #{last+64}]\\n\\t"')
+        else:
+            raise ValueError(mode)
+        source = source[:start] + f + source[end:]
+    return source
+
+
 def k4_tail(source):
     start = source.index('static void k4(')
     end = source.index('\n}\n', start) + 3
@@ -109,7 +131,9 @@ def main():
     variants = {'baseline': source, 'unroll2': unroll(source, 2),
                 'unroll4': unroll(source, 4), 'k4tail': k4_tail(source),
                 'offset2': unroll(source, 2, True), 'offset4': unroll(source, 4, True),
-                'full': full_unroll(source)}
+                'full': full_unroll(source), 'nopfo': output_prefetch(source, 'none'),
+                'pfol1': output_prefetch(source, 'l1'),
+                'pfoextra': output_prefetch(source, 'extra')}
     for name, contents in variants.items():
         path = args.out / (name + '.c')
         path.write_text(contents)
