@@ -66,7 +66,7 @@ int main(void)
     }
     printf("PACK_REUSE bitwise=%s extra_allocations=%zu peak_bytes=%zu %s\n",
            ok ? "PASS" : "FAIL", calls-warm_calls, peak,
-           ok && calls == warm_calls ? "PASS" : "FAIL");
+           ok && warm_calls > 0 && calls == warm_calls ? "PASS" : "FAIL");
     free(in); free(k); free(out); free(ref);
-    return ok && calls == warm_calls ? 0 : 1;
+    return ok && warm_calls > 0 && calls == warm_calls ? 0 : 1;
 }
