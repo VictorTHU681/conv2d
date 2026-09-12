@@ -1,5 +1,7 @@
 // 泛化正确性测试：随机尺寸/核大小，与参考四重循环（同编译选项 → fmla）逐位比较
 // gcc -O3 -march=armv9-a+sme+sve2 -fopenmp test_conv.c conv2d.c -o test_conv -lm
+// TEST_BITWISE=1: require exact float bits; TEST_SIGNED=1: cancellation inputs;
+// TEST_REUSE_HEIGHT=1: keep the kernel fixed across increasing input heights.
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

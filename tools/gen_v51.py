@@ -99,6 +99,7 @@ def output_prefetch(source, mode):
             f = f.replace(old, old + f' "prfm pstl2keep, [x21, #{last+64}]\\n\\t"')
         else:
             raise ValueError(mode)
+        f = re.sub(r'(?m)^[ \t]*(?:""[ \t]*)+\n', '', f)
         source = source[:start] + f + source[end:]
     return source
 
@@ -112,6 +113,24 @@ def height_fix(source):
         assert source.count(old) == 1, old
         source = source.replace(old, new)
     return source
+
+
+def preload_tail(source):
+    start = source.index('static void k4(')
+    end = source.index('\n}\n', start) + 3
+    f = source[start:end]
+    old = '        "ldr x12, [%[A], #264]\\n\\t"\n'
+    assert f.count(old) == 1
+    f = f.replace(old, '')
+    old = '        "mov x15, x7\\n\\t"\n'
+    assert f.count(old) == 1
+    f = f.replace(old, '        "ldr x13, [%[A], #264]\\n\\t"\n' + old)
+    for old, new in (('"cbz x12, 42f', '"cbz x13, 42f'),
+                     ('"cmp x12, #1', '"cmp x13, #1'),
+                     ('"cmp x12, #2', '"cmp x13, #2')):
+        assert f.count(old) == 1
+        f = f.replace(old, new)
+    return source[:start] + f + source[end:]
 
 
 def compact_kernel(source):
@@ -209,7 +228,8 @@ def main():
                 'pfoextra': output_prefetch(source, 'extra'),
                 'compact': compact_kernel(source), 'heightfix': height_fix(source),
                 'nopfo_clean': height_fix(output_prefetch(source, 'clean')),
-                'combo': height_fix(output_prefetch(k4_tail(source), 'clean'))}
+                'combo': height_fix(output_prefetch(k4_tail(source), 'clean')),
+                'combo_preload': height_fix(output_prefetch(preload_tail(k4_tail(source)), 'clean'))}
     for name, contents in variants.items():
         path = args.out / (name + '.c')
         path.write_text(contents)
