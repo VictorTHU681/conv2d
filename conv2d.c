@@ -81,7 +81,7 @@ static int env_int(const char* name, int def)
 }
 
 // 可调参数只在首次调用时读环境（getenv 每次要扫整个环境表，~2 µs/次，一次调用 9 次就是 ~0.3%）
-typedef struct { int inited, slice, sp, prof, pf_in, pf_out, postart, uzp, poolwfe, pool, store_asm, pf_fresh, pf_l2, br, sw_dense, pf_st, zva, roll, roll_pd, roll_w8, roll_w4, roll_w16, pack_ser; } knobs_t;
+typedef struct { int inited, slice, sp, prof, pf_in, pf_out, postart, uzp, poolwfe, pool, store_asm, pf_fresh, pf_l2, br, sw_dense, pf_st, zva, roll, roll_pd, roll_w8, roll_w4, roll_w16, roll_w9, pack_ser; } knobs_t;
 static knobs_t g_knobs;
 #ifdef CONV_ROWPROF
 static uint64_t* g_rowts = NULL;      // 线程 0 的逐行时间戳：行首 cntvct；pass 末追加 (cyc | 1<<63) 作结束标记
@@ -103,6 +103,7 @@ static void read_knobs(void)
     g_knobs.roll_w8 = env_int("CONV_ROLL_W8", 104);   // 静态划分的相对慢速权重（%）：8×2 / 4×4 / single16
     g_knobs.roll_w4 = env_int("CONV_ROLL_W4", 123);
     g_knobs.roll_w16 = env_int("CONV_ROLL_W16", 102);
+    g_knobs.roll_w9 = env_int("CONV_ROLL_W9", 140);   // K9 相对权重（远端 v55 定 1.40；pairf4 门控加速后可能偏移）
     g_knobs.pack_ser = env_int("CONV_PACKSER", -1);   // R/kf：-1/1 按组重叠，2 完整串行基线，0 全体并行
     // -DCONV_ZVA_CURSOR 实验用：输出线 dc zva 预清零（不从 DRAM 读 RFO，每次调用少读 ~100 MB），需 zva 块 64 B 且允许
     { uint64_t dczid; asm volatile("mrs %0, dczid_el0" : "=r"(dczid));
@@ -2461,7 +2462,7 @@ static void roll_build_R_row(float* R, const float* k, long KH, long KW, long st
         }
     }
 }
-typedef struct { int kind; long s_base, nvA, nvB, width, steps, RSB; float* R; size_t Rcap; float* kf; size_t kfcap; int Rowner; int sf; } rgrp_t;   // kind 32=pair,16=single,8,4; 33/34=pair+fmla；kf = pairf3 的三链 b 打包 [KH][steps][4]
+typedef struct { int kind; long s_base, nvA, nvB, width, steps, RSB; float* R; size_t Rcap; float* kf; size_t kfcap; int Rowner; int sf; int kfowner; } rgrp_t;   // kind 32=pair,16=single,8,4; 33/34=pair+fmla；kf = pairf3 的三链 b 打包 [KH][steps][4]
 typedef struct { int g; long base; } ritem_t;
 typedef struct { int item; long ja, jb; } rpiece_t;
 typedef struct {
@@ -2488,7 +2489,7 @@ static void roll_pack_chunk(const rplan_t* P, const float* k, long KH, long KW, 
     if (G->Rowner == i / (int)KH)
     roll_build_R_row(G->R, k, KH, KW, G->steps, G->s_base,
                      (G->kind == 32 || G->kind == 33 || G->kind == 34 || G->kind == 35 || G->kind == 17) ? 16 : G->kind == 9 ? 8 : G->kind, y);
-    if (G->kind == 34 || G->kind == 35) {       // kf[a][X] = {k[a][X], k[(a+1)%KH][X], k[(a+2)%KH][X], (k[(a+3)%KH][X])}，a = y
+    if ((G->kind == 34 || G->kind == 35) && G->kfowner == i / (int)KH) {   // kf[a][X] = {k[a][X], k[(a+1)%KH][X], k[(a+2)%KH][X], (k[(a+3)%KH][X])}，a = y；共享组只由属主构建
         const long a = y;
         const long a1 = a + 1 >= KH ? a + 1 - KH : a + 1, a2 = a + 2 >= KH ? a + 2 - KH : a + 2, a3 = a + 3 >= KH ? a + 3 - KH : a + 3;
         float* d = G->kf + a * G->steps * 4;
@@ -2615,9 +2616,22 @@ static void roll_prepare(const float* k, long H, long W, long KH, long KW, int n
             }
 
             if (G->kind == 34 || G->kind == 35) {
-                size_t kfneed = (size_t)KH * G->steps * 4 * sizeof(float);
-                if (g_rbuf[g].kfcap < kfneed) { free(g_rbuf[g].kf); g_rbuf[g].kf = alloc_aligned(kfneed); g_rbuf[g].kfcap = g_rbuf[g].kf ? kfneed : 0; }
-                G->kf = g_rbuf[g].kf; G->kfcap = g_rbuf[g].kfcap;
+                // kf 内容只依赖 (a, X, steps, kind)（与折叠起点 sf 无关）：同 kind 同 steps 的组共享一份
+                //（k81 的两个 pairf4 组逐位相同，省一半 kf 打包与 ~105KB L2 占用），gdone 放行时连带检查属主组。
+                G->kfowner = g;
+                int shared = 0;
+                for (int p = 0; p < g; p++) {
+                    const rgrp_t* A = &P->G[p];
+                    if (A->kind == G->kind && A->steps == G->steps && A->kf) {
+                        G->kf = A->kf; G->kfcap = A->kfcap; G->kfowner = A->kfowner; shared = 1;
+                        break;
+                    }
+                }
+                if (!shared) {
+                    size_t kfneed = (size_t)KH * G->steps * 4 * sizeof(float);
+                    if (g_rbuf[g].kfcap < kfneed) { free(g_rbuf[g].kf); g_rbuf[g].kf = alloc_aligned(kfneed); g_rbuf[g].kfcap = g_rbuf[g].kf ? kfneed : 0; }
+                    G->kf = g_rbuf[g].kf; G->kfcap = g_rbuf[g].kfcap;
+                }
             }
         }
         int nit = 0;
@@ -2630,7 +2644,7 @@ static void roll_prepare(const float* k, long H, long W, long KH, long KW, int n
             for (long st = 0; st < nstrip; st++) {
                 long base = st * G->width; if (base + G->width > outW) base = outW - G->width;
                 P->items[P->nit] = (ritem_t){g, base};
-                double w = G->kind == 9 ? 140/100.0 : G->kind == 8 ? g_knobs.roll_w8 / 100.0 : G->kind == 4 ? g_knobs.roll_w4 / 100.0 : (G->kind == 16 || G->kind == 17) ? g_knobs.roll_w16 / 100.0 : 1.0;
+                double w = G->kind == 9 ? g_knobs.roll_w9 / 100.0 : G->kind == 8 ? g_knobs.roll_w8 / 100.0 : G->kind == 4 ? g_knobs.roll_w4 / 100.0 : (G->kind == 16 || G->kind == 17) ? g_knobs.roll_w16 / 100.0 : 1.0;
                 P->cost[P->nit] = (double)G->steps * outH * w;   // ∝ tile-步数（各类都是 4 tile）× 相对慢速权重
                 P->C += P->cost[P->nit]; P->nit++;
             }
@@ -2707,6 +2721,8 @@ static int resume_claim(const rplan_t* P, int first, int last, int* cursor, long
             if (!__atomic_load_n(&g_pk_gdone[gi].v, __ATOMIC_ACQUIRE)) continue;
             const int ro = P->G[gi].Rowner;   // R 共享组：还需 R 所属组就绪（并行打包时组序不保证先后）
             if (ro != gi && !__atomic_load_n(&g_pk_gdone[ro].v, __ATOMIC_ACQUIRE)) continue;
+            const int ko = P->G[gi].kfowner;  // kf 共享组同理
+            if ((P->G[gi].kind == 34 || P->G[gi].kind == 35) && ko != gi && !__atomic_load_n(&g_pk_gdone[ko].v, __ATOMIC_ACQUIRE)) continue;
         }
         uint64_t w = __atomic_load_n(&P->ready[i].v, __ATOMIC_RELAXED);
         long total = P->pieces[i].jb - P->pieces[i].ja + KH - 1;
