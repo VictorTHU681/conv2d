@@ -2692,7 +2692,9 @@ static void roll_build_R_row(float* R, const float* k, long KH, long KW, long st
 }
 typedef struct { int kind; long s_base, nvA, nvB, width, steps, RSB; float* R; size_t Rcap; float* kf; size_t kfcap; int Rowner; int sf; } rgrp_t;   // kind 32=pair,16=single,8,4; 33/34=pair+fmla；kf = pairf3 的三链 b 打包 [KH][steps][4]
 typedef struct { int g; long base; } ritem_t;
-typedef struct { int item; long ja, jb; int dep_first, dep_end; } rpiece_t;
+typedef struct { int item; unsigned char ya, yb, af, cf; long ja, jb; int dep_first, dep_end; } rpiece_t;
+_Static_assert(sizeof(rpiece_t)==32 && offsetof(rpiece_t,ja)==8 && offsetof(rpiece_t,dep_first)==24,
+               "piece phases must use only former padding");
 typedef struct {
     rgrp_t G[12]; int ng;
     ritem_t* items; double* cost; int nit, itcap; double C;
@@ -2853,6 +2855,11 @@ static void roll_link_output_dependencies(rplan_t* P)
     }
 }
 
+static inline long roll_phase_sub(long a, long b, long kh)
+{
+    long d=a-b; return d<0 ? d+kh : d;
+}
+
 static void roll_prepare(const float* k, long H, long W, long KH, long KW, int nth)
 {
     rplan_t* P = &g_rp;
@@ -2915,16 +2922,26 @@ static void roll_prepare(const float* k, long H, long W, long KH, long KW, int n
             while (i < P->nit) {
                 double w = P->cost[i] / outH; long R = outH - r;
                 double full = w * (R + ovh);
-                if (acc + full <= target * 1.0005 || t == nth - 1) { P->pieces[np++] = (rpiece_t){i, r, outH}; acc += full; i++; r = 0; continue; }
+                if (acc + full <= target * 1.0005 || t == nth - 1) { P->pieces[np++] = (rpiece_t){.item=i, .ja=r, .jb=outH}; acc += full; i++; r = 0; continue; }
                 long rows = (long)((target - acc) / w) - ovh;
                 if (rows < 8) break;
                 if (rows > R - 8) rows = R - 8;                // 剩余太少就整项给下一个线程
-                P->pieces[np++] = (rpiece_t){i, r, r + rows}; acc += w * (rows + ovh); r += rows;
+                P->pieces[np++] = (rpiece_t){.item=i, .ja=r, .jb=r+rows}; acc += w * (rows + ovh); r += rows;
                 break;
             }
         }
         P->pstart[nth] = np; P->npieces = np; P->pnth = nth;
         roll_link_output_dependencies(P);
+        // Continuation offsets are multiples of KH, so these phases are
+        // constant within a piece. Rebuild them with every call's plan.
+        for(int pi=0;pi<P->npieces;pi++) {
+            rpiece_t* pc=&P->pieces[pi]; const rgrp_t* g=&P->G[P->items[pc->item].g];
+            long jp=pc->ja % KH, ya=roll_phase_sub(jp,g->s_base,KH);
+            pc->ya=(unsigned char)ya;
+            pc->yb=(unsigned char)(ya>=16 ? ya-16 : ya+KH-16);
+            pc->af=(unsigned char)roll_phase_sub(jp,g->sf,KH);
+            pc->cf=(unsigned char)roll_phase_sub(g->sf,g->s_base,KH);
+        }
     }
     if (P->nthr_alloc < nth) {
         free(P->rings); free(P->scratch);
@@ -2945,18 +2962,26 @@ static void roll_prepare(const float* k, long H, long W, long KH, long KW, int n
 static inline void carry_store_za(float* p)
 {
     asm volatile("mov w12, #0\n\t"
-                 "49: str za[w12, 0], [%[p]]\n\t"
-                 "add %[p], %[p], #64\n\t"
-                 "add w12, w12, #1\n\t"
+                 "49:\n\t"
+                 "str za[w12, 0], [%[p], #0, mul vl]\n\t"
+                 "str za[w12, 1], [%[p], #1, mul vl]\n\t"
+                 "str za[w12, 2], [%[p], #2, mul vl]\n\t"
+                 "str za[w12, 3], [%[p], #3, mul vl]\n\t"
+                 "add %[p], %[p], #256\n\t"
+                 "add w12, w12, #4\n\t"
                  "cmp w12, #64\n\t" "b.lo 49b\n\t"
                  : [p] "+r"(p) : : "x12", "memory", "cc");
 }
 static inline void carry_load_za(const float* p)
 {
     asm volatile("mov w12, #0\n\t"
-                 "49: ldr za[w12, 0], [%[p]]\n\t"
-                 "add %[p], %[p], #64\n\t"
-                 "add w12, w12, #1\n\t"
+                 "49:\n\t"
+                 "ldr za[w12, 0], [%[p], #0, mul vl]\n\t"
+                 "ldr za[w12, 1], [%[p], #1, mul vl]\n\t"
+                 "ldr za[w12, 2], [%[p], #2, mul vl]\n\t"
+                 "ldr za[w12, 3], [%[p], #3, mul vl]\n\t"
+                 "add %[p], %[p], #256\n\t"
+                 "add w12, w12, #4\n\t"
                  "cmp w12, #64\n\t" "b.lo 49b\n\t"
                  : [p] "+r"(p) : : "x12", "memory", "cc");
 }
@@ -3069,17 +3094,17 @@ static void roll_worker(int tid, int nth, const ctx_t* c)
         uint64_t t0 = g_roll_diag ? cyc() : 0;
         kp_t K = { c->in + ja * W + base, W * 4, g->R, g->RSB, KH, g->steps, rows,
                    (uintptr_t)c->out + (uintptr_t)((ja - KH + 1) * c->outW + base) * sizeof(float), scr,
-                   ((ja + 1 - g->s_base) % KH + KH) % KH, ((ja + 1 - g->s_base - 16) % KH + KH) % KH,
-                   ((ja - g->s_base) % KH + KH) % KH, ((ja - g->s_base - 16) % KH + KH) % KH, g->nvA, g->nvB, ring, KW, c->outW * 4,
+                   (pc->ya+1==KH ? 0 : pc->ya+1), (pc->yb+1==KH ? 0 : pc->yb+1),
+                   pc->ya, pc->yb, g->nvA, g->nvB, ring, KW, c->outW * 4,
                    NULL, NULL, NULL, 0, NULL, 0 };
         if (g->kind == 34 || g->kind == 35) {
-            const long sF = g->sf, a0 = ((ja - sF) % KH + KH) % KH;   // kf 链的起始 kernel 行
+            const long sF = g->sf, a0 = pc->af;   // kf 链的起始 kernel 行
             K.kb0 = g->kf + a0 * g->steps * 4; K.kbase = g->kf; K.kend = g->kf + KH * g->steps * 4;
-            K.cf0 = ((sF - g->s_base) % KH + KH) % KH;
+            K.cf0 = pc->cf;
         } else if (g->kind == 33 || g->kind == 9) {
-            const long sF = g->sf, kj0 = ((ja - sF) % KH + KH) % KH;
+            const long sF = g->sf, kj0 = pc->af;
             K.kb0 = c->k + kj0 * KW; K.kbase = c->k; K.kend = c->k + KH * KW;
-            K.cf0 = ((sF - g->s_base) % KH + KH) % KH;
+            K.cf0 = pc->cf;
         } else if (g->kind == 17) {
             const long sF1 = KH - 3, sF2 = KH - 2;
             K.kb0 = c->k + (((ja - sF1) % KH + KH) % KH) * KW;

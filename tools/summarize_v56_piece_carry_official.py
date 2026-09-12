@@ -33,3 +33,12 @@ for m in memories:
     for k in [39,41,55,81]:
         a,b,c=[median(data[m,r,v,k] for r in range(6)) for v in variants]
         print(f'| {m} | {k} | {a:.1f} | {b:.1f} | {c:.1f} | {100*(b/a-1):+.2f}% | {100*(c/a-1):+.2f}% |')
+
+print('\nPaired within-round consistency; observed ranges are not confidence intervals.')
+print('\n| Memory | KH | Candidate | Median paired change | Paired range | Positive rounds |')
+print('| --- | ---: | --- | ---: | --- | ---: |')
+for m in memories:
+    for k in [39,41,55,81]:
+        for v in ['carry4','combined']:
+            ratios=[100*(data[m,r,v,k]/data[m,r,'baseline',k]-1) for r in range(6)]
+            print(f'| {m} | {k} | {v} | {median(ratios):+.2f}% | {min(ratios):+.2f}% to {max(ratios):+.2f}% | {sum(x>0 for x in ratios)}/6 |')

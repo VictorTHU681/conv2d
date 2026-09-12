@@ -1,0 +1,33 @@
+#!/usr/bin/env python3
+"""Validate a complete alternating direct comparison to published v55."""
+from pathlib import Path
+from statistics import median
+from collections import defaultdict,Counter
+import re,sys
+s=Path(sys.argv[1]).read_text();assert 'PIECE_V55_DONE' in s and 'FAIL' not in s
+m=re.search(r'^PLACEMENT cpu_node=\d+ hbm_node=(-?\d+)$',s,re.M);assert m
+memories=['DDR'] if int(m[1])<0 else ['DDR','HBM'];data={};order=defaultdict(list);key=None
+shapes={39:(4096,6144,39,39),41:(6144,4096,41,41),55:(4256,6390,55,55),81:(6390,4256,81,81)}
+for line in s.splitlines():
+    m=re.match(r'CHECKPOINT memory=(\w+) round=(\d+) variant=(\w+) shape=(\d+) (\d+) (\d+) (\d+)$',line)
+    if m:
+        assert key is None;kh=int(m[6]);assert tuple(map(int,m.groups()[3:]))==shapes[kh]
+        key=m[1],int(m[2]),m[3],kh;order[key[0],key[1],kh].append(key[2])
+    m=re.match(r'\s*(\d+)\s*x\s*(\d+)\s+(\d+)\s*x\s*(\d+)\s+([\d.]+)\s+([\d.]+)\s+(\S+)\s+(PASS|FAIL)',line)
+    if m:
+        assert key is not None and key not in data and tuple(map(int,m.groups()[:4]))==shapes[key[3]]
+        assert m[8]=='PASS' and float(m[7])==0;data[key]=float(m[6]);key=None
+assert key is None
+assert set(data)=={(m,r,v,k) for m in memories for r in range(6) for v in ['v55','current'] for k in shapes}
+for m in memories:
+    for k in shapes:
+        assert Counter(tuple(order[m,r,k]) for r in range(6))==Counter({('v55','current'):3,('current','v55'):3})
+print(f'{len(data)} original-benchmark full-reference checks PASS, maximum errors zero. Six alternating rounds, five timings per process.')
+print('Direct snapshots: published v55 0a39770 versus accepted local v56 source 1d3f5071. Median of six process-average GFLOPS. DDR/HBM are separate; no historical percentages are added.')
+print('Historical v55 is comparison-only and retains known correctness defects outside these benchmark checks. Neither its test pass nor this timing comparison establishes general compliance.')
+print('\n| Memory | KH | Published v55 | Accepted local v56 | v56/v55 |')
+print('| --- | ---: | ---: | ---: | ---: |')
+for m in memories:
+    for k in shapes:
+        a,b=[median(data[m,r,v,k] for r in range(6)) for v in ['v55','current']]
+        print(f'| {m} | {k} | {a:.1f} | {b:.1f} | {100*(b/a-1):+.2f}% |')
