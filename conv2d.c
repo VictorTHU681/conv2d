@@ -2210,6 +2210,8 @@ static uint8_t g_pk_done[4096];
 static int g_pk_nc = 0;
 static padded_u64 g_pk_gdone[12];     // 每组独占缓存线；release/acquire 保护该组本次调用的新打包内容
 static padded_u64 g_pk_all_done;      // 所有组完成后恢复原 resumable-claim 快路径
+static padded_u64 g_pk_gleft[12];     // 并行按组放行（pk_mode 3）：组内剩余 chunk 计数，减到 0 即放行该组
+static padded_u64 g_pk_grel;          // 已放行组数；到 ng 置 all_done
 static void roll_pack_chunk(const rplan_t* P, const float* k, long KH, long KW, int i)
 {
     const rgrp_t* G = &P->G[i / (int)KH];
@@ -2404,6 +2406,8 @@ static int resume_claim(const rplan_t* P, int first, int last, int* cursor, long
         if (ready_only) {
             const int gi = P->items[P->pieces[i].item].g;
             if (!__atomic_load_n(&g_pk_gdone[gi].v, __ATOMIC_ACQUIRE)) continue;
+            const int ro = P->G[gi].Rowner;   // R 共享组：还需 R 所属组就绪（并行打包时组序不保证先后）
+            if (ro != gi && !__atomic_load_n(&g_pk_gdone[ro].v, __ATOMIC_ACQUIRE)) continue;
         }
         uint64_t w = __atomic_load_n(&P->ready[i].v, __ATOMIC_RELAXED);
         long total = P->pieces[i].jb - P->pieces[i].ja + KH - 1;
@@ -2424,8 +2428,9 @@ static void roll_worker(int tid, int nth, const ctx_t* c)
     rdiag_t* D = &g_rdiag[tid]; uint64_t t_start = 0;
     if (g_roll_diag) { memset(D, 0, sizeof(*D)); t_start = cyc(); }
     if (tid >= nth || tid >= P->pnth) return;
-    // 每次调用仍无条件全量重建。mode 1 只改变时序：主线程按组构建，完成一组就放行需要该组的工作线程。
+    // 每次调用仍无条件全量重建。mode 1/3 只改变时序：完成一组就放行需要该组的工作线程。
     if (c->pk_mode == 1) {
+        // 主线程串行按组构建（单写者局部性最好），完成一组放行一组。
         if (tid == 0) {
             for (int g = 0; g < P->ng; g++) {
                 const int begin = g * (int)KH;
@@ -2433,6 +2438,20 @@ static void roll_worker(int tid, int nth, const ctx_t* c)
                 __atomic_store_n(&g_pk_gdone[g].v, 1, __ATOMIC_RELEASE);
             }
             __atomic_store_n(&g_pk_all_done.v, 1, __ATOMIC_RELEASE);
+        }
+    } else if (c->pk_mode == 3) {
+        // 全体并行认领 chunk（id 组主序 → 首组最先凑齐），每组计数减到 0 放行；
+        // 认领耗尽即转入计算（不重做慢线程的 chunk：其组由计数放行，等待只落在真正需要它的线程上）。
+        for (;;) {
+            uint32_t i = __atomic_fetch_add(&g_pk_next, 1, __ATOMIC_RELAXED);
+            if (i >= (uint32_t)g_pk_nc) break;
+            roll_pack_chunk(P, c->k, KH, KW, (int)i);
+            const int g = (int)i / (int)KH;
+            if (__atomic_sub_fetch(&g_pk_gleft[g].v, 1, __ATOMIC_ACQ_REL) == 0) {
+                __atomic_store_n(&g_pk_gdone[g].v, 1, __ATOMIC_RELEASE);
+                if (__atomic_add_fetch(&g_pk_grel.v, 1, __ATOMIC_ACQ_REL) == (uint64_t)P->ng)
+                    __atomic_store_n(&g_pk_all_done.v, 1, __ATOMIC_RELEASE);
+            }
         }
     } else {
         roll_pack_all(P, c->k, KH, KW);
@@ -2442,7 +2461,7 @@ static void roll_worker(int tid, int nth, const ctx_t* c)
     int cursor = first, other = last < P->npieces ? last : 0;
     // Eight complete kernel-row periods preserve locality and amortize state transfers.
     long step = g_roll_step * KH; if (step < KH) step = KH;
-    int packing = c->pk_mode == 1;
+    int packing = c->pk_mode == 1 || c->pk_mode == 3;
     for (;;) {
         long off = 0;
         if (packing && __atomic_load_n(&g_pk_all_done.v, __ATOMIC_ACQUIRE)) packing = 0;
@@ -2607,11 +2626,16 @@ static void conv2d_roll(const CONVFLOAT* in, CONVINT H, CONVINT W, const CONVFLO
     long pk_el = 0;                                        // 打包总元素数（R 16/步 + kf 4/步）
     for (int g = 0; g < g_rp.ng; g++) pk_el += KH * g_rp.G[g].steps * ((g_rp.G[g].kind == 34 || g_rp.G[g].kind == 35) ? 20 : 16);
     int ps = g_knobs.pack_ser;
-    if (ps < 0) ps = 1;                  // 1 = 默认按组重叠；2 = 远端 v54 的完整串行基线；0 = 全体并行
+    if (ps < 0) ps = pk_el <= 96 * 1024 ? 3 : 1;   // 小表（k39/k41）并行按组放行更快，大表（k55/k81）主线程串行局部性更好
+    // 1 = 主线程按组重叠；3 = 并行按组重叠；2 = 完整串行基线；0 = 全体并行
     if (ps == 1) {
         for (int g = 0; g < g_rp.ng; g++) g_pk_gdone[g].v = 0;
         g_pk_all_done.v = 0;
         g_pk_next = (uint32_t)g_pk_nc;    // 不走并行 chunk 认领；主线程将在 worker 内构建
+    } else if (ps == 3) {
+        for (int g = 0; g < g_rp.ng; g++) { g_pk_gdone[g].v = 0; g_pk_gleft[g].v = (uint64_t)KH; }
+        g_pk_all_done.v = 0; g_pk_grel.v = 0;
+        g_pk_next = 0;                    // 全体线程认领（组主序），组计数减零即放行
     } else if (ps == 2) {
         for (int i = 0; i < g_pk_nc; i++) { roll_pack_chunk(&g_rp, k, KH, KW, i); g_pk_done[i] = 1; }
         g_pk_next = (uint32_t)g_pk_nc;
