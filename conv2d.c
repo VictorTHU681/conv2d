@@ -1598,6 +1598,114 @@ static void k16single(const kp_t* P)
 // 每步 4 载入 + 3 ld1rw + 4 fmopa + 6 fmla（探针：16 fmopa + 32 fmla = 32 周期，1 fmla/周期免费）。
 // 三条链残差 = KH-1, KH-2, KH-3：kj 相差 1 → k 行游标 x13（KH-1）每行派生 x21 = x13+KW4、x22 = x13+2*KW4（回绕各自处理）。
 // 事件窗口 [CF0-2, CF0]（CF0 = (KH-1-s_base) mod KH ≥ 36，与 A/B 窗口互斥）。
+static void k16pairf4(const kp_t* P)
+{
+    ka_t A; fill_args(&A, P, 1, 512, 31 + P->steps);
+    A.n2 = (int64_t)P->kb0; A.e2 = (int64_t)P->kbase; A.T = (int64_t)P->kend; A.nlines = P->cf0;
+    A.kw4 = P->steps * 16;   // kf 每 kernel 行的字节跨度 = steps*4floats*4B
+    asm volatile(
+        LOAD_ARGS
+        "ldr x25, [%[A], #232]\n\t"
+        "ldr x13, [%[A], #184]\n\t"     // kf 线性游标（起始行 a0）
+        "fmov z31.s, #0.0\n\t"
+        "fmov z10.s, #0.0\n\t" "fmov z11.s, #0.0\n\t" "fmov z12.s, #0.0\n\t"
+        "fmov z13.s, #0.0\n\t" "fmov z14.s, #0.0\n\t" "fmov z15.s, #0.0\n\t"
+        "fmov z16.s, #0.0\n\t" "fmov z17.s, #0.0\n\t"
+        "1:\n\t"
+        ROW_HEAD_COMMON
+        "add x21, x9, x25\n\t"
+        "prfm pstl2keep, [x21]\n\t" "prfm pstl2keep, [x21, #64]\n\t"
+        "mov x15, x7\n\t"
+        ".p2align 4\n"
+        "2:\n\t"
+        "ld1w {z0.s}, p0/z, [x16]\n\t"
+        "ld1w {z1.s}, p0/z, [x16, #1, mul vl]\n\t"
+        "ld1w {z2.s}, p0/z, [x2]\n\t"
+        "ld1w {z3.s}, p0/z, [x3]\n\t"
+        "ld1rqw {z4.s}, p0/z, [x13]\n\t"        // 一次 quadword 广播：z4 各 128 位段 = {kf0,kf1,kf2,0}
+        "fmopa za0.s, p0/m, p0/m, z0.s, z2.s\n\t"
+        "fmopa za1.s, p0/m, p0/m, z1.s, z2.s\n\t"
+        "fmopa za2.s, p0/m, p0/m, z0.s, z3.s\n\t"
+        "fmopa za3.s, p0/m, p0/m, z1.s, z3.s\n\t"
+        "fmla z10.s, z0.s, z4.s[0]\n\t"          // 按元素索引 fmla（无需单独广播）
+        "fmla z11.s, z1.s, z4.s[0]\n\t"
+        "fmla z12.s, z0.s, z4.s[1]\n\t"
+        "fmla z13.s, z1.s, z4.s[1]\n\t"
+        "fmla z14.s, z0.s, z4.s[2]\n\t"
+        "fmla z15.s, z1.s, z4.s[2]\n\t"
+        "fmla z16.s, z0.s, z4.s[3]\n\t"
+        "fmla z17.s, z1.s, z4.s[3]\n\t"
+        "add x13, x13, #16\n\t"
+        "add x16, x16, #4\n\t"
+        "add x2, x2, #64\n\t"
+        "add x3, x3, #64\n\t"
+        "subs x15, x15, #1\n\t"
+        "b.ne 2b\n\t"
+        WRAP_B(x2) WRAP_B(x3)
+        "ldr x24, [%[A], #208]\n\t"              // kf 行回绕（到表尾则回表头）
+        "cmp x13, x24\n\t"
+        "ldr x24, [%[A], #192]\n\t"
+        "csel x13, x24, x13, eq\n\t"
+        SEL_OUT
+        // 事件：cA ∈ [CF0-3, CF0] → 4 条 fmla 链（w24 = 0:KH-4 / 1:KH-3 / 2:KH-2 / 3:KH-1）；cA<16 → A；16≤cA<32 → B
+        "ldr x24, [%[A], #216]\n\t"
+        "sub x24, x24, #3\n\t"
+        "subs w24, w27, w24\n\t"
+        "b.lo 30f\n\t"
+        "cmp w24, #3\n\t"
+        "b.hi 5f\n\t"
+        "b.eq 8f\n\t"
+        "cmp w24, #2\n\t"
+        "b.eq 9f\n\t"
+        "cmp w24, #1\n\t"
+        "b.eq 90f\n\t"
+        "st1w {z16.s}, p0, [x20]\n\t"
+        "st1w {z17.s}, p0, [x20, #1, mul vl]\n\t"
+        "fmov z16.s, #0.0\n\t" "fmov z17.s, #0.0\n\t"
+        "b 5f\n\t"
+        "90:\n\t"
+        "st1w {z14.s}, p0, [x20]\n\t"
+        "st1w {z15.s}, p0, [x20, #1, mul vl]\n\t"
+        "fmov z14.s, #0.0\n\t" "fmov z15.s, #0.0\n\t"
+        "b 5f\n\t"
+        "9:\n\t"
+        "st1w {z12.s}, p0, [x20]\n\t"
+        "st1w {z13.s}, p0, [x20, #1, mul vl]\n\t"
+        "fmov z12.s, #0.0\n\t" "fmov z13.s, #0.0\n\t"
+        "b 5f\n\t"
+        "8:\n\t"
+        "st1w {z10.s}, p0, [x20]\n\t"
+        "st1w {z11.s}, p0, [x20, #1, mul vl]\n\t"
+        "fmov z10.s, #0.0\n\t" "fmov z11.s, #0.0\n\t"
+        "b 5f\n\t"
+        "30:\n\t"
+        "cmp x27, #32\n\t" "b.hs 5f\n\t"
+        "cmp x27, #16\n\t" "b.hs 6f\n\t"
+        "mov w12, w27\n\t"
+        "mova z8.s, p0/m, za0v.s[w12, 0]\n\t"
+        "mova z9.s, p0/m, za1v.s[w12, 0]\n\t"
+        "st1w {z8.s}, p0, [x20]\n\t"
+        "st1w {z9.s}, p0, [x20, #1, mul vl]\n\t"
+        "mova za0v.s[w12, 0], p0/m, z31.s\n\t"
+        "mova za1v.s[w12, 0], p0/m, z31.s\n\t"
+        "b 5f\n\t"
+        "6:\n\t"
+        "sub w12, w27, #16\n\t"
+        "mova z8.s, p0/m, za2v.s[w12, 0]\n\t"
+        "mova z9.s, p0/m, za3v.s[w12, 0]\n\t"
+        "st1w {z8.s}, p0, [x20]\n\t"
+        "st1w {z9.s}, p0, [x20, #1, mul vl]\n\t"
+        "mova za2v.s[w12, 0], p0/m, z31.s\n\t"
+        "mova za3v.s[w12, 0], p0/m, z31.s\n\t"
+        "5:\n\t"
+        ADV_CNT(x27)
+        ROW_TAIL
+        :
+        : [A]"r"(&A)
+        : XCLOB, "z0", "z1", "z2", "z3", "z4", "z8", "z9", "z10", "z11", "z12", "z13", "z14", "z15", "z16", "z17", "z24", "z31", "p0", "p3", "memory", "cc");
+}
+
+
 static void k16pairf3(const kp_t* P)
 {
     ka_t A; fill_args(&A, P, 1, 512, 31 + P->steps);
@@ -1992,7 +2100,7 @@ static padded_u64 g_rwork[1024] __attribute__((aligned(64)));   // 每线程片�
 static int g_roll_diag = 0;
 typedef struct { uint64_t tk[4]; long ts[4]; uint64_t tot; } rdiag_t;   // 每线程：各类内核的 cntvct 计时与 tile-步数
 static rdiag_t g_rdiag[1024];
-static inline int roll_kind_idx(int kind) { return (kind == 32 || kind == 33 || kind == 34) ? 0 : (kind == 16 || kind == 17) ? 1 : kind == 8 ? 2 : 3; }
+static inline int roll_kind_idx(int kind) { return (kind == 32 || kind == 33 || kind == 34 || kind == 35) ? 0 : (kind == 16 || kind == 17) ? 1 : kind == 8 ? 2 : 3; }
 
 // 分组：16 组成对；单 16；余 ≥3 → 8×2（≤8 个）；余 1–2 → 每个残差一个 1×16
 static int roll_groups(long KH, long KW, rgrp_t* G)
@@ -2002,11 +2110,12 @@ static int roll_groups(long KH, long KW, rgrp_t* G)
     // rem == 9 或 1 且有 pair 组：最后一个 pair 升级为 pair+fmla（kind 33，第 33 个残差 = KH-1，
     // 用 fmopa 旁的免费 fmla 累加），余数变 8/0 → 8×2 满槽 / 无 K4（k41: 32+8+1 → 33+8；k81: 64+16+1 → 65+16）
     int fmla = (npair >= 1 && (rem == 9 || rem == 1)) ? 1 : 0;   // pair+1fmla：k41(32+8+1→33+8)、k81(64+16+1→65+16)
-    int f3 = (npair >= 1 && rem == 7) ? 3 : 0;                   // pair+3fmla：k39(32+7→35+4)、k55(32+16+7→35+16+4)，消掉 8×2
-    for (int i = 0; i < npair; i++) { G[ng++] = (rgrp_t){(i == npair - 1 && f3) ? 34 : (i == npair - 1 && fmla) ? 33 : 32, s, 16, 16, 32, KW, 0, NULL, 0}; s += 32; }
+    int nf = (npair >= 1 && rem == 7) ? ((n16 & 1) ? 3 : 4) : 0;   // pair+3/4fmla 消掉 8×2；无 single16 组（n16 偶）时用 4 链更快（k39），有则 3 链（k55），同节点 A/B 实测
+    int pk = nf == 4 ? 35 : 34;
+    for (int i = 0; i < npair; i++) { G[ng++] = (rgrp_t){(i == npair - 1 && nf) ? pk : (i == npair - 1 && fmla) ? 33 : 32, s, 16, 16, 32, KW, 0, NULL, 0}; s += 32; }
     if (n16 & 1) { G[ng++] = (rgrp_t){16, s, 16, 0, 64, KW, 0, NULL, 0}; s += 16; }
     if (fmla) rem -= 1;
-    rem -= f3;
+    rem -= nf;
     while (rem >= 5) { long nv = rem > 8 ? 8 : rem; G[ng++] = (rgrp_t){8, s, nv, 0, 128, (KW & 1) ? KW + 1 : KW + 2, 0, NULL, 0}; s += nv; rem -= nv; }
     if (rem > 0) { G[ng++] = (rgrp_t){4, s, rem, 0, 256, (KW + 3 + 3) & ~3L, 0, NULL, 0}; s += rem; rem = 0; }
     for (int g = 0; g < ng; g++) G[g].RSB = G[g].steps * 64;
@@ -2040,8 +2149,8 @@ static void roll_prepare(const float* k, long H, long W, long KH, long KW, int n
             rgrp_t* G = &P->G[g];
             size_t need = (size_t)KH * G->RSB;
             if (G->Rcap < need) { free(G->R); G->R = alloc_aligned(need); G->Rcap = G->R ? need : 0; }
-            roll_build_R(G->R, k, KH, KW, G->steps, G->s_base, (G->kind == 32 || G->kind == 33 || G->kind == 34 || G->kind == 17) ? 16 : G->kind);
-            if (G->kind == 34) {
+            roll_build_R(G->R, k, KH, KW, G->steps, G->s_base, (G->kind == 32 || G->kind == 33 || G->kind == 34 || G->kind == 35 || G->kind == 17) ? 16 : G->kind);
+            if (G->kind == 34 || G->kind == 35) {
                 size_t kfneed = (size_t)KH * G->steps * 4 * sizeof(float);
                 if (G->kfcap < kfneed) { free(G->kf); G->kf = alloc_aligned(kfneed); G->kfcap = G->kf ? kfneed : 0; }
                 for (long a = 0; a < KH; a++)               // kf[a][X] = {k[a][X], k[(a+1)%KH][X], k[(a+2)%KH][X], 0}
@@ -2050,7 +2159,7 @@ static void roll_prepare(const float* k, long H, long W, long KH, long KW, int n
                         d[0] = X < KW ? k[a * KW + X] : 0.f;
                         d[1] = X < KW ? k[((a + 1) % KH) * KW + X] : 0.f;
                         d[2] = X < KW ? k[((a + 2) % KH) * KW + X] : 0.f;
-                        d[3] = 0.f;
+                        d[3] = (G->kind == 35 && X < KW) ? k[((a + 3) % KH) * KW + X] : 0.f;
                     }
             }
         }
@@ -2148,8 +2257,8 @@ static void roll_worker(int tid, int nth, const ctx_t* c)
                    ((ja + 1 - g->s_base) % KH + KH) % KH, ((ja + 1 - g->s_base - 16) % KH + KH) % KH,
                    ((ja - g->s_base) % KH + KH) % KH, ((ja - g->s_base - 16) % KH + KH) % KH, g->nvA, g->nvB, ring, KW, c->outW * 4,
                    NULL, NULL, NULL, 0, NULL, 0 };
-        if (g->kind == 34) {
-            const long sF = KH - 1, a0 = ((ja - sF) % KH + KH) % KH;   // kf 三链的起始 kernel 行
+        if (g->kind == 34 || g->kind == 35) {
+            const long sF = KH - 1, a0 = ((ja - sF) % KH + KH) % KH;   // kf 链的起始 kernel 行
             K.kb0 = g->kf + a0 * g->steps * 4; K.kbase = g->kf; K.kend = g->kf + KH * g->steps * 4;
             K.cf0 = ((sF - g->s_base) % KH + KH) % KH;
         } else if (g->kind == 33) {
@@ -2165,7 +2274,7 @@ static void roll_worker(int tid, int nth, const ctx_t* c)
             K.cf20 = ((sF2 - g->s_base) % KH + KH) % KH;
         }
         sme_zero_za();
-        if (g->kind == 32) k16pair(&K); else if (g->kind == 33) k16pairf(&K); else if (g->kind == 34) k16pairf3(&K); else if (g->kind == 16) k16single(&K);
+        if (g->kind == 32) k16pair(&K); else if (g->kind == 33) k16pairf(&K); else if (g->kind == 34) k16pairf3(&K); else if (g->kind == 35) k16pairf4(&K); else if (g->kind == 16) k16single(&K);
         else if (g->kind == 17) k16singlef2(&K); else if (g->kind == 8) k8(&K); else k4(&K);
         if (g_roll_diag) { int ki = roll_kind_idx(g->kind); D->tk[ki] += cyc() - t0; D->ts[ki] += 4L * g->steps * (jb - ja + KH - 1); }
     }
