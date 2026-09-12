@@ -101,8 +101,18 @@ There is no evidence here that the regression is caused by alignment.
 
 `toggle.c` is an isolated source adding CONV_KF_SHARE to enable/disable sharing
 within the same executable. Both settings pay the environment read and branch;
-it is a diagnostic comparison and not an adopted production knob. Job **1583338**
-on cn20481 tests 522 signed bitwise state cases and six alternating pairs for
-KH 39/55/81 in DDR/HBM when allowed. This is pending; its source hash is separate.
+it is a diagnostic comparison and not an adopted production knob. Job **1583338**,
+cn20481, 04:08:24–04:09:37, succeeds with 522 signed bitwise state cases and
+360 timed output hashes. Six alternating pairs per shape and memory give:
+
+| KH | DDR sharing on/off | HBM sharing on/off |
+| --- | ---: | ---: |
+| 39 | -0.05% | -0.12% |
+| 55 | +0.01% | +0.04% |
+| 81 | +0.17% | -0.13% |
+
+This also fails to establish a consistent KH 81 improvement across placements.
+Do not adopt the sharing change or attribute the prior negative result solely
+to differing binary layout. The diagnostic source hash is recorded separately.
 The aim is to distinguish a benefit of table sharing from differences between
 compiled binaries. It does not eliminate memory placement or run-to-run noise.
