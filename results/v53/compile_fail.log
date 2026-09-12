@@ -1,0 +1,8 @@
+=== HOST
+cn20483
+Sat Sep 12 18:35:21 CST 2026
+conv2d.c:2145:63: error: ‘rplan_t’ has no member named ‘outH’
+conv2d.c:2145:63: error: ‘rplan_t’ has no member named ‘outH’
+conv2d.c:2145:63: error: ‘rplan_t’ has no member named ‘outH’
+conv2d.c:2145:63: error: ‘rplan_t’ has no member named ‘outH’
+BUILD FAIL tc53

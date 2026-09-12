@@ -1,0 +1,62 @@
+=== HOST
+cn20483
+Sat Sep 12 18:36:50 CST 2026
+--- 位精确：默认 / ROLL=0 / ROLL=1 / SIGNED / BITWISE / BITWISE+SIGNED / REUSE_HEIGHT / NF=3 / 通用回退
+ALL PASS: 103/103 通过
+ALL PASS: 63/63 通过
+ALL PASS: 63/63 通过
+ALL PASS: 63/63 通过
+ALL PASS: 63/63 通过
+ALL PASS: 63/63 通过
+ALL PASS: 36/36 通过
+ALL PASS: 63/63 通过
+ALL PASS: 43/43 通过
+--- A/B DDR（v53 / v52 / v50 交替）
+DDR  r1 v53 4096 6144 39 39    4096 x  6144     39 x    39 best    7.574 ms     9951.5 GFLOPS | avg    7.634 ms     9873.3 GFLOPS  PASS
+DDR  r1 v52 4096 6144 39 39    4096 x  6144     39 x    39 best    7.437 ms    10135.5 GFLOPS | avg    7.553 ms     9979.1 GFLOPS  PASS
+DDR  r1 v50 4096 6144 39 39    4096 x  6144     39 x    39 best    9.605 ms     7847.3 GFLOPS | avg    9.618 ms     7836.6 GFLOPS  PASS
+DDR  r1 v53 6144 4096 41 41    6144 x  4096     41 x    41 best    9.354 ms     8898.3 GFLOPS | avg    9.494 ms     8766.8 GFLOPS  PASS
+DDR  r1 v52 6144 4096 41 41    6144 x  4096     41 x    41 best    9.369 ms     8883.9 GFLOPS | avg    9.398 ms     8856.3 GFLOPS  PASS
+DDR  r1 v50 6144 4096 41 41    6144 x  4096     41 x    41 best    9.286 ms     8963.5 GFLOPS | avg    9.320 ms     8930.5 GFLOPS  PASS
+DDR  r2 v53 4096 6144 39 39    4096 x  6144     39 x    39 best    7.539 ms     9998.6 GFLOPS | avg    7.644 ms     9860.1 GFLOPS  PASS
+DDR  r2 v52 4096 6144 39 39    4096 x  6144     39 x    39 best    7.442 ms    10128.8 GFLOPS | avg    7.521 ms    10021.6 GFLOPS  PASS
+DDR  r2 v50 4096 6144 39 39    4096 x  6144     39 x    39 best    9.616 ms     7838.5 GFLOPS | avg    9.620 ms     7835.1 GFLOPS  PASS
+DDR  r2 v53 6144 4096 41 41    6144 x  4096     41 x    41 best    9.301 ms     8949.2 GFLOPS | avg    9.379 ms     8875.2 GFLOPS  PASS
+DDR  r2 v52 6144 4096 41 41    6144 x  4096     41 x    41 best    9.376 ms     8877.3 GFLOPS | avg    9.534 ms     8730.4 GFLOPS  PASS
+DDR  r2 v50 6144 4096 41 41    6144 x  4096     41 x    41 best    9.514 ms     8748.3 GFLOPS | avg    9.561 ms     8706.1 GFLOPS  PASS
+DDR  r1 v53 4256 6390 55 55    4256 x  6390     55 x    55 best   14.370 ms    11209.2 GFLOPS | avg   14.440 ms    11154.4 GFLOPS  PASS
+DDR  r1 v52 4256 6390 55 55    4256 x  6390     55 x    55 best   14.199 ms    11343.9 GFLOPS | avg   14.249 ms    11304.4 GFLOPS  PASS
+DDR  r1 v50 4256 6390 55 55    4256 x  6390     55 x    55 best   15.013 ms    10728.9 GFLOPS | avg   15.017 ms    10725.9 GFLOPS  PASS
+DDR  r1 v53 6390 4256 81 81    6390 x  4256     81 x    81 best   23.849 ms    14498.1 GFLOPS | avg   24.088 ms    14354.3 GFLOPS  PASS
+DDR  r1 v52 6390 4256 81 81    6390 x  4256     81 x    81 best   23.775 ms    14543.3 GFLOPS | avg   23.787 ms    14536.3 GFLOPS  PASS
+DDR  r1 v50 6390 4256 81 81    6390 x  4256     81 x    81 best   24.126 ms    14331.8 GFLOPS | avg   24.178 ms    14301.1 GFLOPS  PASS
+--- A/B HBM（v53 / v52 / v50 交替）
+HBM  r1 v53 4096 6144 39 39    4096 x  6144     39 x    39 best    5.379 ms    14013.1 GFLOPS | avg    5.417 ms    13913.8 GFLOPS  PASS
+HBM  r1 v52 4096 6144 39 39    4096 x  6144     39 x    39 best    5.264 ms    14319.1 GFLOPS | avg    5.268 ms    14306.8 GFLOPS  PASS
+HBM  r1 v50 4096 6144 39 39    4096 x  6144     39 x    39 best    5.463 ms    13796.3 GFLOPS | avg    5.477 ms    13761.5 GFLOPS  PASS
+HBM  r1 v53 6144 4096 41 41    6144 x  4096     41 x    41 best    6.168 ms    13495.8 GFLOPS | avg    6.223 ms    13375.4 GFLOPS  PASS
+HBM  r1 v52 6144 4096 41 41    6144 x  4096     41 x    41 best    6.661 ms    12495.8 GFLOPS | avg    6.849 ms    12153.0 GFLOPS  PASS
+HBM  r1 v50 6144 4096 41 41    6144 x  4096     41 x    41 best    5.859 ms    14206.8 GFLOPS | avg    5.869 ms    14182.8 GFLOPS  PASS
+HBM  r2 v53 4096 6144 39 39    4096 x  6144     39 x    39 best    5.417 ms    13915.1 GFLOPS | avg    5.431 ms    13878.4 GFLOPS  PASS
+HBM  r2 v52 4096 6144 39 39    4096 x  6144     39 x    39 best    5.276 ms    14286.7 GFLOPS | avg    5.286 ms    14260.3 GFLOPS  PASS
+HBM  r2 v50 4096 6144 39 39    4096 x  6144     39 x    39 best    5.911 ms    12751.7 GFLOPS | avg    6.063 ms    12432.3 GFLOPS  PASS
+HBM  r2 v53 6144 4096 41 41    6144 x  4096     41 x    41 best    5.982 ms    13915.0 GFLOPS | avg    5.999 ms    13874.4 GFLOPS  PASS
+HBM  r2 v52 6144 4096 41 41    6144 x  4096     41 x    41 best    5.985 ms    13906.4 GFLOPS | avg    6.232 ms    13355.3 GFLOPS  PASS
+HBM  r2 v50 6144 4096 41 41    6144 x  4096     41 x    41 best    5.847 ms    14235.6 GFLOPS | avg    5.853 ms    14221.7 GFLOPS  PASS
+HBM  r1 v53 4256 6390 55 55    4256 x  6390     55 x    55 best   11.178 ms    14410.5 GFLOPS | avg   11.266 ms    14297.4 GFLOPS  PASS
+HBM  r1 v52 4256 6390 55 55    4256 x  6390     55 x    55 best   11.056 ms    14568.8 GFLOPS | avg   11.079 ms    14538.4 GFLOPS  PASS
+HBM  r1 v50 4256 6390 55 55    4256 x  6390     55 x    55 best   11.091 ms    14523.6 GFLOPS | avg   11.117 ms    14489.4 GFLOPS  PASS
+HBM  r1 v53 6390 4256 81 81    6390 x  4256     81 x    81 best   24.074 ms    14362.7 GFLOPS | avg   24.236 ms    14266.9 GFLOPS  PASS
+HBM  r1 v52 6390 4256 81 81    6390 x  4256     81 x    81 best   24.075 ms    14362.4 GFLOPS | avg   24.089 ms    14354.2 GFLOPS  PASS
+HBM  r1 v50 6390 4256 81 81    6390 x  4256     81 x    81 best   24.124 ms    14333.0 GFLOPS | avg   24.194 ms    14291.5 GFLOPS  PASS
+--- 官方 bench v53（-march / 无 -march，DDR node1）
+  4096 x  6144     39 x    39         7.57    9957.1314     0.00e+00     PASS
+  6144 x  4096     41 x    41         9.45    8803.9988     0.00e+00     PASS
+  4256 x  6390     55 x    55        14.64   11002.1817     0.00e+00     PASS
+  6390 x  4256     81 x    81        24.15   14314.9399     0.00e+00     PASS
+  4096 x  6144     39 x    39         7.57    9953.5142     0.00e+00     PASS
+  6144 x  4096     41 x    41         9.21    9037.5839     0.00e+00     PASS
+  4256 x  6390     55 x    55        14.54   11075.2217     0.00e+00     PASS
+  6390 x  4256     81 x    81        25.26   13687.8700     0.00e+00     PASS
+=== DONE
+Sat Sep 12 18:38:18 CST 2026
