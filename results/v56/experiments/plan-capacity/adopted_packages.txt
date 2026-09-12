@@ -1,0 +1,4 @@
+conv.zip: all non-README members byte-identical to job 1585377 tested archive; SHA256 466476f521248f73836877bd13956d3daeb780385a29055599fe5f2b23e30ce9
+conv_nf3.zip: all non-README members byte-identical to job 1585377 tested archive; SHA256 1fd3ce6dfc0e9da312b9bc38d30f0df20c5c300b55ad8af2239adf8ca8477598
+conv_diag.zip: all non-README members byte-identical to job 1585377 tested archive; SHA256 a0f10ced0155642013ed3be4732404d268cea271d18c59c28eae32f2040257f8
+Root source byte-identical to accepted ebf36923 candidate. Only README differs within release archives.

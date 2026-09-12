@@ -6,12 +6,12 @@ import subprocess
 import argparse
 
 parser=argparse.ArgumentParser()
-parser.add_argument('--experiment',choices=['upstream-gate','kf-share','k5-layout','k5-default','piece-carry','tail-cutoff'],default='upstream-gate')
+parser.add_argument('--experiment',choices=['upstream-gate','kf-share','k5-layout','k5-default','piece-carry','tail-cutoff','plan-capacity'],default='upstream-gate')
 args=parser.parse_args()
 root=Path('build/v56/experiments')/args.experiment;stage=root/'package'
 (stage/'tools').mkdir(parents=True,exist_ok=True)
 (stage/'submissions').mkdir(exist_ok=True)
-shutil.copyfile(root/({'k5-layout':'triplet.c','k5-default':'short2.c','piece-carry':'combined.c','tail-cutoff':'cut2.c'}.get(args.experiment,'merged.c')),stage/'conv2d.c')
+shutil.copyfile(root/({'k5-layout':'triplet.c','k5-default':'short2.c','piece-carry':'combined.c','tail-cutoff':'cut2.c','plan-capacity':'capacity.c'}.get(args.experiment,'merged.c')),stage/'conv2d.c')
 for name in ['bench_conv.c','run.sh','run_diag.sh','tools/mkdiag.py','tools/package_v56.py']:
     shutil.copyfile(name,stage/name)
 readme='''# Local v56 upstream F4 gate integration candidate
@@ -45,7 +45,7 @@ if args.experiment=='k5-default':
     readme=readme.replace('K5 residual folding candidate','K5 short continuation candidate').replace(
         'This selects the ordinary K5 source; F4 outlining and cost controls are excluded.',
         'Only prepared plans containing K5 select continuation step 2; other plans retain 8.\nCONV_ROLL_STEP overrides remain available. No memory-placement detection is added.\nDDR KH41 benefits; HBM KH41 regresses slightly. Both are reported separately.')
-if args.experiment=='piece-carry':
+if args.experiment in ('piece-carry','plan-capacity'):
     readme='''# Local v56 prepared phases and four-slice ZA candidate
 
 Retains the accepted K5-only short continuation default, K5/F4/K9 kernels,
@@ -65,6 +65,11 @@ This unpublished candidate is undergoing acceptance, not yet adopted.
 External concurrent callers, allocation failures and other SVL hardware remain
 outside the validated scope. No F3/F4 outlining, layout padding or K4 EXT change.
 '''
+if args.experiment=='plan-capacity':
+    readme=readme.replace('prepared phases and four-slice ZA candidate','thread-start capacity repair candidate')
+    readme=readme.replace('Original build:', 'The thread-start array now allocates the same capacity as its shared growth\n'
+                          'guard. Sequential calls that reduce strip count while increasing threads\n'
+                          'must not reuse an undersized array. Kernels and scheduler arithmetic stay unchanged.\n\nOriginal build:')
 if args.experiment=='tail-cutoff':
     readme='''# Local v56 global completion cutoff candidate
 

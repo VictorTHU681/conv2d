@@ -30,5 +30,12 @@ default-step signed packing modes and explicit step1 override; guards; standard
 and long ownership cases with actual large/small chunk counters and per-call
 unfinished==0 assertions. Totals planned: 1,790 state/guard, 78 ownership cases
 (24 long), then six permutations of accepted baseline/cut2/local, four shapes,
-DDR/HBM and five timings, 720 timed hashes. Still running; no acceptance claimed.
+DDR/HBM and five timings, 720 timed hashes. Completed 07:31:43: all checks pass,
+zero observed active conflicts. The parser also verifies all four source hashes.
+Local/base KH39/41/55/81: DDR +0.51%/-0.05%/+0.34%/-0.03%;
+HBM +0.26%/+1.22%/+0.32%/+0.07%. These are median process-average GFLOPS
+from the screening harness, not original-reference acceptance or a v55 comparison.
+The target DDR KH41 benefit is still absent. Not adopted; follow-up is deferred
+while a confirmed plan-array capacity defect is repaired.
+See [complete screening](../../results/v56/experiments/cutoff-local/summary.md).
 Root source and release archives remain unchanged.

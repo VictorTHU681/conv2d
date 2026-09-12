@@ -2911,7 +2911,7 @@ static void roll_prepare(const float* k, long H, long W, long KH, long KW, int n
         // 精确静态划分：片段代价 = 权重 × 步数 × (行数 + KH-1)，贪心填到目标，整项放不下就按行切开
         const long ovh = KH - 1;
         int need = 2 * P->nit + 2 * nth + 4;
-        if (P->pcap < need) { free(P->pieces); free(P->pstart); P->pieces = malloc(need * sizeof(rpiece_t)); P->pstart = malloc((nth + 1) * sizeof(int)); P->pcap = need; }
+        if (P->pcap < need) { free(P->pieces); free(P->pstart); P->pieces = malloc(need * sizeof(rpiece_t)); P->pstart = malloc(need * sizeof(int)); P->pcap = need; }
         double total = 0, wsum = 0;
         for (int i = 0; i < P->nit; i++) { double w = P->cost[i] / outH; total += w * (outH + ovh); wsum += w; }
         total += (nth - 1) * (wsum / P->nit) * ovh;

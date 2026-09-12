@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate guided chunks and balanced screening positions."""
+"""Validate local-first cutoff and balanced screening positions."""
 from pathlib import Path
 from statistics import median
 from collections import defaultdict,Counter
@@ -7,6 +7,11 @@ from itertools import permutations
 import re,sys
 s=Path(sys.argv[1]).read_text()
 assert 'CUTOFF_LOCAL_DONE' in s and 'FAIL' not in s
+for digest in ['1d3f5071d51cd4f8c88720b8d4fa91983515ffd83bdeb4983377a991df2b871a',
+               '41d1a3a4eddaaa3e972a59dcce2b6770d8aa8556850f3558bdd90fe3c16440b2',
+               'e0b363e28e20c04cf6e8a52f115088190f7e6d31fbe86a5807576e1f11785b19',
+               'e5e52c8d666584cc49ca6f11162be4868b240e2cc99a3c3ef0a2f8ac292c65ad']:
+    assert re.search(r'^'+digest+r'\s+',s,re.M),digest
 assert s.count('STATE_SWEEP PASS cases=261')==6
 assert s.count('PLANAR_GUARD_PASS cases=224')==1
 assert len(re.findall(r'OUTPUT_OVERLAP PASS cases=54 calls=\d+ active_conflicts=0 positive_control=0',s))==1
