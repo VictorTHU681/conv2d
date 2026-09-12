@@ -1602,11 +1602,11 @@ static void k16pairf3(const kp_t* P)
 {
     ka_t A; fill_args(&A, P, 1, 512, 31 + P->steps);
     A.n2 = (int64_t)P->kb0; A.e2 = (int64_t)P->kbase; A.T = (int64_t)P->kend; A.nlines = P->cf0;
-    A.kw4 = P->KW * 4; A.khkw4 = P->KH * P->KW * 4;
+    A.kw4 = P->steps * 16;   // kf 每 kernel 行的字节跨度 = steps*4floats*4B
     asm volatile(
         LOAD_ARGS
         "ldr x25, [%[A], #232]\n\t"
-        "ldr x13, [%[A], #184]\n\t"
+        "ldr x13, [%[A], #184]\n\t"     // kf 线性游标（起始行 a0）
         "fmov z31.s, #0.0\n\t"
         "fmov z10.s, #0.0\n\t" "fmov z11.s, #0.0\n\t" "fmov z12.s, #0.0\n\t"
         "fmov z13.s, #0.0\n\t" "fmov z14.s, #0.0\n\t" "fmov z15.s, #0.0\n\t"
@@ -1614,18 +1614,6 @@ static void k16pairf3(const kp_t* P)
         ROW_HEAD_COMMON
         "add x21, x9, x25\n\t"
         "prfm pstl2keep, [x21]\n\t" "prfm pstl2keep, [x21, #64]\n\t"
-        // 派生另外两条链的游标：+KW4 / +2*KW4，超出 kend 则回绕（减 KH*KW*4）
-        "ldr x23, [%[A], #264]\n\t"
-        "ldr x12, [%[A], #208]\n\t"
-        "ldr x24, [%[A], #272]\n\t"
-        "add x21, x13, x23\n\t"
-        "sub x22, x21, x24\n\t"
-        "cmp x21, x12\n\t"
-        "csel x21, x22, x21, hs\n\t"
-        "add x22, x21, x23\n\t"
-        "sub x23, x22, x24\n\t"
-        "cmp x22, x12\n\t"
-        "csel x22, x23, x22, hs\n\t"
         "mov x15, x7\n\t"
         ".p2align 4\n"
         "2:\n\t"
@@ -1633,29 +1621,25 @@ static void k16pairf3(const kp_t* P)
         "ld1w {z1.s}, p0/z, [x16, #1, mul vl]\n\t"
         "ld1w {z2.s}, p0/z, [x2]\n\t"
         "ld1w {z3.s}, p0/z, [x3]\n\t"
+        "ld1rqw {z4.s}, p0/z, [x13]\n\t"        // 一次 quadword 广播：z4 各 128 位段 = {kf0,kf1,kf2,0}
         "fmopa za0.s, p0/m, p0/m, z0.s, z2.s\n\t"
         "fmopa za1.s, p0/m, p0/m, z1.s, z2.s\n\t"
         "fmopa za2.s, p0/m, p0/m, z0.s, z3.s\n\t"
         "fmopa za3.s, p0/m, p0/m, z1.s, z3.s\n\t"
-        "ld1rw {z4.s}, p0/z, [x13]\n\t"
-        "ld1rw {z5.s}, p0/z, [x21]\n\t"
-        "ld1rw {z6.s}, p0/z, [x22]\n\t"
-        "fmla z10.s, p0/m, z0.s, z4.s\n\t"
-        "fmla z11.s, p0/m, z1.s, z4.s\n\t"
-        "fmla z12.s, p0/m, z0.s, z5.s\n\t"
-        "fmla z13.s, p0/m, z1.s, z5.s\n\t"
-        "fmla z14.s, p0/m, z0.s, z6.s\n\t"
-        "fmla z15.s, p0/m, z1.s, z6.s\n\t"
-        "add x13, x13, #4\n\t"
-        "add x21, x21, #4\n\t"
-        "add x22, x22, #4\n\t"
+        "fmla z10.s, z0.s, z4.s[0]\n\t"          // 按元素索引 fmla（无需单独广播）
+        "fmla z11.s, z1.s, z4.s[0]\n\t"
+        "fmla z12.s, z0.s, z4.s[1]\n\t"
+        "fmla z13.s, z1.s, z4.s[1]\n\t"
+        "fmla z14.s, z0.s, z4.s[2]\n\t"
+        "fmla z15.s, z1.s, z4.s[2]\n\t"
+        "add x13, x13, #16\n\t"
         "add x16, x16, #4\n\t"
         "add x2, x2, #64\n\t"
         "add x3, x3, #64\n\t"
         "subs x15, x15, #1\n\t"
         "b.ne 2b\n\t"
         WRAP_B(x2) WRAP_B(x3)
-        "ldr x24, [%[A], #208]\n\t"
+        "ldr x24, [%[A], #208]\n\t"              // kf 行回绕（到表尾则回表头）
         "cmp x13, x24\n\t"
         "ldr x24, [%[A], #192]\n\t"
         "csel x13, x24, x13, eq\n\t"
@@ -1708,7 +1692,7 @@ static void k16pairf3(const kp_t* P)
         ROW_TAIL
         :
         : [A]"r"(&A)
-        : XCLOB, "z0", "z1", "z2", "z3", "z4", "z5", "z6", "z8", "z9", "z10", "z11", "z12", "z13", "z14", "z15", "z24", "z31", "p0", "p3", "memory", "cc");
+        : XCLOB, "z0", "z1", "z2", "z3", "z4", "z8", "z9", "z10", "z11", "z12", "z13", "z14", "z15", "z24", "z31", "p0", "p3", "memory", "cc");
 }
 
 // ---------------- 16×1 单组 + 2 条 fmla 残差：4 tile = 64 列，z16..z19 / z20..z23 为两条 64 列累加链 ----------------
@@ -1993,7 +1977,7 @@ static void roll_build_R(float* R, const float* k, long KH, long KW, long steps,
                 R[(y * steps + X) * 16 + c] = (ki >= 0 && ki < KW && s_base + sidx < KH) ? k[kj * KW + ki] : 0.f;
             }
 }
-typedef struct { int kind; long s_base, nvA, nvB, width, steps, RSB; float* R; size_t Rcap; } rgrp_t;   // kind 32=pair,16=single,8,1
+typedef struct { int kind; long s_base, nvA, nvB, width, steps, RSB; float* R; size_t Rcap; float* kf; size_t kfcap; } rgrp_t;   // kind 32=pair,16=single,8,4; 33/34=pair+fmla；kf = pairf3 的三链 b 打包 [KH][steps][4]
 typedef struct { int g; long base; } ritem_t;
 typedef struct { int item; long ja, jb; } rpiece_t;
 typedef struct {
@@ -2057,6 +2041,18 @@ static void roll_prepare(const float* k, long H, long W, long KH, long KW, int n
             size_t need = (size_t)KH * G->RSB;
             if (G->Rcap < need) { free(G->R); G->R = alloc_aligned(need); G->Rcap = G->R ? need : 0; }
             roll_build_R(G->R, k, KH, KW, G->steps, G->s_base, (G->kind == 32 || G->kind == 33 || G->kind == 34 || G->kind == 17) ? 16 : G->kind);
+            if (G->kind == 34) {
+                size_t kfneed = (size_t)KH * G->steps * 4 * sizeof(float);
+                if (G->kfcap < kfneed) { free(G->kf); G->kf = alloc_aligned(kfneed); G->kfcap = G->kf ? kfneed : 0; }
+                for (long a = 0; a < KH; a++)               // kf[a][X] = {k[a][X], k[(a+1)%KH][X], k[(a+2)%KH][X], 0}
+                    for (long X = 0; X < G->steps; X++) {
+                        float* d = G->kf + (a * G->steps + X) * 4;
+                        d[0] = X < KW ? k[a * KW + X] : 0.f;
+                        d[1] = X < KW ? k[((a + 1) % KH) * KW + X] : 0.f;
+                        d[2] = X < KW ? k[((a + 2) % KH) * KW + X] : 0.f;
+                        d[3] = 0.f;
+                    }
+            }
         }
         int nit = 0;
         for (int g = 0; g < P->ng; g++) nit += (int)((outW + P->G[g].width - 1) / P->G[g].width);
@@ -2152,7 +2148,11 @@ static void roll_worker(int tid, int nth, const ctx_t* c)
                    ((ja + 1 - g->s_base) % KH + KH) % KH, ((ja + 1 - g->s_base - 16) % KH + KH) % KH,
                    ((ja - g->s_base) % KH + KH) % KH, ((ja - g->s_base - 16) % KH + KH) % KH, g->nvA, g->nvB, ring, KW, c->outW * 4,
                    NULL, NULL, NULL, 0, NULL, 0 };
-        if (g->kind == 33 || g->kind == 34) {
+        if (g->kind == 34) {
+            const long sF = KH - 1, a0 = ((ja - sF) % KH + KH) % KH;   // kf 三链的起始 kernel 行
+            K.kb0 = g->kf + a0 * g->steps * 4; K.kbase = g->kf; K.kend = g->kf + KH * g->steps * 4;
+            K.cf0 = ((sF - g->s_base) % KH + KH) % KH;
+        } else if (g->kind == 33) {
             const long sF = KH - 1, kj0 = ((ja - sF) % KH + KH) % KH;
             K.kb0 = c->k + kj0 * KW; K.kbase = c->k; K.kend = c->k + KH * KW;
             K.cf0 = ((sF - g->s_base) % KH + KH) % KH;
