@@ -102,6 +102,20 @@ def private_done(s):
     return s
 
 
+def copy_pairf4(s):
+    copied = copy_unroll(s, 4)
+    a = copied.index('#define ROW_HEAD_COMMON')
+    b = copied.index('\n\n', a)
+    macro = copied[a:b].replace('ROW_HEAD_COMMON', 'ROW_HEAD_COPY4')
+    pos = s.index('// ---------------- 16×1 对')
+    s = s[:pos] + macro + '\n\n' + s[pos:]
+    a = s.index('static void k16pairf4(')
+    b = s.index('\n}\n', a) + 3
+    f = s[a:b]
+    assert f.count('ROW_HEAD_COMMON') == 1
+    return s[:a] + f.replace('ROW_HEAD_COMMON', 'ROW_HEAD_COPY4') + s[b:]
+
+
 def main():
     source = subprocess.check_output(['git', 'show', BASE + ':conv2d.c'], text=True)
     fixed = cache_fix(source)
@@ -115,6 +129,7 @@ def main():
     variants['copy4'] = copy_unroll(fixed, 4)
     variants['done'] = private_done(fixed)
     variants['donecopy2'] = private_done(variants['copy2'])
+    variants['copy4f4'] = copy_pairf4(fixed)
     out = Path('build/v52')
     out.mkdir(parents=True, exist_ok=True)
     for name, contents in variants.items():

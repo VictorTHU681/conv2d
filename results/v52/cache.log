@@ -1,0 +1,90 @@
+HOST cn20481 2026-09-12T18:00:03+08:00
+pid 3209249's current affinity list: 37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+PLACEMENT cpu_node=1 hbm_node=17
+Cpus_allowed_list:	37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+Mems_allowed_list:	0-31
+1548401
+policy: default
+preferred node: current
+physcpubind: 37 75 113 151 189 227 265 303 341 379 417 455 493 531 569 607 
+cpubind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+nodebind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 
+preferred: 
+EFFECTIVE_PLACEMENT
+policy: preferred
+preferred node: 17
+physcpubind: 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 
+cpubind: 1 
+nodebind: 1 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 
+preferred: 17 
+BASELINE_EXPECT_ALLOCATION_REGRESSION
+round=0 k=81 bitwise=PASS aligned_calls=5 live=10485760
+round=0 k=39 bitwise=PASS aligned_calls=8 live=16777216
+round=0 k=39 bitwise=PASS aligned_calls=11 live=23068672
+round=0 k=55 bitwise=PASS aligned_calls=15 live=31457280
+round=1 k=81 bitwise=PASS aligned_calls=18 live=37748736
+round=1 k=39 bitwise=PASS aligned_calls=21 live=44040192
+round=1 k=39 bitwise=PASS aligned_calls=24 live=50331648
+round=1 k=55 bitwise=PASS aligned_calls=28 live=58720256
+round=2 k=81 bitwise=PASS aligned_calls=31 live=65011712
+round=2 k=39 bitwise=PASS aligned_calls=34 live=71303168
+round=2 k=39 bitwise=PASS aligned_calls=37 live=77594624
+round=2 k=55 bitwise=PASS aligned_calls=41 live=85983232
+round=3 k=81 bitwise=PASS aligned_calls=44 live=92274688
+round=3 k=39 bitwise=PASS aligned_calls=47 live=98566144
+round=3 k=39 bitwise=PASS aligned_calls=50 live=104857600
+round=3 k=55 bitwise=PASS aligned_calls=54 live=113246208
+round=4 k=81 bitwise=PASS aligned_calls=57 live=119537664
+round=4 k=39 bitwise=PASS aligned_calls=60 live=125829120
+round=4 k=39 bitwise=PASS aligned_calls=63 live=132120576
+round=4 k=55 bitwise=PASS aligned_calls=67 live=140509184
+round=5 k=81 bitwise=PASS aligned_calls=70 live=146800640
+round=5 k=39 bitwise=PASS aligned_calls=73 live=153092096
+round=5 k=39 bitwise=PASS aligned_calls=76 live=159383552
+round=5 k=55 bitwise=PASS aligned_calls=80 live=167772160
+round=6 k=81 bitwise=PASS aligned_calls=83 live=174063616
+round=6 k=39 bitwise=PASS aligned_calls=86 live=180355072
+round=6 k=39 bitwise=PASS aligned_calls=89 live=186646528
+round=6 k=55 bitwise=PASS aligned_calls=93 live=195035136
+round=7 k=81 bitwise=PASS aligned_calls=96 live=201326592
+round=7 k=39 bitwise=PASS aligned_calls=99 live=207618048
+round=7 k=39 bitwise=PASS aligned_calls=102 live=213909504
+round=7 k=55 bitwise=PASS aligned_calls=106 live=222298112
+PACK_REUSE bitwise=PASS extra_allocations=91 peak_bytes=222298112 FAIL
+FIXED_PACK_REUSE
+round=0 k=81 bitwise=PASS aligned_calls=5 live=10485760
+round=0 k=39 bitwise=PASS aligned_calls=6 live=12582912
+round=0 k=39 bitwise=PASS aligned_calls=6 live=12582912
+round=0 k=55 bitwise=PASS aligned_calls=7 live=12582912
+round=1 k=81 bitwise=PASS aligned_calls=7 live=12582912
+round=1 k=39 bitwise=PASS aligned_calls=7 live=12582912
+round=1 k=39 bitwise=PASS aligned_calls=7 live=12582912
+round=1 k=55 bitwise=PASS aligned_calls=7 live=12582912
+round=2 k=81 bitwise=PASS aligned_calls=7 live=12582912
+round=2 k=39 bitwise=PASS aligned_calls=7 live=12582912
+round=2 k=39 bitwise=PASS aligned_calls=7 live=12582912
+round=2 k=55 bitwise=PASS aligned_calls=7 live=12582912
+round=3 k=81 bitwise=PASS aligned_calls=7 live=12582912
+round=3 k=39 bitwise=PASS aligned_calls=7 live=12582912
+round=3 k=39 bitwise=PASS aligned_calls=7 live=12582912
+round=3 k=55 bitwise=PASS aligned_calls=7 live=12582912
+round=4 k=81 bitwise=PASS aligned_calls=7 live=12582912
+round=4 k=39 bitwise=PASS aligned_calls=7 live=12582912
+round=4 k=39 bitwise=PASS aligned_calls=7 live=12582912
+round=4 k=55 bitwise=PASS aligned_calls=7 live=12582912
+round=5 k=81 bitwise=PASS aligned_calls=7 live=12582912
+round=5 k=39 bitwise=PASS aligned_calls=7 live=12582912
+round=5 k=39 bitwise=PASS aligned_calls=7 live=12582912
+round=5 k=55 bitwise=PASS aligned_calls=7 live=12582912
+round=6 k=81 bitwise=PASS aligned_calls=7 live=12582912
+round=6 k=39 bitwise=PASS aligned_calls=7 live=12582912
+round=6 k=39 bitwise=PASS aligned_calls=7 live=12582912
+round=6 k=55 bitwise=PASS aligned_calls=7 live=12582912
+round=7 k=81 bitwise=PASS aligned_calls=7 live=12582912
+round=7 k=39 bitwise=PASS aligned_calls=7 live=12582912
+round=7 k=39 bitwise=PASS aligned_calls=7 live=12582912
+round=7 k=55 bitwise=PASS aligned_calls=7 live=12582912
+PACK_REUSE bitwise=PASS extra_allocations=0 peak_bytes=12582912 PASS
+CACHE_DONE 2026-09-12T18:00:23+08:00
