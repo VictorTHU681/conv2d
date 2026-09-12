@@ -1,0 +1,214 @@
+HOST cn20483 2026-09-12T22:40:33+08:00
+pid 2881447's current affinity list: 37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+PLACEMENT cpu_node=1 hbm_node=17
+Cpus_allowed_list:	37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+Mems_allowed_list:	0-31
+1548119
+policy: default
+preferred node: current
+physcpubind: 37 75 113 151 189 227 265 303 341 379 417 455 493 531 569 607 
+cpubind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+nodebind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 
+preferred: 
+EFFECTIVE_PLACEMENT
+policy: preferred
+preferred node: 17
+physcpubind: 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 
+cpubind: 1 
+nodebind: 1 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 
+preferred: 17 
+68c449b03c33f776fb7d91d9d86982c2d207eeee4c9c892b26c1736919cf1ac9  build/v54_stack/upstream.c
+03294f5954ee3656b7b2000c6379536d290d9d570c5fef307fbe004ae6bbfaaa  build/v54_stack/candidate.c
+=== STATE step4
+STATE_SWEEP PASS cases=261
+=== STATE step32
+STATE_SWEEP PASS cases=261
+=== DIAG per-kind cycles (HBM)
+DIAG memory=HBM shape=4096 6144 39 39
+[roll] thr ms min/avg/max 0.007/5.256/10.217 | 周期/tile步: pair 2.14 single 0.00 8x2 0.00 4x4 2.58 | 份额 %: 85.4 0.0 0.0 14.6
+[roll] thr ms min/avg/max 5.225/5.233/5.241 | 周期/tile步: pair 2.13 single 0.00 8x2 0.00 4x4 2.53 | 份额 %: 85.6 0.0 0.0 14.4
+[roll] thr ms min/avg/max 5.232/5.239/5.247 | 周期/tile步: pair 2.14 single 0.00 8x2 0.00 4x4 2.52 | 份额 %: 85.7 0.0 0.0 14.3
+[roll] thr ms min/avg/max 5.231/5.239/5.246 | 周期/tile步: pair 2.14 single 0.00 8x2 0.00 4x4 2.53 | 份额 %: 85.6 0.0 0.0 14.4
+[roll] thr ms min/avg/max 5.228/5.237/5.245 | 周期/tile步: pair 2.14 single 0.00 8x2 0.00 4x4 2.52 | 份额 %: 85.7 0.0 0.0 14.3
+  4096 x  6144     39 x    39 run0    5.453 ms    13823.0 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.462 ms    13800.8 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.446 ms    13839.7 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.446 ms    13839.7 GFLOPS | avg    5.454 ms    13821.1 GFLOPS  PASS
+DIAG memory=HBM shape=6144 4096 41 41
+[roll] thr ms min/avg/max 0.007/5.880/13.192 | 周期/tile步: pair 2.11 single 0.00 8x2 2.20 4x4 0.00 | 份额 %: 78.9 0.0 21.1 0.0
+[roll] thr ms min/avg/max 4.142/5.850/6.442 | 周期/tile步: pair 2.10 single 0.00 8x2 2.18 4x4 0.00 | 份额 %: 78.8 0.0 21.2 0.0
+[roll] thr ms min/avg/max 5.833/5.854/5.897 | 周期/tile步: pair 2.10 single 0.00 8x2 2.18 4x4 0.00 | 份额 %: 78.8 0.0 21.2 0.0
+[roll] thr ms min/avg/max 5.820/5.848/5.888 | 周期/tile步: pair 2.10 single 0.00 8x2 2.18 4x4 0.00 | 份额 %: 78.9 0.0 21.1 0.0
+[roll] thr ms min/avg/max 5.822/5.850/5.965 | 周期/tile步: pair 2.10 single 0.00 8x2 2.20 4x4 0.00 | 份额 %: 78.7 0.0 21.3 0.0
+  6144 x  4096     41 x    41 run0    6.109 ms    13624.6 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    6.112 ms    13619.3 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    6.179 ms    13470.6 GFLOPS PASS
+  6144 x  4096     41 x    41 best    6.109 ms    13624.6 GFLOPS | avg    6.133 ms    13571.1 GFLOPS  PASS
+DIAG memory=HBM shape=4256 6390 55 55
+[roll] thr ms min/avg/max 4.121/11.104/16.699 | 周期/tile步: pair 2.11 single 2.10 8x2 0.00 4x4 2.46 | 份额 %: 60.3 30.0 0.0 9.7
+[roll] thr ms min/avg/max 11.025/11.083/11.111 | 周期/tile步: pair 2.10 single 2.11 8x2 0.00 4x4 2.45 | 份额 %: 60.1 30.2 0.0 9.7
+[roll] thr ms min/avg/max 11.040/11.085/11.125 | 周期/tile步: pair 2.10 single 2.11 8x2 0.00 4x4 2.46 | 份额 %: 60.1 30.2 0.0 9.7
+[roll] thr ms min/avg/max 11.034/11.079/11.118 | 周期/tile步: pair 2.10 single 2.11 8x2 0.00 4x4 2.45 | 份额 %: 60.1 30.2 0.0 9.7
+[roll] thr ms min/avg/max 11.035/11.083/11.125 | 周期/tile步: pair 2.10 single 2.11 8x2 0.00 4x4 2.46 | 份额 %: 60.1 30.2 0.0 9.7
+  4256 x  6390     55 x    55 run0   11.345 ms    14198.1 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.350 ms    14191.3 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.336 ms    14209.3 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.336 ms    14209.3 GFLOPS | avg   11.344 ms    14199.5 GFLOPS  PASS
+DIAG memory=HBM shape=6390 4256 81 81
+[roll] thr ms min/avg/max 17.066/23.807/29.377 | 周期/tile步: pair 2.05 single 2.09 8x2 0.00 4x4 0.00 | 份额 %: 79.6 20.4 0.0 0.0
+[roll] thr ms min/avg/max 23.718/23.795/23.946 | 周期/tile步: pair 2.04 single 2.09 8x2 0.00 4x4 0.00 | 份额 %: 79.5 20.5 0.0 0.0
+[roll] thr ms min/avg/max 23.734/23.807/23.977 | 周期/tile步: pair 2.04 single 2.09 8x2 0.00 4x4 0.00 | 份额 %: 79.5 20.5 0.0 0.0
+[roll] thr ms min/avg/max 23.733/23.806/23.975 | 周期/tile步: pair 2.04 single 2.09 8x2 0.00 4x4 0.00 | 份额 %: 79.5 20.5 0.0 0.0
+[roll] thr ms min/avg/max 23.720/23.796/23.964 | 周期/tile步: pair 2.04 single 2.09 8x2 0.00 4x4 0.00 | 份额 %: 79.5 20.5 0.0 0.0
+  6390 x  4256     81 x    81 run0   24.181 ms    14299.1 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   24.206 ms    14284.7 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   24.157 ms    14313.4 GFLOPS PASS
+  6390 x  4256     81 x    81 best   24.157 ms    14313.4 GFLOPS | avg   24.181 ms    14299.0 GFLOPS  PASS
+=== DIAG thread spread k39 (HBM)
+[roll] thr ms min/avg/max 0.006/5.261/9.113 | 周期/tile步: pair 2.15 single 0.00 8x2 0.00 4x4 2.56 | 份额 %: 85.5 0.0 0.0 14.5
+ 0:9.11/5.3M/2.57 1:0.01/0.0M/0.00 2:0.01/0.0M/0.00 3:0.01/0.0M/0.00 4:0.01/0.0M/0.00 5:5.75/4.2M/2.12 6:6.15/4.4M/2.13 7:6.50/4.7M/2.13 8:6.31/4.5M/2.13 9:6.38/4.6M/2.14 10:5.63/4.1M/2.13 11:6.10/4.4M/2.13 12:6.34/4.6M/2.13 13:6.34/4.6M/2.13 14:5.74/4.1M/2.13 15:6.03/4.3M/2.13 16:6.19/4.5M/2.12 17:6.19/4.5M/2.14 18:6.14/4.4M/2.14 19:5.77/4.2M/2.13 20:5.67/4.1M/2.14 21:5.99/4.3M/2.12 22:6.03/4.3M/2.13 23:6.00/4.3M/2.12 24:5.98/4.3M/2.13 25:5.96/4.3M/2.13 26:5.88/4.2M/2.13 27:5.09/3.7M/2.13 28:5.84/4.2M/2.14 29:5.81/4.2M/2.13 30:4.99/3.6M/2.13 31:5.72/4.1M/2.13 32:4.94/3.2M/2.42 33:5.04/3.1M/2.54 34:4.98/3.0M/2.58 35:4.88/3.0M/2.54 36:4.84/2.9M/2.56 37:5.57/3.5M/2.46
+[roll] thr ms min/avg/max 5.223/5.231/5.238 | 周期/tile步: pair 2.14 single 0.00 8x2 0.00 4x4 2.52 | 份额 %: 85.7 0.0 0.0 14.3
+ 0:5.23/3.8M/2.11 1:5.23/3.8M/2.14 2:5.23/3.8M/2.13 3:5.23/3.7M/2.14 4:5.24/3.8M/2.14 5:5.23/3.8M/2.13 6:5.24/3.8M/2.13 7:5.24/3.8M/2.14 8:5.24/3.8M/2.13 9:5.23/3.8M/2.14 10:5.23/3.8M/2.13 11:5.23/3.8M/2.13 12:5.23/3.8M/2.14 13:5.24/3.8M/2.14 14:5.23/3.8M/2.14 15:5.23/3.8M/2.13 16:5.23/3.8M/2.13 17:5.23/3.8M/2.14 18:5.23/3.8M/2.14 19:5.23/3.8M/2.13 20:5.23/3.8M/2.13 21:5.23/3.8M/2.12 22:5.23/3.8M/2.13 23:5.23/3.8M/2.13 24:5.23/3.8M/2.14 25:5.23/3.8M/2.14 26:5.23/3.8M/2.14 27:5.22/3.8M/2.12 28:5.23/3.8M/2.13 29:5.23/3.8M/2.13 30:5.23/3.8M/2.14 31:5.23/3.8M/2.13 32:5.22/3.3M/2.40 33:5.23/3.2M/2.50 34:5.22/3.1M/2.53 35:5.22/3.2M/2.49 36:5.23/3.2M/2.52 37:5.23/3.2M/2.52
+[roll] thr ms min/avg/max 5.231/5.239/5.254 | 周期/tile步: pair 2.14 single 0.00 8x2 0.00 4x4 2.51 | 份额 %: 85.7 0.0 0.0 14.3
+ 0:5.24/3.8M/2.12 1:5.24/3.8M/2.14 2:5.24/3.8M/2.13 3:5.24/3.8M/2.14 4:5.25/3.7M/2.15 5:5.24/3.8M/2.13 6:5.24/3.8M/2.14 7:5.24/3.8M/2.14 8:5.24/3.8M/2.14 9:5.24/3.8M/2.14 10:5.24/3.8M/2.13 11:5.24/3.8M/2.13 12:5.24/3.8M/2.14 13:5.24/3.7M/2.14 14:5.24/3.8M/2.14 15:5.24/3.8M/2.14 16:5.24/3.8M/2.13 17:5.23/3.8M/2.14 18:5.24/3.8M/2.14 19:5.23/3.8M/2.14 20:5.25/3.8M/2.15 21:5.23/3.8M/2.12 22:5.23/3.8M/2.14 23:5.24/3.8M/2.13 24:5.24/3.8M/2.14 25:5.24/3.8M/2.14 26:5.24/3.8M/2.14 27:5.24/3.8M/2.12 28:5.23/3.8M/2.14 29:5.23/3.8M/2.14 30:5.25/3.8M/2.14 31:5.24/3.8M/2.13 32:5.24/3.3M/2.40 33:5.24/3.2M/2.50 34:5.24/3.2M/2.51 35:5.24/3.2M/2.48 36:5.23/3.1M/2.52 37:5.24/3.2M/2.53
+[roll] thr ms min/avg/max 5.217/5.226/5.234 | 周期/tile步: pair 2.13 single 0.00 8x2 0.00 4x4 2.52 | 份额 %: 85.7 0.0 0.0 14.3
+ 0:5.23/3.8M/2.12 1:5.23/3.8M/2.13 2:5.23/3.8M/2.13 3:5.23/3.8M/2.14 4:5.22/3.7M/2.14 5:5.22/3.8M/2.12 6:5.23/3.8M/2.13 7:5.22/3.8M/2.13 8:5.23/3.8M/2.14 9:5.22/3.8M/2.14 10:5.23/3.8M/2.13 11:5.22/3.8M/2.13 12:5.23/3.8M/2.13 13:5.23/3.8M/2.13 14:5.22/3.8M/2.14 15:5.22/3.8M/2.13 16:5.22/3.8M/2.13 17:5.23/3.8M/2.14 18:5.23/3.8M/2.14 19:5.22/3.8M/2.14 20:5.23/3.8M/2.14 21:5.22/3.8M/2.12 22:5.23/3.8M/2.13 23:5.23/3.8M/2.13 24:5.22/3.8M/2.13 25:5.23/3.8M/2.13 26:5.22/3.8M/2.14 27:5.23/3.8M/2.12 28:5.22/3.8M/2.14 29:5.22/3.8M/2.13 30:5.23/3.8M/2.14 31:5.22/3.8M/2.13 32:5.23/3.3M/2.40 33:5.23/3.2M/2.50 34:5.23/3.1M/2.53 35:5.22/3.2M/2.49 36:5.23/3.2M/2.51 37:5.23/3.2M/2.52
+  4096 x  6144     39 x    39 run0    5.686 ms    13257.2 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.738 ms    13135.1 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.686 ms    13257.2 GFLOPS | avg    5.712 ms    13195.9 GFLOPS  PASS
+=== DIAG per-kind cycles k39/k41 (DDR)
+DIAG memory=DDR shape=4096 6144 39 39
+[roll] thr ms min/avg/max 0.008/5.325/12.123 | 周期/tile步: pair 2.15 single 0.00 8x2 0.00 4x4 2.74 | 份额 %: 84.7 0.0 0.0 15.3
+[roll] thr ms min/avg/max 5.282/5.292/5.368 | 周期/tile步: pair 2.15 single 0.00 8x2 0.00 4x4 2.62 | 份额 %: 85.2 0.0 0.0 14.8
+[roll] thr ms min/avg/max 5.266/5.276/5.380 | 周期/tile步: pair 2.14 single 0.00 8x2 0.00 4x4 2.61 | 份额 %: 85.2 0.0 0.0 14.8
+[roll] thr ms min/avg/max 5.271/5.281/5.376 | 周期/tile步: pair 2.15 single 0.00 8x2 0.00 4x4 2.61 | 份额 %: 85.3 0.0 0.0 14.7
+[roll] thr ms min/avg/max 5.271/5.284/5.388 | 周期/tile步: pair 2.15 single 0.00 8x2 0.00 4x4 2.62 | 份额 %: 85.2 0.0 0.0 14.8
+  4096 x  6144     39 x    39 run0    5.594 ms    13475.4 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.609 ms    13437.1 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.600 ms    13460.9 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.594 ms    13475.4 GFLOPS | avg    5.601 ms    13457.8 GFLOPS  PASS
+DIAG memory=DDR shape=6144 4096 41 41
+[roll] thr ms min/avg/max 0.005/5.898/10.847 | 周期/tile步: pair 2.12 single 0.00 8x2 2.21 4x4 0.00 | 份额 %: 78.8 0.0 21.2 0.0
+[roll] thr ms min/avg/max 5.955/5.989/6.018 | 周期/tile步: pair 2.15 single 0.00 8x2 2.25 4x4 0.00 | 份额 %: 78.7 0.0 21.3 0.0
+[roll] thr ms min/avg/max 5.978/6.009/6.039 | 周期/tile步: pair 2.15 single 0.00 8x2 2.27 4x4 0.00 | 份额 %: 78.6 0.0 21.4 0.0
+[roll] thr ms min/avg/max 5.960/5.988/6.026 | 周期/tile步: pair 2.14 single 0.00 8x2 2.25 4x4 0.00 | 份额 %: 78.6 0.0 21.4 0.0
+[roll] thr ms min/avg/max 5.936/5.968/5.999 | 周期/tile步: pair 2.14 single 0.00 8x2 2.25 4x4 0.00 | 份额 %: 78.6 0.0 21.4 0.0
+  6144 x  4096     41 x    41 run0    6.252 ms    13313.6 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    6.231 ms    13357.5 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    6.207 ms    13409.1 GFLOPS PASS
+  6144 x  4096     41 x    41 best    6.207 ms    13409.1 GFLOPS | avg    6.230 ms    13360.0 GFLOPS  PASS
+SWEEP memory=HBM round=1 variant=upstream shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.252 ms    14352.7 GFLOPS | avg    5.257 ms    14337.9 GFLOPS  PASS
+SWEEP memory=HBM round=1 variant=base     shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.282 ms    14271.5 GFLOPS | avg    5.290 ms    14249.7 GFLOPS  PASS
+SWEEP memory=HBM round=1 variant=step4    shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.282 ms    14269.9 GFLOPS | avg    5.288 ms    14253.8 GFLOPS  PASS
+SWEEP memory=HBM round=1 variant=step16   shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.316 ms    14179.9 GFLOPS | avg    5.325 ms    14155.6 GFLOPS  PASS
+SWEEP memory=HBM round=1 variant=step32   shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.317 ms    14176.8 GFLOPS | avg    5.331 ms    14138.4 GFLOPS  PASS
+SWEEP memory=HBM round=1 variant=pd2      shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.278 ms    14280.6 GFLOPS | avg    5.285 ms    14261.8 GFLOPS  PASS
+SWEEP memory=HBM round=1 variant=pd6      shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.372 ms    14030.8 GFLOPS | avg    5.408 ms    13936.7 GFLOPS  PASS
+SWEEP memory=HBM round=1 variant=upstream shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.883 ms    14148.5 GFLOPS | avg    5.888 ms    14137.5 GFLOPS  PASS
+SWEEP memory=HBM round=1 variant=base     shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.913 ms    14076.5 GFLOPS | avg    5.940 ms    14012.8 GFLOPS  PASS
+SWEEP memory=HBM round=1 variant=step4    shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.942 ms    14008.6 GFLOPS | avg    5.950 ms    13990.4 GFLOPS  PASS
+SWEEP memory=HBM round=1 variant=step16   shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.897 ms    14114.7 GFLOPS | avg    5.908 ms    14087.6 GFLOPS  PASS
+SWEEP memory=HBM round=1 variant=step32   shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.921 ms    14056.9 GFLOPS | avg    5.958 ms    13969.6 GFLOPS  PASS
+SWEEP memory=HBM round=1 variant=pd2      shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.946 ms    13998.2 GFLOPS | avg    5.985 ms    13907.7 GFLOPS  PASS
+SWEEP memory=HBM round=1 variant=pd6      shape=6144 4096 41 41   6144 x  4096     41 x    41 best    6.063 ms    13727.6 GFLOPS | avg    6.085 ms    13678.2 GFLOPS  PASS
+SWEEP memory=HBM round=1 variant=upstream shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.161 ms    14432.5 GFLOPS | avg   11.362 ms    14176.3 GFLOPS  PASS
+SWEEP memory=HBM round=1 variant=base     shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.158 ms    14436.4 GFLOPS | avg   11.161 ms    14431.5 GFLOPS  PASS
+SWEEP memory=HBM round=1 variant=step4    shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.246 ms    14323.2 GFLOPS | avg   11.256 ms    14310.6 GFLOPS  PASS
+SWEEP memory=HBM round=1 variant=step16   shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.179 ms    14408.5 GFLOPS | avg   11.184 ms    14402.5 GFLOPS  PASS
+SWEEP memory=HBM round=1 variant=step32   shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.152 ms    14442.9 GFLOPS | avg   11.156 ms    14438.9 GFLOPS  PASS
+SWEEP memory=HBM round=1 variant=pd2      shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.254 ms    14312.8 GFLOPS | avg   11.258 ms    14307.5 GFLOPS  PASS
+SWEEP memory=HBM round=1 variant=pd6      shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.405 ms    14123.1 GFLOPS | avg   11.418 ms    14106.6 GFLOPS  PASS
+SWEEP memory=HBM round=1 variant=upstream shape=6390 4256 81 81   6390 x  4256     81 x    81 best   23.906 ms    14463.7 GFLOPS | avg   24.144 ms    14321.2 GFLOPS  PASS
+SWEEP memory=HBM round=1 variant=base     shape=6390 4256 81 81   6390 x  4256     81 x    81 best   23.972 ms    14424.2 GFLOPS | avg   23.985 ms    14416.0 GFLOPS  PASS
+SWEEP memory=HBM round=1 variant=step4    shape=6390 4256 81 81   6390 x  4256     81 x    81 best   23.997 ms    14408.7 GFLOPS | avg   24.024 ms    14392.7 GFLOPS  PASS
+SWEEP memory=HBM round=1 variant=step16   shape=6390 4256 81 81   6390 x  4256     81 x    81 best   23.885 ms    14476.6 GFLOPS | avg   23.920 ms    14455.6 GFLOPS  PASS
+SWEEP memory=HBM round=1 variant=step32   shape=6390 4256 81 81   6390 x  4256     81 x    81 best   24.142 ms    14322.5 GFLOPS | avg   24.171 ms    14305.0 GFLOPS  PASS
+SWEEP memory=HBM round=1 variant=pd2      shape=6390 4256 81 81   6390 x  4256     81 x    81 best   23.974 ms    14422.7 GFLOPS | avg   23.982 ms    14417.9 GFLOPS  PASS
+SWEEP memory=HBM round=1 variant=pd6      shape=6390 4256 81 81   6390 x  4256     81 x    81 best   24.243 ms    14262.5 GFLOPS | avg   24.252 ms    14257.4 GFLOPS  PASS
+SWEEP memory=HBM round=2 variant=pd6      shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.342 ms    14109.3 GFLOPS | avg    5.372 ms    14030.6 GFLOPS  PASS
+SWEEP memory=HBM round=2 variant=pd2      shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.268 ms    14307.5 GFLOPS | avg    5.277 ms    14284.5 GFLOPS  PASS
+SWEEP memory=HBM round=2 variant=step32   shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.311 ms    14191.0 GFLOPS | avg    5.323 ms    14161.5 GFLOPS  PASS
+SWEEP memory=HBM round=2 variant=step16   shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.301 ms    14219.1 GFLOPS | avg    5.305 ms    14209.0 GFLOPS  PASS
+SWEEP memory=HBM round=2 variant=step4    shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.291 ms    14244.8 GFLOPS | avg    5.305 ms    14208.4 GFLOPS  PASS
+SWEEP memory=HBM round=2 variant=base     shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.271 ms    14299.5 GFLOPS | avg    5.279 ms    14278.9 GFLOPS  PASS
+SWEEP memory=HBM round=2 variant=upstream shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.246 ms    14366.8 GFLOPS | avg    5.254 ms    14346.7 GFLOPS  PASS
+SWEEP memory=HBM round=2 variant=pd6      shape=6144 4096 41 41   6144 x  4096     41 x    41 best    6.059 ms    13737.0 GFLOPS | avg    6.067 ms    13720.5 GFLOPS  PASS
+SWEEP memory=HBM round=2 variant=pd2      shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.936 ms    14022.4 GFLOPS | avg    5.956 ms    13975.0 GFLOPS  PASS
+SWEEP memory=HBM round=2 variant=step32   shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.950 ms    13989.1 GFLOPS | avg    5.981 ms    13917.6 GFLOPS  PASS
+SWEEP memory=HBM round=2 variant=step16   shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.895 ms    14118.9 GFLOPS | avg    5.913 ms    14076.6 GFLOPS  PASS
+SWEEP memory=HBM round=2 variant=step4    shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.926 ms    14044.9 GFLOPS | avg    5.944 ms    14004.0 GFLOPS  PASS
+SWEEP memory=HBM round=2 variant=base     shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.907 ms    14091.6 GFLOPS | avg    5.913 ms    14076.5 GFLOPS  PASS
+SWEEP memory=HBM round=2 variant=upstream shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.868 ms    14185.5 GFLOPS | avg    5.872 ms    14173.9 GFLOPS  PASS
+SWEEP memory=HBM round=2 variant=pd6      shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.408 ms    14119.3 GFLOPS | avg   11.414 ms    14111.6 GFLOPS  PASS
+SWEEP memory=HBM round=2 variant=pd2      shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.243 ms    14326.4 GFLOPS | avg   11.255 ms    14311.7 GFLOPS  PASS
+SWEEP memory=HBM round=2 variant=step32   shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.166 ms    14425.8 GFLOPS | avg   11.175 ms    14413.9 GFLOPS  PASS
+SWEEP memory=HBM round=2 variant=step16   shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.185 ms    14400.6 GFLOPS | avg   11.194 ms    14389.9 GFLOPS  PASS
+SWEEP memory=HBM round=2 variant=step4    shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.243 ms    14326.2 GFLOPS | avg   11.247 ms    14320.9 GFLOPS  PASS
+SWEEP memory=HBM round=2 variant=base     shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.161 ms    14432.3 GFLOPS | avg   11.173 ms    14416.3 GFLOPS  PASS
+SWEEP memory=HBM round=2 variant=upstream shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.168 ms    14422.6 GFLOPS | avg   11.226 ms    14348.7 GFLOPS  PASS
+SWEEP memory=HBM round=2 variant=pd6      shape=6390 4256 81 81   6390 x  4256     81 x    81 best   24.180 ms    14300.0 GFLOPS | avg   24.185 ms    14296.9 GFLOPS  PASS
+SWEEP memory=HBM round=2 variant=pd2      shape=6390 4256 81 81   6390 x  4256     81 x    81 best   23.963 ms    14429.6 GFLOPS | avg   23.978 ms    14420.1 GFLOPS  PASS
+SWEEP memory=HBM round=2 variant=step32   shape=6390 4256 81 81   6390 x  4256     81 x    81 best   23.874 ms    14483.0 GFLOPS | avg   23.903 ms    14465.5 GFLOPS  PASS
+SWEEP memory=HBM round=2 variant=step16   shape=6390 4256 81 81   6390 x  4256     81 x    81 best   23.916 ms    14458.1 GFLOPS | avg   23.938 ms    14444.6 GFLOPS  PASS
+SWEEP memory=HBM round=2 variant=step4    shape=6390 4256 81 81   6390 x  4256     81 x    81 best   23.994 ms    14410.7 GFLOPS | avg   24.017 ms    14397.0 GFLOPS  PASS
+SWEEP memory=HBM round=2 variant=base     shape=6390 4256 81 81   6390 x  4256     81 x    81 best   23.990 ms    14413.3 GFLOPS | avg   24.003 ms    14405.6 GFLOPS  PASS
+SWEEP memory=HBM round=2 variant=upstream shape=6390 4256 81 81   6390 x  4256     81 x    81 best   23.910 ms    14461.3 GFLOPS | avg   23.955 ms    14434.2 GFLOPS  PASS
+SWEEP memory=DDR round=1 variant=upstream shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.347 ms    14097.9 GFLOPS | avg    5.376 ms    14020.5 GFLOPS  PASS
+SWEEP memory=DDR round=1 variant=base     shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.346 ms    14099.1 GFLOPS | avg    5.376 ms    14021.5 GFLOPS  PASS
+SWEEP memory=DDR round=1 variant=step4    shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.359 ms    14064.1 GFLOPS | avg    5.365 ms    14048.7 GFLOPS  PASS
+SWEEP memory=DDR round=1 variant=step16   shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.473 ms    13771.5 GFLOPS | avg    5.550 ms    13580.7 GFLOPS  PASS
+SWEEP memory=DDR round=1 variant=step32   shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.962 ms    12642.2 GFLOPS | avg    5.984 ms    12595.9 GFLOPS  PASS
+SWEEP memory=DDR round=1 variant=pd2      shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.503 ms    13697.8 GFLOPS | avg    5.523 ms    13647.9 GFLOPS  PASS
+SWEEP memory=DDR round=1 variant=pd6      shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.434 ms    13871.6 GFLOPS | avg    5.444 ms    13845.3 GFLOPS  PASS
+SWEEP memory=DDR round=1 variant=upstream shape=6144 4096 41 41   6144 x  4096     41 x    41 best    6.228 ms    13364.4 GFLOPS | avg    6.252 ms    13314.2 GFLOPS  PASS
+SWEEP memory=DDR round=1 variant=base     shape=6144 4096 41 41   6144 x  4096     41 x    41 best    6.066 ms    13721.8 GFLOPS | avg    6.080 ms    13690.4 GFLOPS  PASS
+SWEEP memory=DDR round=1 variant=step4    shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.988 ms    13900.1 GFLOPS | avg    6.001 ms    13870.8 GFLOPS  PASS
+SWEEP memory=DDR round=1 variant=step16   shape=6144 4096 41 41   6144 x  4096     41 x    41 best    6.352 ms    13103.9 GFLOPS | avg    6.440 ms    12923.8 GFLOPS  PASS
+SWEEP memory=DDR round=1 variant=step32   shape=6144 4096 41 41   6144 x  4096     41 x    41 best    6.813 ms    12217.4 GFLOPS | avg    6.891 ms    12078.2 GFLOPS  PASS
+SWEEP memory=DDR round=1 variant=pd2      shape=6144 4096 41 41   6144 x  4096     41 x    41 best    6.377 ms    13052.0 GFLOPS | avg    6.445 ms    12914.9 GFLOPS  PASS
+SWEEP memory=DDR round=1 variant=pd6      shape=6144 4096 41 41   6144 x  4096     41 x    41 best    6.237 ms    13344.5 GFLOPS | avg    6.262 ms    13292.1 GFLOPS  PASS
+SWEEP memory=DDR round=1 variant=upstream shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.225 ms    14349.0 GFLOPS | avg   11.256 ms    14309.9 GFLOPS  PASS
+SWEEP memory=DDR round=1 variant=base     shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.185 ms    14401.5 GFLOPS | avg   11.216 ms    14361.3 GFLOPS  PASS
+SWEEP memory=DDR round=1 variant=step4    shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.269 ms    14294.0 GFLOPS | avg   11.285 ms    14273.6 GFLOPS  PASS
+SWEEP memory=DDR round=1 variant=step16   shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.233 ms    14340.0 GFLOPS | avg   11.255 ms    14310.9 GFLOPS  PASS
+SWEEP memory=DDR round=1 variant=step32   shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.399 ms    14131.0 GFLOPS | avg   11.511 ms    13993.3 GFLOPS  PASS
+SWEEP memory=DDR round=1 variant=pd2      shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.420 ms    14104.2 GFLOPS | avg   11.439 ms    14080.7 GFLOPS  PASS
+SWEEP memory=DDR round=1 variant=pd6      shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.405 ms    14123.1 GFLOPS | avg   11.425 ms    14098.3 GFLOPS  PASS
+SWEEP memory=DDR round=1 variant=upstream shape=6390 4256 81 81   6390 x  4256     81 x    81 best   23.966 ms    14427.4 GFLOPS | avg   23.980 ms    14418.9 GFLOPS  PASS
+SWEEP memory=DDR round=1 variant=base     shape=6390 4256 81 81   6390 x  4256     81 x    81 best   23.961 ms    14430.6 GFLOPS | avg   23.966 ms    14427.9 GFLOPS  PASS
+SWEEP memory=DDR round=1 variant=step4    shape=6390 4256 81 81   6390 x  4256     81 x    81 best   23.987 ms    14415.2 GFLOPS | avg   23.997 ms    14409.1 GFLOPS  PASS
+SWEEP memory=DDR round=1 variant=step16   shape=6390 4256 81 81   6390 x  4256     81 x    81 best   23.784 ms    14538.1 GFLOPS | avg   23.913 ms    14459.9 GFLOPS  PASS
+SWEEP memory=DDR round=1 variant=step32   shape=6390 4256 81 81   6390 x  4256     81 x    81 best   23.844 ms    14501.6 GFLOPS | avg   23.862 ms    14490.3 GFLOPS  PASS
+SWEEP memory=DDR round=1 variant=pd2      shape=6390 4256 81 81   6390 x  4256     81 x    81 best   23.920 ms    14455.6 GFLOPS | avg   23.945 ms    14440.6 GFLOPS  PASS
+SWEEP memory=DDR round=1 variant=pd6      shape=6390 4256 81 81   6390 x  4256     81 x    81 best   24.193 ms    14292.5 GFLOPS | avg   24.202 ms    14286.8 GFLOPS  PASS
+SWEEP memory=DDR round=2 variant=pd6      shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.442 ms    13851.5 GFLOPS | avg    5.462 ms    13799.7 GFLOPS  PASS
+SWEEP memory=DDR round=2 variant=pd2      shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.508 ms    13684.1 GFLOPS | avg    5.514 ms    13670.2 GFLOPS  PASS
+SWEEP memory=DDR round=2 variant=step32   shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.977 ms    12610.1 GFLOPS | avg    6.006 ms    12549.3 GFLOPS  PASS
+SWEEP memory=DDR round=2 variant=step16   shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.487 ms    13737.6 GFLOPS | avg    5.516 ms    13665.6 GFLOPS  PASS
+SWEEP memory=DDR round=2 variant=step4    shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.347 ms    14097.6 GFLOPS | avg    5.368 ms    14041.1 GFLOPS  PASS
+SWEEP memory=DDR round=2 variant=base     shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.334 ms    14130.9 GFLOPS | avg    5.373 ms    14029.8 GFLOPS  PASS
+SWEEP memory=DDR round=2 variant=upstream shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.373 ms    14028.3 GFLOPS | avg    5.391 ms    13982.2 GFLOPS  PASS
+SWEEP memory=DDR round=2 variant=pd6      shape=6144 4096 41 41   6144 x  4096     41 x    41 best    6.230 ms    13359.7 GFLOPS | avg    6.321 ms    13168.8 GFLOPS  PASS
+SWEEP memory=DDR round=2 variant=pd2      shape=6144 4096 41 41   6144 x  4096     41 x    41 best    6.350 ms    13107.3 GFLOPS | avg    6.380 ms    13045.6 GFLOPS  PASS
+SWEEP memory=DDR round=2 variant=step32   shape=6144 4096 41 41   6144 x  4096     41 x    41 best    6.791 ms    12256.4 GFLOPS | avg    6.854 ms    12144.2 GFLOPS  PASS
+SWEEP memory=DDR round=2 variant=step16   shape=6144 4096 41 41   6144 x  4096     41 x    41 best    6.339 ms    13129.8 GFLOPS | avg    6.370 ms    13066.8 GFLOPS  PASS
+SWEEP memory=DDR round=2 variant=step4    shape=6144 4096 41 41   6144 x  4096     41 x    41 best    6.002 ms    13867.6 GFLOPS | avg    6.032 ms    13799.6 GFLOPS  PASS
+SWEEP memory=DDR round=2 variant=base     shape=6144 4096 41 41   6144 x  4096     41 x    41 best    6.058 ms    13738.9 GFLOPS | avg    6.096 ms    13653.5 GFLOPS  PASS
+SWEEP memory=DDR round=2 variant=upstream shape=6144 4096 41 41   6144 x  4096     41 x    41 best    6.076 ms    13698.4 GFLOPS | avg    6.093 ms    13659.8 GFLOPS  PASS
+SWEEP memory=DDR round=2 variant=pd6      shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.422 ms    14101.9 GFLOPS | avg   11.431 ms    14091.3 GFLOPS  PASS
+SWEEP memory=DDR round=2 variant=pd2      shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.432 ms    14089.3 GFLOPS | avg   11.456 ms    14060.6 GFLOPS  PASS
+SWEEP memory=DDR round=2 variant=step32   shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.395 ms    14135.3 GFLOPS | avg   11.417 ms    14108.0 GFLOPS  PASS
+SWEEP memory=DDR round=2 variant=step16   shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.240 ms    14330.1 GFLOPS | avg   11.258 ms    14307.6 GFLOPS  PASS
+SWEEP memory=DDR round=2 variant=step4    shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.269 ms    14293.4 GFLOPS | avg   11.275 ms    14285.5 GFLOPS  PASS
+SWEEP memory=DDR round=2 variant=base     shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.177 ms    14411.2 GFLOPS | avg   11.188 ms    14396.5 GFLOPS  PASS
+SWEEP memory=DDR round=2 variant=upstream shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.217 ms    14360.0 GFLOPS | avg   11.237 ms    14334.9 GFLOPS  PASS
+SWEEP memory=DDR round=2 variant=pd6      shape=6390 4256 81 81   6390 x  4256     81 x    81 best   24.129 ms    14330.3 GFLOPS | avg   24.145 ms    14320.4 GFLOPS  PASS
+SWEEP memory=DDR round=2 variant=pd2      shape=6390 4256 81 81   6390 x  4256     81 x    81 best   23.911 ms    14460.7 GFLOPS | avg   23.929 ms    14449.7 GFLOPS  PASS
+SWEEP memory=DDR round=2 variant=step32   shape=6390 4256 81 81   6390 x  4256     81 x    81 best   23.803 ms    14526.7 GFLOPS | avg   23.882 ms    14478.2 GFLOPS  PASS
+SWEEP memory=DDR round=2 variant=step16   shape=6390 4256 81 81   6390 x  4256     81 x    81 best   23.769 ms    14547.5 GFLOPS | avg   23.811 ms    14521.6 GFLOPS  PASS
+SWEEP memory=DDR round=2 variant=step4    shape=6390 4256 81 81   6390 x  4256     81 x    81 best   23.964 ms    14429.0 GFLOPS | avg   23.975 ms    14422.0 GFLOPS  PASS
+SWEEP memory=DDR round=2 variant=base     shape=6390 4256 81 81   6390 x  4256     81 x    81 best   23.884 ms    14477.0 GFLOPS | avg   23.916 ms    14457.6 GFLOPS  PASS
+SWEEP memory=DDR round=2 variant=upstream shape=6390 4256 81 81   6390 x  4256     81 x    81 best   23.853 ms    14495.7 GFLOPS | avg   23.901 ms    14466.6 GFLOPS  PASS
+V55_DIAG_SWEEP_DONE 2026-09-12T22:42:09+08:00

@@ -103,7 +103,7 @@ static void read_knobs(void)
     g_knobs.roll_w8 = env_int("CONV_ROLL_W8", 104);   // 静态划分的相对慢速权重（%）：8×2 / 4×4 / single16
     g_knobs.roll_w4 = env_int("CONV_ROLL_W4", 123);
     g_knobs.roll_w16 = env_int("CONV_ROLL_W16", 102);
-    g_knobs.pack_ser = env_int("CONV_PACKSER", -1);   // R/kf 打包：1 主线程串行 / 0 全体并行 / -1 按表大小自动
+    g_knobs.pack_ser = env_int("CONV_PACKSER", -1);   // R/kf：-1/1 按组重叠，2 完整串行基线，0 全体并行
     // -DCONV_ZVA_CURSOR 实验用：输出线 dc zva 预清零（不从 DRAM 读 RFO，每次调用少读 ~100 MB），需 zva 块 64 B 且允许
     { uint64_t dczid; asm volatile("mrs %0, dczid_el0" : "=r"(dczid));
       g_knobs.zva = env_int("CONV_ZVA", 1) && !(dczid & 0x10) && (4L << (dczid & 0xf)) == 64; }
@@ -801,6 +801,7 @@ typedef struct {
     int SP, prof, pf_in, pf_out, pool, slice_ovl, postart_env, store_asm, pf_l2;
     const int* TB; uint64_t c_pre; prof_t* prs; uint64_t call_id;
     int mode; const void* rp;  // mode 1 = 滚动形态（rp 指向 rplan_t）
+    int pk_mode;               // 滚动打包：0 全体并行；1 主线程按组打包并逐组放行；2 主线程先完整打包
 } ctx_t;
 
 // ---- 边界行（BR）方案的辅助：sweep 队列、ZA 初值装入、ZA 抽取
@@ -1210,9 +1211,10 @@ static void roll_copy_row(float* dst, const float* src, long n)   // n 个 float
 //  行数据先由 prfm pldl2keep 提前 PD 行进 L2，再在处理第 Y 行时把第 Y+1 行的段拷进 L1 环（2 槽），a 从环取：
 //  避免行距 16/24 KB 与 L1 组混叠（每行落在同一组，PD 行同时在 L1 会互相逐出）。
 typedef struct {
-    int64_t in_row, rsb, R, Rend, bA, bB, KH, steps, nrows, out, scr, cA0, cB0, va, nvA, nvB, pf, it, PD, ring, slot, ncp_full, ncp_tail, n2, e2, TSB, T, nlines, osb, pfo, sh4, kb2, cf2, kw4, khkw4, carry, resume;
+    int64_t in_row, rsb, R, Rend, bA, bB, KH, steps, nrows, out, scr, cA0, cB0, va, nvA, nvB, pf, it, PD, ring, slot, ncp_full, ncp_tail, n2, e2, TSB, T, nlines, osb, pfo, sh4, kb2, cf2, kw4, khkw4, carry, resume, ovn, ovr;
 } ka_t;
 _Static_assert(offsetof(ka_t, carry) == 280 && offsetof(ka_t, resume) == 288, "rolling state assembly offsets");
+_Static_assert(offsetof(ka_t, ovn) == 296 && offsetof(ka_t, ovr) == 304, "overlapped-copy assembly offsets");
 typedef struct {
     const float* in_row; long rsb; const float* R; long RSB; long KH, steps, nrows;
     float* out_row0; float* scratch; long cA0, cB0, yA0, yB0, nvA, nvB; float* ring; long KW; long osb;   // osb: 输出行距（字节）
@@ -1237,6 +1239,14 @@ static void fill_args(ka_t* A, const kp_t* P, long div, long slot_unused, long n
     A->KH = P->KH; A->steps = P->steps; A->nrows = P->nrows; A->out = (int64_t)P->out_row0; A->scr = (int64_t)P->scratch;
     A->cA0 = P->cA0; A->cB0 = P->cB0; A->va = P->resume ? 0 : P->KH - 1; A->nvA = P->nvA; A->nvB = P->nvB; A->pf = g_roll_pd * P->rsb; A->it = P->steps / div; A->PD = g_roll_pd;
     A->ring = (int64_t)P->ring; A->slot = slot; A->osb = P->osb; A->pfo = g_roll_pd * P->osb;
+    // 穿插拷贝：步循环每步捎带一个下一行整向量（去掉行首串行拷贝气泡）。ovn = 穿插步数 ≤ it-1
+    //（保证纯步循环 ≥ 1 次，do-while 安全），装不下的整向量（仅小 KW 的 single 形态）走补拷循环 ovr。
+    A->ovn = 0; A->ovr = 0;
+    if (ncp) {
+        long f = A->it - 1 < A->ncp_full ? A->it - 1 : A->ncp_full;
+        if (f < 0) f = 0;
+        A->ovn = f; A->ovr = A->ncp_full - f;
+    }
     if (ncp) roll_copy_row(P->ring, src, ncp);   // 第 0 行进槽 0；K4 自己做去交织拷贝
 }
 // 寄存器约定：x0 行指针(输入) x1 rsb x2 bA x3 bB x4 R x5 Rend x6 KH x7 steps/it x8 行计数 x9 out 行 x10 scr x11 Y x12/x13 切片号
@@ -1321,7 +1331,65 @@ static void fill_args(ka_t* A, const kp_t* P, long div, long slot_unused, long n
         "ld1w {z24.s}, p3/z, [x22]\n\t" \
         "st1w {z24.s}, p3, [x23]\n\t"
 
+// 行首（重叠版）：只做槽切换与游标准备；下一行拷贝 + L2 预取由步循环每步捎带一个向量（OVL_LOOP）。
+// 动机：k39 每行仅 39 步，行首串行拷贝/预取的每行固定气泡把 pair 从 2.04（k81, 81 步摊薄）拖到 2.13–2.15。
+// 拷贝目标是另一槽、与本行读取无别名；步循环的 z 管线已被 fmopa/fmla 占满，多出的 ld/st 走独立端口。
+#define ROW_HEAD_OVL \
+        "add x21, x0, x26\n\t" \
+        "ldr x12, [%[A], #240]\n\t" \
+        "add x16, x17, x12\n\t" \
+        "sub x17, x28, x17\n\t" \
+        "add x22, x0, x1\n\t" "cmp x8, #1\n\t" "csel x22, x0, x22, eq\n\t" "mov x23, x17\n\t"
+#define OVL_COPY \
+        "prfm pldl2keep, [x21]\n\t" \
+        "ld1w {z24.s}, p0/z, [x22]\n\t" \
+        "st1w {z24.s}, p0, [x23]\n\t" \
+        "add x21, x21, #64\n\t" "add x22, x22, #64\n\t" "add x23, x23, #64\n\t"
+#define OVL_TAIL \
+        "prfm pldl2keep, [x21]\n\t" \
+        "ld1w {z24.s}, p3/z, [x22]\n\t" \
+        "st1w {z24.s}, p3, [x23]\n\t"
+// 步循环骨架：前 ovn 步捎带拷贝，一般已covers全部整向量（ovr 仅小 KW 的 single 形态非零），
+// 随后补拷循环 + 谓词尾拷，最后纯步循环跑完剩余步（≥1，见 fill_args）。
+#define OVL_LOOP(STEP) \
+        "ldr x12, [%[A], #296]\n\t" \
+        "mov x15, x7\n\t" \
+        "cbz x12, 52f\n\t" \
+        "sub x15, x15, x12\n\t" \
+        ".p2align 4\n" \
+        "51:\n\t" \
+        STEP \
+        OVL_COPY \
+        "subs x12, x12, #1\n\t" \
+        "b.ne 51b\n\t" \
+        "52:\n\t" \
+        "ldr x12, [%[A], #304]\n\t" \
+        "cbz x12, 54f\n\t" \
+        "53:\n\t" \
+        OVL_COPY \
+        "subs x12, x12, #1\n\t" \
+        "b.ne 53b\n\t" \
+        "54:\n\t" \
+        OVL_TAIL \
+        ".p2align 4\n" \
+        "2:\n\t" \
+        STEP \
+        "subs x15, x15, #1\n\t" \
+        "b.ne 2b\n\t"
+
 // ---------------- 16×1 对：A 用 za0/za1（列 0..15 / 16..31），B 用 za2/za3 ----------------
+#define PAIR_STEP \
+        "ld1w {z0.s}, p0/z, [x16]\n\t" \
+        "ld1w {z1.s}, p0/z, [x16, #1, mul vl]\n\t" \
+        "ld1w {z2.s}, p0/z, [x2]\n\t" \
+        "ld1w {z3.s}, p0/z, [x3]\n\t" \
+        "fmopa za0.s, p0/m, p0/m, z0.s, z2.s\n\t" \
+        "fmopa za1.s, p0/m, p0/m, z1.s, z2.s\n\t" \
+        "fmopa za2.s, p0/m, p0/m, z0.s, z3.s\n\t" \
+        "fmopa za3.s, p0/m, p0/m, z1.s, z3.s\n\t" \
+        "add x16, x16, #4\n\t" \
+        "add x2, x2, #64\n\t" \
+        "add x3, x3, #64\n\t"
 static void k16pair(const kp_t* P)
 {
     ka_t A; fill_args(&A, P, 1, 512, 31 + P->steps);
@@ -1329,22 +1397,8 @@ static void k16pair(const kp_t* P)
         LOAD_ARGS
         "fmov z31.s, #0.0\n\t"
         "1:\n\t"
-        ROW_HEAD_COMMON
-        "mov x15, x7\n\t"
-        "2:\n\t"
-        "ld1w {z0.s}, p0/z, [x16]\n\t"
-        "ld1w {z1.s}, p0/z, [x16, #1, mul vl]\n\t"
-        "ld1w {z2.s}, p0/z, [x2]\n\t"
-        "ld1w {z3.s}, p0/z, [x3]\n\t"
-        "fmopa za0.s, p0/m, p0/m, z0.s, z2.s\n\t"
-        "fmopa za1.s, p0/m, p0/m, z1.s, z2.s\n\t"
-        "fmopa za2.s, p0/m, p0/m, z0.s, z3.s\n\t"
-        "fmopa za3.s, p0/m, p0/m, z1.s, z3.s\n\t"
-        "add x16, x16, #4\n\t"
-        "add x2, x2, #64\n\t"
-        "add x3, x3, #64\n\t"
-        "subs x15, x15, #1\n\t"
-        "b.ne 2b\n\t"
+        ROW_HEAD_OVL
+        OVL_LOOP(PAIR_STEP)
         WRAP_B(x2) WRAP_B(x3) SEL_OUT
         // 事件：cA<16 → A 组（za0/za1，切片 cA）；16≤cA<32 → B 组（za2/za3，切片 cA−16）；否则无（KH≥32 时二者互斥）
         "cmp x27, #32\n\t" "b.hs 5f\n\t"
@@ -1373,6 +1427,22 @@ static void k16pair(const kp_t* P)
         : XCLOB, "z0", "z1", "z2", "z3", "z8", "z9", "z24", "z31", "p0", "p3", "memory", "cc");
 }
 
+#define PAIRF_STEP \
+        "ld1w {z0.s}, p0/z, [x16]\n\t" \
+        "ld1w {z1.s}, p0/z, [x16, #1, mul vl]\n\t" \
+        "ld1w {z2.s}, p0/z, [x2]\n\t" \
+        "ld1w {z3.s}, p0/z, [x3]\n\t" \
+        "fmopa za0.s, p0/m, p0/m, z0.s, z2.s\n\t" \
+        "fmopa za1.s, p0/m, p0/m, z1.s, z2.s\n\t" \
+        "fmopa za2.s, p0/m, p0/m, z0.s, z3.s\n\t" \
+        "fmopa za3.s, p0/m, p0/m, z1.s, z3.s\n\t" \
+        "ld1rw {z4.s}, p0/z, [x13]\n\t" \
+        "fmla z10.s, p0/m, z0.s, z4.s\n\t" \
+        "fmla z11.s, p0/m, z1.s, z4.s\n\t" \
+        "add x13, x13, #4\n\t" \
+        "add x16, x16, #4\n\t" \
+        "add x2, x2, #64\n\t" \
+        "add x3, x3, #64\n\t"
 static void k16pairf(const kp_t* P)
 {
     ka_t A; fill_args(&A, P, 1, 512, 31 + P->steps);
@@ -1390,26 +1460,8 @@ static void k16pairf(const kp_t* P)
         "ld1w {z11.s}, p0/z, [x12, #1, mul vl]\n\t"
         "47:\n\t"
         "1:\n\t"
-        ROW_HEAD_COMMON
-        "mov x15, x7\n\t"
-        "2:\n\t"
-        "ld1w {z0.s}, p0/z, [x16]\n\t"
-        "ld1w {z1.s}, p0/z, [x16, #1, mul vl]\n\t"
-        "ld1w {z2.s}, p0/z, [x2]\n\t"
-        "ld1w {z3.s}, p0/z, [x3]\n\t"
-        "fmopa za0.s, p0/m, p0/m, z0.s, z2.s\n\t"
-        "fmopa za1.s, p0/m, p0/m, z1.s, z2.s\n\t"
-        "fmopa za2.s, p0/m, p0/m, z0.s, z3.s\n\t"
-        "fmopa za3.s, p0/m, p0/m, z1.s, z3.s\n\t"
-        "ld1rw {z4.s}, p0/z, [x13]\n\t"
-        "fmla z10.s, p0/m, z0.s, z4.s\n\t"
-        "fmla z11.s, p0/m, z1.s, z4.s\n\t"
-        "add x13, x13, #4\n\t"
-        "add x16, x16, #4\n\t"
-        "add x2, x2, #64\n\t"
-        "add x3, x3, #64\n\t"
-        "subs x15, x15, #1\n\t"
-        "b.ne 2b\n\t"
+        ROW_HEAD_OVL
+        OVL_LOOP(PAIRF_STEP)
         WRAP_B(x2) WRAP_B(x3)
         "ldr x24, [%[A], #208]\n\t"
         "cmp x13, x24\n\t"
@@ -1458,6 +1510,18 @@ static void k16pairf(const kp_t* P)
 
 
 // ---------------- 16×1 单组：4 tile = 64 列；槽 640 B ----------------
+#define SINGLE_STEP \
+        "ld1w {z0.s}, p0/z, [x16]\n\t" \
+        "ld1w {z1.s}, p0/z, [x16, #1, mul vl]\n\t" \
+        "ld1w {z2.s}, p0/z, [x16, #2, mul vl]\n\t" \
+        "ld1w {z3.s}, p0/z, [x16, #3, mul vl]\n\t" \
+        "ld1w {z4.s}, p0/z, [x2]\n\t" \
+        "fmopa za0.s, p0/m, p0/m, z0.s, z4.s\n\t" \
+        "fmopa za1.s, p0/m, p0/m, z1.s, z4.s\n\t" \
+        "fmopa za2.s, p0/m, p0/m, z2.s, z4.s\n\t" \
+        "fmopa za3.s, p0/m, p0/m, z3.s, z4.s\n\t" \
+        "add x16, x16, #4\n\t" \
+        "add x2, x2, #64\n\t"
 static void k16single(const kp_t* P)
 {
     ka_t A; fill_args(&A, P, 1, 640, 63 + P->steps);
@@ -1465,22 +1529,8 @@ static void k16single(const kp_t* P)
         LOAD_ARGS
         "fmov z31.s, #0.0\n\t"
         "1:\n\t"
-        ROW_HEAD_COMMON
-        "mov x15, x7\n\t"
-        "2:\n\t"
-        "ld1w {z0.s}, p0/z, [x16]\n\t"
-        "ld1w {z1.s}, p0/z, [x16, #1, mul vl]\n\t"
-        "ld1w {z2.s}, p0/z, [x16, #2, mul vl]\n\t"
-        "ld1w {z3.s}, p0/z, [x16, #3, mul vl]\n\t"
-        "ld1w {z4.s}, p0/z, [x2]\n\t"
-        "fmopa za0.s, p0/m, p0/m, z0.s, z4.s\n\t"
-        "fmopa za1.s, p0/m, p0/m, z1.s, z4.s\n\t"
-        "fmopa za2.s, p0/m, p0/m, z2.s, z4.s\n\t"
-        "fmopa za3.s, p0/m, p0/m, z3.s, z4.s\n\t"
-        "add x16, x16, #4\n\t"
-        "add x2, x2, #64\n\t"
-        "subs x15, x15, #1\n\t"
-        "b.ne 2b\n\t"
+        ROW_HEAD_OVL
+        OVL_LOOP(SINGLE_STEP)
         WRAP_B(x2) SEL_OUT
         "cmp x27, x24\n\t" "b.hs 4f\n\t"
         "and w12, w27, #15\n\t"
@@ -1508,6 +1558,28 @@ static void k16single(const kp_t* P)
 // 每步 4 载入 + 3 ld1rw + 4 fmopa + 6 fmla（探针：16 fmopa + 32 fmla = 32 周期，1 fmla/周期免费）。
 // 三条链残差 = KH-1, KH-2, KH-3：kj 相差 1 → k 行游标 x13（KH-1）每行派生 x21 = x13+KW4、x22 = x13+2*KW4（回绕各自处理）。
 // 事件窗口 [CF0-2, CF0]（CF0 = (KH-1-s_base) mod KH ≥ 36，与 A/B 窗口互斥）。
+#define PAIRF4_STEP \
+        "ld1w {z0.s}, p0/z, [x16]\n\t" \
+        "ld1w {z1.s}, p0/z, [x16, #1, mul vl]\n\t" \
+        "ld1w {z2.s}, p0/z, [x2]\n\t" \
+        "ld1w {z3.s}, p0/z, [x3]\n\t" \
+        "ld1rqw {z4.s}, p0/z, [x13]\n\t" \
+        "fmopa za0.s, p0/m, p0/m, z0.s, z2.s\n\t" \
+        "fmopa za1.s, p0/m, p0/m, z1.s, z2.s\n\t" \
+        "fmopa za2.s, p0/m, p0/m, z0.s, z3.s\n\t" \
+        "fmopa za3.s, p0/m, p0/m, z1.s, z3.s\n\t" \
+        "fmla z10.s, z0.s, z4.s[0]\n\t" \
+        "fmla z11.s, z1.s, z4.s[0]\n\t" \
+        "fmla z12.s, z0.s, z4.s[1]\n\t" \
+        "fmla z13.s, z1.s, z4.s[1]\n\t" \
+        "fmla z14.s, z0.s, z4.s[2]\n\t" \
+        "fmla z15.s, z1.s, z4.s[2]\n\t" \
+        "fmla z16.s, z0.s, z4.s[3]\n\t" \
+        "fmla z17.s, z1.s, z4.s[3]\n\t" \
+        "add x13, x13, #16\n\t" \
+        "add x16, x16, #4\n\t" \
+        "add x2, x2, #64\n\t" \
+        "add x3, x3, #64\n\t"
 static void k16pairf4(const kp_t* P)
 {
     ka_t A; fill_args(&A, P, 1, 512, 31 + P->steps);
@@ -1533,31 +1605,13 @@ static void k16pairf4(const kp_t* P)
         "ld1w {z17.s}, p0/z, [x12, #7, mul vl]\n\t"
         "47:\n\t"
         "1:\n\t"
+        // pairf4 不用穿插：4 fmopa + 8 fmla 已占满 z 管线、循环体 ~3.4 IPC 无前端余量，
+        // 加拷贝指令实测 k39 −1.3%（v55 A/B 1580138）；保留串行 4× 展开行首。
         ROW_HEAD_COPY4
         "mov x15, x7\n\t"
         ".p2align 4\n"
         "2:\n\t"
-        "ld1w {z0.s}, p0/z, [x16]\n\t"
-        "ld1w {z1.s}, p0/z, [x16, #1, mul vl]\n\t"
-        "ld1w {z2.s}, p0/z, [x2]\n\t"
-        "ld1w {z3.s}, p0/z, [x3]\n\t"
-        "ld1rqw {z4.s}, p0/z, [x13]\n\t"        // 一次 quadword 广播：z4 各 128 位段 = {kf0,kf1,kf2,0}
-        "fmopa za0.s, p0/m, p0/m, z0.s, z2.s\n\t"
-        "fmopa za1.s, p0/m, p0/m, z1.s, z2.s\n\t"
-        "fmopa za2.s, p0/m, p0/m, z0.s, z3.s\n\t"
-        "fmopa za3.s, p0/m, p0/m, z1.s, z3.s\n\t"
-        "fmla z10.s, z0.s, z4.s[0]\n\t"          // 按元素索引 fmla（无需单独广播）
-        "fmla z11.s, z1.s, z4.s[0]\n\t"
-        "fmla z12.s, z0.s, z4.s[1]\n\t"
-        "fmla z13.s, z1.s, z4.s[1]\n\t"
-        "fmla z14.s, z0.s, z4.s[2]\n\t"
-        "fmla z15.s, z1.s, z4.s[2]\n\t"
-        "fmla z16.s, z0.s, z4.s[3]\n\t"
-        "fmla z17.s, z1.s, z4.s[3]\n\t"
-        "add x13, x13, #16\n\t"
-        "add x16, x16, #4\n\t"
-        "add x2, x2, #64\n\t"
-        "add x3, x3, #64\n\t"
+        PAIRF4_STEP
         "subs x15, x15, #1\n\t"
         "b.ne 2b\n\t"
         WRAP_B(x2) WRAP_B(x3)
@@ -1636,6 +1690,26 @@ static void k16pairf4(const kp_t* P)
 }
 
 
+#define PAIRF3_STEP \
+        "ld1w {z0.s}, p0/z, [x16]\n\t" \
+        "ld1w {z1.s}, p0/z, [x16, #1, mul vl]\n\t" \
+        "ld1w {z2.s}, p0/z, [x2]\n\t" \
+        "ld1w {z3.s}, p0/z, [x3]\n\t" \
+        "ld1rqw {z4.s}, p0/z, [x13]\n\t" \
+        "fmopa za0.s, p0/m, p0/m, z0.s, z2.s\n\t" \
+        "fmopa za1.s, p0/m, p0/m, z1.s, z2.s\n\t" \
+        "fmopa za2.s, p0/m, p0/m, z0.s, z3.s\n\t" \
+        "fmopa za3.s, p0/m, p0/m, z1.s, z3.s\n\t" \
+        "fmla z10.s, z0.s, z4.s[0]\n\t" \
+        "fmla z11.s, z1.s, z4.s[0]\n\t" \
+        "fmla z12.s, z0.s, z4.s[1]\n\t" \
+        "fmla z13.s, z1.s, z4.s[1]\n\t" \
+        "fmla z14.s, z0.s, z4.s[2]\n\t" \
+        "fmla z15.s, z1.s, z4.s[2]\n\t" \
+        "add x13, x13, #16\n\t" \
+        "add x16, x16, #4\n\t" \
+        "add x2, x2, #64\n\t" \
+        "add x3, x3, #64\n\t"
 static void k16pairf3(const kp_t* P)
 {
     ka_t A; fill_args(&A, P, 1, 512, 31 + P->steps);
@@ -1658,31 +1732,8 @@ static void k16pairf3(const kp_t* P)
         "ld1w {z15.s}, p0/z, [x12, #5, mul vl]\n\t"
         "47:\n\t"
         "1:\n\t"
-        ROW_HEAD_COMMON
-        "mov x15, x7\n\t"
-        ".p2align 4\n"
-        "2:\n\t"
-        "ld1w {z0.s}, p0/z, [x16]\n\t"
-        "ld1w {z1.s}, p0/z, [x16, #1, mul vl]\n\t"
-        "ld1w {z2.s}, p0/z, [x2]\n\t"
-        "ld1w {z3.s}, p0/z, [x3]\n\t"
-        "ld1rqw {z4.s}, p0/z, [x13]\n\t"        // 一次 quadword 广播：z4 各 128 位段 = {kf0,kf1,kf2,0}
-        "fmopa za0.s, p0/m, p0/m, z0.s, z2.s\n\t"
-        "fmopa za1.s, p0/m, p0/m, z1.s, z2.s\n\t"
-        "fmopa za2.s, p0/m, p0/m, z0.s, z3.s\n\t"
-        "fmopa za3.s, p0/m, p0/m, z1.s, z3.s\n\t"
-        "fmla z10.s, z0.s, z4.s[0]\n\t"          // 按元素索引 fmla（无需单独广播）
-        "fmla z11.s, z1.s, z4.s[0]\n\t"
-        "fmla z12.s, z0.s, z4.s[1]\n\t"
-        "fmla z13.s, z1.s, z4.s[1]\n\t"
-        "fmla z14.s, z0.s, z4.s[2]\n\t"
-        "fmla z15.s, z1.s, z4.s[2]\n\t"
-        "add x13, x13, #16\n\t"
-        "add x16, x16, #4\n\t"
-        "add x2, x2, #64\n\t"
-        "add x3, x3, #64\n\t"
-        "subs x15, x15, #1\n\t"
-        "b.ne 2b\n\t"
+        ROW_HEAD_OVL
+        OVL_LOOP(PAIRF3_STEP)
         WRAP_B(x2) WRAP_B(x3)
         "ldr x24, [%[A], #208]\n\t"              // kf 行回绕（到表尾则回表头）
         "cmp x13, x24\n\t"
@@ -1751,6 +1802,30 @@ static void k16pairf3(const kp_t* P)
 
 // ---------------- 16×1 单组 + 2 条 fmla 残差：4 tile = 64 列，z16..z19 / z20..z23 为两条 64 列累加链 ----------------
 // 每步 4 fmopa + 8 fmla + 2 ld1rw：探针（NOTES fmopa+fmla 并发）证实 16 fmopa + 32 fmla = 32 周期，fmla 免费。
+#define SINGLEF2_STEP \
+        "ld1w {z0.s}, p0/z, [x16]\n\t" \
+        "ld1w {z1.s}, p0/z, [x16, #1, mul vl]\n\t" \
+        "ld1w {z2.s}, p0/z, [x16, #2, mul vl]\n\t" \
+        "ld1w {z3.s}, p0/z, [x16, #3, mul vl]\n\t" \
+        "ld1w {z4.s}, p0/z, [x2]\n\t" \
+        "fmopa za0.s, p0/m, p0/m, z0.s, z4.s\n\t" \
+        "fmopa za1.s, p0/m, p0/m, z1.s, z4.s\n\t" \
+        "fmopa za2.s, p0/m, p0/m, z2.s, z4.s\n\t" \
+        "fmopa za3.s, p0/m, p0/m, z3.s, z4.s\n\t" \
+        "ld1rw {z5.s}, p0/z, [x13]\n\t" \
+        "ld1rw {z6.s}, p0/z, [x3]\n\t" \
+        "fmla z16.s, p0/m, z0.s, z5.s\n\t" \
+        "fmla z17.s, p0/m, z1.s, z5.s\n\t" \
+        "fmla z18.s, p0/m, z2.s, z5.s\n\t" \
+        "fmla z19.s, p0/m, z3.s, z5.s\n\t" \
+        "fmla z20.s, p0/m, z0.s, z6.s\n\t" \
+        "fmla z21.s, p0/m, z1.s, z6.s\n\t" \
+        "fmla z22.s, p0/m, z2.s, z6.s\n\t" \
+        "fmla z23.s, p0/m, z3.s, z6.s\n\t" \
+        "add x13, x13, #4\n\t" \
+        "add x3, x3, #4\n\t" \
+        "add x16, x16, #4\n\t" \
+        "add x2, x2, #64\n\t"
 static void k16singlef2(const kp_t* P)
 {
     ka_t A; fill_args(&A, P, 1, 640, 63 + P->steps);
@@ -1776,37 +1851,10 @@ static void k16singlef2(const kp_t* P)
         "ld1w {z23.s}, p0/z, [x12, #7, mul vl]\n\t"
         "47:\n\t"
         "1:\n\t"
-        ROW_HEAD_COMMON
         "ldr x21, [%[A], #232]\n\t" "add x21, x9, x21\n\t"
         "prfm pstl2keep, [x21]\n\t" "prfm pstl2keep, [x21, #64]\n\t" "prfm pstl2keep, [x21, #128]\n\t" "prfm pstl2keep, [x21, #192]\n\t"
-        "mov x15, x7\n\t"
-        ".p2align 4\n"
-        "2:\n\t"
-        "ld1w {z0.s}, p0/z, [x16]\n\t"
-        "ld1w {z1.s}, p0/z, [x16, #1, mul vl]\n\t"
-        "ld1w {z2.s}, p0/z, [x16, #2, mul vl]\n\t"
-        "ld1w {z3.s}, p0/z, [x16, #3, mul vl]\n\t"
-        "ld1w {z4.s}, p0/z, [x2]\n\t"
-        "fmopa za0.s, p0/m, p0/m, z0.s, z4.s\n\t"
-        "fmopa za1.s, p0/m, p0/m, z1.s, z4.s\n\t"
-        "fmopa za2.s, p0/m, p0/m, z2.s, z4.s\n\t"
-        "fmopa za3.s, p0/m, p0/m, z3.s, z4.s\n\t"
-        "ld1rw {z5.s}, p0/z, [x13]\n\t"
-        "ld1rw {z6.s}, p0/z, [x3]\n\t"
-        "fmla z16.s, p0/m, z0.s, z5.s\n\t"
-        "fmla z17.s, p0/m, z1.s, z5.s\n\t"
-        "fmla z18.s, p0/m, z2.s, z5.s\n\t"
-        "fmla z19.s, p0/m, z3.s, z5.s\n\t"
-        "fmla z20.s, p0/m, z0.s, z6.s\n\t"
-        "fmla z21.s, p0/m, z1.s, z6.s\n\t"
-        "fmla z22.s, p0/m, z2.s, z6.s\n\t"
-        "fmla z23.s, p0/m, z3.s, z6.s\n\t"
-        "add x13, x13, #4\n\t"
-        "add x3, x3, #4\n\t"
-        "add x16, x16, #4\n\t"
-        "add x2, x2, #64\n\t"
-        "subs x15, x15, #1\n\t"
-        "b.ne 2b\n\t"
+        ROW_HEAD_OVL
+        OVL_LOOP(SINGLEF2_STEP)
         WRAP_B(x2)
         "ldr x24, [%[A], #208]\n\t"
         "cmp x13, x24\n\t"
@@ -1869,6 +1917,23 @@ static void k16singlef2(const kp_t* P)
 }
 
 // ---------------- 8×2：4 tile = 128 列，列 c = 2s+ic；槽 896 B ----------------
+#define K8_STEP \
+        "ld2w {z0.s, z1.s}, p0/z, [x16]\n\t" \
+        "ld2w {z2.s, z3.s}, p0/z, [x16, #2, mul vl]\n\t" \
+        "ld2w {z4.s, z5.s}, p0/z, [x16, #4, mul vl]\n\t" \
+        "ld2w {z6.s, z7.s}, p0/z, [x16, #6, mul vl]\n\t" \
+        "ld1w {z8.s}, p0/z, [x2]\n\t" \
+        "ld1w {z9.s}, p0/z, [x2, #1, mul vl]\n\t" \
+        "fmopa za0.s, p0/m, p0/m, z0.s, z8.s\n\t" \
+        "fmopa za1.s, p0/m, p0/m, z2.s, z8.s\n\t" \
+        "fmopa za2.s, p0/m, p0/m, z4.s, z8.s\n\t" \
+        "fmopa za3.s, p0/m, p0/m, z6.s, z8.s\n\t" \
+        "fmopa za0.s, p0/m, p0/m, z1.s, z9.s\n\t" \
+        "fmopa za1.s, p0/m, p0/m, z3.s, z9.s\n\t" \
+        "fmopa za2.s, p0/m, p0/m, z5.s, z9.s\n\t" \
+        "fmopa za3.s, p0/m, p0/m, z7.s, z9.s\n\t" \
+        "add x16, x16, #8\n\t" \
+        "add x2, x2, #128\n\t"
 static void k8(const kp_t* P)
 {
     ka_t A; fill_args(&A, P, 2, 896, 126 + P->steps);
@@ -1877,8 +1942,7 @@ static void k8(const kp_t* P)
         "ldr x7, [%[A], #136]\n\t"      // it = steps/2
         "fmov z31.s, #0.0\n\t"
         "1:\n\t"
-        ROW_HEAD_COMMON
-        // 输出预取：PD 行后是否有事件（(cA+PD) mod KH < nv）
+        // 输出预取：PD 行后是否有事件（(cA+PD) mod KH < nv）；x21/x22/x23 此处为临时，随后 ROW_HEAD_OVL 重设
         "ldr x23, [%[A], #144]\n\t"
         "add x22, x27, x23\n\t" "cmp x22, x6\n\t" "sub x21, x22, x6\n\t" "csel x22, x21, x22, hs\n\t"
         "cmp x22, x24\n\t" "b.hs 6f\n\t"
@@ -1886,26 +1950,8 @@ static void k8(const kp_t* P)
         "prfm pstl2keep, [x21]\n\t" "prfm pstl2keep, [x21, #64]\n\t" "prfm pstl2keep, [x21, #128]\n\t" "prfm pstl2keep, [x21, #192]\n\t"
         "prfm pstl2keep, [x21, #256]\n\t" "prfm pstl2keep, [x21, #320]\n\t" "prfm pstl2keep, [x21, #384]\n\t" "prfm pstl2keep, [x21, #448]\n\t"
         "6:\n\t"
-        "mov x15, x7\n\t"
-        "2:\n\t"
-        "ld2w {z0.s, z1.s}, p0/z, [x16]\n\t"
-        "ld2w {z2.s, z3.s}, p0/z, [x16, #2, mul vl]\n\t"
-        "ld2w {z4.s, z5.s}, p0/z, [x16, #4, mul vl]\n\t"
-        "ld2w {z6.s, z7.s}, p0/z, [x16, #6, mul vl]\n\t"
-        "ld1w {z8.s}, p0/z, [x2]\n\t"
-        "ld1w {z9.s}, p0/z, [x2, #1, mul vl]\n\t"
-        "fmopa za0.s, p0/m, p0/m, z0.s, z8.s\n\t"
-        "fmopa za1.s, p0/m, p0/m, z2.s, z8.s\n\t"
-        "fmopa za2.s, p0/m, p0/m, z4.s, z8.s\n\t"
-        "fmopa za3.s, p0/m, p0/m, z6.s, z8.s\n\t"
-        "fmopa za0.s, p0/m, p0/m, z1.s, z9.s\n\t"
-        "fmopa za1.s, p0/m, p0/m, z3.s, z9.s\n\t"
-        "fmopa za2.s, p0/m, p0/m, z5.s, z9.s\n\t"
-        "fmopa za3.s, p0/m, p0/m, z7.s, z9.s\n\t"
-        "add x16, x16, #8\n\t"
-        "add x2, x2, #128\n\t"
-        "subs x15, x15, #1\n\t"
-        "b.ne 2b\n\t"
+        ROW_HEAD_OVL
+        OVL_LOOP(K8_STEP)
         WRAP_B(x2) SEL_OUT
         "cmp x27, x24\n\t" "b.hs 4f\n\t"
         "and w12, w27, #7\n\t" "lsl w12, w12, #1\n\t"
@@ -1990,6 +2036,9 @@ static void k4(const kp_t* P)
     A.it = (P->KW + 3) / 4;
     A.kw4 = (P->KW + 3) % 4;
     A.ncp_full = ncp / 64; A.ncp_tail = ((ncp % 64) + 3) / 4;      // ld4w 整块数、尾块每平面元素数
+    A.ovn = A.it - 1 < A.ncp_full ? A.it - 1 : A.ncp_full;         // 穿插的整块数 ≤ 外步数-1（纯步循环 ≥ 1）
+    if (A.ovn < 0) A.ovn = 0;
+    A.ovr = A.ncp_full - A.ovn;
     A.TSB = TSB;
     A.n2 = TSB * ((sh + 0) & 3) + 4 * ((sh + 0) >> 2);             // 子步 i 的平面起点偏移（相对槽基址）
     A.e2 = TSB * ((sh + 1) & 3) + 4 * ((sh + 1) >> 2);
@@ -2005,18 +2054,76 @@ static void k4(const kp_t* P)
         "add x21, x0, x26\n\t"
         K4_CP(x17)
         "1:\n\t"
-        // 换槽 + 拷下一行（末行时拷本行）
+        // 输出预取（与 k8 同法）：PD 行后有事件（(cA+PD) mod KH < nv）则预取输出行 16 线（事件 st4w 共 1 KB）
+        "ldr x12, [%[A], #144]\n\t"
+        "add x13, x27, x12\n\t" "cmp x13, x6\n\t" "sub x12, x13, x6\n\t" "csel x13, x12, x13, hs\n\t"
+        "cmp x13, x24\n\t" "b.hs 60f\n\t"
+        "ldr x12, [%[A], #232]\n\t" "add x12, x9, x12\n\t"
+        "prfm pstl2keep, [x12]\n\t" "prfm pstl2keep, [x12, #64]\n\t" "prfm pstl2keep, [x12, #128]\n\t" "prfm pstl2keep, [x12, #192]\n\t"
+        "prfm pstl2keep, [x12, #256]\n\t" "prfm pstl2keep, [x12, #320]\n\t" "prfm pstl2keep, [x12, #384]\n\t" "prfm pstl2keep, [x12, #448]\n\t"
+        "prfm pstl2keep, [x12, #512]\n\t" "prfm pstl2keep, [x12, #576]\n\t" "prfm pstl2keep, [x12, #640]\n\t" "prfm pstl2keep, [x12, #704]\n\t"
+        "prfm pstl2keep, [x12, #768]\n\t" "prfm pstl2keep, [x12, #832]\n\t" "prfm pstl2keep, [x12, #896]\n\t" "prfm pstl2keep, [x12, #960]\n\t"
+        "60:\n\t"
+        // 换槽；下一行的平面拷贝改为穿插：尾块（谓词）先拷（块间不相交、次序无关），
+        // 整块由步循环每外步捎带一个（K4 外步 16 fmopa = 32 周期、~1.3 IPC，前端/访存余量充足）。
         "mov x16, x17\n\t"
         "sub x17, x28, x17\n\t"
         "add x22, x0, x1\n\t" "cmp x8, #1\n\t" "csel x22, x0, x22, eq\n\t"
         "add x21, x0, x26\n\t"
-        K4_CP(x17)
+        "ldr x12, [%[A], #168]\n\t"
+        "add x13, x22, x12, lsl #8\n\t"
+        "add x20, x17, x12, lsl #6\n\t"
+        "add x24, x21, x12, lsl #8\n\t"
+        "prfm pldl2keep, [x24]\n\t" "prfm pldl2keep, [x24, #64]\n\t" "prfm pldl2keep, [x24, #128]\n\t" "prfm pldl2keep, [x24, #192]\n\t"
+        "ldr x24, [%[A], #176]\n\t"
+        "whilelo p4.s, xzr, x24\n\t"
+        "ld4w {z0.s, z1.s, z2.s, z3.s}, p4/z, [x13]\n\t"
+        "st1w {z0.s}, p4, [x20]\n\t" "add x23, x20, x3\n\t" "st1w {z1.s}, p4, [x23]\n\t"
+        "add x23, x23, x3\n\t" "st1w {z2.s}, p4, [x23]\n\t" "add x23, x23, x3\n\t" "st1w {z3.s}, p4, [x23]\n\t"
+        "ldr x20, [%[A], #304]\n\t"              // 装不进步循环的整块（仅极小 KW）：串行补拷
+        "cbz x20, 64f\n\t"
+        "ldr x12, [%[A], #296]\n\t"
+        "add x13, x22, x12, lsl #8\n\t"
+        "add x24, x17, x12, lsl #6\n\t"
+        "63:\n\t"
+        "ld4w {z0.s, z1.s, z2.s, z3.s}, p0/z, [x13]\n\t"
+        "st1w {z0.s}, p0, [x24]\n\t" "add x23, x24, x3\n\t" "st1w {z1.s}, p0, [x23]\n\t"
+        "add x23, x23, x3\n\t" "st1w {z2.s}, p0, [x23]\n\t" "add x23, x23, x3\n\t" "st1w {z3.s}, p0, [x23]\n\t"
+        "add x13, x13, #256\n\t" "add x24, x24, #64\n\t"
+        "subs x20, x20, #1\n\t" "b.ne 63b\n\t"
+        "64:\n\t"
+        "mov x13, x22\n\t"                        // 穿插拷贝游标：src / dst（槽头）
+        "mov x12, x17\n\t"
         // 平面指针 p0..p3 = x16, x22, x23, x25（起点按 sh 排列）
         "ldr x22, [%[A], #192]\n\t" "add x22, x22, x16\n\t"
         "ldr x23, [%[A], #208]\n\t" "add x23, x23, x16\n\t"
         "ldr x25, [%[A], #216]\n\t" "add x25, x25, x16\n\t"
-        "ldr x12, [%[A], #184]\n\t" "add x16, x16, x12\n\t"
+        "ldr x20, [%[A], #184]\n\t" "add x16, x16, x20\n\t"
+        "ldr x20, [%[A], #296]\n\t"
         "mov x15, x7\n\t"
+        "cbz x20, 62f\n\t"
+        "sub x15, x15, x20\n\t"
+        ".p2align 4\n"
+        "61:\n\t"
+        K4_STEP(x16, 0)
+        K4_STEP(x22, 1)
+        K4_STEP(x23, 2)
+        K4_STEP(x25, 3)
+        "add x16, x16, #4\n\t"
+        "add x22, x22, #4\n\t"
+        "add x23, x23, #4\n\t"
+        "add x25, x25, #4\n\t"
+        "add x2, x2, #256\n\t"
+        "prfm pldl2keep, [x21]\n\t" "prfm pldl2keep, [x21, #64]\n\t" "prfm pldl2keep, [x21, #128]\n\t" "prfm pldl2keep, [x21, #192]\n\t"
+        "ld4w {z25.s, z26.s, z27.s, z28.s}, p0/z, [x13]\n\t"
+        "st1w {z25.s}, p0, [x12]\n\t" "add x24, x12, x3\n\t" "st1w {z26.s}, p0, [x24]\n\t"
+        "add x24, x24, x3\n\t" "st1w {z27.s}, p0, [x24]\n\t" "add x24, x24, x3\n\t" "st1w {z28.s}, p0, [x24]\n\t"
+        "add x13, x13, #256\n\t" "add x12, x12, #64\n\t" "add x21, x21, #256\n\t"
+        "subs x20, x20, #1\n\t"
+        "b.ne 61b\n\t"
+        "62:\n\t"
+        "ldr x24, [%[A], #112]\n\t"              // 头部/穿插拷贝用过 x24：恢复 nvA（事件判定用）
+        ".p2align 4\n"
         "2:\n\t"
         K4_STEP(x16, 0)
         K4_STEP(x22, 1)
@@ -2050,7 +2157,7 @@ static void k4(const kp_t* P)
         ROW_TAIL
         :
         : [A]"r"(&A)
-        : XCLOB, "z0", "z1", "z2", "z3", "z4", "z31", "p0", "p3", "p4", "memory", "cc");
+        : XCLOB, "z0", "z1", "z2", "z3", "z4", "z25", "z26", "z27", "z28", "z31", "p0", "p3", "p4", "memory", "cc");
 }
 // b 表：kind 16: R[y][X][c] = k[(y-c) mod KH][X]（残差 s_base+c ≥ KH → 0）；kind 8: c=2s+ic → k[(y-s) mod KH][X-ic]；kind 4: c=4s+ic
 // 每次调用都重建（不缓存打包结果），按行构建：kj 只依赖 (y,c)，提出内层（无逐元素取模），X 方向三段拷贝/清零
@@ -2101,6 +2208,8 @@ static rplan_t g_rp;
 static uint32_t g_pk_next;
 static uint8_t g_pk_done[4096];
 static int g_pk_nc = 0;
+static padded_u64 g_pk_gdone[12];     // 每组独占缓存线；release/acquire 保护该组本次调用的新打包内容
+static padded_u64 g_pk_all_done;      // 所有组完成后恢复原 resumable-claim 快路径
 static void roll_pack_chunk(const rplan_t* P, const float* k, long KH, long KW, int i)
 {
     const rgrp_t* G = &P->G[i / (int)KH];
@@ -2140,6 +2249,7 @@ static void roll_pack_all(const rplan_t* P, const float* k, long KH, long KW)
     }
 }
 static int g_roll_diag = 0;
+static int g_roll_step = 8;              // 条带块长 = g_roll_step*KH 行（CONV_ROLL_STEP 覆盖，默认 8 与远端 v54 一致）
 typedef struct { uint64_t tk[4]; long ts[4]; uint64_t tot; } rdiag_t;   // 每线程：各类内核的 cntvct 计时与 tile-步数
 static rdiag_t g_rdiag[1024];
 static inline int roll_kind_idx(int kind) { return (kind == 32 || kind == 33 || kind == 34 || kind == 35) ? 0 : (kind == 16 || kind == 17) ? 1 : kind == 8 ? 2 : 3; }
@@ -2286,11 +2396,15 @@ static inline void carry_load_za(const float* p)
 }
 // Each strip publishes progress after saving ZA and the live FMLA vectors.
 // Acquire/release transfers those accumulators when another worker resumes it.
-static int resume_claim(const rplan_t* P, int first, int last, int* cursor, long KH, long* off)
+static int resume_claim(const rplan_t* P, int first, int last, int* cursor, long KH, long* off, int ready_only)
 {
     for (int n = first; n < last; n++) {
         int i = *cursor;
         if (++*cursor >= last) *cursor = first;
+        if (ready_only) {
+            const int gi = P->items[P->pieces[i].item].g;
+            if (!__atomic_load_n(&g_pk_gdone[gi].v, __ATOMIC_ACQUIRE)) continue;
+        }
         uint64_t w = __atomic_load_n(&P->ready[i].v, __ATOMIC_RELAXED);
         long total = P->pieces[i].jb - P->pieces[i].ja + KH - 1;
         if (w >= (uint64_t)total) continue; // Includes the high-bit busy marker.
@@ -2310,23 +2424,42 @@ static void roll_worker(int tid, int nth, const ctx_t* c)
     rdiag_t* D = &g_rdiag[tid]; uint64_t t_start = 0;
     if (g_roll_diag) { memset(D, 0, sizeof(*D)); t_start = cyc(); }
     if (tid >= nth || tid >= P->pnth) return;
-    roll_pack_all(P, c->k, KH, KW);
+    // 每次调用仍无条件全量重建。mode 1 只改变时序：主线程按组构建，完成一组就放行需要该组的工作线程。
+    if (c->pk_mode == 1) {
+        if (tid == 0) {
+            for (int g = 0; g < P->ng; g++) {
+                const int begin = g * (int)KH;
+                for (int i = begin; i < begin + (int)KH; i++) roll_pack_chunk(P, c->k, KH, KW, i);
+                __atomic_store_n(&g_pk_gdone[g].v, 1, __ATOMIC_RELEASE);
+            }
+            __atomic_store_n(&g_pk_all_done.v, 1, __ATOMIC_RELEASE);
+        }
+    } else {
+        roll_pack_all(P, c->k, KH, KW);
+    }
     sme_start();
     const int first = P->pstart[tid], last = P->pstart[tid+1];
     int cursor = first, other = last < P->npieces ? last : 0;
     // Eight complete kernel-row periods preserve locality and amortize state transfers.
-    long step = 8 * KH; if (step < KH) step = KH;
+    long step = g_roll_step * KH; if (step < KH) step = KH;
+    int packing = c->pk_mode == 1;
     for (;;) {
         long off = 0;
-        int pi = resume_claim(P, first, last, &cursor, KH, &off);
-        if (pi < 0) pi = resume_claim(P, 0, P->npieces, &other, KH, &off);
-        if (pi < 0) break;
+        if (packing && __atomic_load_n(&g_pk_all_done.v, __ATOMIC_ACQUIRE)) packing = 0;
+        int pi = resume_claim(P, first, last, &cursor, KH, &off, packing);
+        // 打包阶段只推进本线程的静态片段，避免把首个就绪组全局偷散；全表完成后恢复远端 v54 的原始偷取路径。
+        if (pi < 0 && !packing) pi = resume_claim(P, 0, P->npieces, &other, KH, &off, 0);
+        if (pi < 0) {
+            if (packing) { asm volatile("yield" ::: "memory"); continue; }
+            break;
+        }
         const rpiece_t* pc = &P->pieces[pi];
         long total = pc->jb - pc->ja + KH - 1;
         long rows = total - off; if (rows > step) rows = step;
         const long ja = pc->ja + off;
         float* state = P->carry + (size_t)pi * 1152;
-        const rgrp_t* g = &P->G[P->items[pc->item].g];
+        const int gi = P->items[pc->item].g;
+        const rgrp_t* g = &P->G[gi];
         const long base = P->items[pc->item].base;
         uint64_t t0 = g_roll_diag ? cyc() : 0;
         kp_t K = { c->in + ja * W + base, W * 4, g->R, g->RSB, KH, g->steps, rows,
@@ -2467,20 +2600,25 @@ static void conv2d_roll(const CONVFLOAT* in, CONVINT H, CONVINT W, const CONVFLO
     read_knobs();
     g_roll_pd = g_knobs.roll_pd;
     g_roll_diag = env_int("CONV_ROLL_DIAG", 0);
+    g_roll_step = env_int("CONV_ROLL_STEP", 8);
     roll_prepare(k, H, W, KH, KW, nth);
     g_pk_nc = g_rp.ng * (int)KH; g_pk_next = 0;            // 重置打包 chunk 游标/完成标志（ng ≤ 12、KH ≤ 256 → nc ≤ 3072）
     memset(g_pk_done, 0, (size_t)g_pk_nc);
     long pk_el = 0;                                        // 打包总元素数（R 16/步 + kf 4/步）
     for (int g = 0; g < g_rp.ng; g++) pk_el += KH * g_rp.G[g].steps * ((g_rp.G[g].kind == 34 || g_rp.G[g].kind == 35) ? 20 : 16);
     int ps = g_knobs.pack_ser;
-    if (ps < 0) ps = 1;                  // 小表主线程串行（并行认领/扫描的同步开销 ≥ 打包本身），大表全体并行
-    if (ps) {
+    if (ps < 0) ps = 1;                  // 1 = 默认按组重叠；2 = 远端 v54 的完整串行基线；0 = 全体并行
+    if (ps == 1) {
+        for (int g = 0; g < g_rp.ng; g++) g_pk_gdone[g].v = 0;
+        g_pk_all_done.v = 0;
+        g_pk_next = (uint32_t)g_pk_nc;    // 不走并行 chunk 认领；主线程将在 worker 内构建
+    } else if (ps == 2) {
         for (int i = 0; i < g_pk_nc; i++) { roll_pack_chunk(&g_rp, k, KH, KW, i); g_pk_done[i] = 1; }
         g_pk_next = (uint32_t)g_pk_nc;
     }
     ctx_t ctx; memset(&ctx, 0, sizeof(ctx));
     ctx.in = in; ctx.k = k; ctx.out = out; ctx.H = H; ctx.W = W; ctx.KH = KH; ctx.KW = KW; ctx.outH = H - KH + 1; ctx.outW = W - KW + 1;
-    ctx.mode = 1; ctx.rp = &g_rp;
+    ctx.mode = 1; ctx.rp = &g_rp; ctx.pk_mode = ps;
     run_parallel(nth, &ctx, g_knobs.pool);
     if (g_roll_diag) roll_diag_print(nth);
 }
