@@ -2824,7 +2824,9 @@ static void roll_worker(int tid, int nth, const ctx_t* c)
         }
         const rpiece_t* pc = &P->pieces[pi];
         long total = pc->jb - pc->ja + KH - 1;
-        long rows = total - off; if (rows > step) rows = step;
+        long rows = total - off;
+        if (rows > step) rows = step;
+        else if (rows > 2 * KH) rows = (rows / 2 + KH - 1) / KH * KH;   // 尾块对分（≥KH）：缩短末段串行链的接力粒度（共享机上被抢占时更快移交；本地中性）
         const long ja = pc->ja + off;
         float* state = P->carry + (size_t)pi * 1152;
         const int gi = P->items[pc->item].g;
