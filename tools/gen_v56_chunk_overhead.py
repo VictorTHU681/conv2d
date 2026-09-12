@@ -34,7 +34,10 @@ change('        if (pi < 0) {', '        uint64_t ct1=chunk_tick(); CP->claim+=c
 change('        K.carry = state + 1024; K.resume = off != 0;', '        K.carry = state + 1024; K.resume = off != 0;\n        uint64_t ct2=chunk_tick(); CP->setup+=ct2-ct1;')
 change('        if (off) carry_load_za(state); else sme_zero_za();','        if (off) carry_load_za(state); else sme_zero_za();\n        uint64_t ct3=chunk_tick(); CP->restore+=ct3-ct2;')
 change('        if (g_roll_diag) { int ki = roll_kind_idx(g->kind);', '        uint64_t ct4=chunk_tick(); CP->kernel+=ct4-ct3;\n        if (g_roll_diag) { int ki = roll_kind_idx(g->kind);')
-change('        __atomic_store_n(&P->ready[pi].v, (uint64_t)(off + rows), __ATOMIC_RELEASE);','''        __atomic_store_n(&P->ready[pi].v, (uint64_t)(off + rows), __ATOMIC_RELEASE);
+publication='        __atomic_store_n(&P->ready[pi].v, (uint64_t)(off + rows), __ATOMIC_RELEASE);'
+if 'g_roll_unfinished' in w:
+    publication+='\n        if (g_roll_guided && off + rows == total)\n            __atomic_sub_fetch(&g_roll_unfinished.v, 1, __ATOMIC_RELAXED);'
+change(publication,publication+'''
         uint64_t ct5=chunk_tick(); CP->publish+=ct5-ct4;
         CP->chunks++; CP->resumes+=off!=0; CP->saves+=off+rows<total;
         CP->steals+=pi<first || pi>=last; CP->rows+=(unsigned long)rows;''')

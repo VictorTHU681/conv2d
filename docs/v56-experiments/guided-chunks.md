@@ -105,3 +105,18 @@ including setup, two initial calls, and spinning; the driver's output sample is
 not complete correctness validation. They are not operator-only counts or the
 original allocation/timing protocol. Full correctness evidence is the completed
 screen above. This measurement is pending; no hardware-event cause is claimed yet.
+
+PMU job **1584918**, cn20483 06:55:57–06:56:53, is now complete. All 24
+steady-allocation processes and four counters validate at 100% running time.
+[Summary](../../results/v56/experiments/guided-chunks/pmu_summary.md).
+Guidance reduces L1 load misses by 12.25% DDR / 12.01% HBM, yet DDR steady time
+increases 0.75% (5.8363 -> 5.8803 ms). HBM steady time falls 0.34%
+(5.7819 -> 5.7623 ms). Instructions increase from 183.236 to 184.394 billion
+per process in DDR, and 182.927 to 183.854 billion in HBM. These totals include
+spinning and setup, so they cannot be called arithmetic-kernel instruction counts.
+Fewer L1 misses do not explain an improvement in DDR; its measured regression
+remains. No particular cache-miss latency or hardware-stall mechanism is proven.
+
+The next [global tail cutoff](tail-cutoff.md) stops guidance when few pieces remain,
+targeting the independently observed completion spread. No source is adopted
+from these diagnostic measurements.

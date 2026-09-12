@@ -141,6 +141,49 @@ if '--guided' in sys.argv:
         '        assert(next==total || next%KH==0);\n'
         '        __atomic_store_n(&P.ready[pi].v,')
     harness = harness.replace('OUTPUT_PIPELINE_HOST', 'OUTPUT_GUIDED_HOST')
+    if 'static padded_u64 g_roll_unfinished;' in s:
+        import re
+        match=re.search(r'g_roll_cutoff = (\d+) \* nth;',s)
+        assert match
+        factor=int(match[1])
+        prefix=prefix.replace('static int g_roll_guided=1;',
+            'static int g_roll_guided=1;\nstatic padded_u64 g_roll_unfinished;\nstatic int g_roll_cutoff;')
+        # Freeze the actual range of every active invocation. Recomputing it
+        # after the global cutoff changes could hide overlapping active writes.
+        harness=harness.replace('int a,long ao,int b,long bo,long KH)',
+            'int a,long ao,long ar,int b,long bo,long br,long KH)')
+        harness=harness.replace('roll_chunk_rows(x->jb-x->ja+KH-1,ao,g_roll_step*KH)','ar')
+        harness=harness.replace('roll_chunk_rows(y->jb-y->ja+KH-1,bo,g_roll_step*KH)','br')
+        harness=harness.replace('int active[8]; long progress[8];',
+            'int active[8]; long progress[8],active_rows[8];')
+        harness=harness.replace('            if(pi>=0) {',
+            '            if(pi>=0) {\n'
+            '                long rows=roll_chunk_rows(P.pieces[pi].jb-P.pieces[pi].ja+KH-1,off,g_roll_step*KH);')
+        harness=harness.replace('chunk_overlap(&P,pi,off,active[u],progress[u],KH)',
+            'chunk_overlap(&P,pi,off,rows,active[u],progress[u],active_rows[u],KH)')
+        harness=harness.replace('active[t]=pi; progress[t]=off;',
+            'active[t]=pi; progress[t]=off; active_rows[t]=rows;')
+        harness=harness.replace('progress[t]+roll_chunk_rows(total,progress[t],g_roll_step*KH)',
+            'progress[t]+active_rows[t]')
+        harness=harness.replace('    roll_link_output_dependencies(&P);',f'''
+    g_roll_cutoff={factor}*8;
+    // Crossing the cutoff may shrink execution after a dependency check,
+    // but must never enlarge the range that was checked.
+    long step=g_roll_step*KH;
+    long checks[]={{1,step,2*step,4*step,4*step+1,8*step,8*step+KH-1}};
+    for(unsigned z=0;z<sizeof(checks)/sizeof(*checks);z++) {{
+        g_roll_unfinished.v=(uint64_t)g_roll_cutoff+1;
+        long before=roll_chunk_rows(checks[z],0,step);
+        g_roll_unfinished.v=(uint64_t)g_roll_cutoff;
+        long after=roll_chunk_rows(checks[z],0,step);
+        assert(after>0 && after<=before && before<=checks[z]);
+    }}
+    __atomic_store_n(&g_roll_unfinished.v,(uint64_t)P.npieces,__ATOMIC_RELAXED);
+    roll_link_output_dependencies(&P);''')
+        harness=harness.replace('        if(next==total) remaining--;',
+            '        if(next==total) { remaining--;\n'
+            '            assert(__atomic_sub_fetch(&g_roll_unfinished.v,1,__ATOMIC_RELAXED)==(uint64_t)remaining); }')
+        harness=harness.replace('OUTPUT_GUIDED_HOST','OUTPUT_CUTOFF_HOST')
 stem = 'host_test' if variant == 'ordered' else 'host_pipeline'
 if custom_source:
     harness=harness.replace('128,129,255,256,257,273,511,512,513',

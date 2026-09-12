@@ -6,16 +6,17 @@ from statistics import median,mean
 from itertools import permutations
 import re,sys
 s=Path(sys.argv[1]).read_text()
-combo='PIECE_CARRY_PROFILE_DONE' in s
+cutoff='TAIL_CUTOFF_PROFILE_DONE' in s
+combo=cutoff or 'PIECE_CARRY_PROFILE_DONE' in s
 guided='GUIDED_PROFILE_DONE' in s
 same='GUIDED_SAME_BINARY_DONE' in s
 piece=same or guided or 'PIECE_PHASE_PROFILE_DONE' in s
 setup55='CHUNK_SETUP55_PROFILE_DONE' in s
 setup=combo or piece or setup55 or 'CHUNK_SETUP_PROFILE_DONE' in s
-assert ('GUIDED_SAME_BINARY_DONE' if same else 'GUIDED_PROFILE_DONE' if guided else 'PIECE_CARRY_PROFILE_DONE' if combo else 'PIECE_PHASE_PROFILE_DONE' if piece else 'CHUNK_SETUP55_PROFILE_DONE' if setup55 else 'CHUNK_SETUP_PROFILE_DONE' if setup else 'CHUNK_OVERHEAD_DONE') in s and 'FAIL' not in s
+assert ('TAIL_CUTOFF_PROFILE_DONE' if cutoff else 'GUIDED_SAME_BINARY_DONE' if same else 'GUIDED_PROFILE_DONE' if guided else 'PIECE_CARRY_PROFILE_DONE' if combo else 'PIECE_PHASE_PROFILE_DONE' if piece else 'CHUNK_SETUP55_PROFILE_DONE' if setup55 else 'CHUNK_SETUP_PROFILE_DONE' if setup else 'CHUNK_OVERHEAD_DONE') in s and 'FAIL' not in s
 m=re.search(r'^PLACEMENT cpu_node=\d+ hbm_node=(-?\d+)$',s,re.M);assert m
 memories=['DDR'] if int(m[1])<0 else ['DDR','HBM']
-variants=['fixed','guided'] if same else ['baseline','grow2','grow4'] if guided else ['baseline','cached','carry4','combined'] if combo else ['baseline','phase','cached'] if piece else ['baseline','phase','carry4','both'] if setup else ['s8','s2','s4']
+variants=['baseline','guided','cut2','cut4'] if cutoff else ['fixed','guided'] if same else ['baseline','grow2','grow4'] if guided else ['baseline','cached','carry4','combined'] if combo else ['baseline','phase','cached'] if piece else ['baseline','phase','carry4','both'] if setup else ['s8','s2','s4']
 rounds=range(4 if setup and not piece else 6)
 data={};threads={};costs={};hosts={};counts=defaultdict(int);orders=defaultdict(list);key=None
 for line in s.splitlines():
@@ -63,6 +64,7 @@ for k in blocks:
 assert len(row_totals)==len(piece_counts)==1
 print(f'{len(blocks)} processes, {len(data)} phase records, {sum(counts.values())} timed hashes PASS. Saves equal resumes; every call processes {next(iter(row_totals)):.0f} rows across {next(iter(piece_counts)):.0f} pieces.')
 print('Timed calls 3–7: median of '+('four' if setup and not piece else 'six')+' process medians of per-call worker means. Extra counter reads perturb execution; timings include boundary instrumentation and are attribution only.')
+if cutoff: print('Publish also includes the completed-piece atomic decrement in cutoff variants.')
 print('Restore includes first-chunk ZA zeroing. Publish includes existing diagnostic accounting, ZA save and release. Setup excludes kernel-internal ring initialization; kernel includes that initialization and vector carry.')
 print('\n| Memory | '+('Variant' if setup else 'Step')+' | Chunks/thread | Steals/thread | Claim us | Setup us | ZA restore/zero us | Kernel us | Save/publish us | Last end us |')
 print('| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |')
@@ -110,7 +112,7 @@ if piece or combo:
                 for n in names:vals[n].append(median(hosts[m,r,v,c][n] for c in range(3,8)))
             print(f'| {m} | {v} | '+ ' | '.join(f'{median(vals[n]):.3f}' for n in names)+' |')
 
-if guided or same:
+if guided or same or cutoff:
     print('\nWorker completion spread; instrumented results, not an accepted score.')
     print('\n| Memory | Variant | Mean end us | Last end us | Last minus mean us |')
     print('| --- | --- | ---: | ---: | ---: |')
