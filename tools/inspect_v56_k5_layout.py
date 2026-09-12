@@ -4,12 +4,13 @@ from pathlib import Path
 from collections import Counter
 import hashlib,re,argparse
 parser=argparse.ArgumentParser()
-parser.add_argument('--experiment',choices=['k5-layout','k5-cost'],default='k5-layout')
+parser.add_argument('--experiment',choices=['k5-layout','k5-cost','chunk-setup'],default='k5-layout')
 args=parser.parse_args()
 root=Path('build/v56/experiments')/args.experiment/'disassembly'
 out=Path('results/v56/experiments')/args.experiment
 report=[];reference=None;functions={}
 variants=['baseline','triplet','k5cost','tailcost'] if args.experiment=='k5-cost' else ['baseline','triplet','baseline_out','triplet_out']
+if args.experiment=='chunk-setup':variants=['baseline','phase','carry4','both']
 for v in variants:
     rows=[];symbol=None
     for line in (root/(v+'.txt')).read_text().splitlines():
@@ -37,9 +38,12 @@ for v in variants:
         if symbol=='roll_worker' or symbol.startswith(('k16pairf4','k5.')) or symbol=='k5':
             report.append(f'{v} function={symbol} disassembled_instruction_count={n}')
 report.append('All 12 extracted F4 steps have identical arithmetic instruction words. Counts include compiler scaffolding and padding, not dynamic execution counts.')
+if args.experiment=='chunk-setup':
+    for v in variants[1:]:
+        report.append(f'{v} k5 full_instruction_addresses_and_words_identical_to_baseline={functions[v]["k5"]==functions["baseline"]["k5"]}')
 if args.experiment=='k5-cost':
     for name in ['k5','roll_worker']:
         same=all(functions[v][name]==functions['triplet'][name] for v in ['k5cost','tailcost'])
         report.append(f'K5 cost variants function={name} full_instruction_addresses_and_words_identical={same}')
-(out/'machine_code.txt').write_text('\n'.join(report)+'\n')
+(out/('arithmetic_code.txt' if args.experiment=='chunk-setup' else 'machine_code.txt')).write_text('\n'.join(report)+'\n')
 print('\n'.join(report))

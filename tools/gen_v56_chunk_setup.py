@@ -62,3 +62,30 @@ proof=Path('tools/test_v56_chunk_phases.c').read_text()
 def helper(t):
     a=t.index('static inline long roll_phase_sub(');return t[a:t.index('\n}\n',a)+3]
 assert helper(proof)==helper(variants['phase'])
+
+# Audit phase-helper preconditions against the actual grouping implementation.
+typedef=next(line.split('//')[0] for line in variants['baseline'].splitlines() if line.startswith('typedef struct { int kind;'))
+a=variants['baseline'].index('static int roll_groups_base(')
+b=variants['baseline'].index('// 滚动形态的结构性开关',a)
+groups=variants['baseline'][a:b]
+p=root/'group_check.c'
+p.write_text('#include <assert.h>\n#include <stddef.h>\n#include <stdio.h>\n'+typedef+'\n'+
+    'static int nf_mode=-1;\nstatic int env_int(const char* name,int def) { (void)name;(void)def;return nf_mode; }\n'+groups+r"""
+int main(void) {
+    const int modes[]={-1,0,3,4}; const long kws[]={3,4,399,400};
+    const long widths[]={31,32,63,64,127,128,191,192,256};
+    unsigned long cases=0,ngroups=0;
+    for(int m=0;m<4;m++) { nf_mode=modes[m];
+        for(long kh=16;kh<=256;kh++) for(int k=0;k<4;k++) for(int w=0;w<9;w++) {
+            rgrp_t G[12]={0};int ng=roll_groups_width(kh,kws[k],G,widths[w]);
+            assert(ng>0 && ng<=12);
+            for(int g=0;g<ng;g++) {
+                assert(G[g].s_base>=0 && G[g].s_base<kh);
+                assert(G[g].sf>=0 && G[g].sf<kh);ngroups++;
+            }
+            cases++;
+        }
+    }
+    printf("PHASE_GROUP_PRECONDITIONS PASS plans=%lu groups=%lu KH=16..256 NF=-1,0,3,4\n",cases,ngroups);
+}
+""")

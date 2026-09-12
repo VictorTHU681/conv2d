@@ -1,0 +1,25 @@
+Static instructions across all worker branches; not dynamic per-chunk counts or proof of end-to-end benefit.
+baseline: roll_worker entry=0x0000000000422864 static_divide_instructions=25 static_ZA_transfers=2 disassembly_sha256=bcd864610476e5fc7eec72f1d960ae62598bad7c2591287f7ce9aef21bb52691
+  422ca8: e1000000 ldr	za[w12, 0], [x0]
+  4233fc: e1200000 str	za[w12, 0], [x0]
+phase: roll_worker entry=0x0000000000422864 static_divide_instructions=2 static_ZA_transfers=2 disassembly_sha256=0741cebc42e558d553d9190282a8908431ef47c3547876118e6beb7cdb63e448
+  422c68: e1000000 ldr	za[w12, 0], [x0]
+  4233b4: e1200000 str	za[w12, 0], [x0]
+carry4: roll_worker entry=0x0000000000422864 static_divide_instructions=25 static_ZA_transfers=8 disassembly_sha256=bcfae380c72162c907f1e2b2f5852cdb97fdf285c90d1ad83bf5689442d145d2
+  422ca8: e1000000 ldr	za[w12, 0], [x0]
+  422cac: e1000001 ldr	za[w12, 1], [x0, #1, mul vl]
+  422cb0: e1000002 ldr	za[w12, 2], [x0, #2, mul vl]
+  422cb4: e1000003 ldr	za[w12, 3], [x0, #3, mul vl]
+  42340c: e1200000 str	za[w12, 0], [x0]
+  423410: e1200001 str	za[w12, 1], [x0, #1, mul vl]
+  423414: e1200002 str	za[w12, 2], [x0, #2, mul vl]
+  423418: e1200003 str	za[w12, 3], [x0, #3, mul vl]
+both: roll_worker entry=0x0000000000422864 static_divide_instructions=2 static_ZA_transfers=8 disassembly_sha256=c588125d601188ed6e00ed4e50e0c9f00b0c5e48b085e95ffa912a30e423128e
+  422c68: e1000000 ldr	za[w12, 0], [x0]
+  422c6c: e1000001 ldr	za[w12, 1], [x0, #1, mul vl]
+  422c70: e1000002 ldr	za[w12, 2], [x0, #2, mul vl]
+  422c74: e1000003 ldr	za[w12, 3], [x0, #3, mul vl]
+  4233c4: e1200000 str	za[w12, 0], [x0]
+  4233c8: e1200001 str	za[w12, 1], [x0, #1, mul vl]
+  4233cc: e1200002 str	za[w12, 2], [x0, #2, mul vl]
+  4233d0: e1200003 str	za[w12, 3], [x0, #3, mul vl]

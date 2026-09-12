@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 """Instrument continuation phase costs; diagnostic-only, never packaged."""
 from pathlib import Path
-import subprocess,hashlib
-root=Path('build/v56/experiments/chunk-overhead')
-subprocess.run(['python3','tools/gen_v56_k5_profile.py','--root',str(root),'--variants','candidate','--thread-detail'],check=True,stdout=subprocess.DEVNULL)
-p=root/'candidate_profile.c';s=p.read_text()
+import subprocess,hashlib,argparse
+parser=argparse.ArgumentParser()
+parser.add_argument('--root',type=Path,default=Path('build/v56/experiments/chunk-overhead'))
+parser.add_argument('--variant',default='candidate')
+args=parser.parse_args();root=args.root
+subprocess.run(['python3','tools/gen_v56_k5_profile.py','--root',str(root),'--variants',args.variant,'--thread-detail'],check=True,stdout=subprocess.DEVNULL)
+p=root/(args.variant+'_profile.c');s=p.read_text()
 def once(old,new):
     global s
     assert s.count(old)==1,(s.count(old),old[:80])
