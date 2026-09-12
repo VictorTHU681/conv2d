@@ -17,9 +17,20 @@ all addresses and pointer increments. No copy prefix, group, worker, claim,
 preparation or output-dependency function changes. The bounded per-plane padding
 from the earlier EXT audit is retained.
 
-Job **1584148**, cn20481, started 06:02:50 and is running. The new interleaved
-candidate receives five packing-mode state sweeps, plain/NaN-ring guard checks,
-NaN-ring state checks and runtime output-ownership checks: planned 2,014
-state/guard cases plus 54 ownership cases. All three variants get six balanced
-permutations, four full shapes, allowed DDR/HBM and five timings per process
-(720 timed hashes). No runtime/performance result or adoption yet claimed.
+Job **1584148**, cn20481 06:02:50–06:07:07, succeeded. The interleaved
+candidate passes five-mode state, plain/NaN-ring guards, NaN-ring state and
+runtime output ownership: 2,014 state/guard cases and 54 ownership cases,
+zero observed active conflicts. All three variants pass 720 timed hashes in
+six permutations, four shapes and both placements.
+
+[Results](../../results/v56/experiments/k4-ext-schedule/summary.md): interleaved
+versus blocked recovers KH55 +0.07% DDR / +0.17% HBM, but versus accepted
+baseline remains **-0.39% / -0.15%**. Other interleaved/base changes range
+-0.47% to +0.12%, including changes in shapes without K4 execution. The blocked
+rebased EXT control also regresses KH55 -0.46% / -0.32%. Neither is adopted.
+
+The synthetic matrix/EXT overlap budget does not guarantee a real kernel gain.
+Moving boundary loads earlier is insufficient here; whole-worker compiler
+layout, loads, copies and output handling remain possible influences. No
+single physical bottleneck or complete causal explanation is established by
+these timings. Root accepted source and packages remain unchanged.
