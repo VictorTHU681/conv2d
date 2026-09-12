@@ -1,0 +1,19 @@
+# To display the perf.data header info, please use --header/--header-only options.
+#
+#
+# Total Lost Samples: 0
+#
+# Samples: 4K of event 'cycles:u'
+# Event count (approx.): 72019841345
+#
+# Overhead  Command          Shared Object          Symbol                   
+# ........  ...............  .....................  .........................
+#
+    97.00%  steady_baseline  steady_baseline        [.] roll_worker
+     2.82%  steady_baseline  steady_baseline        [.] pool_worker
+     0.10%  steady_baseline  steady_baseline        [.] fill_args.constprop.0
+
+
+#
+# (Tip: To change sampling frequency to 100 Hz: perf record -F 100)
+#

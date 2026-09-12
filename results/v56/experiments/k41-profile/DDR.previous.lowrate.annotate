@@ -1,0 +1,2014 @@
+ Percent |	Source code & Disassembly of steady_previous for cycles:u (4360 samples, percent: local period)
+---------------------------------------------------------------------------------------------------------------
+         :
+         :
+         :
+         :            Disassembly of section .text:
+         :
+         :            00000000004218b0 <roll_worker>:
+         :            roll_worker():
+    0.00 :   4218b0: sub     sp, sp, #0x370
+    0.00 :   4218b4: stp     x29, x30, [sp]
+    0.00 :   4218b8: mov     x29, sp
+    0.00 :   4218bc: stp     x21, x22, [sp, #32]
+    0.00 :   4218c0: mov     x21, x2
+    0.00 :   4218c4: adrp    x2, 440000 <__libc_start_main@GLIBC_2.34>
+    0.00 :   4218c8: stp     x19, x20, [sp, #16]
+    0.00 :   4218cc: mov     w19, w0
+    0.00 :   4218d0: ldr     w2, [x2, #384]
+    0.00 :   4218d4: ldr     x0, [x21, #264]
+    0.00 :   4218d8: stp     x25, x26, [sp, #64]
+    0.00 :   4218dc: str     x0, [sp, #168]
+    0.00 :   4218e0: str     xzr, [sp, #352]
+    0.00 :   4218e4: ldp     x26, x18, [x21, #32]
+    0.00 :   4218e8: ldr     x25, [x21, #48]
+    0.00 :   4218ec: ldr     x22, [x0, #1224]
+    0.00 :   4218f0: ldr     x5, [x0, #1232]
+    0.00 :   4218f4: cbnz    w2, 423730 <roll_worker+0x1e80>
+    0.00 :   4218f8: cmp     w19, w1
+    0.00 :   4218fc: b.ge    421910 <roll_worker+0x60>  // b.tcont
+    0.00 :   421900: ldr     x0, [sp, #168]
+    0.00 :   421904: ldr     w1, [x0, #1216]
+    0.00 :   421908: cmp     w1, w19
+    0.00 :   42190c: b.gt    421928 <roll_worker+0x78>
+    0.00 :   421910: ldp     x29, x30, [sp]
+    0.00 :   421914: ldp     x19, x20, [sp, #16]
+    0.00 :   421918: ldp     x21, x22, [sp, #32]
+    0.00 :   42191c: ldp     x25, x26, [sp, #64]
+    0.00 :   421920: add     sp, sp, #0x370
+    0.00 :   421924: ret
+         :            roll_pack_all():
+    0.00 :   421928: adrp    x1, 440000 <__libc_start_main@GLIBC_2.34>
+    0.00 :   42192c: add     x1, x1, #0x180
+    0.00 :   421930: add     x20, x1, #0x8
+    0.00 :   421934: adrp    x1, 440000 <__libc_start_main@GLIBC_2.34>
+    0.00 :   421938: add     x1, x1, #0x180
+    0.00 :   42193c: stp     x23, x24, [sp, #48]
+    0.00 :   421940: adrp    x24, 464000 <g_rdiag+0x11680>
+         :            roll_worker():
+    0.00 :   421944: ldr     x23, [x21, #8]
+         :            roll_pack_all():
+    0.00 :   421948: add     x24, x24, #0x980
+    0.00 :   42194c: stp     x27, x28, [sp, #80]
+    0.00 :   421950: mov     w28, #0x1                       // #1
+    0.00 :   421954: ldr     w27, [x1, #4]
+    0.00 :   421958: stp     d8, d9, [sp, #96]
+    0.00 :   42195c: stp     d10, d11, [sp, #112]
+    0.00 :   421960: stp     d12, d13, [sp, #128]
+    0.00 :   421964: stp     d14, d15, [sp, #144]
+    0.00 :   421968: str     x5, [sp, #176]
+    0.00 :   42196c: str     w19, [sp, #184]
+    0.00 :   421970: mov     x19, x0
+    0.00 :   421974: str     x21, [sp, #192]
+    0.00 :   421978: b       4219a0 <roll_worker+0xf0>
+    0.00 :   42197c: mov     w4, w21
+    0.00 :   421980: mov     x3, x25
+    0.00 :   421984: mov     x2, x18
+    0.00 :   421988: mov     x1, x23
+    0.00 :   42198c: mov     x0, x19
+    0.00 :   421990: bl      4203b0 <roll_pack_chunk>
+    0.00 :   421994: add     x4, x24, w21, uxtw
+    0.00 :   421998: mov     w0, #0x1                        // #1
+    0.00 :   42199c: stlrb   w0, [x4]
+    0.00 :   4219a0: ldadd   w28, w21, [x20]
+    0.02 :   4219a4: cmp     w21, w27
+    0.00 :   4219a8: b.cc    42197c <roll_worker+0xcc>  // b.lo, b.ul, b.last
+    0.00 :   4219ac: ldr     x5, [sp, #176]
+    0.00 :   4219b0: adrp    x24, 464000 <g_rdiag+0x11680>
+    0.00 :   4219b4: ldr     x21, [sp, #192]
+    0.00 :   4219b8: add     x24, x24, #0x980
+    0.00 :   4219bc: ldr     w19, [sp, #184]
+    0.00 :   4219c0: cmp     w27, #0x0
+    0.00 :   4219c4: b.le    421a50 <roll_worker+0x1a0>
+    0.00 :   4219c8: ldr     x28, [sp, #168]
+    0.00 :   4219cc: str     w19, [sp, #176]
+    0.00 :   4219d0: mov     w19, w27
+    0.00 :   4219d4: mov     x27, x5
+    0.00 :   4219d8: str     x21, [sp, #184]
+    0.00 :   4219dc: nop
+    0.00 :   4219e0: mov     x21, x24
+    0.00 :   4219e4: mov     w1, #0x1                        // #1
+    0.00 :   4219e8: mov     w20, #0x0                       // #0
+    0.00 :   4219ec: b       421a00 <roll_worker+0x150>
+    0.00 :   4219f0: add     w20, w20, #0x1
+    0.00 :   4219f4: add     x21, x21, #0x1
+    0.00 :   4219f8: cmp     w19, w20
+    0.00 :   4219fc: b.eq    421a40 <roll_worker+0x190>  // b.none
+    0.00 :   421a00: ldarb   w0, [x21]
+    0.00 :   421a04: tst     w0, #0xff
+    0.00 :   421a08: b.ne    4219f0 <roll_worker+0x140>  // b.any
+    0.00 :   421a0c: mov     w4, w20
+    0.00 :   421a10: mov     x3, x25
+    0.00 :   421a14: mov     x2, x18
+    0.00 :   421a18: mov     x1, x23
+    0.00 :   421a1c: mov     x0, x28
+    0.00 :   421a20: bl      4203b0 <roll_pack_chunk>
+    0.00 :   421a24: mov     w0, #0x1                        // #1
+    0.00 :   421a28: stlrb   w0, [x21]
+    0.00 :   421a2c: add     w20, w20, #0x1
+    0.00 :   421a30: add     x21, x21, #0x1
+    0.00 :   421a34: mov     w1, #0x0                        // #0
+    0.00 :   421a38: cmp     w19, w20
+    0.00 :   421a3c: b.ne    421a00 <roll_worker+0x150>  // b.any
+    0.00 :   421a40: cbz     w1, 4219e0 <roll_worker+0x130>
+    0.00 :   421a44: ldr     x21, [sp, #184]
+    0.00 :   421a48: mov     x5, x27
+    0.00 :   421a4c: ldr     w19, [sp, #176]
+         :            sme_start():
+    0.00 :   421a50: smstart
+         :            roll_worker():
+    0.00 :   421a54: ldr     x0, [sp, #168]
+    0.00 :   421a58: sxtw    x4, w19
+    0.00 :   421a5c: mul     x2, x18, x25
+    0.00 :   421a60: sbfiz   x9, x19, #15, #32
+    0.00 :   421a64: add     x3, x22, x9
+    0.00 :   421a68: lsl     x1, x18, #3
+    0.00 :   421a6c: ldr     x6, [x0, #1200]
+    0.00 :   421a70: stp     x25, x21, [sp, #256]
+    0.00 :   421a74: ldr     w7, [x0, #1208]
+    0.00 :   421a78: sbfiz   x0, x19, #13, #32
+    0.00 :   421a7c: str     x26, [sp, #304]
+    0.00 :   421a80: add     x8, x6, w19, sxtw #2
+    0.00 :   421a84: add     x0, x5, x0
+    0.00 :   421a88: stp     x3, x0, [sp, #288]
+    0.00 :   421a8c: add     x0, x4, x4, lsl #3
+    0.00 :   421a90: ldr     w23, [x6, x4, lsl #2]
+    0.00 :   421a94: ldr     w24, [x8, #4]
+    0.00 :   421a98: str     x0, [sp, #328]
+    0.00 :   421a9c: lsl     x0, x2, #2
+    0.00 :   421aa0: cmp     w7, w24
+    0.00 :   421aa4: str     x0, [sp, #336]
+    0.00 :   421aa8: lsl     x0, x26, #2
+    0.00 :   421aac: str     x0, [sp, #272]
+    0.00 :   421ab0: csel    w0, w24, wzr, gt
+    0.00 :   421ab4: cmp     x1, x18
+    0.00 :   421ab8: str     w0, [sp, #316]
+    0.00 :   421abc: csel    x0, x1, x18, ge // ge = tcont
+    0.00 :   421ac0: adrp    x2, 452000 <g_go_t+0xf680>
+    0.00 :   421ac4: str     w24, [sp, #192]
+    0.00 :   421ac8: str     w23, [sp, #204]
+    0.00 :   421acc: str     x0, [sp, #280]
+    0.00 :   421ad0: add     x0, x2, #0x980
+    0.00 :   421ad4: str     w23, [sp, #312]
+    0.00 :   421ad8: str     x0, [sp, #320]
+    0.00 :   421adc: str     x4, [sp, #360]
+    0.00 :   421ae0: b       422114 <roll_worker+0x864>
+         :            carry_load_za():
+    0.00 :   421ae4: mov     x0, x2
+    0.00 :   421ae8: mov     w12, #0x0                       // #0
+    0.00 :   421aec: ldr     za[w12, 0], [x0]
+    0.00 :   421af0: add     x0, x0, #0x40
+    0.00 :   421af4: add     w12, w12, #0x1
+    0.00 :   421af8: cmp     w12, #0x40
+    0.46 :   421afc: b.cc    421aec <roll_worker+0x23c>  // b.lo, b.ul, b.last
+         :            roll_worker():
+    0.00 :   421b00: ldr     x0, [sp, #168]
+    0.00 :   421b04: ldr     x1, [sp, #216]
+    0.00 :   421b08: ldr     w0, [x0, x1]
+    0.00 :   421b0c: cmp     w0, #0x20
+    0.00 :   421b10: b.eq    42240c <roll_worker+0xb5c>  // b.none
+    0.00 :   421b14: cmp     w0, #0x21
+    0.00 :   421b18: b.eq    4227c4 <roll_worker+0xf14>  // b.none
+    0.00 :   421b1c: cmp     w0, #0x22
+    0.00 :   421b20: b.eq    4229f0 <roll_worker+0x1140>  // b.none
+    0.00 :   421b24: cmp     w0, #0x23
+    0.00 :   421b28: b.eq    422cb0 <roll_worker+0x1400>  // b.none
+    0.00 :   421b2c: cmp     w0, #0x10
+    0.00 :   421b30: b.eq    42309c <roll_worker+0x17ec>  // b.none
+    0.00 :   421b34: cmp     w0, #0x11
+    0.00 :   421b38: b.eq    423424 <roll_worker+0x1b74>  // b.none
+    0.00 :   421b3c: cmp     w0, #0x9
+    0.00 :   421b40: b.eq    42371c <roll_worker+0x1e6c>  // b.none
+    0.00 :   421b44: str     x18, [sp, #344]
+         :            k16pair():
+    0.00 :   421b48: ldr     x19, [sp, #408]
+         :            roll_worker():
+    0.00 :   421b4c: cmp     w0, #0x8
+    0.00 :   421b50: b.eq    423224 <roll_worker+0x1974>  // b.none
+         :            k4():
+    0.00 :   421b54: ldr     x20, [sp, #368]
+    0.00 :   421b58: add     x19, x19, #0xfc
+    0.00 :   421b5c: add     x0, sp, #0x240
+    0.00 :   421b60: add     x1, sp, #0x170
+    0.00 :   421b64: mov     x2, #0x1                        // #1
+    0.00 :   421b68: mov     x3, #0x0                        // #0
+    0.00 :   421b6c: ubfx    x22, x20, #2, #4
+    0.00 :   421b70: lsr     x23, x20, #2
+    0.00 :   421b74: add     x19, x19, x22
+    0.00 :   421b78: adds    x5, x19, #0x3
+    0.00 :   421b7c: add     x4, x19, #0x6
+    0.00 :   421b80: csel    x4, x4, x5, mi  // mi = first
+    0.00 :   421b84: sub     x20, x20, x22, lsl #2
+    0.00 :   421b88: asr     x4, x4, #2
+    0.00 :   421b8c: add     x4, x4, #0xf
+    0.00 :   421b90: and     x21, x4, #0xfffffffffffffff0
+    0.00 :   421b94: bl      420e80 <fill_args.constprop.0>
+    0.00 :   421b98: str     x20, [sp, #576]
+    0.00 :   421b9c: ldr     x0, [sp, #496]
+    0.00 :   421ba0: add     x3, x19, #0x3f
+    0.00 :   421ba4: add     x9, x22, x2
+    0.00 :   421ba8: and     x1, x22, #0xc
+    0.00 :   421bac: add     x5, x0, #0x6
+    0.00 :   421bb0: adds    x0, x0, #0x3
+    0.00 :   421bb4: csel    x5, x5, x0, mi  // mi = first
+    0.00 :   421bb8: negs    x6, x0
+    0.00 :   421bbc: and     x6, x6, #0x3
+    0.00 :   421bc0: and     x0, x0, #0x3
+    0.00 :   421bc4: csneg   x6, x0, x6, mi  // mi = first
+    0.00 :   421bc8: cmp     x19, #0x0
+    0.00 :   421bcc: lsl     x2, x21, #2
+    0.00 :   421bd0: csel    x3, x3, x19, lt // lt = tstop
+    0.00 :   421bd4: and     x11, x23, #0x3
+    0.00 :   421bd8: negs    x0, x19
+    0.00 :   421bdc: and     x0, x0, #0x3f
+    0.00 :   421be0: and     x19, x19, #0x3f
+    0.00 :   421be4: csneg   x0, x19, x0, mi // mi = first
+    0.00 :   421be8: add     x8, x22, #0x2
+    0.00 :   421bec: madd    x11, x11, x2, x1
+    0.00 :   421bf0: add     x1, x0, #0x6
+    0.00 :   421bf4: adds    x0, x0, #0x3
+    0.00 :   421bf8: add     x7, x22, #0x3
+    0.00 :   421bfc: csel    x0, x1, x0, mi  // mi = first
+    0.00 :   421c00: add     x1, sp, #0x2e0
+    0.00 :   421c04: lsl     x4, x21, #4
+    0.00 :   421c08: asr     x5, x5, #2
+    0.00 :   421c0c: str     x5, [sp, #712]
+    0.00 :   421c10: and     x10, x9, #0x3
+    0.00 :   421c14: and     x5, x8, #0x3
+    0.00 :   421c18: asr     x3, x3, #6
+    0.00 :   421c1c: and     x8, x8, #0x1c
+    0.00 :   421c20: and     x9, x9, #0x1c
+    0.00 :   421c24: stp     x4, x3, [x1]
+    0.00 :   421c28: and     x4, x7, #0x3
+    0.00 :   421c2c: and     x7, x7, #0x1c
+    0.00 :   421c30: madd    x9, x10, x2, x9
+    0.00 :   421c34: asr     x0, x0, #2
+    0.00 :   421c38: madd    x3, x5, x2, x8
+    0.00 :   421c3c: stp     x0, x11, [x1, #16]
+    0.00 :   421c40: madd    x1, x4, x2, x7
+    0.00 :   421c44: add     x18, sp, #0x240
+    0.00 :   421c48: str     x9, [sp, #768]
+    0.00 :   421c4c: str     x2, [sp, #776]
+    0.00 :   421c50: str     x3, [sp, #784]
+    0.00 :   421c54: str     x1, [sp, #792]
+    0.00 :   421c58: str     x6, [sp, #840]
+    0.00 :   421c5c: ldr     x0, [x18]
+    0.00 :   421c60: ldr     x1, [x18, #8]
+    0.00 :   421c64: ldr     x4, [x18, #16]
+    0.00 :   421c68: ldr     x5, [x18, #24]
+    0.00 :   421c6c: ldr     x2, [x18, #32]
+    0.00 :   421c70: ldr     x3, [x18, #40]
+    0.00 :   421c74: ldr     x6, [x18, #48]
+    0.00 :   421c78: ldr     x7, [x18, #56]
+    0.00 :   421c7c: ldr     x8, [x18, #64]
+    0.00 :   421c80: ldr     x9, [x18, #72]
+    0.00 :   421c84: ldr     x10, [x18, #80]
+    0.00 :   421c88: ldr     x27, [x18, #88]
+    0.00 :   421c8c: ldr     x19, [x18, #224]
+    0.00 :   421c90: ldr     x14, [x18, #104]
+    0.00 :   421c94: ldr     x24, [x18, #112]
+    0.00 :   421c98: ldr     x25, [x18, #120]
+    0.00 :   421c9c: ldr     x26, [x18, #128]
+    0.00 :   421ca0: ldr     x17, [x18, #152]
+    0.00 :   421ca4: ldr     x22, [x18, #160]
+    0.00 :   421ca8: add     x28, x17, x17
+    0.00 :   421cac: add     x28, x28, x22
+    0.00 :   421cb0: ldr     x22, [x18, #176]
+    0.00 :   421cb4: whilelo p3.s, xzr, x22
+    0.00 :   421cb8: mov     x11, #0x0                       // #0
+    0.00 :   421cbc: ptrue   p0.s
+    0.00 :   421cc0: ldr     x3, [x18, #200]
+    0.00 :   421cc4: ldr     x7, [x18, #136]
+    0.00 :   421cc8: mov     z31.s, #0
+    0.00 :   421ccc: mov     x22, x0
+    0.00 :   421cd0: add     x21, x0, x26
+    0.00 :   421cd4: mov     x12, x22
+    0.00 :   421cd8: mov     x13, x17
+    0.00 :   421cdc: ldr     x24, [x18, #168]
+    0.00 :   421ce0: cbz     x24, 421d28 <roll_worker+0x478>
+    0.00 :   421ce4: prfm    pldl2keep, [x21]
+    0.00 :   421ce8: prfm    pldl2keep, [x21, #64]
+    0.00 :   421cec: prfm    pldl2keep, [x21, #128]
+    0.00 :   421cf0: prfm    pldl2keep, [x21, #192]
+    0.00 :   421cf4: ld4w    {z0.s-z3.s}, p0/z, [x12]
+    0.00 :   421cf8: st1w    {z0.s}, p0, [x13]
+    0.00 :   421cfc: add     x23, x13, x3
+    0.00 :   421d00: st1w    {z1.s}, p0, [x23]
+    0.00 :   421d04: add     x23, x23, x3
+    0.00 :   421d08: st1w    {z2.s}, p0, [x23]
+    0.00 :   421d0c: add     x23, x23, x3
+    0.00 :   421d10: st1w    {z3.s}, p0, [x23]
+    0.00 :   421d14: add     x12, x12, #0x100
+    0.00 :   421d18: add     x13, x13, #0x40
+    0.00 :   421d1c: add     x21, x21, #0x100
+    0.00 :   421d20: subs    x24, x24, #0x1
+    0.00 :   421d24: b.ne    421ce4 <roll_worker+0x434>  // b.any
+    0.00 :   421d28: prfm    pldl2keep, [x21]
+    0.00 :   421d2c: prfm    pldl2keep, [x21, #64]
+    0.00 :   421d30: prfm    pldl2keep, [x21, #128]
+    0.00 :   421d34: prfm    pldl2keep, [x21, #192]
+    0.00 :   421d38: ldr     x24, [x18, #176]
+    0.00 :   421d3c: whilelo p4.s, xzr, x24
+    0.00 :   421d40: ld4w    {z0.s-z3.s}, p4/z, [x12]
+    0.00 :   421d44: st1w    {z0.s}, p4, [x13]
+    0.00 :   421d48: add     x23, x13, x3
+    0.00 :   421d4c: st1w    {z1.s}, p4, [x23]
+    0.00 :   421d50: add     x23, x23, x3
+    0.00 :   421d54: st1w    {z2.s}, p4, [x23]
+    0.00 :   421d58: add     x23, x23, x3
+    0.00 :   421d5c: st1w    {z3.s}, p4, [x23]
+    0.00 :   421d60: ldr     x24, [x18, #112]
+    0.00 :   421d64: mov     x16, x17
+    0.00 :   421d68: sub     x17, x28, x17
+    0.00 :   421d6c: add     x22, x0, x1
+    0.00 :   421d70: cmp     x8, #0x1
+    0.00 :   421d74: csel    x22, x0, x22, eq        // eq = none
+    0.00 :   421d78: add     x21, x0, x26
+    0.00 :   421d7c: mov     x12, x22
+    0.00 :   421d80: mov     x13, x17
+    0.00 :   421d84: ldr     x24, [x18, #168]
+    0.00 :   421d88: cbz     x24, 421dd0 <roll_worker+0x520>
+    0.00 :   421d8c: prfm    pldl2keep, [x21]
+    0.00 :   421d90: prfm    pldl2keep, [x21, #64]
+    0.00 :   421d94: prfm    pldl2keep, [x21, #128]
+    0.00 :   421d98: prfm    pldl2keep, [x21, #192]
+    0.00 :   421d9c: ld4w    {z0.s-z3.s}, p0/z, [x12]
+    0.00 :   421da0: st1w    {z0.s}, p0, [x13]
+    0.00 :   421da4: add     x23, x13, x3
+    0.00 :   421da8: st1w    {z1.s}, p0, [x23]
+    0.00 :   421dac: add     x23, x23, x3
+    0.00 :   421db0: st1w    {z2.s}, p0, [x23]
+    0.00 :   421db4: add     x23, x23, x3
+    0.00 :   421db8: st1w    {z3.s}, p0, [x23]
+    0.00 :   421dbc: add     x12, x12, #0x100
+    0.00 :   421dc0: add     x13, x13, #0x40
+    0.00 :   421dc4: add     x21, x21, #0x100
+    0.00 :   421dc8: subs    x24, x24, #0x1
+    0.00 :   421dcc: b.ne    421d8c <roll_worker+0x4dc>  // b.any
+    0.00 :   421dd0: prfm    pldl2keep, [x21]
+    0.00 :   421dd4: prfm    pldl2keep, [x21, #64]
+    0.00 :   421dd8: prfm    pldl2keep, [x21, #128]
+    0.00 :   421ddc: prfm    pldl2keep, [x21, #192]
+    0.00 :   421de0: ldr     x24, [x18, #176]
+    0.00 :   421de4: whilelo p4.s, xzr, x24
+    0.00 :   421de8: ld4w    {z0.s-z3.s}, p4/z, [x12]
+    0.00 :   421dec: st1w    {z0.s}, p4, [x13]
+    0.00 :   421df0: add     x23, x13, x3
+    0.00 :   421df4: st1w    {z1.s}, p4, [x23]
+    0.00 :   421df8: add     x23, x23, x3
+    0.00 :   421dfc: st1w    {z2.s}, p4, [x23]
+    0.00 :   421e00: add     x23, x23, x3
+    0.00 :   421e04: st1w    {z3.s}, p4, [x23]
+    0.00 :   421e08: ldr     x24, [x18, #112]
+    0.00 :   421e0c: ldr     x22, [x18, #192]
+    0.00 :   421e10: add     x22, x22, x16
+    0.00 :   421e14: ldr     x23, [x18, #208]
+    0.00 :   421e18: add     x23, x23, x16
+    0.00 :   421e1c: ldr     x25, [x18, #216]
+    0.00 :   421e20: add     x25, x25, x16
+    0.00 :   421e24: ldr     x12, [x18, #184]
+    0.00 :   421e28: add     x16, x16, x12
+    0.00 :   421e2c: mov     x15, x7
+    0.00 :   421e30: ld1w    {z0.s}, p0/z, [x16]
+    0.00 :   421e34: ld1w    {z1.s}, p0/z, [x16, #1, mul vl]
+    0.00 :   421e38: ld1w    {z2.s}, p0/z, [x16, #2, mul vl]
+    0.00 :   421e3c: ld1w    {z3.s}, p0/z, [x16, #3, mul vl]
+    0.00 :   421e40: ld1w    {z4.s}, p0/z, [x2]
+    0.00 :   421e44: fmopa   za0.s, p0/m, p0/m, z0.s, z4.s
+    0.00 :   421e48: fmopa   za1.s, p0/m, p0/m, z1.s, z4.s
+    0.00 :   421e4c: fmopa   za2.s, p0/m, p0/m, z2.s, z4.s
+    0.00 :   421e50: fmopa   za3.s, p0/m, p0/m, z3.s, z4.s
+    0.00 :   421e54: ld1w    {z0.s}, p0/z, [x22]
+    0.00 :   421e58: ld1w    {z1.s}, p0/z, [x22, #1, mul vl]
+    0.00 :   421e5c: ld1w    {z2.s}, p0/z, [x22, #2, mul vl]
+    0.00 :   421e60: ld1w    {z3.s}, p0/z, [x22, #3, mul vl]
+    0.00 :   421e64: ld1w    {z4.s}, p0/z, [x2, #1, mul vl]
+    0.00 :   421e68: fmopa   za0.s, p0/m, p0/m, z0.s, z4.s
+    0.00 :   421e6c: fmopa   za1.s, p0/m, p0/m, z1.s, z4.s
+    0.00 :   421e70: fmopa   za2.s, p0/m, p0/m, z2.s, z4.s
+    0.00 :   421e74: fmopa   za3.s, p0/m, p0/m, z3.s, z4.s
+    0.00 :   421e78: ld1w    {z0.s}, p0/z, [x23]
+    0.00 :   421e7c: ld1w    {z1.s}, p0/z, [x23, #1, mul vl]
+    0.00 :   421e80: ld1w    {z2.s}, p0/z, [x23, #2, mul vl]
+    0.00 :   421e84: ld1w    {z3.s}, p0/z, [x23, #3, mul vl]
+    0.00 :   421e88: ld1w    {z4.s}, p0/z, [x2, #2, mul vl]
+    0.00 :   421e8c: fmopa   za0.s, p0/m, p0/m, z0.s, z4.s
+    0.00 :   421e90: fmopa   za1.s, p0/m, p0/m, z1.s, z4.s
+    0.00 :   421e94: fmopa   za2.s, p0/m, p0/m, z2.s, z4.s
+    0.00 :   421e98: fmopa   za3.s, p0/m, p0/m, z3.s, z4.s
+    0.00 :   421e9c: ld1w    {z0.s}, p0/z, [x25]
+    0.00 :   421ea0: ld1w    {z1.s}, p0/z, [x25, #1, mul vl]
+    0.00 :   421ea4: ld1w    {z2.s}, p0/z, [x25, #2, mul vl]
+    0.00 :   421ea8: ld1w    {z3.s}, p0/z, [x25, #3, mul vl]
+    0.00 :   421eac: ld1w    {z4.s}, p0/z, [x2, #3, mul vl]
+    0.00 :   421eb0: fmopa   za0.s, p0/m, p0/m, z0.s, z4.s
+    0.00 :   421eb4: fmopa   za1.s, p0/m, p0/m, z1.s, z4.s
+    0.00 :   421eb8: fmopa   za2.s, p0/m, p0/m, z2.s, z4.s
+    0.00 :   421ebc: fmopa   za3.s, p0/m, p0/m, z3.s, z4.s
+    0.00 :   421ec0: add     x16, x16, #0x4
+    0.00 :   421ec4: add     x22, x22, #0x4
+    0.00 :   421ec8: add     x23, x23, #0x4
+    0.00 :   421ecc: add     x25, x25, #0x4
+    0.00 :   421ed0: add     x2, x2, #0x100
+    0.00 :   421ed4: subs    x15, x15, #0x1
+    0.00 :   421ed8: b.ne    421e30 <roll_worker+0x580>  // b.any
+    0.00 :   421edc: ldr     x12, [x18, #264]
+    0.00 :   421ee0: cbz     x12, 421f64 <roll_worker+0x6b4>
+    0.00 :   421ee4: ld1w    {z0.s}, p0/z, [x16]
+    0.00 :   421ee8: ld1w    {z1.s}, p0/z, [x16, #1, mul vl]
+    0.00 :   421eec: ld1w    {z2.s}, p0/z, [x16, #2, mul vl]
+    0.00 :   421ef0: ld1w    {z3.s}, p0/z, [x16, #3, mul vl]
+    0.00 :   421ef4: ld1w    {z4.s}, p0/z, [x2]
+    0.00 :   421ef8: fmopa   za0.s, p0/m, p0/m, z0.s, z4.s
+    0.00 :   421efc: fmopa   za1.s, p0/m, p0/m, z1.s, z4.s
+    0.00 :   421f00: fmopa   za2.s, p0/m, p0/m, z2.s, z4.s
+    0.00 :   421f04: fmopa   za3.s, p0/m, p0/m, z3.s, z4.s
+    0.00 :   421f08: cmp     x12, #0x1
+    0.00 :   421f0c: b.eq    421f60 <roll_worker+0x6b0>  // b.none
+    0.00 :   421f10: ld1w    {z0.s}, p0/z, [x22]
+    0.00 :   421f14: ld1w    {z1.s}, p0/z, [x22, #1, mul vl]
+    0.00 :   421f18: ld1w    {z2.s}, p0/z, [x22, #2, mul vl]
+    0.00 :   421f1c: ld1w    {z3.s}, p0/z, [x22, #3, mul vl]
+    0.00 :   421f20: ld1w    {z4.s}, p0/z, [x2, #1, mul vl]
+    0.00 :   421f24: fmopa   za0.s, p0/m, p0/m, z0.s, z4.s
+    0.00 :   421f28: fmopa   za1.s, p0/m, p0/m, z1.s, z4.s
+    0.00 :   421f2c: fmopa   za2.s, p0/m, p0/m, z2.s, z4.s
+    0.00 :   421f30: fmopa   za3.s, p0/m, p0/m, z3.s, z4.s
+    0.00 :   421f34: cmp     x12, #0x2
+    0.00 :   421f38: b.eq    421f60 <roll_worker+0x6b0>  // b.none
+    0.00 :   421f3c: ld1w    {z0.s}, p0/z, [x23]
+    0.00 :   421f40: ld1w    {z1.s}, p0/z, [x23, #1, mul vl]
+    0.00 :   421f44: ld1w    {z2.s}, p0/z, [x23, #2, mul vl]
+    0.00 :   421f48: ld1w    {z3.s}, p0/z, [x23, #3, mul vl]
+    0.00 :   421f4c: ld1w    {z4.s}, p0/z, [x2, #2, mul vl]
+    0.00 :   421f50: fmopa   za0.s, p0/m, p0/m, z0.s, z4.s
+    0.00 :   421f54: fmopa   za1.s, p0/m, p0/m, z1.s, z4.s
+    0.00 :   421f58: fmopa   za2.s, p0/m, p0/m, z2.s, z4.s
+    0.00 :   421f5c: fmopa   za3.s, p0/m, p0/m, z3.s, z4.s
+    0.00 :   421f60: add     x2, x2, #0x100
+    0.00 :   421f64: cmp     x2, x5
+    0.00 :   421f68: csel    x2, x4, x2, eq  // eq = none
+    0.00 :   421f6c: cmp     x11, x14
+    0.00 :   421f70: csel    x20, x9, x10, cs        // cs = hs, nlast
+    0.00 :   421f74: cmp     x27, x24
+    0.00 :   421f78: b.cs    422010 <roll_worker+0x760>  // b.hs, b.nlast
+    0.00 :   421f7c: lsl     w12, w27, #2
+    0.00 :   421f80: mov     z0.s, p0/m, za0v.s[w12, 0]
+    0.00 :   421f84: mov     z1.s, p0/m, za0v.s[w12, 1]
+    0.00 :   421f88: mov     z2.s, p0/m, za0v.s[w12, 2]
+    0.00 :   421f8c: mov     z3.s, p0/m, za0v.s[w12, 3]
+    0.00 :   421f90: st4w    {z0.s-z3.s}, p0, [x20]
+    0.00 :   421f94: mov     za0v.s[w12, 0], p0/m, z31.s
+    0.00 :   421f98: mov     za0v.s[w12, 1], p0/m, z31.s
+    0.00 :   421f9c: mov     za0v.s[w12, 2], p0/m, z31.s
+    0.00 :   421fa0: mov     za0v.s[w12, 3], p0/m, z31.s
+    0.00 :   421fa4: mov     z0.s, p0/m, za1v.s[w12, 0]
+    0.00 :   421fa8: mov     z1.s, p0/m, za1v.s[w12, 1]
+    0.00 :   421fac: mov     z2.s, p0/m, za1v.s[w12, 2]
+    0.00 :   421fb0: mov     z3.s, p0/m, za1v.s[w12, 3]
+    0.00 :   421fb4: st4w    {z0.s-z3.s}, p0, [x20, #4, mul vl]
+    0.00 :   421fb8: mov     za1v.s[w12, 0], p0/m, z31.s
+    0.00 :   421fbc: mov     za1v.s[w12, 1], p0/m, z31.s
+    0.00 :   421fc0: mov     za1v.s[w12, 2], p0/m, z31.s
+    0.00 :   421fc4: mov     za1v.s[w12, 3], p0/m, z31.s
+    0.00 :   421fc8: mov     z0.s, p0/m, za2v.s[w12, 0]
+    0.00 :   421fcc: mov     z1.s, p0/m, za2v.s[w12, 1]
+    0.00 :   421fd0: mov     z2.s, p0/m, za2v.s[w12, 2]
+    0.00 :   421fd4: mov     z3.s, p0/m, za2v.s[w12, 3]
+    0.00 :   421fd8: st4w    {z0.s-z3.s}, p0, [x20, #8, mul vl]
+    0.00 :   421fdc: mov     za2v.s[w12, 0], p0/m, z31.s
+    0.00 :   421fe0: mov     za2v.s[w12, 1], p0/m, z31.s
+    0.00 :   421fe4: mov     za2v.s[w12, 2], p0/m, z31.s
+    0.00 :   421fe8: mov     za2v.s[w12, 3], p0/m, z31.s
+    0.00 :   421fec: mov     z0.s, p0/m, za3v.s[w12, 0]
+    0.00 :   421ff0: mov     z1.s, p0/m, za3v.s[w12, 1]
+    0.00 :   421ff4: mov     z2.s, p0/m, za3v.s[w12, 2]
+    0.00 :   421ff8: mov     z3.s, p0/m, za3v.s[w12, 3]
+    0.00 :   421ffc: st4w    {z0.s-z3.s}, p0, [x20, #12, mul vl]
+    0.00 :   422000: mov     za3v.s[w12, 0], p0/m, z31.s
+    0.00 :   422004: mov     za3v.s[w12, 1], p0/m, z31.s
+    0.00 :   422008: mov     za3v.s[w12, 2], p0/m, z31.s
+    0.00 :   42200c: mov     za3v.s[w12, 3], p0/m, z31.s
+    0.00 :   422010: add     x27, x27, #0x1
+    0.00 :   422014: cmp     x27, x6
+    0.00 :   422018: csel    x27, xzr, x27, eq       // eq = none
+    0.00 :   42201c: add     x0, x0, x1
+    0.00 :   422020: add     x9, x9, x19
+    0.00 :   422024: add     x11, x11, #0x1
+    0.00 :   422028: subs    x8, x8, #0x1
+    0.00 :   42202c: b.ne    421d64 <roll_worker+0x4b4>  // b.any
+    0.00 :   422030: ldr     x18, [sp, #344]
+    0.00 :   422034: nop
+         :            roll_worker():
+    0.00 :   422038: adrp    x0, 440000 <__libc_start_main@GLIBC_2.34>
+    0.00 :   42203c: add     x0, x0, #0x180
+    0.00 :   422040: ldr     w0, [x0]
+    0.00 :   422044: cbz     w0, 4220d0 <roll_worker+0x820>
+         :            roll_kind_idx():
+    0.00 :   422048: ldr     x0, [sp, #168]
+    0.00 :   42204c: ldr     x1, [sp, #216]
+    0.00 :   422050: ldr     w0, [x0, x1]
+    0.00 :   422054: mov     w1, #0x0                        // #0
+    0.00 :   422058: sub     w2, w0, #0x20
+    0.00 :   42205c: cmp     w2, #0x3
+    0.00 :   422060: b.ls    422084 <roll_worker+0x7d4>  // b.plast
+    0.00 :   422064: sub     w2, w0, #0x10
+    0.00 :   422068: mov     w1, #0x1                        // #1
+    0.00 :   42206c: cmp     w2, w1
+    0.00 :   422070: b.ls    422084 <roll_worker+0x7d4>  // b.plast
+    0.00 :   422074: sub     w0, w0, #0x8
+    0.00 :   422078: cmp     w0, w1
+    0.00 :   42207c: cset    w1, hi  // hi = pmore
+    0.00 :   422080: add     w1, w1, #0x2
+         :            cyc():
+    0.00 :   422084: mrs     x3, cntvct_el0
+         :            roll_worker():
+    0.00 :   422088: ldp     x5, x2, [sp, #320]
+    0.00 :   42208c: ldr     x0, [sp, #248]
+    0.00 :   422090: add     x1, x2, w1, sxtw
+    0.00 :   422094: add     x0, x0, x0, lsl #1
+    0.00 :   422098: ldr     x2, [sp, #232]
+    0.00 :   42209c: add     x4, x1, #0x4
+    0.00 :   4220a0: sub     x3, x3, x2
+    0.00 :   4220a4: ldr     x2, [sp, #168]
+    0.00 :   4220a8: add     x0, x2, x0, lsl #5
+    0.00 :   4220ac: ldr     x2, [x5, x1, lsl #3]
+    0.00 :   4220b0: ldr     x0, [x0, #40]
+    0.00 :   4220b4: add     x2, x2, x3
+    0.00 :   4220b8: str     x2, [x5, x1, lsl #3]
+    0.00 :   4220bc: ldr     x1, [sp, #184]
+    0.00 :   4220c0: ldr     x3, [x5, x4, lsl #3]
+    0.00 :   4220c4: mul     x0, x1, x0
+    0.00 :   4220c8: add     x0, x3, x0, lsl #2
+    0.00 :   4220cc: str     x0, [x5, x4, lsl #3]
+    0.00 :   4220d0: ldp     x1, x0, [sp, #176]
+    0.00 :   4220d4: add     x0, x0, x1
+    0.00 :   4220d8: ldr     x1, [sp, #240]
+    0.00 :   4220dc: cmp     x0, x1
+    0.00 :   4220e0: b.ge    422100 <roll_worker+0x850>  // b.tcont
+         :            carry_store_za():
+    0.00 :   4220e4: ldr     x1, [sp, #208]
+    0.00 :   4220e8: mov     w12, #0x0                       // #0
+    0.00 :   4220ec: str     za[w12, 0], [x1]
+    0.00 :   4220f0: add     x1, x1, #0x40
+    0.00 :   4220f4: add     w12, w12, #0x1
+    0.00 :   4220f8: cmp     w12, #0x40
+    0.16 :   4220fc: b.cc    4220ec <roll_worker+0x83c>  // b.lo, b.ul, b.last
+         :            roll_worker():
+    0.00 :   422100: ldr     x1, [sp, #168]
+    0.02 :   422104: ldr     x1, [x1, #1248]
+    0.00 :   422108: ldr     x2, [sp, #224]
+    0.00 :   42210c: add     x1, x1, x2
+    0.00 :   422110: stlr    x0, [x1]
+         :            resume_claim():
+    0.46 :   422114: ldr     w1, [sp, #192]
+    0.00 :   422118: ldr     w0, [sp, #204]
+    0.00 :   42211c: cmp     w0, w1
+    0.00 :   422120: b.ge    4225c4 <roll_worker+0xd14>  // b.tcont
+    0.00 :   422124: ldr     x10, [sp, #168]
+    0.00 :   422128: mov     w9, w0
+    0.00 :   42212c: ldr     w7, [sp, #312]
+    0.00 :   422130: mov     w8, #0x18                       // #24
+    0.00 :   422134: ldr     w0, [sp, #192]
+    0.00 :   422138: add     w2, w7, #0x1
+    0.00 :   42213c: ldr     x1, [x10, #1248]
+    0.00 :   422140: cmp     w0, w2
+    0.00 :   422144: ldr     w0, [sp, #204]
+    0.00 :   422148: sbfiz   x11, x7, #6, #32
+    0.00 :   42214c: sxtw    x5, w7
+    0.00 :   422150: add     x1, x1, x11
+    0.00 :   422154: csel    w2, w2, w0, gt
+    0.00 :   422158: ldr     x3, [x1]
+    0.02 :   42215c: ldr     x0, [x10, #1192]
+    0.00 :   422160: smull   x4, w7, w8
+    0.00 :   422164: orr     x13, x3, #0x8000000000000000
+    0.00 :   422168: mov     x6, x3
+    0.00 :   42216c: add     x0, x0, x4
+    0.00 :   422170: ldp     x12, x0, [x0, #8]
+    0.00 :   422174: sub     x0, x0, x12
+    0.00 :   422178: add     x0, x0, x18
+    0.00 :   42217c: sub     x0, x0, #0x1
+    0.02 :   422180: cmp     x3, x0
+    0.00 :   422184: b.cs    4225ac <roll_worker+0xcfc>  // b.hs, b.nlast
+    0.00 :   422188: casa    x6, x13, [x1]
+    0.06 :   42218c: cmp     x6, x3
+    0.00 :   422190: b.ne    4225ac <roll_worker+0xcfc>  // b.any
+         :            roll_worker():
+    0.00 :   422194: str     x11, [sp, #224]
+    0.00 :   422198: tbnz    w7, #31, 4225c0 <roll_worker+0xd10>
+         :            resume_claim():
+    0.00 :   42219c: str     x6, [sp, #176]
+    0.00 :   4221a0: str     w2, [sp, #312]
+         :            roll_worker():
+    0.00 :   4221a4: ldr     x2, [sp, #168]
+    0.00 :   4221a8: add     x5, x5, x5, lsl #3
+    0.00 :   4221ac: ldr     x0, [x2, #1192]
+    0.00 :   4221b0: ldr     x3, [x2, #1160]
+    0.00 :   4221b4: add     x1, x0, x4
+    0.00 :   4221b8: ldr     x6, [x2, #1240]
+    0.00 :   4221bc: ldp     x2, x1, [x1, #8]
+    0.00 :   4221c0: ldrsw   x0, [x0, x4]
+    0.00 :   4221c4: lsl     x0, x0, #4
+    0.00 :   4221c8: add     x4, x3, x0
+    0.00 :   4221cc: sub     x1, x1, x2
+    0.00 :   4221d0: add     x1, x1, x18
+    0.00 :   4221d4: ldr     w0, [x3, x0]
+    0.00 :   4221d8: add     x3, x6, x5, lsl #9
+    0.00 :   4221dc: ldr     x5, [sp, #176]
+    0.00 :   4221e0: sub     x1, x1, #0x1
+    0.00 :   4221e4: str     x3, [sp, #208]
+    0.00 :   4221e8: adrp    x3, 440000 <__libc_start_main@GLIBC_2.34>
+    0.00 :   4221ec: add     x3, x3, #0x180
+    0.00 :   4221f0: add     x2, x2, x5
+    0.00 :   4221f4: stp     xzr, x1, [sp, #232]
+    0.00 :   4221f8: sub     x1, x1, x5
+    0.00 :   4221fc: ldr     x5, [sp, #280]
+    0.00 :   422200: ldr     w3, [x3]
+    0.00 :   422204: cmp     x1, x5
+    0.00 :   422208: csel    x1, x1, x5, le
+    0.04 :   42220c: str     x1, [sp, #184]
+    0.00 :   422210: ldr     x4, [x4, #8]
+    0.00 :   422214: cbz     w3, 422220 <roll_worker+0x970>
+         :            cyc():
+    0.00 :   422218: mrs     x1, cntvct_el0
+    0.00 :   42221c: str     x1, [sp, #232]
+         :            roll_worker():
+    0.00 :   422220: mov     w3, #0x60                       // #96
+    0.00 :   422224: add     x1, x2, #0x1
+    0.00 :   422228: ldr     x11, [sp, #168]
+    0.00 :   42222c: smull   x12, w0, w3
+    0.00 :   422230: ldr     x3, [sp, #184]
+    0.00 :   422234: str     x3, [sp, #416]
+    0.00 :   422238: add     x3, x11, x12
+    0.00 :   42223c: str     x12, [sp, #216]
+    0.00 :   422240: ldp     x13, x5, [sp, #264]
+    0.00 :   422244: str     x5, [sp, #376]
+    0.02 :   422248: ldr     x9, [x3, #8]
+    0.00 :   42224c: sxtw    x5, w0
+    0.00 :   422250: add     x0, x5, w0, sxtw #1
+    0.00 :   422254: str     x5, [sp, #248]
+    0.00 :   422258: ldr     x5, [sp, #296]
+    0.00 :   42225c: sub     x1, x1, x9
+    0.00 :   422260: str     x5, [sp, #432]
+    0.00 :   422264: sub     x8, x2, x9
+    0.00 :   422268: ldr     x5, [sp, #288]
+    0.00 :   42226c: str     x5, [sp, #488]
+    0.00 :   422270: sub     x5, x1, #0x10
+    0.00 :   422274: lsl     x0, x0, #5
+    0.00 :   422278: ldr     x3, [sp, #256]
+    0.00 :   42227c: str     x3, [sp, #496]
+    0.00 :   422280: sdiv    x7, x5, x18
+    0.00 :   422284: sub     x3, x8, #0x10
+    0.00 :   422288: movi    v0.4s, #0x0
+    0.00 :   42228c: str     x18, [sp, #400]
+    0.00 :   422290: sdiv    x6, x3, x18
+    0.00 :   422294: msub    x7, x7, x18, x5
+    0.00 :   422298: sdiv    x5, x1, x18
+    0.00 :   42229c: add     x7, x7, x18
+    0.00 :   4222a0: msub    x6, x6, x18, x3
+    0.00 :   4222a4: sdiv    x3, x8, x18
+    0.00 :   4222a8: msub    x5, x5, x18, x1
+    0.00 :   4222ac: add     x1, x0, #0x10
+    0.00 :   4222b0: sdiv    x10, x7, x18
+    0.00 :   4222b4: add     x6, x6, x18
+    0.00 :   4222b8: add     x5, x5, x18
+    0.00 :   4222bc: add     x0, x11, x0
+    0.00 :   4222c0: ldr     q1, [x11, x1]
+    0.00 :   4222c4: msub    x3, x3, x18, x8
+    0.00 :   4222c8: msub    x7, x10, x18, x7
+    0.00 :   4222cc: sub     x1, x2, x18
+    0.00 :   4222d0: str     x7, [sp, #448]
+    0.00 :   4222d4: add     x7, sp, #0x2d0
+    0.00 :   4222d8: ldr     x8, [x13, #64]
+    0.00 :   4222dc: add     x3, x3, x18
+    0.00 :   4222e0: sdiv    x10, x6, x18
+    0.00 :   4222e4: stur    q1, [x7, #-248]
+    0.00 :   4222e8: ldr     x7, [sp, #304]
+    0.00 :   4222ec: madd    x1, x1, x8, x8
+    0.00 :   4222f0: lsl     x8, x8, #2
+    0.00 :   4222f4: str     x8, [sp, #504]
+    0.00 :   4222f8: ldr     x8, [x13]
+    0.00 :   4222fc: add     x1, x1, x4
+    0.00 :   422300: madd    x4, x7, x2, x4
+    0.00 :   422304: sdiv    x7, x5, x18
+    0.00 :   422308: msub    x6, x10, x18, x6
+    0.00 :   42230c: str     x6, [sp, #464]
+    0.00 :   422310: sdiv    x6, x3, x18
+    0.00 :   422314: add     x4, x8, x4, lsl #2
+    0.00 :   422318: ldr     x8, [x13, #16]
+    0.00 :   42231c: msub    x7, x7, x18, x5
+    0.00 :   422320: add     x5, sp, #0x200
+    0.00 :   422324: str     x4, [sp, #368]
+    0.00 :   422328: msub    x3, x6, x18, x3
+    0.00 :   42232c: ldr     w4, [x11, x12]
+    0.00 :   422330: ldr     x6, [x0, #40]
+    0.00 :   422334: add     x1, x8, x1, lsl #2
+    0.00 :   422338: str     x6, [sp, #408]
+    0.00 :   42233c: str     x1, [sp, #424]
+    0.00 :   422340: ldr     x1, [x0, #48]
+    0.00 :   422344: str     x7, [sp, #440]
+    0.00 :   422348: str     x1, [sp, #392]
+    0.00 :   42234c: ldr     x1, [x0, #56]
+    0.00 :   422350: stp     q0, q0, [x5]
+    0.00 :   422354: stp     q0, q0, [x5, #32]
+    0.00 :   422358: str     x1, [sp, #384]
+    0.00 :   42235c: sub     w1, w4, #0x22
+    0.00 :   422360: str     x3, [sp, #456]
+    0.00 :   422364: cmp     w1, #0x1
+    0.00 :   422368: b.ls    42264c <roll_worker+0xd9c>  // b.plast
+    0.00 :   42236c: cmp     w4, #0x21
+    0.00 :   422370: ccmp    w4, #0x9, #0x4, ne      // ne = any
+    0.00 :   422374: b.ne    4226a8 <roll_worker+0xdf8>  // b.any
+    0.00 :   422378: ldrsw   x0, [x0, #92]
+    0.00 :   42237c: ldr     x3, [x13, #8]
+    0.00 :   422380: sub     x4, x2, x0
+    0.00 :   422384: ldr     x1, [sp, #336]
+    0.00 :   422388: sub     x0, x0, x9
+    0.00 :   42238c: sdiv    x2, x4, x18
+    0.00 :   422390: str     x3, [sp, #520]
+    0.00 :   422394: add     x1, x3, x1
+    0.00 :   422398: str     x1, [sp, #528]
+    0.00 :   42239c: sdiv    x1, x0, x18
+    0.00 :   4223a0: msub    x2, x2, x18, x4
+    0.00 :   4223a4: msub    x1, x1, x18, x0
+    0.00 :   4223a8: add     x2, x2, x18
+    0.00 :   4223ac: add     x1, x1, x18
+    0.00 :   4223b0: sdiv    x0, x2, x18
+    0.00 :   4223b4: sdiv    x4, x1, x18
+    0.00 :   4223b8: msub    x0, x0, x18, x2
+    0.00 :   4223bc: msub    x1, x4, x18, x1
+    0.00 :   4223c0: str     x1, [sp, #536]
+    0.00 :   4223c4: ldr     x1, [sp, #256]
+    0.00 :   4223c8: mul     x0, x0, x1
+    0.00 :   4223cc: add     x0, x3, x0, lsl #2
+    0.00 :   4223d0: str     x0, [sp, #512]
+    0.02 :   4223d4: ldr     x0, [sp, #176]
+    0.00 :   4223d8: ldr     x2, [sp, #208]
+    0.00 :   4223dc: cmp     x0, #0x0
+    0.00 :   4223e0: cset    x0, ne  // ne = any
+    0.00 :   4223e4: str     x0, [sp, #568]
+    0.00 :   4223e8: add     x1, x2, #0x1, lsl #12
+    0.00 :   4223ec: str     x1, [sp, #560]
+    0.00 :   4223f0: b.ne    421ae4 <roll_worker+0x234>  // b.any
+         :            sme_zero_za():
+    0.00 :   4223f4: zero    {za}
+         :            roll_worker():
+    0.00 :   4223f8: ldr     x0, [sp, #168]
+    0.00 :   4223fc: ldr     x1, [sp, #216]
+    0.00 :   422400: ldr     w0, [x0, x1]
+    0.00 :   422404: cmp     w0, #0x20
+    0.00 :   422408: b.ne    421b14 <roll_worker+0x264>  // b.any
+         :            k16pair():
+    0.00 :   42240c: ldr     x3, [sp, #408]
+    0.00 :   422410: add     x0, sp, #0x240
+    0.00 :   422414: add     x1, sp, #0x170
+    0.00 :   422418: mov     x2, #0x1                        // #1
+    0.00 :   42241c: add     x3, x3, #0x1f
+    0.00 :   422420: str     x18, [sp, #344]
+    0.00 :   422424: bl      420e80 <fill_args.constprop.0>
+    0.00 :   422428: mov     x18, x0
+    0.00 :   42242c: ldr     x0, [x18]
+    0.00 :   422430: ldr     x1, [x18, #8]
+    0.00 :   422434: ldr     x4, [x18, #16]
+    0.00 :   422438: ldr     x5, [x18, #24]
+    0.00 :   42243c: ldr     x2, [x18, #32]
+    0.00 :   422440: ldr     x3, [x18, #40]
+    0.00 :   422444: ldr     x6, [x18, #48]
+    0.00 :   422448: ldr     x7, [x18, #56]
+    0.00 :   42244c: ldr     x8, [x18, #64]
+    0.00 :   422450: ldr     x9, [x18, #72]
+    0.00 :   422454: ldr     x10, [x18, #80]
+    0.00 :   422458: ldr     x27, [x18, #88]
+    0.00 :   42245c: ldr     x19, [x18, #224]
+    0.00 :   422460: ldr     x14, [x18, #104]
+    0.00 :   422464: ldr     x24, [x18, #112]
+    0.00 :   422468: ldr     x25, [x18, #120]
+    0.00 :   42246c: ldr     x26, [x18, #128]
+    0.00 :   422470: ldr     x17, [x18, #152]
+    0.00 :   422474: ldr     x22, [x18, #160]
+    0.00 :   422478: add     x28, x17, x17
+    0.00 :   42247c: add     x28, x28, x22
+    0.00 :   422480: ldr     x22, [x18, #176]
+    0.00 :   422484: whilelo p3.s, xzr, x22
+    0.00 :   422488: mov     x11, #0x0                       // #0
+    0.00 :   42248c: ptrue   p0.s
+    0.00 :   422490: mov     z31.s, #0
+    0.00 :   422494: add     x21, x0, x26
+    0.00 :   422498: ldr     x12, [x18, #240]
+    0.00 :   42249c: add     x16, x17, x12
+    0.00 :   4224a0: sub     x17, x28, x17
+    0.00 :   4224a4: add     x22, x0, x1
+    0.00 :   4224a8: cmp     x8, #0x1
+    0.00 :   4224ac: csel    x22, x0, x22, eq        // eq = none
+    0.00 :   4224b0: mov     x23, x17
+    0.00 :   4224b4: ldr     x12, [x18, #168]
+    0.00 :   4224b8: cbz     x12, 4224dc <roll_worker+0xc2c>
+    0.00 :   4224bc: prfm    pldl2keep, [x21]
+    0.00 :   4224c0: ld1w    {z24.s}, p0/z, [x22]
+    0.00 :   4224c4: st1w    {z24.s}, p0, [x23]
+    0.00 :   4224c8: add     x21, x21, #0x40
+    0.00 :   4224cc: add     x22, x22, #0x40
+    0.00 :   4224d0: add     x23, x23, #0x40
+    0.00 :   4224d4: subs    x12, x12, #0x1
+    0.00 :   4224d8: b.ne    4224bc <roll_worker+0xc0c>  // b.any
+    0.00 :   4224dc: prfm    pldl2keep, [x21]
+    0.00 :   4224e0: ld1w    {z24.s}, p3/z, [x22]
+    0.00 :   4224e4: st1w    {z24.s}, p3, [x23]
+    0.00 :   4224e8: mov     x15, x7
+    0.00 :   4224ec: ld1w    {z0.s}, p0/z, [x16]
+    0.00 :   4224f0: ld1w    {z1.s}, p0/z, [x16, #1, mul vl]
+    0.00 :   4224f4: ld1w    {z2.s}, p0/z, [x2]
+    0.00 :   4224f8: ld1w    {z3.s}, p0/z, [x3]
+    0.00 :   4224fc: fmopa   za0.s, p0/m, p0/m, z0.s, z2.s
+    0.00 :   422500: fmopa   za1.s, p0/m, p0/m, z1.s, z2.s
+    0.00 :   422504: fmopa   za2.s, p0/m, p0/m, z0.s, z3.s
+    0.00 :   422508: fmopa   za3.s, p0/m, p0/m, z1.s, z3.s
+    0.00 :   42250c: add     x16, x16, #0x4
+    0.00 :   422510: add     x2, x2, #0x40
+    0.00 :   422514: add     x3, x3, #0x40
+    0.00 :   422518: subs    x15, x15, #0x1
+    0.00 :   42251c: b.ne    4224ec <roll_worker+0xc3c>  // b.any
+    0.00 :   422520: cmp     x2, x5
+    0.00 :   422524: csel    x2, x4, x2, eq  // eq = none
+    0.00 :   422528: cmp     x3, x5
+    0.00 :   42252c: csel    x3, x4, x3, eq  // eq = none
+    0.00 :   422530: cmp     x11, x14
+    0.00 :   422534: csel    x20, x9, x10, cs        // cs = hs, nlast
+    0.00 :   422538: cmp     x27, #0x20
+    0.00 :   42253c: b.cs    422584 <roll_worker+0xcd4>  // b.hs, b.nlast
+    0.00 :   422540: cmp     x27, #0x10
+    0.00 :   422544: b.cs    422568 <roll_worker+0xcb8>  // b.hs, b.nlast
+    0.00 :   422548: mov     w12, w27
+    0.00 :   42254c: mov     z8.s, p0/m, za0v.s[w12, 0]
+    0.00 :   422550: mov     z9.s, p0/m, za1v.s[w12, 0]
+    0.00 :   422554: st1w    {z8.s}, p0, [x20]
+    0.00 :   422558: st1w    {z9.s}, p0, [x20, #1, mul vl]
+    0.00 :   42255c: mov     za0v.s[w12, 0], p0/m, z31.s
+    0.00 :   422560: mov     za1v.s[w12, 0], p0/m, z31.s
+    0.00 :   422564: b       422584 <roll_worker+0xcd4>
+    0.00 :   422568: sub     w12, w27, #0x10
+    0.00 :   42256c: mov     z8.s, p0/m, za2v.s[w12, 0]
+    0.00 :   422570: mov     z9.s, p0/m, za3v.s[w12, 0]
+    0.00 :   422574: st1w    {z8.s}, p0, [x20]
+    0.00 :   422578: st1w    {z9.s}, p0, [x20, #1, mul vl]
+    0.00 :   42257c: mov     za2v.s[w12, 0], p0/m, z31.s
+    0.00 :   422580: mov     za3v.s[w12, 0], p0/m, z31.s
+    0.00 :   422584: add     x27, x27, #0x1
+    0.00 :   422588: cmp     x27, x6
+    0.00 :   42258c: csel    x27, xzr, x27, eq       // eq = none
+    0.00 :   422590: add     x0, x0, x1
+    0.00 :   422594: add     x9, x9, x19
+    0.00 :   422598: add     x11, x11, #0x1
+    0.00 :   42259c: subs    x8, x8, #0x1
+    0.00 :   4225a0: b.ne    422494 <roll_worker+0xbe4>  // b.any
+    0.00 :   4225a4: ldr     x18, [sp, #344]
+    0.00 :   4225a8: b       422038 <roll_worker+0x788>
+         :            resume_claim():
+    0.00 :   4225ac: ldr     w0, [sp, #192]
+    0.00 :   4225b0: add     w9, w9, #0x1
+    0.00 :   4225b4: mov     w7, w2
+    0.00 :   4225b8: cmp     w0, w9
+    0.00 :   4225bc: b.ne    422134 <roll_worker+0x884>  // b.any
+    0.00 :   4225c0: str     w2, [sp, #312]
+         :            roll_worker():
+    0.00 :   4225c4: ldr     x10, [sp, #168]
+    0.00 :   4225c8: ldr     w7, [x10, #1208]
+         :            resume_claim():
+    0.00 :   4225cc: cmp     w7, #0x0
+    0.00 :   4225d0: b.le    422760 <roll_worker+0xeb0>
+    0.00 :   4225d4: ldr     w8, [sp, #316]
+    0.00 :   4225d8: mov     w11, #0x0                       // #0
+    0.00 :   4225dc: mov     w9, #0x18                       // #24
+    0.00 :   4225e0: ldr     x1, [x10, #1248]
+    0.00 :   4225e4: add     w2, w8, #0x1
+    0.00 :   4225e8: cmp     w7, w2
+    0.00 :   4225ec: sbfiz   x12, x8, #6, #32
+    0.00 :   4225f0: csel    w2, w2, wzr, gt
+    0.00 :   4225f4: sxtw    x5, w8
+    0.00 :   4225f8: add     x1, x1, x12
+    0.00 :   4225fc: ldr     x3, [x1]
+    0.00 :   422600: ldr     x0, [x10, #1192]
+    0.00 :   422604: smull   x4, w8, w9
+    0.00 :   422608: orr     x14, x3, #0x8000000000000000
+    0.00 :   42260c: mov     x6, x3
+    0.00 :   422610: add     x0, x0, x4
+    0.00 :   422614: ldp     x13, x0, [x0, #8]
+    0.00 :   422618: sub     x0, x0, x13
+    0.00 :   42261c: add     x0, x0, x18
+    0.00 :   422620: sub     x0, x0, #0x1
+    0.02 :   422624: cmp     x3, x0
+    0.00 :   422628: b.cs    422750 <roll_worker+0xea0>  // b.hs, b.nlast
+    0.00 :   42262c: casa    x6, x14, [x1]
+    0.00 :   422630: cmp     x6, x3
+    0.00 :   422634: b.ne    422750 <roll_worker+0xea0>  // b.any
+    0.00 :   422638: str     x6, [sp, #176]
+    0.00 :   42263c: str     x12, [sp, #224]
+         :            roll_worker():
+    0.00 :   422640: tbnz    w8, #31, 422760 <roll_worker+0xeb0>
+    0.00 :   422644: str     w2, [sp, #316]
+    0.00 :   422648: b       4221a4 <roll_worker+0x8f4>
+    0.00 :   42264c: ldrsw   x1, [x0, #92]
+    0.00 :   422650: mul     x4, x6, x18
+    0.00 :   422654: ldr     x3, [x0, #72]
+    0.00 :   422658: sub     x5, x2, x1
+    0.00 :   42265c: sub     x0, x1, x9
+    0.00 :   422660: str     x3, [sp, #520]
+    0.00 :   422664: sdiv    x2, x5, x18
+    0.00 :   422668: add     x1, x3, x4, lsl #4
+    0.00 :   42266c: str     x1, [sp, #528]
+    0.00 :   422670: sdiv    x1, x0, x18
+    0.00 :   422674: msub    x2, x2, x18, x5
+    0.00 :   422678: add     x2, x2, x18
+    0.00 :   42267c: msub    x1, x1, x18, x0
+    0.00 :   422680: add     x1, x1, x18
+    0.00 :   422684: sdiv    x0, x2, x18
+    0.00 :   422688: sdiv    x4, x1, x18
+    0.00 :   42268c: msub    x0, x0, x18, x2
+    0.00 :   422690: msub    x1, x4, x18, x1
+    0.00 :   422694: str     x1, [sp, #536]
+    0.00 :   422698: mul     x0, x0, x6
+    0.00 :   42269c: add     x0, x3, x0, lsl #4
+    0.00 :   4226a0: str     x0, [sp, #512]
+    0.00 :   4226a4: b       4223d4 <roll_worker+0xb24>
+    0.00 :   4226a8: cmp     w4, #0x11
+    0.00 :   4226ac: b.ne    4223d4 <roll_worker+0xb24>  // b.any
+    0.00 :   4226b0: sub     x3, x18, #0x3
+    0.00 :   4226b4: sub     x0, x18, #0x2
+    0.00 :   4226b8: sub     x1, x2, x3
+    0.00 :   4226bc: sub     x2, x2, x0
+    0.00 :   4226c0: sub     x0, x0, x9
+    0.00 :   4226c4: sub     x3, x3, x9
+    0.00 :   4226c8: ldr     x7, [x13, #8]
+    0.00 :   4226cc: sdiv    x5, x2, x18
+    0.00 :   4226d0: sdiv    x6, x1, x18
+    0.00 :   4226d4: sdiv    x4, x3, x18
+    0.00 :   4226d8: msub    x5, x5, x18, x2
+    0.00 :   4226dc: sdiv    x2, x0, x18
+    0.00 :   4226e0: add     x5, x5, x18
+    0.00 :   4226e4: msub    x6, x6, x18, x1
+    0.00 :   4226e8: msub    x3, x4, x18, x3
+    0.00 :   4226ec: add     x6, x6, x18
+    0.00 :   4226f0: msub    x2, x2, x18, x0
+    0.00 :   4226f4: add     x3, x3, x18
+    0.00 :   4226f8: sdiv    x0, x5, x18
+    0.00 :   4226fc: add     x2, x2, x18
+    0.00 :   422700: sdiv    x1, x6, x18
+    0.00 :   422704: sdiv    x4, x2, x18
+    0.00 :   422708: msub    x0, x0, x18, x5
+    0.00 :   42270c: ldr     x5, [sp, #256]
+    0.00 :   422710: msub    x1, x1, x18, x6
+    0.00 :   422714: sdiv    x6, x3, x18
+    0.00 :   422718: msub    x2, x4, x18, x2
+    0.00 :   42271c: add     x4, sp, #0x200
+    0.00 :   422720: mul     x0, x0, x5
+    0.00 :   422724: str     x2, [sp, #552]
+    0.00 :   422728: mul     x1, x1, x5
+    0.00 :   42272c: msub    x3, x6, x18, x3
+    0.00 :   422730: add     x0, x7, x0, lsl #2
+    0.00 :   422734: stp     x3, x0, [x4, #24]
+    0.00 :   422738: add     x1, x7, x1, lsl #2
+    0.00 :   42273c: ldr     x3, [sp, #336]
+    0.00 :   422740: stp     x1, x7, [x4]
+    0.00 :   422744: add     x3, x7, x3
+    0.00 :   422748: str     x3, [sp, #528]
+    0.00 :   42274c: b       4223d4 <roll_worker+0xb24>
+         :            resume_claim():
+    0.00 :   422750: add     w11, w11, #0x1
+    0.00 :   422754: mov     w8, w2
+    0.00 :   422758: cmp     w7, w11
+    0.00 :   42275c: b.ne    4225e0 <roll_worker+0xd30>  // b.any
+         :            sme_stop():
+    0.00 :   422760: ldr     x4, [sp, #360]
+    0.00 :   422764: smstop
+         :            roll_worker():
+    0.00 :   422768: adrp    x0, 440000 <__libc_start_main@GLIBC_2.34>
+    0.00 :   42276c: ldr     w0, [x0, #384]
+    0.00 :   422770: cbz     w0, 422794 <roll_worker+0xee4>
+         :            cyc():
+    0.00 :   422774: mrs     x1, cntvct_el0
+         :            roll_worker():
+    0.00 :   422778: add     x4, x4, x4, lsl #3
+    0.00 :   42277c: adrp    x0, 452000 <g_go_t+0xf680>
+    0.00 :   422780: add     x0, x0, #0x980
+    0.00 :   422784: ldr     x2, [sp, #352]
+    0.00 :   422788: add     x0, x0, x4, lsl #3
+    0.00 :   42278c: sub     x1, x1, x2
+    0.00 :   422790: str     x1, [x0, #64]
+    0.00 :   422794: ldp     x29, x30, [sp]
+    0.00 :   422798: ldp     x19, x20, [sp, #16]
+    0.00 :   42279c: ldp     x21, x22, [sp, #32]
+    0.00 :   4227a0: ldp     x23, x24, [sp, #48]
+    0.00 :   4227a4: ldp     x25, x26, [sp, #64]
+    0.00 :   4227a8: ldp     x27, x28, [sp, #80]
+    0.00 :   4227ac: ldp     d8, d9, [sp, #96]
+    0.00 :   4227b0: ldp     d10, d11, [sp, #112]
+    0.00 :   4227b4: ldp     d12, d13, [sp, #128]
+    0.00 :   4227b8: ldp     d14, d15, [sp, #144]
+    0.00 :   4227bc: add     sp, sp, #0x370
+    0.00 :   4227c0: ret
+         :            k16pairf():
+    0.00 :   4227c4: ldr     x3, [sp, #408]
+    0.00 :   4227c8: add     x0, sp, #0x240
+    0.00 :   4227cc: add     x1, sp, #0x170
+    0.00 :   4227d0: mov     x2, #0x1                        // #1
+    0.00 :   4227d4: add     x3, x3, #0x1f
+    0.00 :   4227d8: str     x18, [sp, #344]
+    0.00 :   4227dc: bl      420e80 <fill_args.constprop.0>
+    0.00 :   4227e0: ldr     q0, [sp, #512]
+    0.00 :   4227e4: add     x1, sp, #0x2d0
+    0.00 :   4227e8: ldr     x0, [sp, #528]
+    0.00 :   4227ec: str     x0, [sp, #784]
+    0.00 :   4227f0: ldr     x0, [sp, #536]
+    0.00 :   4227f4: stur    q0, [x1, #40]
+    0.00 :   4227f8: add     x18, sp, #0x240
+    0.00 :   4227fc: str     x0, [sp, #792]
+    0.00 :   422800: ldr     x0, [x18]
+    0.00 :   422804: ldr     x1, [x18, #8]
+    0.00 :   422808: ldr     x4, [x18, #16]
+    0.00 :   42280c: ldr     x5, [x18, #24]
+    0.00 :   422810: ldr     x2, [x18, #32]
+    0.00 :   422814: ldr     x3, [x18, #40]
+    0.00 :   422818: ldr     x6, [x18, #48]
+    0.00 :   42281c: ldr     x7, [x18, #56]
+    0.00 :   422820: ldr     x8, [x18, #64]
+    0.00 :   422824: ldr     x9, [x18, #72]
+    0.00 :   422828: ldr     x10, [x18, #80]
+    0.00 :   42282c: ldr     x27, [x18, #88]
+    0.00 :   422830: ldr     x19, [x18, #224]
+    0.00 :   422834: ldr     x14, [x18, #104]
+    0.00 :   422838: ldr     x24, [x18, #112]
+    0.00 :   42283c: ldr     x25, [x18, #120]
+    0.00 :   422840: ldr     x26, [x18, #128]
+    0.00 :   422844: ldr     x17, [x18, #152]
+    0.00 :   422848: ldr     x22, [x18, #160]
+    0.00 :   42284c: add     x28, x17, x17
+    0.00 :   422850: add     x28, x28, x22
+    0.00 :   422854: ldr     x22, [x18, #176]
+    0.00 :   422858: whilelo p3.s, xzr, x22
+    0.00 :   42285c: mov     x11, #0x0                       // #0
+    0.00 :   422860: ptrue   p0.s
+    0.00 :   422864: ldr     x13, [x18, #184]
+    0.00 :   422868: mov     z31.s, #0
+    0.00 :   42286c: mov     z10.s, #0
+    0.00 :   422870: mov     z11.s, #0
+    0.00 :   422874: ldr     x12, [x18, #288]
+    0.00 :   422878: cbz     x12, 422888 <roll_worker+0xfd8>
+    0.00 :   42287c: ldr     x12, [x18, #280]
+    0.00 :   422880: ld1w    {z10.s}, p0/z, [x12]
+    0.00 :   422884: ld1w    {z11.s}, p0/z, [x12, #1, mul vl]
+    0.02 :   422888: add     x21, x0, x26
+    0.14 :   42288c: ldr     x12, [x18, #240]
+    0.00 :   422890: add     x16, x17, x12
+    0.00 :   422894: sub     x17, x28, x17
+    0.00 :   422898: add     x22, x0, x1
+    0.54 :   42289c: cmp     x8, #0x1
+    0.00 :   4228a0: csel    x22, x0, x22, eq        // eq = none
+    0.00 :   4228a4: mov     x23, x17
+    0.00 :   4228a8: ldr     x12, [x18, #168]
+    0.00 :   4228ac: cbz     x12, 4228d0 <roll_worker+0x1020>
+    0.91 :   4228b0: prfm    pldl2keep, [x21]
+    0.12 :   4228b4: ld1w    {z24.s}, p0/z, [x22]
+    5.01 :   4228b8: st1w    {z24.s}, p0, [x23]
+    0.00 :   4228bc: add     x21, x21, #0x40
+    0.00 :   4228c0: add     x22, x22, #0x40
+    0.00 :   4228c4: add     x23, x23, #0x40
+    0.02 :   4228c8: subs    x12, x12, #0x1
+    0.00 :   4228cc: b.ne    4228b0 <roll_worker+0x1000>  // b.any
+    0.00 :   4228d0: prfm    pldl2keep, [x21]
+    0.02 :   4228d4: ld1w    {z24.s}, p3/z, [x22]
+    1.02 :   4228d8: st1w    {z24.s}, p3, [x23]
+    0.00 :   4228dc: mov     x15, x7
+    0.85 :   4228e0: ld1w    {z0.s}, p0/z, [x16]
+   40.59 :   4228e4: ld1w    {z1.s}, p0/z, [x16, #1, mul vl]
+   14.11 :   4228e8: ld1w    {z2.s}, p0/z, [x2]
+    1.15 :   4228ec: ld1w    {z3.s}, p0/z, [x3]
+    0.04 :   4228f0: fmopa   za0.s, p0/m, p0/m, z0.s, z2.s
+    0.00 :   4228f4: fmopa   za1.s, p0/m, p0/m, z1.s, z2.s
+    0.00 :   4228f8: fmopa   za2.s, p0/m, p0/m, z0.s, z3.s
+    1.32 :   4228fc: fmopa   za3.s, p0/m, p0/m, z1.s, z3.s
+    2.38 :   422900: ld1rw   {z4.s}, p0/z, [x13]
+    0.00 :   422904: fmla    z10.s, p0/m, z0.s, z4.s
+    0.00 :   422908: fmla    z11.s, p0/m, z1.s, z4.s
+    0.64 :   42290c: add     x13, x13, #0x4
+    6.04 :   422910: add     x16, x16, #0x4
+    0.00 :   422914: add     x2, x2, #0x40
+    0.14 :   422918: add     x3, x3, #0x40
+    0.02 :   42291c: subs    x15, x15, #0x1
+    0.31 :   422920: b.ne    4228e0 <roll_worker+0x1030>  // b.any
+    0.00 :   422924: cmp     x2, x5
+    0.00 :   422928: csel    x2, x4, x2, eq  // eq = none
+    0.00 :   42292c: cmp     x3, x5
+    0.00 :   422930: csel    x3, x4, x3, eq  // eq = none
+    0.08 :   422934: ldr     x24, [x18, #208]
+    0.00 :   422938: cmp     x13, x24
+    0.66 :   42293c: ldr     x24, [x18, #192]
+    0.00 :   422940: csel    x13, x24, x13, eq       // eq = none
+    0.00 :   422944: cmp     x11, x14
+    0.00 :   422948: csel    x20, x9, x10, cs        // cs = hs, nlast
+    0.08 :   42294c: ldr     x24, [x18, #216]
+    0.00 :   422950: cmp     x27, x24
+    0.00 :   422954: b.eq    4229a8 <roll_worker+0x10f8>  // b.none
+    0.23 :   422958: cmp     x27, #0x20
+    0.00 :   42295c: b.cs    4229b8 <roll_worker+0x1108>  // b.hs, b.nlast
+    0.02 :   422960: cmp     x27, #0x10
+    0.00 :   422964: b.cs    422988 <roll_worker+0x10d8>  // b.hs, b.nlast
+    0.04 :   422968: mov     w12, w27
+    0.00 :   42296c: mov     z8.s, p0/m, za0v.s[w12, 0]
+    0.00 :   422970: mov     z9.s, p0/m, za1v.s[w12, 0]
+    0.00 :   422974: st1w    {z8.s}, p0, [x20]
+    0.16 :   422978: st1w    {z9.s}, p0, [x20, #1, mul vl]
+    0.00 :   42297c: mov     za0v.s[w12, 0], p0/m, z31.s
+    0.00 :   422980: mov     za1v.s[w12, 0], p0/m, z31.s
+    0.00 :   422984: b       4229b8 <roll_worker+0x1108>
+    0.00 :   422988: sub     w12, w27, #0x10
+    0.00 :   42298c: mov     z8.s, p0/m, za2v.s[w12, 0]
+    0.00 :   422990: mov     z9.s, p0/m, za3v.s[w12, 0]
+    0.00 :   422994: st1w    {z8.s}, p0, [x20]
+    0.41 :   422998: st1w    {z9.s}, p0, [x20, #1, mul vl]
+    0.00 :   42299c: mov     za2v.s[w12, 0], p0/m, z31.s
+    0.00 :   4229a0: mov     za3v.s[w12, 0], p0/m, z31.s
+    0.00 :   4229a4: b       4229b8 <roll_worker+0x1108>
+    0.02 :   4229a8: st1w    {z10.s}, p0, [x20]
+    0.17 :   4229ac: st1w    {z11.s}, p0, [x20, #1, mul vl]
+    0.00 :   4229b0: mov     z10.s, #0
+    0.00 :   4229b4: mov     z11.s, #0
+    0.41 :   4229b8: add     x27, x27, #0x1
+    0.00 :   4229bc: cmp     x27, x6
+    0.02 :   4229c0: csel    x27, xzr, x27, eq       // eq = none
+    0.00 :   4229c4: add     x0, x0, x1
+    0.00 :   4229c8: add     x9, x9, x19
+    0.00 :   4229cc: add     x11, x11, #0x1
+    0.00 :   4229d0: subs    x8, x8, #0x1
+    0.00 :   4229d4: b.ne    422888 <roll_worker+0xfd8>  // b.any
+    0.00 :   4229d8: ldr     x12, [x18, #280]
+    0.00 :   4229dc: cbz     x12, 4229e8 <roll_worker+0x1138>
+    0.04 :   4229e0: st1w    {z10.s}, p0, [x12]
+    0.00 :   4229e4: st1w    {z11.s}, p0, [x12, #1, mul vl]
+    0.00 :   4229e8: ldr     x18, [sp, #344]
+    0.00 :   4229ec: b       422038 <roll_worker+0x788>
+         :            k16pairf3():
+    0.00 :   4229f0: ldr     x19, [sp, #408]
+    0.00 :   4229f4: add     x0, sp, #0x240
+    0.00 :   4229f8: add     x1, sp, #0x170
+    0.00 :   4229fc: mov     x2, #0x1                        // #1
+    0.00 :   422a00: add     x3, x19, #0x1f
+    0.00 :   422a04: str     x18, [sp, #344]
+    0.00 :   422a08: bl      420e80 <fill_args.constprop.0>
+    0.00 :   422a0c: lsl     x19, x19, #4
+    0.00 :   422a10: ldr     q0, [sp, #512]
+    0.00 :   422a14: add     x1, sp, #0x2d0
+    0.00 :   422a18: ldr     x0, [sp, #528]
+    0.00 :   422a1c: str     x0, [sp, #784]
+    0.00 :   422a20: str     x19, [sp, #840]
+    0.00 :   422a24: add     x18, sp, #0x240
+    0.00 :   422a28: ldr     x0, [sp, #536]
+    0.00 :   422a2c: stur    q0, [x1, #40]
+    0.00 :   422a30: str     x0, [sp, #792]
+    0.00 :   422a34: ldr     x0, [x18]
+    0.00 :   422a38: ldr     x1, [x18, #8]
+    0.00 :   422a3c: ldr     x4, [x18, #16]
+    0.00 :   422a40: ldr     x5, [x18, #24]
+    0.00 :   422a44: ldr     x2, [x18, #32]
+    0.00 :   422a48: ldr     x3, [x18, #40]
+    0.00 :   422a4c: ldr     x6, [x18, #48]
+    0.00 :   422a50: ldr     x7, [x18, #56]
+    0.00 :   422a54: ldr     x8, [x18, #64]
+    0.00 :   422a58: ldr     x9, [x18, #72]
+    0.00 :   422a5c: ldr     x10, [x18, #80]
+    0.00 :   422a60: ldr     x27, [x18, #88]
+    0.00 :   422a64: ldr     x19, [x18, #224]
+    0.00 :   422a68: ldr     x14, [x18, #104]
+    0.00 :   422a6c: ldr     x24, [x18, #112]
+    0.00 :   422a70: ldr     x25, [x18, #120]
+    0.00 :   422a74: ldr     x26, [x18, #128]
+    0.00 :   422a78: ldr     x17, [x18, #152]
+    0.00 :   422a7c: ldr     x22, [x18, #160]
+    0.00 :   422a80: add     x28, x17, x17
+    0.00 :   422a84: add     x28, x28, x22
+    0.00 :   422a88: ldr     x22, [x18, #176]
+    0.00 :   422a8c: whilelo p3.s, xzr, x22
+    0.00 :   422a90: mov     x11, #0x0                       // #0
+    0.00 :   422a94: ptrue   p0.s
+    0.00 :   422a98: ldr     x13, [x18, #184]
+    0.00 :   422a9c: mov     z31.s, #0
+    0.00 :   422aa0: mov     z10.s, #0
+    0.00 :   422aa4: mov     z11.s, #0
+    0.00 :   422aa8: mov     z12.s, #0
+    0.00 :   422aac: mov     z13.s, #0
+    0.00 :   422ab0: mov     z14.s, #0
+    0.00 :   422ab4: mov     z15.s, #0
+    0.00 :   422ab8: ldr     x12, [x18, #288]
+    0.00 :   422abc: cbz     x12, 422adc <roll_worker+0x122c>
+    0.00 :   422ac0: ldr     x12, [x18, #280]
+    0.00 :   422ac4: ld1w    {z10.s}, p0/z, [x12]
+    0.00 :   422ac8: ld1w    {z11.s}, p0/z, [x12, #1, mul vl]
+    0.00 :   422acc: ld1w    {z12.s}, p0/z, [x12, #2, mul vl]
+    0.00 :   422ad0: ld1w    {z13.s}, p0/z, [x12, #3, mul vl]
+    0.00 :   422ad4: ld1w    {z14.s}, p0/z, [x12, #4, mul vl]
+    0.00 :   422ad8: ld1w    {z15.s}, p0/z, [x12, #5, mul vl]
+    0.00 :   422adc: add     x21, x0, x26
+    0.00 :   422ae0: ldr     x12, [x18, #240]
+    0.00 :   422ae4: add     x16, x17, x12
+    0.00 :   422ae8: sub     x17, x28, x17
+    0.00 :   422aec: add     x22, x0, x1
+    0.00 :   422af0: cmp     x8, #0x1
+    0.00 :   422af4: csel    x22, x0, x22, eq        // eq = none
+    0.00 :   422af8: mov     x23, x17
+    0.00 :   422afc: ldr     x12, [x18, #168]
+    0.00 :   422b00: cbz     x12, 422b24 <roll_worker+0x1274>
+    0.00 :   422b04: prfm    pldl2keep, [x21]
+    0.00 :   422b08: ld1w    {z24.s}, p0/z, [x22]
+    0.00 :   422b0c: st1w    {z24.s}, p0, [x23]
+    0.00 :   422b10: add     x21, x21, #0x40
+    0.00 :   422b14: add     x22, x22, #0x40
+    0.00 :   422b18: add     x23, x23, #0x40
+    0.00 :   422b1c: subs    x12, x12, #0x1
+    0.00 :   422b20: b.ne    422b04 <roll_worker+0x1254>  // b.any
+    0.00 :   422b24: prfm    pldl2keep, [x21]
+    0.00 :   422b28: ld1w    {z24.s}, p3/z, [x22]
+    0.00 :   422b2c: st1w    {z24.s}, p3, [x23]
+    0.00 :   422b30: mov     x15, x7
+    0.00 :   422b34: nop
+    0.00 :   422b38: nop
+    0.00 :   422b3c: nop
+    0.00 :   422b40: ld1w    {z0.s}, p0/z, [x16]
+    0.00 :   422b44: ld1w    {z1.s}, p0/z, [x16, #1, mul vl]
+    0.00 :   422b48: ld1w    {z2.s}, p0/z, [x2]
+    0.00 :   422b4c: ld1w    {z3.s}, p0/z, [x3]
+    0.00 :   422b50: ld1rqw  {z4.s}, p0/z, [x13]
+    0.00 :   422b54: fmopa   za0.s, p0/m, p0/m, z0.s, z2.s
+    0.00 :   422b58: fmopa   za1.s, p0/m, p0/m, z1.s, z2.s
+    0.00 :   422b5c: fmopa   za2.s, p0/m, p0/m, z0.s, z3.s
+    0.00 :   422b60: fmopa   za3.s, p0/m, p0/m, z1.s, z3.s
+    0.00 :   422b64: fmla    z10.s, z0.s, z4.s[0]
+    0.00 :   422b68: fmla    z11.s, z1.s, z4.s[0]
+    0.00 :   422b6c: fmla    z12.s, z0.s, z4.s[1]
+    0.00 :   422b70: fmla    z13.s, z1.s, z4.s[1]
+    0.00 :   422b74: fmla    z14.s, z0.s, z4.s[2]
+    0.00 :   422b78: fmla    z15.s, z1.s, z4.s[2]
+    0.00 :   422b7c: add     x13, x13, #0x10
+    0.00 :   422b80: add     x16, x16, #0x4
+    0.00 :   422b84: add     x2, x2, #0x40
+    0.00 :   422b88: add     x3, x3, #0x40
+    0.00 :   422b8c: subs    x15, x15, #0x1
+    0.00 :   422b90: b.ne    422b40 <roll_worker+0x1290>  // b.any
+    0.00 :   422b94: cmp     x2, x5
+    0.00 :   422b98: csel    x2, x4, x2, eq  // eq = none
+    0.00 :   422b9c: cmp     x3, x5
+    0.00 :   422ba0: csel    x3, x4, x3, eq  // eq = none
+    0.00 :   422ba4: ldr     x24, [x18, #208]
+    0.00 :   422ba8: cmp     x13, x24
+    0.00 :   422bac: ldr     x24, [x18, #192]
+    0.00 :   422bb0: csel    x13, x24, x13, eq       // eq = none
+    0.00 :   422bb4: cmp     x11, x14
+    0.00 :   422bb8: csel    x20, x9, x10, cs        // cs = hs, nlast
+    0.00 :   422bbc: ldr     x24, [x18, #216]
+    0.00 :   422bc0: sub     x24, x24, #0x2
+    0.00 :   422bc4: subs    w24, w27, w24
+    0.00 :   422bc8: b.cc    422c1c <roll_worker+0x136c>  // b.lo, b.ul, b.last
+    0.00 :   422bcc: cmp     w24, #0x2
+    0.00 :   422bd0: b.hi    422c68 <roll_worker+0x13b8>  // b.pmore
+    0.00 :   422bd4: b.eq    422c08 <roll_worker+0x1358>  // b.none
+    0.00 :   422bd8: cmp     w24, #0x1
+    0.00 :   422bdc: b.eq    422bf4 <roll_worker+0x1344>  // b.none
+    0.00 :   422be0: st1w    {z14.s}, p0, [x20]
+    0.00 :   422be4: st1w    {z15.s}, p0, [x20, #1, mul vl]
+    0.00 :   422be8: mov     z14.s, #0
+    0.00 :   422bec: mov     z15.s, #0
+    0.00 :   422bf0: b       422c68 <roll_worker+0x13b8>
+    0.00 :   422bf4: st1w    {z12.s}, p0, [x20]
+    0.00 :   422bf8: st1w    {z13.s}, p0, [x20, #1, mul vl]
+    0.00 :   422bfc: mov     z12.s, #0
+    0.00 :   422c00: mov     z13.s, #0
+    0.00 :   422c04: b       422c68 <roll_worker+0x13b8>
+    0.00 :   422c08: st1w    {z10.s}, p0, [x20]
+    0.00 :   422c0c: st1w    {z11.s}, p0, [x20, #1, mul vl]
+    0.00 :   422c10: mov     z10.s, #0
+    0.00 :   422c14: mov     z11.s, #0
+    0.00 :   422c18: b       422c68 <roll_worker+0x13b8>
+    0.00 :   422c1c: cmp     x27, #0x20
+    0.00 :   422c20: b.cs    422c68 <roll_worker+0x13b8>  // b.hs, b.nlast
+    0.00 :   422c24: cmp     x27, #0x10
+    0.00 :   422c28: b.cs    422c4c <roll_worker+0x139c>  // b.hs, b.nlast
+    0.00 :   422c2c: mov     w12, w27
+    0.00 :   422c30: mov     z8.s, p0/m, za0v.s[w12, 0]
+    0.00 :   422c34: mov     z9.s, p0/m, za1v.s[w12, 0]
+    0.00 :   422c38: st1w    {z8.s}, p0, [x20]
+    0.00 :   422c3c: st1w    {z9.s}, p0, [x20, #1, mul vl]
+    0.00 :   422c40: mov     za0v.s[w12, 0], p0/m, z31.s
+    0.00 :   422c44: mov     za1v.s[w12, 0], p0/m, z31.s
+    0.00 :   422c48: b       422c68 <roll_worker+0x13b8>
+    0.00 :   422c4c: sub     w12, w27, #0x10
+    0.00 :   422c50: mov     z8.s, p0/m, za2v.s[w12, 0]
+    0.00 :   422c54: mov     z9.s, p0/m, za3v.s[w12, 0]
+    0.00 :   422c58: st1w    {z8.s}, p0, [x20]
+    0.00 :   422c5c: st1w    {z9.s}, p0, [x20, #1, mul vl]
+    0.00 :   422c60: mov     za2v.s[w12, 0], p0/m, z31.s
+    0.00 :   422c64: mov     za3v.s[w12, 0], p0/m, z31.s
+    0.00 :   422c68: add     x27, x27, #0x1
+    0.00 :   422c6c: cmp     x27, x6
+    0.00 :   422c70: csel    x27, xzr, x27, eq       // eq = none
+    0.00 :   422c74: add     x0, x0, x1
+    0.00 :   422c78: add     x9, x9, x19
+    0.00 :   422c7c: add     x11, x11, #0x1
+    0.00 :   422c80: subs    x8, x8, #0x1
+    0.00 :   422c84: b.ne    422adc <roll_worker+0x122c>  // b.any
+    0.00 :   422c88: ldr     x12, [x18, #280]
+    0.00 :   422c8c: cbz     x12, 422ca8 <roll_worker+0x13f8>
+    0.00 :   422c90: st1w    {z10.s}, p0, [x12]
+    0.00 :   422c94: st1w    {z11.s}, p0, [x12, #1, mul vl]
+    0.00 :   422c98: st1w    {z12.s}, p0, [x12, #2, mul vl]
+    0.00 :   422c9c: st1w    {z13.s}, p0, [x12, #3, mul vl]
+    0.00 :   422ca0: st1w    {z14.s}, p0, [x12, #4, mul vl]
+    0.00 :   422ca4: st1w    {z15.s}, p0, [x12, #5, mul vl]
+    0.00 :   422ca8: ldr     x18, [sp, #344]
+    0.00 :   422cac: b       422038 <roll_worker+0x788>
+         :            k16pairf4():
+    0.00 :   422cb0: ldr     x19, [sp, #408]
+    0.00 :   422cb4: add     x0, sp, #0x240
+    0.00 :   422cb8: add     x1, sp, #0x170
+    0.00 :   422cbc: mov     x2, #0x1                        // #1
+    0.00 :   422cc0: add     x3, x19, #0x1f
+    0.00 :   422cc4: str     x18, [sp, #344]
+    0.00 :   422cc8: bl      420e80 <fill_args.constprop.0>
+    0.00 :   422ccc: lsl     x19, x19, #4
+    0.00 :   422cd0: ldr     q0, [sp, #512]
+    0.00 :   422cd4: add     x1, sp, #0x2d0
+    0.00 :   422cd8: ldr     x0, [sp, #528]
+    0.00 :   422cdc: str     x0, [sp, #784]
+    0.00 :   422ce0: str     x19, [sp, #840]
+    0.00 :   422ce4: add     x18, sp, #0x240
+    0.00 :   422ce8: ldr     x0, [sp, #536]
+    0.00 :   422cec: stur    q0, [x1, #40]
+    0.00 :   422cf0: str     x0, [sp, #792]
+    0.00 :   422cf4: ldr     x0, [x18]
+    0.00 :   422cf8: ldr     x1, [x18, #8]
+    0.00 :   422cfc: ldr     x4, [x18, #16]
+    0.00 :   422d00: ldr     x5, [x18, #24]
+    0.00 :   422d04: ldr     x2, [x18, #32]
+    0.00 :   422d08: ldr     x3, [x18, #40]
+    0.00 :   422d0c: ldr     x6, [x18, #48]
+    0.00 :   422d10: ldr     x7, [x18, #56]
+    0.00 :   422d14: ldr     x8, [x18, #64]
+    0.00 :   422d18: ldr     x9, [x18, #72]
+    0.00 :   422d1c: ldr     x10, [x18, #80]
+    0.00 :   422d20: ldr     x27, [x18, #88]
+    0.00 :   422d24: ldr     x19, [x18, #224]
+    0.00 :   422d28: ldr     x14, [x18, #104]
+    0.00 :   422d2c: ldr     x24, [x18, #112]
+    0.00 :   422d30: ldr     x25, [x18, #120]
+    0.00 :   422d34: ldr     x26, [x18, #128]
+    0.00 :   422d38: ldr     x17, [x18, #152]
+    0.00 :   422d3c: ldr     x22, [x18, #160]
+    0.00 :   422d40: add     x28, x17, x17
+    0.00 :   422d44: add     x28, x28, x22
+    0.00 :   422d48: ldr     x22, [x18, #176]
+    0.00 :   422d4c: whilelo p3.s, xzr, x22
+    0.00 :   422d50: mov     x11, #0x0                       // #0
+    0.00 :   422d54: ptrue   p0.s
+    0.00 :   422d58: ldr     x13, [x18, #184]
+    0.00 :   422d5c: mov     z31.s, #0
+    0.00 :   422d60: mov     z10.s, #0
+    0.00 :   422d64: mov     z11.s, #0
+    0.00 :   422d68: mov     z12.s, #0
+    0.00 :   422d6c: mov     z13.s, #0
+    0.00 :   422d70: mov     z14.s, #0
+    0.00 :   422d74: mov     z15.s, #0
+    0.00 :   422d78: mov     z16.s, #0
+    0.00 :   422d7c: mov     z17.s, #0
+    0.00 :   422d80: ldr     x12, [x18, #288]
+    0.00 :   422d84: cbz     x12, 422dac <roll_worker+0x14fc>
+    0.00 :   422d88: ldr     x12, [x18, #280]
+    0.00 :   422d8c: ld1w    {z10.s}, p0/z, [x12]
+    0.00 :   422d90: ld1w    {z11.s}, p0/z, [x12, #1, mul vl]
+    0.00 :   422d94: ld1w    {z12.s}, p0/z, [x12, #2, mul vl]
+    0.00 :   422d98: ld1w    {z13.s}, p0/z, [x12, #3, mul vl]
+    0.00 :   422d9c: ld1w    {z14.s}, p0/z, [x12, #4, mul vl]
+    0.00 :   422da0: ld1w    {z15.s}, p0/z, [x12, #5, mul vl]
+    0.00 :   422da4: ld1w    {z16.s}, p0/z, [x12, #6, mul vl]
+    0.00 :   422da8: ld1w    {z17.s}, p0/z, [x12, #7, mul vl]
+    0.00 :   422dac: nop
+    0.00 :   422db0: nop
+    0.00 :   422db4: nop
+    0.00 :   422db8: nop
+    0.00 :   422dbc: nop
+    0.00 :   422dc0: nop
+    0.00 :   422dc4: nop
+    0.00 :   422dc8: nop
+    0.00 :   422dcc: nop
+    0.00 :   422dd0: nop
+    0.00 :   422dd4: nop
+    0.00 :   422dd8: nop
+    0.00 :   422ddc: nop
+    0.00 :   422de0: nop
+    0.00 :   422de4: nop
+    0.00 :   422de8: nop
+    0.00 :   422dec: nop
+    0.00 :   422df0: nop
+    0.00 :   422df4: nop
+    0.00 :   422df8: nop
+    0.00 :   422dfc: nop
+    0.00 :   422e00: nop
+    0.00 :   422e04: nop
+    0.00 :   422e08: nop
+    0.00 :   422e0c: nop
+    0.00 :   422e10: nop
+    0.00 :   422e14: nop
+    0.00 :   422e18: nop
+    0.00 :   422e1c: nop
+    0.00 :   422e20: nop
+    0.00 :   422e24: nop
+    0.00 :   422e28: nop
+    0.00 :   422e2c: nop
+    0.00 :   422e30: nop
+    0.00 :   422e34: nop
+    0.00 :   422e38: nop
+    0.00 :   422e3c: nop
+    0.00 :   422e40: nop
+    0.00 :   422e44: nop
+    0.00 :   422e48: nop
+    0.00 :   422e4c: nop
+    0.00 :   422e50: nop
+    0.00 :   422e54: add     x21, x0, x26
+    0.00 :   422e58: ldr     x12, [x18, #240]
+    0.00 :   422e5c: add     x16, x17, x12
+    0.00 :   422e60: sub     x17, x28, x17
+    0.00 :   422e64: add     x22, x0, x1
+    0.00 :   422e68: cmp     x8, #0x1
+    0.00 :   422e6c: csel    x22, x0, x22, eq        // eq = none
+    0.00 :   422e70: mov     x23, x17
+    0.00 :   422e74: ldr     x12, [x18, #168]
+    0.00 :   422e78: cbz     x12, 422ef0 <roll_worker+0x1640>
+    0.00 :   422e7c: cmp     x12, #0x4
+    0.00 :   422e80: b.cc    422ecc <roll_worker+0x161c>  // b.lo, b.ul, b.last
+    0.00 :   422e84: prfm    pldl2keep, [x21]
+    0.00 :   422e88: ld1w    {z24.s}, p0/z, [x22]
+    0.00 :   422e8c: st1w    {z24.s}, p0, [x23]
+    0.00 :   422e90: prfm    pldl2keep, [x21, #64]
+    0.00 :   422e94: ld1w    {z24.s}, p0/z, [x22, #1, mul vl]
+    0.00 :   422e98: st1w    {z24.s}, p0, [x23, #1, mul vl]
+    0.00 :   422e9c: prfm    pldl2keep, [x21, #128]
+    0.00 :   422ea0: ld1w    {z24.s}, p0/z, [x22, #2, mul vl]
+    0.00 :   422ea4: st1w    {z24.s}, p0, [x23, #2, mul vl]
+    0.00 :   422ea8: prfm    pldl2keep, [x21, #192]
+    0.00 :   422eac: ld1w    {z24.s}, p0/z, [x22, #3, mul vl]
+    0.00 :   422eb0: st1w    {z24.s}, p0, [x23, #3, mul vl]
+    0.00 :   422eb4: add     x21, x21, #0x100
+    0.00 :   422eb8: add     x22, x22, #0x100
+    0.00 :   422ebc: add     x23, x23, #0x100
+    0.00 :   422ec0: sub     x12, x12, #0x4
+    0.00 :   422ec4: cmp     x12, #0x4
+    0.00 :   422ec8: b.cs    422e84 <roll_worker+0x15d4>  // b.hs, b.nlast
+    0.00 :   422ecc: cbz     x12, 422ef0 <roll_worker+0x1640>
+    0.00 :   422ed0: prfm    pldl2keep, [x21]
+    0.00 :   422ed4: ld1w    {z24.s}, p0/z, [x22]
+    0.00 :   422ed8: st1w    {z24.s}, p0, [x23]
+    0.00 :   422edc: add     x21, x21, #0x40
+    0.00 :   422ee0: add     x22, x22, #0x40
+    0.00 :   422ee4: add     x23, x23, #0x40
+    0.00 :   422ee8: subs    x12, x12, #0x1
+    0.00 :   422eec: b.ne    422ed0 <roll_worker+0x1620>  // b.any
+    0.00 :   422ef0: prfm    pldl2keep, [x21]
+    0.00 :   422ef4: ld1w    {z24.s}, p3/z, [x22]
+    0.00 :   422ef8: st1w    {z24.s}, p3, [x23]
+    0.00 :   422efc: mov     x15, x7
+    0.00 :   422f00: ld1w    {z0.s}, p0/z, [x16]
+    0.00 :   422f04: ld1w    {z1.s}, p0/z, [x16, #1, mul vl]
+    0.00 :   422f08: ld1w    {z2.s}, p0/z, [x2]
+    0.00 :   422f0c: ld1w    {z3.s}, p0/z, [x3]
+    0.00 :   422f10: ld1rqw  {z4.s}, p0/z, [x13]
+    0.00 :   422f14: fmopa   za0.s, p0/m, p0/m, z0.s, z2.s
+    0.00 :   422f18: fmopa   za1.s, p0/m, p0/m, z1.s, z2.s
+    0.00 :   422f1c: fmopa   za2.s, p0/m, p0/m, z0.s, z3.s
+    0.00 :   422f20: fmopa   za3.s, p0/m, p0/m, z1.s, z3.s
+    0.00 :   422f24: fmla    z10.s, z0.s, z4.s[0]
+    0.00 :   422f28: fmla    z11.s, z1.s, z4.s[0]
+    0.00 :   422f2c: fmla    z12.s, z0.s, z4.s[1]
+    0.00 :   422f30: fmla    z13.s, z1.s, z4.s[1]
+    0.00 :   422f34: fmla    z14.s, z0.s, z4.s[2]
+    0.00 :   422f38: fmla    z15.s, z1.s, z4.s[2]
+    0.00 :   422f3c: fmla    z16.s, z0.s, z4.s[3]
+    0.00 :   422f40: fmla    z17.s, z1.s, z4.s[3]
+    0.00 :   422f44: add     x13, x13, #0x10
+    0.00 :   422f48: add     x16, x16, #0x4
+    0.00 :   422f4c: add     x2, x2, #0x40
+    0.00 :   422f50: add     x3, x3, #0x40
+    0.00 :   422f54: subs    x15, x15, #0x1
+    0.00 :   422f58: b.ne    422f00 <roll_worker+0x1650>  // b.any
+    0.00 :   422f5c: cmp     x2, x5
+    0.00 :   422f60: csel    x2, x4, x2, eq  // eq = none
+    0.00 :   422f64: cmp     x3, x5
+    0.00 :   422f68: csel    x3, x4, x3, eq  // eq = none
+    0.00 :   422f6c: ldr     x24, [x18, #208]
+    0.00 :   422f70: cmp     x13, x24
+    0.00 :   422f74: ldr     x24, [x18, #192]
+    0.00 :   422f78: csel    x13, x24, x13, eq       // eq = none
+    0.00 :   422f7c: cmp     x11, x14
+    0.00 :   422f80: csel    x20, x9, x10, cs        // cs = hs, nlast
+    0.00 :   422f84: ldr     x24, [x18, #216]
+    0.00 :   422f88: sub     x24, x24, #0x3
+    0.00 :   422f8c: subs    w24, w27, w24
+    0.00 :   422f90: b.cc    423000 <roll_worker+0x1750>  // b.lo, b.ul, b.last
+    0.00 :   422f94: cmp     w24, #0x3
+    0.00 :   422f98: b.hi    42304c <roll_worker+0x179c>  // b.pmore
+    0.00 :   422f9c: b.eq    422fec <roll_worker+0x173c>  // b.none
+    0.00 :   422fa0: cmp     w24, #0x2
+    0.00 :   422fa4: b.eq    422fd8 <roll_worker+0x1728>  // b.none
+    0.00 :   422fa8: cmp     w24, #0x1
+    0.00 :   422fac: b.eq    422fc4 <roll_worker+0x1714>  // b.none
+    0.00 :   422fb0: st1w    {z16.s}, p0, [x20]
+    0.00 :   422fb4: st1w    {z17.s}, p0, [x20, #1, mul vl]
+    0.00 :   422fb8: mov     z16.s, #0
+    0.00 :   422fbc: mov     z17.s, #0
+    0.00 :   422fc0: b       42304c <roll_worker+0x179c>
+    0.00 :   422fc4: st1w    {z14.s}, p0, [x20]
+    0.00 :   422fc8: st1w    {z15.s}, p0, [x20, #1, mul vl]
+    0.00 :   422fcc: mov     z14.s, #0
+    0.00 :   422fd0: mov     z15.s, #0
+    0.00 :   422fd4: b       42304c <roll_worker+0x179c>
+    0.00 :   422fd8: st1w    {z12.s}, p0, [x20]
+    0.00 :   422fdc: st1w    {z13.s}, p0, [x20, #1, mul vl]
+    0.00 :   422fe0: mov     z12.s, #0
+    0.00 :   422fe4: mov     z13.s, #0
+    0.00 :   422fe8: b       42304c <roll_worker+0x179c>
+    0.00 :   422fec: st1w    {z10.s}, p0, [x20]
+    0.00 :   422ff0: st1w    {z11.s}, p0, [x20, #1, mul vl]
+    0.00 :   422ff4: mov     z10.s, #0
+    0.00 :   422ff8: mov     z11.s, #0
+    0.00 :   422ffc: b       42304c <roll_worker+0x179c>
+    0.00 :   423000: cmp     x27, #0x20
+    0.00 :   423004: b.cs    42304c <roll_worker+0x179c>  // b.hs, b.nlast
+    0.00 :   423008: cmp     x27, #0x10
+    0.00 :   42300c: b.cs    423030 <roll_worker+0x1780>  // b.hs, b.nlast
+    0.00 :   423010: mov     w12, w27
+    0.00 :   423014: mov     z8.s, p0/m, za0v.s[w12, 0]
+    0.00 :   423018: mov     z9.s, p0/m, za1v.s[w12, 0]
+    0.00 :   42301c: st1w    {z8.s}, p0, [x20]
+    0.00 :   423020: st1w    {z9.s}, p0, [x20, #1, mul vl]
+    0.00 :   423024: mov     za0v.s[w12, 0], p0/m, z31.s
+    0.00 :   423028: mov     za1v.s[w12, 0], p0/m, z31.s
+    0.00 :   42302c: b       42304c <roll_worker+0x179c>
+    0.00 :   423030: sub     w12, w27, #0x10
+    0.00 :   423034: mov     z8.s, p0/m, za2v.s[w12, 0]
+    0.00 :   423038: mov     z9.s, p0/m, za3v.s[w12, 0]
+    0.00 :   42303c: st1w    {z8.s}, p0, [x20]
+    0.00 :   423040: st1w    {z9.s}, p0, [x20, #1, mul vl]
+    0.00 :   423044: mov     za2v.s[w12, 0], p0/m, z31.s
+    0.00 :   423048: mov     za3v.s[w12, 0], p0/m, z31.s
+    0.00 :   42304c: add     x27, x27, #0x1
+    0.00 :   423050: cmp     x27, x6
+    0.00 :   423054: csel    x27, xzr, x27, eq       // eq = none
+    0.00 :   423058: add     x0, x0, x1
+    0.00 :   42305c: add     x9, x9, x19
+    0.00 :   423060: add     x11, x11, #0x1
+    0.00 :   423064: subs    x8, x8, #0x1
+    0.00 :   423068: b.ne    422e54 <roll_worker+0x15a4>  // b.any
+    0.00 :   42306c: ldr     x12, [x18, #280]
+    0.00 :   423070: cbz     x12, 423094 <roll_worker+0x17e4>
+    0.00 :   423074: st1w    {z10.s}, p0, [x12]
+    0.00 :   423078: st1w    {z11.s}, p0, [x12, #1, mul vl]
+    0.00 :   42307c: st1w    {z12.s}, p0, [x12, #2, mul vl]
+    0.00 :   423080: st1w    {z13.s}, p0, [x12, #3, mul vl]
+    0.00 :   423084: st1w    {z14.s}, p0, [x12, #4, mul vl]
+    0.00 :   423088: st1w    {z15.s}, p0, [x12, #5, mul vl]
+    0.00 :   42308c: st1w    {z16.s}, p0, [x12, #6, mul vl]
+    0.00 :   423090: st1w    {z17.s}, p0, [x12, #7, mul vl]
+    0.00 :   423094: ldr     x18, [sp, #344]
+    0.00 :   423098: b       422038 <roll_worker+0x788>
+         :            k16single():
+    0.00 :   42309c: ldr     x3, [sp, #408]
+    0.00 :   4230a0: add     x0, sp, #0x240
+    0.00 :   4230a4: add     x1, sp, #0x170
+    0.00 :   4230a8: mov     x2, #0x1                        // #1
+    0.00 :   4230ac: add     x3, x3, #0x3f
+    0.00 :   4230b0: str     x18, [sp, #344]
+    0.00 :   4230b4: bl      420e80 <fill_args.constprop.0>
+    0.00 :   4230b8: mov     x18, x0
+    0.00 :   4230bc: ldr     x0, [x18]
+    0.00 :   4230c0: ldr     x1, [x18, #8]
+    0.00 :   4230c4: ldr     x4, [x18, #16]
+    0.00 :   4230c8: ldr     x5, [x18, #24]
+    0.00 :   4230cc: ldr     x2, [x18, #32]
+    0.00 :   4230d0: ldr     x3, [x18, #40]
+    0.00 :   4230d4: ldr     x6, [x18, #48]
+    0.00 :   4230d8: ldr     x7, [x18, #56]
+    0.00 :   4230dc: ldr     x8, [x18, #64]
+    0.00 :   4230e0: ldr     x9, [x18, #72]
+    0.00 :   4230e4: ldr     x10, [x18, #80]
+    0.00 :   4230e8: ldr     x27, [x18, #88]
+    0.00 :   4230ec: ldr     x19, [x18, #224]
+    0.00 :   4230f0: ldr     x14, [x18, #104]
+    0.00 :   4230f4: ldr     x24, [x18, #112]
+    0.00 :   4230f8: ldr     x25, [x18, #120]
+    0.00 :   4230fc: ldr     x26, [x18, #128]
+    0.00 :   423100: ldr     x17, [x18, #152]
+    0.00 :   423104: ldr     x22, [x18, #160]
+    0.00 :   423108: add     x28, x17, x17
+    0.00 :   42310c: add     x28, x28, x22
+    0.00 :   423110: ldr     x22, [x18, #176]
+    0.00 :   423114: whilelo p3.s, xzr, x22
+    0.00 :   423118: mov     x11, #0x0                       // #0
+    0.00 :   42311c: ptrue   p0.s
+    0.00 :   423120: mov     z31.s, #0
+    0.00 :   423124: add     x21, x0, x26
+    0.00 :   423128: ldr     x12, [x18, #240]
+    0.00 :   42312c: add     x16, x17, x12
+    0.00 :   423130: sub     x17, x28, x17
+    0.00 :   423134: add     x22, x0, x1
+    0.00 :   423138: cmp     x8, #0x1
+    0.00 :   42313c: csel    x22, x0, x22, eq        // eq = none
+    0.00 :   423140: mov     x23, x17
+    0.00 :   423144: ldr     x12, [x18, #168]
+    0.00 :   423148: cbz     x12, 42316c <roll_worker+0x18bc>
+    0.00 :   42314c: prfm    pldl2keep, [x21]
+    0.00 :   423150: ld1w    {z24.s}, p0/z, [x22]
+    0.00 :   423154: st1w    {z24.s}, p0, [x23]
+    0.00 :   423158: add     x21, x21, #0x40
+    0.00 :   42315c: add     x22, x22, #0x40
+    0.00 :   423160: add     x23, x23, #0x40
+    0.00 :   423164: subs    x12, x12, #0x1
+    0.00 :   423168: b.ne    42314c <roll_worker+0x189c>  // b.any
+    0.00 :   42316c: prfm    pldl2keep, [x21]
+    0.00 :   423170: ld1w    {z24.s}, p3/z, [x22]
+    0.00 :   423174: st1w    {z24.s}, p3, [x23]
+    0.00 :   423178: mov     x15, x7
+    0.00 :   42317c: ld1w    {z0.s}, p0/z, [x16]
+    0.00 :   423180: ld1w    {z1.s}, p0/z, [x16, #1, mul vl]
+    0.00 :   423184: ld1w    {z2.s}, p0/z, [x16, #2, mul vl]
+    0.00 :   423188: ld1w    {z3.s}, p0/z, [x16, #3, mul vl]
+    0.00 :   42318c: ld1w    {z4.s}, p0/z, [x2]
+    0.00 :   423190: fmopa   za0.s, p0/m, p0/m, z0.s, z4.s
+    0.00 :   423194: fmopa   za1.s, p0/m, p0/m, z1.s, z4.s
+    0.00 :   423198: fmopa   za2.s, p0/m, p0/m, z2.s, z4.s
+    0.00 :   42319c: fmopa   za3.s, p0/m, p0/m, z3.s, z4.s
+    0.00 :   4231a0: add     x16, x16, #0x4
+    0.00 :   4231a4: add     x2, x2, #0x40
+    0.00 :   4231a8: subs    x15, x15, #0x1
+    0.00 :   4231ac: b.ne    42317c <roll_worker+0x18cc>  // b.any
+    0.00 :   4231b0: cmp     x2, x5
+    0.00 :   4231b4: csel    x2, x4, x2, eq  // eq = none
+    0.00 :   4231b8: cmp     x11, x14
+    0.00 :   4231bc: csel    x20, x9, x10, cs        // cs = hs, nlast
+    0.00 :   4231c0: cmp     x27, x24
+    0.00 :   4231c4: b.cs    4231fc <roll_worker+0x194c>  // b.hs, b.nlast
+    0.00 :   4231c8: and     w12, w27, #0xf
+    0.00 :   4231cc: mov     z5.s, p0/m, za0v.s[w12, 0]
+    0.00 :   4231d0: mov     z6.s, p0/m, za1v.s[w12, 0]
+    0.00 :   4231d4: mov     z7.s, p0/m, za2v.s[w12, 0]
+    0.00 :   4231d8: mov     z8.s, p0/m, za3v.s[w12, 0]
+    0.00 :   4231dc: st1w    {z5.s}, p0, [x20]
+    0.00 :   4231e0: st1w    {z6.s}, p0, [x20, #1, mul vl]
+    0.00 :   4231e4: st1w    {z7.s}, p0, [x20, #2, mul vl]
+    0.00 :   4231e8: st1w    {z8.s}, p0, [x20, #3, mul vl]
+    0.00 :   4231ec: mov     za0v.s[w12, 0], p0/m, z31.s
+    0.00 :   4231f0: mov     za1v.s[w12, 0], p0/m, z31.s
+    0.00 :   4231f4: mov     za2v.s[w12, 0], p0/m, z31.s
+    0.00 :   4231f8: mov     za3v.s[w12, 0], p0/m, z31.s
+    0.00 :   4231fc: add     x27, x27, #0x1
+    0.00 :   423200: cmp     x27, x6
+    0.00 :   423204: csel    x27, xzr, x27, eq       // eq = none
+    0.00 :   423208: add     x0, x0, x1
+    0.00 :   42320c: add     x9, x9, x19
+    0.00 :   423210: add     x11, x11, #0x1
+    0.00 :   423214: subs    x8, x8, #0x1
+    0.00 :   423218: b.ne    423124 <roll_worker+0x1874>  // b.any
+    0.00 :   42321c: ldr     x18, [sp, #344]
+    0.00 :   423220: b       422038 <roll_worker+0x788>
+         :            k8():
+    0.00 :   423224: add     x0, sp, #0x240
+    0.00 :   423228: add     x3, x19, #0x7e
+    0.00 :   42322c: add     x1, sp, #0x170
+    0.00 :   423230: mov     x2, #0x2                        // #2
+    0.00 :   423234: bl      420e80 <fill_args.constprop.0>
+    0.00 :   423238: mov     x18, x0
+    0.00 :   42323c: ldr     x0, [x18]
+    0.00 :   423240: ldr     x1, [x18, #8]
+    0.02 :   423244: ldr     x4, [x18, #16]
+    0.00 :   423248: ldr     x5, [x18, #24]
+    0.00 :   42324c: ldr     x2, [x18, #32]
+    0.00 :   423250: ldr     x3, [x18, #40]
+    0.00 :   423254: ldr     x6, [x18, #48]
+    0.00 :   423258: ldr     x7, [x18, #56]
+    0.00 :   42325c: ldr     x8, [x18, #64]
+    0.00 :   423260: ldr     x9, [x18, #72]
+    0.00 :   423264: ldr     x10, [x18, #80]
+    0.00 :   423268: ldr     x27, [x18, #88]
+    0.00 :   42326c: ldr     x19, [x18, #224]
+    0.00 :   423270: ldr     x14, [x18, #104]
+    0.00 :   423274: ldr     x24, [x18, #112]
+    0.00 :   423278: ldr     x25, [x18, #120]
+    0.00 :   42327c: ldr     x26, [x18, #128]
+    0.00 :   423280: ldr     x17, [x18, #152]
+    0.00 :   423284: ldr     x22, [x18, #160]
+    0.00 :   423288: add     x28, x17, x17
+    0.00 :   42328c: add     x28, x28, x22
+    0.00 :   423290: ldr     x22, [x18, #176]
+    0.00 :   423294: whilelo p3.s, xzr, x22
+    0.00 :   423298: mov     x11, #0x0                       // #0
+    0.00 :   42329c: ptrue   p0.s
+    0.00 :   4232a0: ldr     x7, [x18, #136]
+    0.00 :   4232a4: mov     z31.s, #0
+    0.10 :   4232a8: add     x21, x0, x26
+    0.02 :   4232ac: ldr     x12, [x18, #240]
+    0.00 :   4232b0: add     x16, x17, x12
+    0.00 :   4232b4: sub     x17, x28, x17
+    0.00 :   4232b8: add     x22, x0, x1
+    0.10 :   4232bc: cmp     x8, #0x1
+    0.00 :   4232c0: csel    x22, x0, x22, eq        // eq = none
+    0.00 :   4232c4: mov     x23, x17
+    0.04 :   4232c8: ldr     x12, [x18, #168]
+    0.00 :   4232cc: cbz     x12, 4232f0 <roll_worker+0x1a40>
+    0.41 :   4232d0: prfm    pldl2keep, [x21]
+    0.14 :   4232d4: ld1w    {z24.s}, p0/z, [x22]
+    1.48 :   4232d8: st1w    {z24.s}, p0, [x23]
+    0.00 :   4232dc: add     x21, x21, #0x40
+    0.00 :   4232e0: add     x22, x22, #0x40
+    0.00 :   4232e4: add     x23, x23, #0x40
+    0.04 :   4232e8: subs    x12, x12, #0x1
+    0.00 :   4232ec: b.ne    4232d0 <roll_worker+0x1a20>  // b.any
+    0.00 :   4232f0: prfm    pldl2keep, [x21]
+    0.04 :   4232f4: ld1w    {z24.s}, p3/z, [x22]
+    0.07 :   4232f8: st1w    {z24.s}, p3, [x23]
+    0.27 :   4232fc: ldr     x23, [x18, #144]
+    0.00 :   423300: add     x22, x27, x23
+    0.00 :   423304: cmp     x22, x6
+    0.00 :   423308: sub     x21, x22, x6
+    0.02 :   42330c: csel    x22, x21, x22, cs       // cs = hs, nlast
+    0.00 :   423310: cmp     x22, x24
+    0.00 :   423314: b.cs    423340 <roll_worker+0x1a90>  // b.hs, b.nlast
+    0.00 :   423318: ldr     x21, [x18, #232]
+    0.00 :   42331c: add     x21, x9, x21
+    0.02 :   423320: prfm    pstl2keep, [x21]
+    0.04 :   423324: prfm    pstl2keep, [x21, #64]
+    0.00 :   423328: prfm    pstl2keep, [x21, #128]
+    0.00 :   42332c: prfm    pstl2keep, [x21, #192]
+    0.00 :   423330: prfm    pstl2keep, [x21, #256]
+    0.02 :   423334: prfm    pstl2keep, [x21, #320]
+    0.04 :   423338: prfm    pstl2keep, [x21, #384]
+    0.04 :   42333c: prfm    pstl2keep, [x21, #448]
+    0.08 :   423340: mov     x15, x7
+    0.23 :   423344: ld2w    {z0.s-z1.s}, p0/z, [x16]
+    4.81 :   423348: ld2w    {z2.s-z3.s}, p0/z, [x16, #2, mul vl]
+    2.95 :   42334c: ld2w    {z4.s-z5.s}, p0/z, [x16, #4, mul vl]
+    3.90 :   423350: ld2w    {z6.s-z7.s}, p0/z, [x16, #6, mul vl]
+    4.15 :   423354: ld1w    {z8.s}, p0/z, [x2]
+    0.27 :   423358: ld1w    {z9.s}, p0/z, [x2, #1, mul vl]
+    0.06 :   42335c: fmopa   za0.s, p0/m, p0/m, z0.s, z8.s
+    0.21 :   423360: fmopa   za1.s, p0/m, p0/m, z2.s, z8.s
+    0.00 :   423364: fmopa   za2.s, p0/m, p0/m, z4.s, z8.s
+    0.16 :   423368: fmopa   za3.s, p0/m, p0/m, z6.s, z8.s
+    0.00 :   42336c: fmopa   za0.s, p0/m, p0/m, z1.s, z9.s
+    0.08 :   423370: fmopa   za1.s, p0/m, p0/m, z3.s, z9.s
+    0.00 :   423374: fmopa   za2.s, p0/m, p0/m, z5.s, z9.s
+    0.00 :   423378: fmopa   za3.s, p0/m, p0/m, z7.s, z9.s
+    0.02 :   42337c: add     x16, x16, #0x8
+    0.62 :   423380: add     x2, x2, #0x80
+    0.00 :   423384: subs    x15, x15, #0x1
+    0.18 :   423388: b.ne    423344 <roll_worker+0x1a94>  // b.any
+    0.00 :   42338c: cmp     x2, x5
+    0.00 :   423390: csel    x2, x4, x2, eq  // eq = none
+    0.00 :   423394: cmp     x11, x14
+    0.00 :   423398: csel    x20, x9, x10, cs        // cs = hs, nlast
+    0.00 :   42339c: cmp     x27, x24
+    0.00 :   4233a0: b.cs    4233fc <roll_worker+0x1b4c>  // b.hs, b.nlast
+    0.00 :   4233a4: and     w12, w27, #0x7
+    0.00 :   4233a8: lsl     w12, w12, #1
+    0.00 :   4233ac: mov     z8.s, p0/m, za0v.s[w12, 0]
+    0.00 :   4233b0: mov     z9.s, p0/m, za0v.s[w12, 1]
+    0.00 :   4233b4: mov     z10.s, p0/m, za1v.s[w12, 0]
+    0.00 :   4233b8: mov     z11.s, p0/m, za1v.s[w12, 1]
+    0.00 :   4233bc: mov     z12.s, p0/m, za2v.s[w12, 0]
+    0.00 :   4233c0: mov     z13.s, p0/m, za2v.s[w12, 1]
+    0.00 :   4233c4: mov     z14.s, p0/m, za3v.s[w12, 0]
+    0.00 :   4233c8: mov     z15.s, p0/m, za3v.s[w12, 1]
+    0.00 :   4233cc: st2w    {z8.s-z9.s}, p0, [x20]
+    0.10 :   4233d0: st2w    {z10.s-z11.s}, p0, [x20, #2, mul vl]
+    0.04 :   4233d4: st2w    {z12.s-z13.s}, p0, [x20, #4, mul vl]
+    0.02 :   4233d8: st2w    {z14.s-z15.s}, p0, [x20, #6, mul vl]
+    0.02 :   4233dc: mov     za0v.s[w12, 0], p0/m, z31.s
+    0.00 :   4233e0: mov     za0v.s[w12, 1], p0/m, z31.s
+    0.00 :   4233e4: mov     za1v.s[w12, 0], p0/m, z31.s
+    0.00 :   4233e8: mov     za1v.s[w12, 1], p0/m, z31.s
+    0.00 :   4233ec: mov     za2v.s[w12, 0], p0/m, z31.s
+    0.00 :   4233f0: mov     za2v.s[w12, 1], p0/m, z31.s
+    0.04 :   4233f4: mov     za3v.s[w12, 0], p0/m, z31.s
+    0.00 :   4233f8: mov     za3v.s[w12, 1], p0/m, z31.s
+    0.00 :   4233fc: add     x27, x27, #0x1
+    0.00 :   423400: cmp     x27, x6
+    0.00 :   423404: csel    x27, xzr, x27, eq       // eq = none
+    0.00 :   423408: add     x0, x0, x1
+    0.04 :   42340c: add     x9, x9, x19
+    0.00 :   423410: add     x11, x11, #0x1
+    0.00 :   423414: subs    x8, x8, #0x1
+    0.00 :   423418: b.ne    4232a8 <roll_worker+0x19f8>  // b.any
+    0.00 :   42341c: ldr     x18, [sp, #344]
+    0.00 :   423420: b       422038 <roll_worker+0x788>
+         :            k16singlef2():
+    0.00 :   423424: ldr     x3, [sp, #408]
+    0.00 :   423428: add     x0, sp, #0x240
+    0.00 :   42342c: add     x1, sp, #0x170
+    0.00 :   423430: mov     x2, #0x1                        // #1
+    0.00 :   423434: add     x3, x3, #0x3f
+    0.00 :   423438: str     x18, [sp, #344]
+    0.00 :   42343c: bl      420e80 <fill_args.constprop.0>
+    0.00 :   423440: ldr     q0, [sp, #512]
+    0.00 :   423444: add     x1, sp, #0x2d0
+    0.00 :   423448: ldr     x0, [sp, #528]
+    0.00 :   42344c: str     x0, [sp, #784]
+    0.00 :   423450: ldr     x0, [sp, #536]
+    0.00 :   423454: stur    q0, [x1, #40]
+    0.00 :   423458: add     x18, sp, #0x240
+    0.00 :   42345c: ldr     x1, [sp, #544]
+    0.00 :   423460: str     x0, [sp, #792]
+    0.00 :   423464: ldr     x0, [sp, #552]
+    0.00 :   423468: str     x1, [sp, #824]
+    0.00 :   42346c: str     x0, [sp, #832]
+    0.00 :   423470: ldr     x0, [x18]
+    0.00 :   423474: ldr     x1, [x18, #8]
+    0.00 :   423478: ldr     x4, [x18, #16]
+    0.00 :   42347c: ldr     x5, [x18, #24]
+    0.00 :   423480: ldr     x2, [x18, #32]
+    0.00 :   423484: ldr     x3, [x18, #40]
+    0.00 :   423488: ldr     x6, [x18, #48]
+    0.00 :   42348c: ldr     x7, [x18, #56]
+    0.00 :   423490: ldr     x8, [x18, #64]
+    0.00 :   423494: ldr     x9, [x18, #72]
+    0.00 :   423498: ldr     x10, [x18, #80]
+    0.00 :   42349c: ldr     x27, [x18, #88]
+    0.00 :   4234a0: ldr     x19, [x18, #224]
+    0.00 :   4234a4: ldr     x14, [x18, #104]
+    0.00 :   4234a8: ldr     x24, [x18, #112]
+    0.00 :   4234ac: ldr     x25, [x18, #120]
+    0.00 :   4234b0: ldr     x26, [x18, #128]
+    0.00 :   4234b4: ldr     x17, [x18, #152]
+    0.00 :   4234b8: ldr     x22, [x18, #160]
+    0.00 :   4234bc: add     x28, x17, x17
+    0.00 :   4234c0: add     x28, x28, x22
+    0.00 :   4234c4: ldr     x22, [x18, #176]
+    0.00 :   4234c8: whilelo p3.s, xzr, x22
+    0.00 :   4234cc: mov     x11, #0x0                       // #0
+    0.00 :   4234d0: ptrue   p0.s
+    0.00 :   4234d4: ldr     x13, [x18, #184]
+    0.00 :   4234d8: ldr     x3, [x18, #248]
+    0.00 :   4234dc: mov     z31.s, #0
+    0.00 :   4234e0: mov     z16.s, #0
+    0.00 :   4234e4: mov     z17.s, #0
+    0.00 :   4234e8: mov     z18.s, #0
+    0.00 :   4234ec: mov     z19.s, #0
+    0.00 :   4234f0: mov     z20.s, #0
+    0.00 :   4234f4: mov     z21.s, #0
+    0.00 :   4234f8: mov     z22.s, #0
+    0.00 :   4234fc: mov     z23.s, #0
+    0.00 :   423500: ldr     x12, [x18, #288]
+    0.00 :   423504: cbz     x12, 42352c <roll_worker+0x1c7c>
+    0.00 :   423508: ldr     x12, [x18, #280]
+    0.00 :   42350c: ld1w    {z16.s}, p0/z, [x12]
+    0.00 :   423510: ld1w    {z17.s}, p0/z, [x12, #1, mul vl]
+    0.00 :   423514: ld1w    {z18.s}, p0/z, [x12, #2, mul vl]
+    0.00 :   423518: ld1w    {z19.s}, p0/z, [x12, #3, mul vl]
+    0.00 :   42351c: ld1w    {z20.s}, p0/z, [x12, #4, mul vl]
+    0.00 :   423520: ld1w    {z21.s}, p0/z, [x12, #5, mul vl]
+    0.00 :   423524: ld1w    {z22.s}, p0/z, [x12, #6, mul vl]
+    0.00 :   423528: ld1w    {z23.s}, p0/z, [x12, #7, mul vl]
+    0.00 :   42352c: add     x21, x0, x26
+    0.00 :   423530: ldr     x12, [x18, #240]
+    0.00 :   423534: add     x16, x17, x12
+    0.00 :   423538: sub     x17, x28, x17
+    0.00 :   42353c: add     x22, x0, x1
+    0.00 :   423540: cmp     x8, #0x1
+    0.00 :   423544: csel    x22, x0, x22, eq        // eq = none
+    0.00 :   423548: mov     x23, x17
+    0.00 :   42354c: ldr     x12, [x18, #168]
+    0.00 :   423550: cbz     x12, 423574 <roll_worker+0x1cc4>
+    0.00 :   423554: prfm    pldl2keep, [x21]
+    0.00 :   423558: ld1w    {z24.s}, p0/z, [x22]
+    0.00 :   42355c: st1w    {z24.s}, p0, [x23]
+    0.00 :   423560: add     x21, x21, #0x40
+    0.00 :   423564: add     x22, x22, #0x40
+    0.00 :   423568: add     x23, x23, #0x40
+    0.00 :   42356c: subs    x12, x12, #0x1
+    0.00 :   423570: b.ne    423554 <roll_worker+0x1ca4>  // b.any
+    0.00 :   423574: prfm    pldl2keep, [x21]
+    0.00 :   423578: ld1w    {z24.s}, p3/z, [x22]
+    0.00 :   42357c: st1w    {z24.s}, p3, [x23]
+    0.00 :   423580: ldr     x21, [x18, #232]
+    0.00 :   423584: add     x21, x9, x21
+    0.00 :   423588: prfm    pstl2keep, [x21]
+    0.00 :   42358c: prfm    pstl2keep, [x21, #64]
+    0.00 :   423590: prfm    pstl2keep, [x21, #128]
+    0.00 :   423594: prfm    pstl2keep, [x21, #192]
+    0.00 :   423598: mov     x15, x7
+    0.00 :   42359c: nop
+    0.00 :   4235a0: ld1w    {z0.s}, p0/z, [x16]
+    0.00 :   4235a4: ld1w    {z1.s}, p0/z, [x16, #1, mul vl]
+    0.00 :   4235a8: ld1w    {z2.s}, p0/z, [x16, #2, mul vl]
+    0.00 :   4235ac: ld1w    {z3.s}, p0/z, [x16, #3, mul vl]
+    0.00 :   4235b0: ld1w    {z4.s}, p0/z, [x2]
+    0.00 :   4235b4: fmopa   za0.s, p0/m, p0/m, z0.s, z4.s
+    0.00 :   4235b8: fmopa   za1.s, p0/m, p0/m, z1.s, z4.s
+    0.00 :   4235bc: fmopa   za2.s, p0/m, p0/m, z2.s, z4.s
+    0.00 :   4235c0: fmopa   za3.s, p0/m, p0/m, z3.s, z4.s
+    0.00 :   4235c4: ld1rw   {z5.s}, p0/z, [x13]
+    0.00 :   4235c8: ld1rw   {z6.s}, p0/z, [x3]
+    0.00 :   4235cc: fmla    z16.s, p0/m, z0.s, z5.s
+    0.00 :   4235d0: fmla    z17.s, p0/m, z1.s, z5.s
+    0.00 :   4235d4: fmla    z18.s, p0/m, z2.s, z5.s
+    0.00 :   4235d8: fmla    z19.s, p0/m, z3.s, z5.s
+    0.00 :   4235dc: fmla    z20.s, p0/m, z0.s, z6.s
+    0.00 :   4235e0: fmla    z21.s, p0/m, z1.s, z6.s
+    0.00 :   4235e4: fmla    z22.s, p0/m, z2.s, z6.s
+    0.00 :   4235e8: fmla    z23.s, p0/m, z3.s, z6.s
+    0.00 :   4235ec: add     x13, x13, #0x4
+    0.00 :   4235f0: add     x3, x3, #0x4
+    0.00 :   4235f4: add     x16, x16, #0x4
+    0.00 :   4235f8: add     x2, x2, #0x40
+    0.00 :   4235fc: subs    x15, x15, #0x1
+    0.00 :   423600: b.ne    4235a0 <roll_worker+0x1cf0>  // b.any
+    0.00 :   423604: cmp     x2, x5
+    0.00 :   423608: csel    x2, x4, x2, eq  // eq = none
+    0.00 :   42360c: ldr     x24, [x18, #208]
+    0.00 :   423610: cmp     x13, x24
+    0.00 :   423614: ldr     x22, [x18, #192]
+    0.00 :   423618: csel    x13, x22, x13, eq       // eq = none
+    0.00 :   42361c: cmp     x3, x24
+    0.00 :   423620: csel    x3, x22, x3, eq // eq = none
+    0.00 :   423624: cmp     x11, x14
+    0.00 :   423628: csel    x20, x9, x10, cs        // cs = hs, nlast
+    0.00 :   42362c: ldr     x24, [x18, #216]
+    0.00 :   423630: cmp     x27, x24
+    0.00 :   423634: b.eq    423688 <roll_worker+0x1dd8>  // b.none
+    0.00 :   423638: ldr     x24, [x18, #256]
+    0.00 :   42363c: cmp     x27, x24
+    0.00 :   423640: b.eq    4236ac <roll_worker+0x1dfc>  // b.none
+    0.00 :   423644: ldr     x24, [x18, #112]
+    0.00 :   423648: cmp     x27, x24
+    0.00 :   42364c: b.cs    4236cc <roll_worker+0x1e1c>  // b.hs, b.nlast
+    0.00 :   423650: and     w12, w27, #0xf
+    0.00 :   423654: mov     z5.s, p0/m, za0v.s[w12, 0]
+    0.00 :   423658: mov     z6.s, p0/m, za1v.s[w12, 0]
+    0.00 :   42365c: mov     z7.s, p0/m, za2v.s[w12, 0]
+    0.00 :   423660: mov     z8.s, p0/m, za3v.s[w12, 0]
+    0.00 :   423664: st1w    {z5.s}, p0, [x20]
+    0.00 :   423668: st1w    {z6.s}, p0, [x20, #1, mul vl]
+    0.00 :   42366c: st1w    {z7.s}, p0, [x20, #2, mul vl]
+    0.00 :   423670: st1w    {z8.s}, p0, [x20, #3, mul vl]
+    0.00 :   423674: mov     za0v.s[w12, 0], p0/m, z31.s
+    0.00 :   423678: mov     za1v.s[w12, 0], p0/m, z31.s
+    0.00 :   42367c: mov     za2v.s[w12, 0], p0/m, z31.s
+    0.00 :   423680: mov     za3v.s[w12, 0], p0/m, z31.s
+    0.00 :   423684: b       4236cc <roll_worker+0x1e1c>
+    0.00 :   423688: st1w    {z16.s}, p0, [x20]
+    0.00 :   42368c: st1w    {z17.s}, p0, [x20, #1, mul vl]
+    0.00 :   423690: st1w    {z18.s}, p0, [x20, #2, mul vl]
+    0.00 :   423694: st1w    {z19.s}, p0, [x20, #3, mul vl]
+    0.00 :   423698: mov     z16.s, #0
+    0.00 :   42369c: mov     z17.s, #0
+    0.00 :   4236a0: mov     z18.s, #0
+    0.00 :   4236a4: mov     z19.s, #0
+    0.00 :   4236a8: b       4236cc <roll_worker+0x1e1c>
+    0.00 :   4236ac: st1w    {z20.s}, p0, [x20]
+    0.00 :   4236b0: st1w    {z21.s}, p0, [x20, #1, mul vl]
+    0.00 :   4236b4: st1w    {z22.s}, p0, [x20, #2, mul vl]
+    0.00 :   4236b8: st1w    {z23.s}, p0, [x20, #3, mul vl]
+    0.00 :   4236bc: mov     z20.s, #0
+    0.00 :   4236c0: mov     z21.s, #0
+    0.00 :   4236c4: mov     z22.s, #0
+    0.00 :   4236c8: mov     z23.s, #0
+    0.00 :   4236cc: add     x27, x27, #0x1
+    0.00 :   4236d0: cmp     x27, x6
+    0.00 :   4236d4: csel    x27, xzr, x27, eq       // eq = none
+    0.00 :   4236d8: add     x0, x0, x1
+    0.00 :   4236dc: add     x9, x9, x19
+    0.00 :   4236e0: add     x11, x11, #0x1
+    0.00 :   4236e4: subs    x8, x8, #0x1
+    0.00 :   4236e8: b.ne    42352c <roll_worker+0x1c7c>  // b.any
+    0.00 :   4236ec: ldr     x12, [x18, #280]
+    0.00 :   4236f0: cbz     x12, 423714 <roll_worker+0x1e64>
+    0.00 :   4236f4: st1w    {z16.s}, p0, [x12]
+    0.00 :   4236f8: st1w    {z17.s}, p0, [x12, #1, mul vl]
+    0.00 :   4236fc: st1w    {z18.s}, p0, [x12, #2, mul vl]
+    0.00 :   423700: st1w    {z19.s}, p0, [x12, #3, mul vl]
+    0.00 :   423704: st1w    {z20.s}, p0, [x12, #4, mul vl]
+    0.00 :   423708: st1w    {z21.s}, p0, [x12, #5, mul vl]
+    0.00 :   42370c: st1w    {z22.s}, p0, [x12, #6, mul vl]
+    0.00 :   423710: st1w    {z23.s}, p0, [x12, #7, mul vl]
+    0.00 :   423714: ldr     x18, [sp, #344]
+    0.00 :   423718: b       422038 <roll_worker+0x788>
+         :            roll_worker():
+    0.00 :   42371c: add     x0, sp, #0x170
+    0.00 :   423720: str     x18, [sp, #344]
+    0.00 :   423724: bl      421010 <k8f>
+    0.00 :   423728: ldr     x18, [sp, #344]
+    0.00 :   42372c: b       422038 <roll_worker+0x788>
+    0.00 :   423730: adrp    x4, 452000 <g_go_t+0xf680>
+    0.00 :   423734: add     x4, x4, #0x980
+    0.00 :   423738: movi    v0.4s, #0x0
+    0.00 :   42373c: mov     w2, #0x48                       // #72
+    0.00 :   423740: smaddl  x2, w19, w2, x4
+    0.00 :   423744: stp     q0, q0, [x2]
+    0.00 :   423748: stp     q0, q0, [x2, #32]
+    0.00 :   42374c: str     xzr, [x2, #64]
+         :            cyc():
+    0.00 :   423750: mrs     x0, cntvct_el0
+    0.00 :   423754: str     x0, [sp, #352]
+    0.00 :   423758: b       4218f8 <roll_worker+0x48>
