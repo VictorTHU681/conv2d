@@ -69,9 +69,13 @@ OMP_NUM_THREADS=38 numactl -N 1 ./conv2d_test 4096 6144 39 39 1
 - 开发库另有 `tools/test_conv.c`（与参考四重循环逐位比较的泛化测试，固定边界用例 + 随机尺寸）、
   `tools/fbench.c`（快速判题口径 bench）、`tools/drv.c`（分相计时驱动）。
 - `docs/v56.md` 与 `results/v56/` 记录本地 v56 的瓶颈分析、被淘汰的实验及验收；v54/v55 记录保留作历史对照。
-  v56 尚未推送；用户已授权发布的是 v55，v56 仍需单独授权。
+  **每次发布/push 递增一次版本号**；所有未发布的优化与实验统一归入 v56。
+  系数打包、缓存策略、K9 软件流水、三链分组实验见 `docs/v56-experiments/`；
+  实测无稳定收益或造成退化的方案未合入默认实现。v56 尚未推送，GitHub 已发布版本仍为 v55。
   `submissions/conv.zip` 为正式包；
-  `conv_nf3.zip` 为三链对照，`conv_diag.zip` 为诊断包。两个带 `_zva` 的旧包仅为历史实验，不代表当前实现。
+  `conv_nf3.zip` 为三链对照，`conv_diag.zip` 含环境探针，仅用于诊断，不作正式提交。
+  合规与已知限制见 `docs/v56-compliance.md`；默认实现未发现结果缓存/公开尺寸特判，
+  非默认 `CONV_PACKSER=0` 并行打包仍有数据竞争风险。两个带 `_zva` 的旧包仅为历史实验，不代表当前实现。
 
 ## 环境变量（默认即最优，仅用于实验/回退）
 

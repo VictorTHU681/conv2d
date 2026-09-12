@@ -1,10 +1,6 @@
-# v57 local investigation — folded coefficient tables
+# v56 experiment — folded coefficient tables
 
-Continue optimizing locally and report progress each round. Push only when
-explicitly requested. The user previously authorized v55; v56 and these new
-experiments remain local. The previous turn made progress by producing three
-coefficient-table controls and submitting job 1581333; its state was polled
-on resumption, not restarted after the turn interruption.
+Part of the unpublished v56 work. Historical raw logs retain their original job tags.
 
 Baseline: validated v56 `72b10c2:conv2d.c`, SHA-256
 `472e4bcd213c538e3cc827c6476cee8a61a528f4bb4709d475e961c175339964`.
@@ -19,7 +15,7 @@ regardless of which output residuals the pair handles. For KH=KW=81, each table
 contains 81*81*4 floats = 104,976 bytes (about 103 KiB). Separate copies may
 increase active cache footprint and per-call packing work.
 
-`tools/gen_v57.py` generates three controls from immutable v56:
+`tools/gen_v56_coeff_pack.py` generates three controls from immutable v56:
 
 - `sharekf`: alias tables only when kind and padded step count match, and pack
   the first owner on every call. Aliases belong to the call's plan; persistent
@@ -56,16 +52,16 @@ reduce the reuse test's peak tracked aligned allocation from 18,874,368 bytes
 (18 MiB) to 16,777,216 bytes (16 MiB); this is that test's aligned-allocation
 metric, not whole-process RSS or a general memory reduction claim.
 Vectorization alone retains the 18 MiB peak. All variants report zero extra
-aligned allocations after warmup. Evidence: `results/v57/folded_pack.log`.
+aligned allocations after warmup. Evidence: `results/v56/experiments/coefficient-packing/folded_pack.log`.
 
 ## Separate packing time from worker time
 
-`tools/v57_phase.py` reuses the existing phase instrumentation but converts
+`tools/v56_coeff_pack_phase.py` reuses the existing phase instrumentation but converts
 counter ticks with actual `cyc_hz()` instead of the legacy 100-MHz assumption.
 Job **1581409** compares all four variants on k39 and k81 in DDR and HBM.
 Diagnostic instrumentation changes timing/code placement, so this identifies
 which phase changes; it does not replace the uninstrumented performance test.
-This job is pending. No candidate has been promoted or pushed.
+The completed measurements and decision follow below.
 
 
 ## Completed phase measurements and decision
@@ -98,12 +94,12 @@ The memory-saving variant remains reproducible for future resource-pressure
 investigation. Further throughput work should target worker computation/load
 cost, which dominates the measured total, rather than this small packing phase.
 
-Both v57 jobs are terminal. No production source, compile command, submission
+Both coefficient-packing jobs are terminal. No production source, compile command, submission
 archive, or GitHub branch was changed in this round. Results, generators and
 job scripts are saved locally. Reproduce controls with:
 
 ```bash
-python3 tools/gen_v57.py > results/v57/sources.sha256
-python3 tools/v57_phase.py > results/v57/phase_sources.sha256
-python3 tools/summarize_v54.py results/v57/folded_pack.log
+python3 tools/gen_v56_coeff_pack.py > results/v56/experiments/coefficient-packing/sources.sha256
+python3 tools/v56_coeff_pack_phase.py > results/v56/experiments/coefficient-packing/phase_sources.sha256
+python3 tools/summarize_v54.py results/v56/experiments/coefficient-packing/folded_pack.log
 ```

@@ -1,9 +1,6 @@
-# v58 local investigation — coefficient load cache policy
+# v56 experiment — coefficient load cache policy
 
-Continue local optimization and report each round. Push only on explicit user
-request. Previous progress: v57 established that the folded-table packing
-savings are too small to justify adoption. Main was pulled again and was
-unchanged at published v55 8ce8af2. Validated local v56 remains production.
+Part of the unpublished v56 work; the coefficient-packing experiment found no stable throughput gain.
 Baseline source: `72b10c2:conv2d.c`, SHA-256
 `472e4bcd213c538e3cc827c6476cee8a61a528f4bb4709d475e961c175339964`.
 
@@ -19,15 +16,15 @@ It does not change table contents, arithmetic, output ordering or allocation.
 ## Scope correction and isolated controls
 
 Job **1581486** uses the initial generator, now retained as
-`tools/gen_v58_mixed.py`. Its register-prefix matcher also matched x21/x25,
+`tools/gen_v56_coeff_cache_mixed.py`. Its register-prefix matcher also matched x21/x25,
 so only `ntwide` (10 load sites in 16-row pair/single kernels) is a pure
 coefficient control. `ntres` (19 sites) and `ntall` (29 sites) include some
 residual input loads and are recorded as mixed-load controls. These results
 must not be attributed solely to coefficient caching. Existing files and the
 live job were preserved; no running source was replaced.
 
-Corrected `tools/gen_v58.py` requires a delimiter after x2/x3 and asserts the
-changed base registers. It writes a separate `build/v58/coeff/` directory:
+Corrected `tools/gen_v56_coeff_cache.py` requires a delimiter after x2/x3 and asserts the
+changed base registers. It writes a separate `build/v56/experiments/coefficient-cache/coeff/` directory:
 `coefres` changes exactly 7 coefficient load sites in K8/K9/K4; `coefall`
 changes exactly 17 coefficient load sites across all rolling kernels.
 Job **1581489** compares these sources against exact v56. Generalized state
@@ -36,7 +33,7 @@ Each process has five hash-checked timings. These are screening controls,
 not accepted production changes.
 
 Neither experiment changes the production source, benchmark, compile command,
-run scripts or submission archives. Results are pending.
+run scripts or submission archives.
 
 ## Cache counter diagnostic
 
@@ -72,8 +69,7 @@ process rounds with five timings each:
 
 All corrected controls regress in this run. They are rejected for production;
 retain ordinary coefficient LD1W and the validated v56 source. PMU job
-1581513 remains pending at this checkpoint and will explain the measured
-cache-access changes only within its separate workload.
+1581513 provides the separate cache-counter measurements below.
 
 ## Completed PMU diagnostic and decision
 
@@ -94,9 +90,9 @@ This does not prove a specific hardware mechanism, but rules out treating
 lower generic L1-miss counts as an optimization success. The small k39 HBM
 steady-workload gain does not reproduce the independent allocation/copy-based
 screen, where coefall regressed every shape and placement. Raw evidence is
-in `results/v58/pmu.log`; the counter summary is `pmu_summary.txt`.
+in `results/v56/experiments/coefficient-cache/pmu.log`; the counter summary is `pmu_summary.txt`.
 
-**Decision:** reject all v58 controls and retain the original LD1W coefficient
+**Decision:** reject all coefficient-cache controls and retain the original LD1W coefficient
 loads. No production change or push. The round contributes **1,305 state
 checks and 840 timed hash checks**, plus the separate PMU evidence. All three
 jobs are terminal. The baseline remains accepted local v56.
@@ -104,8 +100,8 @@ jobs are terminal. The baseline remains accepted local v56.
 Reproduce the historical mixed controls and corrected sources separately:
 
 ```bash
-python3 tools/gen_v58_mixed.py > results/v58/sources.sha256
-python3 tools/gen_v58.py > results/v58/coeff_sources.sha256
-python3 tools/summarize_v54.py results/v58/coeff.log
-python3 tools/summarize_v54.py results/v58/exact_coeff.log
+python3 tools/gen_v56_coeff_cache_mixed.py > results/v56/experiments/coefficient-cache/sources.sha256
+python3 tools/gen_v56_coeff_cache.py > results/v56/experiments/coefficient-cache/coeff_sources.sha256
+python3 tools/summarize_v54.py results/v56/experiments/coefficient-cache/coeff.log
+python3 tools/summarize_v54.py results/v56/experiments/coefficient-cache/exact_coeff.log
 ```

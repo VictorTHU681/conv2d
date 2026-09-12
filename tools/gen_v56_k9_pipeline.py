@@ -3,7 +3,7 @@
 from pathlib import Path
 import subprocess,hashlib
 source=subprocess.check_output(['git','show','72b10c2:conv2d.c'],text=True)
-root=Path('build/v59');root.mkdir(parents=True,exist_ok=True)
+root=Path('build/v56/experiments/k9-pipeline');root.mkdir(parents=True,exist_ok=True)
 def emit(xs):return ''.join('        "'+x+'\\n\\t"\n' for x in xs)
 banks=[([1,3,5,7],[8,9]),([10,11,12,13],[14,15])]
 def loads(bank,advance=False):

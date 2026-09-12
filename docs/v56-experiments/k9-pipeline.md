@@ -1,10 +1,6 @@
-# v59 local investigation — K9 software pipeline
+# v56 experiment — K9 software pipeline
 
-Continue local optimization, report each round, and push only on explicit user
-request. v58 rejected coefficient streaming loads after measured regressions;
-that turn made progress by isolating and rejecting a cache-policy hypothesis.
-Main was pulled again and unchanged at published v55 8ce8af2. Production source
-and archives remain accepted local v56, SHA-256
+Part of the unpublished v56 work. Baseline: `72b10c2:conv2d.c`, SHA-256
 `472e4bcd213c538e3cc827c6476cee8a61a528f4bb4709d475e961c175339964`.
 
 ## Hypothesis and controls
@@ -36,13 +32,12 @@ raw input; they stay within the same padded-pair span used by v56. Output
 extraction clobbers scratch banks only after all KW work, and each new input
 row reloads its initial bank.
 
-`tools/gen_v59.py` creates baseline and both controls under `build/v59/`.
+`tools/gen_v56_k9_pipeline.py` creates baseline and both controls under `build/v56/experiments/k9-pipeline/`.
 The server screen compiles each, runs 140 signed bitwise extended K9 cases per
 changed variant (including guard pages, odd/even widths through 400, narrow
 outputs and multi-block continuation), then compares three alternating
 process rounds across all four official shapes in DDR/HBM. The benchmark
-uses five hash-checked timings per process. Results are pending; nothing has
-been promoted or pushed.
+uses five hash-checked timings per process. Completed results follow below; neither control was promoted.
 
 Main screen job **1581591** starts on cn20481 at 00:11:35 on 2026-09-13.
 Diagnostic job **1581607** SUCCEEDED on cn20482, 00:12:38–00:13:20, and
@@ -51,8 +46,8 @@ cycles/tile-step still normalize to 1.55 GHz, so only within-job ratios apply.
 K9 median normalized costs for baseline/unroll2/pipeline2 are 2.93/2.93/2.98
 in DDR and 2.95/2.93/2.93 in HBM. Pair costs stay around 2.70–2.71.
 There is no clear kernel-cost benefit in this diagnostic. Full signed and
-alternating performance results remain pending. Disassembly is captured in
-`results/v59/disas_*.txt`.
+alternating performance results follow below. Disassembly is captured in
+`results/v56/experiments/k9-pipeline/disas_*.txt`.
 
 ## Next architecture question
 
@@ -86,5 +81,4 @@ other shapes regress; the diagnostic likewise shows no substantial reduction
 in K9 kernel cost. Both jobs are terminal. Production source, compile command
 and submission packages remain validated v56; no push was performed.
 
-The next fold/copy control is prepared in tools/gen_v60.py and
-jobs/v60_fold_copy_job.sh, but has not been submitted at this checkpoint.
+The completed fold/copy investigation is recorded in [fold-copy.md](fold-copy.md).

@@ -3,7 +3,7 @@ set -eo pipefail
 source "$(dirname "$0")/v55_setup.sh"
 variants=(baseline sharekf veckf sharevec)
 for v in "${variants[@]}"; do
-    gcc "${flags[@]}" tools/fbench.c "build/v57/${v}_phase.c" -o "build/v57/phase_$v" -lm
+    gcc "${flags[@]}" tools/fbench.c "build/v56/experiments/coefficient-packing/${v}_phase.c" -o "build/v56/experiments/coefficient-packing/phase_$v" -lm
 done
 for memory in DDR HBM; do
     run=(numactl -N "$cpu_node")
@@ -15,8 +15,8 @@ for memory in DDR HBM; do
         read -ra shape <<< "$args"
         for v in "${variants[@]}"; do
             echo "PHASE memory=$memory variant=$v shape=$args"
-            CONV_ROLL_DIAG=1 "${run[@]}" "build/v57/phase_$v" "${shape[@]}" 3
+            CONV_ROLL_DIAG=1 "${run[@]}" "build/v56/experiments/coefficient-packing/phase_$v" "${shape[@]}" 3
         done
     done
 done
-echo "V57_PHASE_DONE $(date -Is)"
+echo "V56_COEFF_PACK_PHASE_DONE $(date -Is)"

@@ -3,7 +3,7 @@
 from pathlib import Path
 import subprocess,hashlib,re
 source=subprocess.check_output(['git','show','72b10c2:conv2d.c'],text=True)
-root=Path('build/v58');root.mkdir(parents=True,exist_ok=True)
+root=Path('build/v56/experiments/coefficient-cache');root.mkdir(parents=True,exist_ok=True)
 start=source.index('static void k16pair(')
 mid=source.index('static void k8(')
 end=source.index('// b 表：kind 16:',mid)
@@ -17,4 +17,4 @@ for name,(s,n) in variants.items():
     p=root/(name+'.c');p.write_text(s)
     print(hashlib.sha256(s.encode()).hexdigest(),p)
     # Separate metadata from the sha256sum-compatible manifest.
-    Path('results/v58/'+name+'_loads.txt').write_text(f'matrix coefficient load sites changed: {n}\n')
+    Path('results/v56/experiments/coefficient-cache/'+name+'_loads.txt').write_text(f'matrix coefficient load sites changed: {n}\n')

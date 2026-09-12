@@ -19,7 +19,7 @@ f=f.replace(old,'')
 label='        "1:\\n\\t"\n';assert f.count(label)==1
 prefix='        ".p2align 7\\n"\n'+'        "nop\\n\\t"\n'*(pad//4)
 aligned=copy[:a]+f.replace(label,prefix+label)+copy[copy.index('\n}\n',a)+3:]
-root=Path('build/v60');root.mkdir(parents=True,exist_ok=True)
+root=Path('build/v56/experiments/fold-copy');root.mkdir(parents=True,exist_ok=True)
 for name,s in [('baseline',source),('nf3',nf3),('f3copy',copy),('f3copy128',aligned)]:
     p=root/(name+'.c');p.write_text(s)
     print(hashlib.sha256(s.encode()).hexdigest(),p)

@@ -3,7 +3,7 @@
 from pathlib import Path
 import subprocess,hashlib
 source=subprocess.check_output(['git','show','72b10c2:conv2d.c'],text=True)
-root=Path('build/v57');root.mkdir(parents=True,exist_ok=True)
+root=Path('build/v56/experiments/coefficient-packing');root.mkdir(parents=True,exist_ok=True)
 def share(s):
     old='''                size_t kfneed = (size_t)KH * G->steps * 4 * sizeof(float);
                 if (g_rbuf[g].kfcap < kfneed) { free(g_rbuf[g].kf); g_rbuf[g].kf = alloc_aligned(kfneed); g_rbuf[g].kfcap = g_rbuf[g].kf ? kfneed : 0; }

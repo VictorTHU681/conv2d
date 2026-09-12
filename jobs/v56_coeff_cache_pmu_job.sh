@@ -2,7 +2,7 @@
 set -eo pipefail
 source "$(dirname "$0")/v55_setup.sh"
 for v in baseline coefall; do
-    gcc "${flags[@]}" tools/v55_pmu_driver.c "build/v58/coeff/$v.c" -o "build/v58/coeff/pmu_$v" -lm
+    gcc "${flags[@]}" tools/v55_pmu_driver.c "build/v56/experiments/coefficient-cache/coeff/$v.c" -o "build/v56/experiments/coefficient-cache/coeff/pmu_$v" -lm
 done
 for memory in DDR HBM; do
     run=(numactl -N "$cpu_node")
@@ -17,9 +17,9 @@ for memory in DDR HBM; do
             if (( round == 2 )); then order=(coefall baseline); fi
             for v in "${order[@]}"; do
                 echo "PMU memory=$memory round=$round variant=$v shape=$args"
-                perf stat -x, -e cycles:u,instructions:u,L1-dcache-loads:u,L1-dcache-load-misses:u -- "${run[@]}" "build/v58/coeff/pmu_$v" "${shape[@]}" 200
+                perf stat -x, -e cycles:u,instructions:u,L1-dcache-loads:u,L1-dcache-load-misses:u -- "${run[@]}" "build/v56/experiments/coefficient-cache/coeff/pmu_$v" "${shape[@]}" 200
             done
         done
     done
 done
-echo "V58_PMU_DONE $(date -Is)"
+echo "V56_COEFF_CACHE_PMU_DONE $(date -Is)"
