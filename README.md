@@ -66,7 +66,7 @@ OMP_NUM_THREADS=38 numactl -N 1 ./conv2d_test 4096 6144 39 39 1
 - 开发库另有 `tools/test_conv.c`（与参考四重循环逐位比较的泛化测试，固定边界用例 + 随机尺寸）、
   `tools/fbench.c`（快速判题口径 bench）、`tools/drv.c`（分相计时驱动）。
 - `docs/v55.md` 与 `results/v55/` 记录本地 v55 的瓶颈分析、被淘汰的实验及验收；v54 记录保留作历史对照。
-  v55 尚未推送，等待用户明确同意。`submissions/conv.zip` 为正式包；
+  `submissions/conv.zip` 为正式包；
   `conv_nf3.zip` 为三链对照，`conv_diag.zip` 为诊断包。两个带 `_zva` 的旧包仅为历史实验，不代表当前实现。
 
 ## 环境变量（默认即最优，仅用于实验/回退）
