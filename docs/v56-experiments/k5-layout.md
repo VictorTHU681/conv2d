@@ -5,7 +5,8 @@ has no stable uninstrumented speedup. Its instrumented phase times look better
 than end-to-end screening, so test sensitivity to F4 function placement on both
 baseline and K5. This is a controlled hypothesis, not an established explanation.
 
-The accepted root remains local v56 commit 4817eff / source 4689e38f. The later
+The experiment baseline is local v56 commit 4817eff / source 4689e38f.
+After the validation below, ordinary K5 source 4b35b3d5 is adopted locally. The later
 [kf sharing experiment](kf-share.md) is not adopted after a negative official
 comparison and inconsistent same-executable control. No push.
 
@@ -63,7 +64,10 @@ These compare against accepted 4817eff, not published v55. The official comparis
 does not reproduce the initial KH 39 slowdown, but the negative screening record
 remains relevant evidence of variability; do not erase it. Select ordinary K5
 for archive acceptance because its overall comparison is preferable to outlined
-K5. **1583413**, cn20483, is currently validating its three staged archives.
+K5. **1583413**, cn20483, 04:30:14–04:32:27, succeeds: all three staged archives
+pass 12 full-reference checks with zero maximum errors. Ordinary K5 source
+4b35b3d5 is now adopted; current archives differ only in README from these
+runtime-tested program members. Source and package manifests identify both.
 **1583390**, cn20481, 04:19:18–04:20:12, succeeded: 72 profiled processes,
 504 call records and 360 timed hashes. Baseline/plain K5/outlined K5 use all
 six permutations on KH 39 and 41. Full phase results are in profile_summary.md.
@@ -80,7 +84,7 @@ absent from the historical K5 extended driver; no old acceptance was assumed.
 The [executed-step cost control](k5-cost.md) now tests the specific discrepancy
 between padded packing steps and actual kernel work.
 
-The ordinary K5 candidate is awaiting archive acceptance before adoption. Existing K5 guards from the historical
-source are useful background, not acceptance of this rebased/outlined source.
-Any candidate with a measured benefit still needs relevant extended checks,
-original benchmark comparison and package acceptance before replacing the root.
+Ordinary K5 is adopted after its new extended/gate/output checks, full original
+benchmark comparison and archive acceptance. Outlined K5 and cost controls remain
+unadopted. Historical K5 checks were not substituted for the rebased source's
+acceptance. All modifications remain local v56; nothing has been pushed.

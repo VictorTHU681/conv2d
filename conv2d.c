@@ -2504,6 +2504,159 @@ static void k4(const kp_t* P)
         : [A]"r"(&A)
         : XCLOB, "z0", "z1", "z2", "z3", "z4", "z25", "z26", "z27", "z28", "z31", "p0", "p3", "p4", "memory", "cc");
 }
+// Five output-row residues, each with three interleaved column classes.
+// ZA column 15 is inactive; exact live input is KW+191 floats.
+#define K5_STEP(PQ, BOFF) \
+        "ld1w {z0.s}, p0/z, [" #PQ "]\n\t" \
+        "ld1w {z1.s}, p0/z, [" #PQ ", #1, mul vl]\n\t" \
+        "ld1w {z2.s}, p0/z, [" #PQ ", #2, mul vl]\n\t" \
+        "ld1w {z3.s}, p0/z, [" #PQ ", #3, mul vl]\n\t" \
+        "ld1w {z4.s}, p0/z, [x2, #" #BOFF ", mul vl]\n\t" \
+        "fmopa za0.s, p0/m, p0/m, z0.s, z4.s\n\t" \
+        "fmopa za1.s, p0/m, p0/m, z1.s, z4.s\n\t" \
+        "fmopa za2.s, p0/m, p0/m, z2.s, z4.s\n\t" \
+        "fmopa za3.s, p0/m, p0/m, z3.s, z4.s\n\t"
+static __attribute__((noinline)) void k5(const kp_t* P)
+{
+    const long sh = ((uintptr_t)P->in_row >> 2) & 15;
+    const long live = P->KW + 191, ncp = live + sh;
+    const long TSB = (((ncp + 2) / 3 + 15) & ~15L) * 4 + 64;
+    ka_t A; fill_args(&A, P, 1, 0, 0);
+    A.in_row = (int64_t)((uintptr_t)P->in_row - (uintptr_t)sh * sizeof(float));
+    A.slot = 3 * TSB; A.TSB = TSB;
+    A.it = (P->KW + 2) / 3; A.kw4 = (P->KW + 2) % 3;
+    A.ncp_full = ncp / 48; A.ncp_tail = (ncp % 48) / 3; A.khkw4 = ncp % 3;
+    A.n2 = TSB * ((sh + 0) % 3) + 4 * ((sh + 0) / 3);
+    A.e2 = TSB * ((sh + 1) % 3) + 4 * ((sh + 1) / 3);
+    A.T  = TSB * ((sh + 2) % 3) + 4 * ((sh + 2) / 3);
+    roll_first_planes(P->ring, P->in_row, live, sh, 3, TSB / 4);
+    asm volatile(
+        LOAD_ARGS
+        "ldr x3, [%[A], #200]\n\t"
+        "ldr x7, [%[A], #136]\n\t"
+        "fmov z31.s, #0.0\n\t"
+        "1:\n\t"
+        "mov x16, x17\n\t"
+        "sub x17, x28, x17\n\t"
+        "add x22, x0, x1\n\t"
+        "cmp x8, #1\n\t"
+        "csel x22, x0, x22, eq\n\t"
+        "add x21, x0, x26\n\t"
+        "mov x12, x22\n\t"
+        "mov x13, x17\n\t"
+        "ldr x24, [%[A], #168]\n\t"
+        "cbz x24, 71f\n\t"
+        "70:\n\t"
+        "prfm pldl2keep, [x21, #0]\n\t"
+        "prfm pldl2keep, [x21, #64]\n\t"
+        "prfm pldl2keep, [x21, #128]\n\t"
+        "ld3w {z0.s, z1.s, z2.s}, p0/z, [x12]\n\t"
+        "st1w {z0.s}, p0, [x13]\n\t"
+        "add x23, x13, x3\n\t"
+        "st1w {z1.s}, p0, [x23]\n\t"
+        "add x23, x23, x3\n\t"
+        "st1w {z2.s}, p0, [x23]\n\t"
+        "add x12, x12, #192\n\t"
+        "add x13, x13, #64\n\t"
+        "add x21, x21, #192\n\t"
+        "subs x24, x24, #1\n\t"
+        "b.ne 70b\n\t"
+        "71:\n\t"
+        "ldr x24, [%[A], #176]\n\t"
+        "whilelo p4.s, xzr, x24\n\t"
+        "ld3w {z0.s, z1.s, z2.s}, p4/z, [x12]\n\t"
+        "st1w {z0.s}, p0, [x13]\n\t"
+        "add x23, x13, x3\n\t"
+        "st1w {z1.s}, p0, [x23]\n\t"
+        "add x23, x23, x3\n\t"
+        "st1w {z2.s}, p0, [x23]\n\t"
+        "add x12, x12, x24, lsl #3\n\t"
+        "add x12, x12, x24, lsl #2\n\t"
+        "add x13, x13, x24, lsl #2\n\t"
+        "ldr x24, [%[A], #272]\n\t"
+        "cbz x24, 73f\n\t"
+        "ptrue p4.s, vl1\n\t"
+        "72:\n\t"
+        "ld1rw {z0.s}, p0/z, [x12]\n\t"
+        "st1w {z0.s}, p4, [x13]\n\t"
+        "add x12, x12, #4\n\t"
+        "add x13, x13, x3\n\t"
+        "subs x24, x24, #1\n\t"
+        "b.ne 72b\n\t"
+        "73:\n\t"
+        "ldr x24, [%[A], #112]\n\t"
+        "ldr x22, [%[A], #192]\n\t"
+        "add x22, x22, x16\n\t"
+        "ldr x23, [%[A], #208]\n\t"
+        "add x23, x23, x16\n\t"
+        "ldr x12, [%[A], #184]\n\t"
+        "add x16, x16, x12\n\t"
+        "mov x15, x7\n\t"
+        ".p2align 4\n\t"
+        "2:\n\t"
+
+        K5_STEP(x16, 0)
+        K5_STEP(x22, 1)
+        K5_STEP(x23, 2)
+        "add x16, x16, #4\n\t"
+        "add x22, x22, #4\n\t"
+        "add x23, x23, #4\n\t"
+        "add x2, x2, #192\n\t"
+        "subs x15, x15, #1\n\t"
+        "b.ne 2b\n\t"
+        "ldr x12, [%[A], #264]\n\t"
+        "cbz x12, 42f\n\t"
+
+        K5_STEP(x16, 0)
+        "cmp x12, #1\n\t"
+        "b.eq 41f\n\t"
+
+        K5_STEP(x22, 1)
+        "41:\n\t"
+        "add x2, x2, #192\n\t"
+        "42:\n\t"
+
+        WRAP_B(x2) SEL_OUT
+        "cmp x27, x24\n\t"
+        "b.hs 4f\n\t"
+        "add w12, w27, w27, lsl #1\n\t"
+        "mova z0.s, p0/m, za0v.s[w12, 0]\n\t"
+        "mova z1.s, p0/m, za0v.s[w12, 1]\n\t"
+        "mova z2.s, p0/m, za0v.s[w12, 2]\n\t"
+        "st3w {z0.s, z1.s, z2.s}, p0, [x20, #0, mul vl]\n\t"
+        "mova za0v.s[w12, 0], p0/m, z31.s\n\t"
+        "mova za0v.s[w12, 1], p0/m, z31.s\n\t"
+        "mova za0v.s[w12, 2], p0/m, z31.s\n\t"
+        "mova z0.s, p0/m, za1v.s[w12, 0]\n\t"
+        "mova z1.s, p0/m, za1v.s[w12, 1]\n\t"
+        "mova z2.s, p0/m, za1v.s[w12, 2]\n\t"
+        "st3w {z0.s, z1.s, z2.s}, p0, [x20, #3, mul vl]\n\t"
+        "mova za1v.s[w12, 0], p0/m, z31.s\n\t"
+        "mova za1v.s[w12, 1], p0/m, z31.s\n\t"
+        "mova za1v.s[w12, 2], p0/m, z31.s\n\t"
+        "mova z0.s, p0/m, za2v.s[w12, 0]\n\t"
+        "mova z1.s, p0/m, za2v.s[w12, 1]\n\t"
+        "mova z2.s, p0/m, za2v.s[w12, 2]\n\t"
+        "st3w {z0.s, z1.s, z2.s}, p0, [x20, #6, mul vl]\n\t"
+        "mova za2v.s[w12, 0], p0/m, z31.s\n\t"
+        "mova za2v.s[w12, 1], p0/m, z31.s\n\t"
+        "mova za2v.s[w12, 2], p0/m, z31.s\n\t"
+        "mova z0.s, p0/m, za3v.s[w12, 0]\n\t"
+        "mova z1.s, p0/m, za3v.s[w12, 1]\n\t"
+        "mova z2.s, p0/m, za3v.s[w12, 2]\n\t"
+        "st3w {z0.s, z1.s, z2.s}, p0, [x20, #9, mul vl]\n\t"
+        "mova za3v.s[w12, 0], p0/m, z31.s\n\t"
+        "mova za3v.s[w12, 1], p0/m, z31.s\n\t"
+        "mova za3v.s[w12, 2], p0/m, z31.s\n\t"
+        "4:\n\t"
+
+        ADV_CNT(x27)
+        ROW_TAIL
+        : : [A]"r"(&A)
+        : XCLOB, "z0", "z1", "z2", "z3", "z4", "z31", "p0", "p3", "p4", "memory", "cc");
+}
+#undef K5_STEP
+
 // b 表：kind 16: R[y][X][c] = k[(y-c) mod KH][X]（残差 s_base+c ≥ KH → 0）；kind 8: c=2s+ic → k[(y-s) mod KH][X-ic]；kind 4: c=4s+ic
 // 每次调用都重建（不缓存打包结果），按行构建：kj 只依赖 (y,c)，提出内层（无逐元素取模），X 方向三段拷贝/清零
 #include <arm_sve.h>
@@ -2511,12 +2664,12 @@ static void roll_build_R_row(float* R, const float* k, long KH, long KW, long st
 {
     int32_t offsets[16], shifts[16], live[16];
     for (int c = 0; c < 16; c++) {
-        long sidx = kind == 16 ? c : kind == 8 ? c >> 1 : c >> 2;
-        long ic = kind == 16 ? 0 : kind == 8 ? c & 1 : c & 3;
+        long sidx = kind == 16 ? c : kind == 8 ? c >> 1 : kind == 5 ? c / 3 : c >> 2;
+        long ic = kind == 16 ? 0 : kind == 8 ? c & 1 : kind == 5 ? c % 3 : c & 3;
         long kj = y - sidx; if (kj < 0) kj += KH;
         offsets[c] = (int32_t)(kj * KW - ic);
         shifts[c] = (int32_t)ic;
-        live[c] = s_base + sidx < KH;
+        live[c] = s_base + sidx < KH && (kind != 5 || c < 15);
     }
     float* Ry = R + y * steps * 16;
     for (int c = 0; c < 16; c += (int)svcntw()) {
@@ -2644,9 +2797,25 @@ static int roll_groups(long KH, long KW, rgrp_t* G)
 // Preserve the original rolling plan when a 128-column K9 strip cannot fit.
 static int roll_groups_width(long KH, long KW, rgrp_t* G, long outW)
 {
-    if (outW >= 128) return roll_groups(KH, KW, G);
-    int ng = roll_groups_base(KH, KW, G);
-    for (int g = 0; g < ng; g++) G[g].sf = KH - 1;
+    int ng;
+    if (outW >= 128) ng = roll_groups(KH, KW, G);
+    else {
+        ng = roll_groups_base(KH, KW, G);
+        for (int g = 0; g < ng; g++) G[g].sf = KH - 1;
+    }
+    if (outW >= 192) {
+        int pair = -1, tail = -1;
+        for (int g = 0; g < ng; g++) {
+            if (G[g].kind == 33) pair = g;
+            if (G[g].kind == 8 && G[g].nvA == 8) tail = g;
+        }
+        if (pair >= 0 && tail >= 0) {
+            G[pair].kind = 35;
+            G[tail].kind = 5; G[tail].nvA = 5; G[tail].width = 192;
+            G[tail].steps = ((KW + 4) / 3) * 3;
+            G[tail].RSB = G[tail].steps * 64;
+        }
+    }
     return ng;
 }
 // 滚动形态的结构性开关（与具体用例尺寸无关）：KH ≥ 16 才有 16 残差组（≤ 256 保证分组数 ≤ 12）、
@@ -2725,7 +2894,7 @@ static void roll_prepare(const float* k, long H, long W, long KH, long KW, int n
             for (long st = 0; st < nstrip; st++) {
                 long base = st * G->width; if (base + G->width > outW) base = outW - G->width;
                 P->items[P->nit] = (ritem_t){g, base};
-                double w = G->kind == 9 ? 140/100.0 : G->kind == 8 ? g_knobs.roll_w8 / 100.0 : G->kind == 4 ? g_knobs.roll_w4 / 100.0 : (G->kind == 16 || G->kind == 17) ? g_knobs.roll_w16 / 100.0 : 1.0;
+                double w = G->kind == 9 ? 140/100.0 : G->kind == 8 ? g_knobs.roll_w8 / 100.0 : (G->kind == 4 || G->kind == 5) ? g_knobs.roll_w4 / 100.0 : (G->kind == 16 || G->kind == 17) ? g_knobs.roll_w16 / 100.0 : 1.0;
                 P->cost[P->nit] = (double)G->steps * outH * w;   // ∝ tile-步数（各类都是 4 tile）× 相对慢速权重
                 P->C += P->cost[P->nit]; P->nit++;
             }
@@ -2922,7 +3091,7 @@ static void roll_worker(int tid, int nth, const ctx_t* c)
         K.carry = state + 1024; K.resume = off != 0;
         if (off) carry_load_za(state); else sme_zero_za();
         if (g->kind == 32) k16pair(&K); else if (g->kind == 33) k16pairf(&K); else if (g->kind == 34) k16pairf3(&K); else if (g->kind == 35) k16pairf4(&K); else if (g->kind == 16) k16single(&K);
-        else if (g->kind == 17) k16singlef2(&K); else if (g->kind == 9) k8f(&K); else if (g->kind == 8) k8(&K); else k4(&K);
+        else if (g->kind == 17) k16singlef2(&K); else if (g->kind == 9) k8f(&K); else if (g->kind == 8) k8(&K); else if (g->kind == 5) k5(&K); else k4(&K);
         if (g_roll_diag) { int ki = roll_kind_idx(g->kind); D->tk[ki] += cyc() - t0; D->ts[ki] += 4L * g->steps * (rows); }
         if (off + rows < total) carry_store_za(state);
 
@@ -2940,7 +3109,7 @@ static void roll_diag_print(int nth)
         for (int k = 0; k < 4; k++) { tk[k] += g_rdiag[t].tk[k]; ts[k] += g_rdiag[t].ts[k]; }
         double ms = g_rdiag[t].tot / 1e5; if (ms < mn) mn = ms; if (ms > mx) mx = ms; av += ms / nth;
     }
-    fprintf(stderr, "[roll] thr ms min/avg/max %.3f/%.3f/%.3f | 周期/tile步: pair %.2f single %.2f 8x2 %.2f 4x4 %.2f | 份额 %%: %.1f %.1f %.1f %.1f\n", mn, av, mx,
+    fprintf(stderr, "[roll] thr ms min/avg/max %.3f/%.3f/%.3f | 周期/tile步: pair %.2f single %.2f 8x2 %.2f 4x4/5x3 %.2f | 份额 %%: %.1f %.1f %.1f %.1f\n", mn, av, mx,
             ts[0] ? tk[0] * tick_cyc / ts[0] : 0, ts[1] ? tk[1] * tick_cyc / ts[1] : 0, ts[2] ? tk[2] * tick_cyc / ts[2] : 0, ts[3] ? tk[3] * tick_cyc / ts[3] : 0,
             100.0 * tk[0] / (tk[0] + tk[1] + tk[2] + tk[3] + 1), 100.0 * tk[1] / (tk[0] + tk[1] + tk[2] + tk[3] + 1), 100.0 * tk[2] / (tk[0] + tk[1] + tk[2] + tk[3] + 1), 100.0 * tk[3] / (tk[0] + tk[1] + tk[2] + tk[3] + 1));
     if (getenv("CONV_ROLL_DIAG_THR")) {

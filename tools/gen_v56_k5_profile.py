@@ -8,6 +8,7 @@ parser=argparse.ArgumentParser()
 parser.add_argument('--root',type=Path,default=Path('build/v56/experiments/k5-triplet'))
 parser.add_argument('--variants',default='baseline,triplet')
 parser.add_argument('--table-counts',action='store_true')
+parser.add_argument('--thread-detail',action='store_true')
 args=parser.parse_args()
 root=args.root
 def once(s,old,new):
@@ -19,6 +20,11 @@ for name in args.variants.split(','):
            'static rdiag_t g_rdiag[1024];\nstatic uint64_t k5_pack_ticks[1024];\nstatic unsigned long k5_profile_call;')
     s=once(s,'    if (tid >= nth || tid >= P->pnth) return;',
            '    if (tid >= nth || tid >= P->pnth) return;\n    uint64_t k5_pack_begin=cyc();')
+    if args.thread_detail:
+        s=once(s,'static unsigned long k5_profile_call;',
+               'static unsigned long k5_profile_call;\nstatic uint64_t k5_start_ticks[1024];')
+        s=once(s,'    uint64_t k5_pack_begin=cyc();',
+               '    uint64_t k5_pack_begin=cyc();\n    k5_start_ticks[tid]=t_start;')
     a=s.index('static void roll_worker(');b=s.index('    sme_start();',a)
     s=s[:b]+'    k5_pack_ticks[tid]=cyc()-k5_pack_begin;\n'+s[b:]
     s=once(s,'D->ts[ki] += 4L * g->steps * (rows);',
@@ -55,6 +61,19 @@ for name in args.variants.split(','):
 '''
         counts=counts.replace('KF_OWNED','G->kfowner==g' if 'int kfowner;' in s else '1')
         new=new.replace('    if (g_roll_diag)',counts+'    if (g_roll_diag)')
+    if args.thread_detail:
+        detail='''    uint64_t origin=k5_start_ticks[0];
+    for(int t=1;t<nth;t++) if(k5_start_ticks[t]<origin) origin=k5_start_ticks[t];
+    for(int t=0;t<nth;t++) {
+        uint64_t tail=g_rdiag[t].tk[1]+g_rdiag[t].tk[2]+g_rdiag[t].tk[3];
+        long tailsteps=g_rdiag[t].ts[1]+g_rdiag[t].ts[2]+g_rdiag[t].ts[3];
+        fprintf(stderr,"K5_THREAD call=%lu tid=%d start_us=%.3f end_us=%.3f duration_us=%.3f pack_us=%.3f main_us=%.3f tail_us=%.3f main_steps=%ld tail_steps=%ld\\n",
+                call,t,(k5_start_ticks[t]-origin)*1e6/hz,
+                (k5_start_ticks[t]-origin+g_rdiag[t].tot)*1e6/hz,g_rdiag[t].tot*1e6/hz,
+                k5_pack_ticks[t]*1e6/hz,g_rdiag[t].tk[0]*1e6/hz,tail*1e6/hz,g_rdiag[t].ts[0],tailsteps);
+    }
+'''
+        new=new.replace('    if (g_roll_diag)',detail+'    if (g_roll_diag)')
     s=once(s,old,new)
     s=s.replace('1.55e9 / 1e8','1.55e9 / (double)cyc_hz()').replace('g_rdiag[t].tot / 1e5','g_rdiag[t].tot * (1e3/(double)cyc_hz())')
     p=root/(name+'_profile.c');p.write_text(s)

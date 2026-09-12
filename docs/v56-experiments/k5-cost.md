@@ -1,7 +1,8 @@
 # K5 scheduling cost from executed steps
 
-Candidate experiment; accepted local v56 remains source 4689e38f / 4817eff.
-No push. The [rebased K5 experiment](k5-layout.md) is still in official comparison.
+Rejected cost controls over the K5 experiment; ordinary K5 source 4b35b3d5
+is now accepted after [official and archive validation](k5-layout.md).
+The cost experiment baseline remains immutable 4817eff. No push.
 
 The phase profile 1583390 finds that K5 reduces average KH 41 kernel-region
 work but increases per-thread duration imbalance. In DDR the maximum-minus-mean
@@ -45,7 +46,12 @@ arithmetic bodies. Cost changes still alter host planning and piece boundaries,
 and other code/data layout or noise remain possible influences. Full results
 and machine-code checks are in results/v56/experiments/k5-cost/.
 
-The ordinary K5 candidate's independent original-benchmark comparison is now
-complete; it retains the original scheduling costs and is in archive acceptance.
+Ordinary K5's independent original-benchmark and archive comparisons are complete;
+it is adopted with the original scheduling costs.
 Further scheduling investigation should identify the longest-duration workers'
 actual main/tail workloads before changing weights again.
+
+Thread-detail job **1583419**, submitted for cn20481, compares baseline 4817eff,
+ordinary K5 and k5cost at KH 41. It records per-thread absolute-relative start/end
+times, durations, packing time and main/tail work after workers have joined.
+It is pending; detailed printing is diagnostic and cannot define production speed.
