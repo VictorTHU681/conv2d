@@ -1,0 +1,115 @@
+HOST cn20483 2026-09-13T02:17:15+08:00
+pid 8162's current affinity list: 37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+PLACEMENT cpu_node=1 hbm_node=17
+Cpus_allowed_list:	37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+Mems_allowed_list:	0-31
+1549999
+policy: default
+preferred node: current
+physcpubind: 37 75 113 151 189 227 265 303 341 379 417 455 493 531 569 607 
+cpubind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+nodebind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 
+preferred: 
+EFFECTIVE_PLACEMENT
+policy: preferred
+preferred node: 17
+physcpubind: 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 
+cpubind: 1 
+nodebind: 1 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 
+preferred: 17 
+c2ec70d05c76a8103e2b331347bbd263adde0d4ab9d85ef0f2ade95c7e49dbd7  build/v56/experiments/mixed-throughput/probe.c
+MIXED_BEGIN threads=1 2026-09-13T02:17:17+08:00
+1549999
+MIXED_TIMER_HZ 100000000 threads=1 outer_iters=1000000 steps_per_iter=4
+MIXED_THROUGHPUT round=0 variant=mix0 threads=1 ns_per_step_min=5.161295 mean=5.161295 max=5.161295
+MIXED_THROUGHPUT round=0 variant=mix2 threads=1 ns_per_step_min=5.161295 mean=5.161295 max=5.161295
+MIXED_THROUGHPUT round=0 variant=mix4 threads=1 ns_per_step_min=5.161295 mean=5.161295 max=5.161295
+MIXED_THROUGHPUT round=0 variant=mix6 threads=1 ns_per_step_min=5.161295 mean=5.161295 max=5.161295
+MIXED_THROUGHPUT round=0 variant=mix8 threads=1 ns_per_step_min=5.161295 mean=5.161295 max=5.161295
+MIXED_THROUGHPUT round=0 variant=mix10 threads=1 ns_per_step_min=6.451618 mean=6.451618 max=6.451618
+MIXED_THROUGHPUT round=0 variant=mix12 threads=1 ns_per_step_min=7.741940 mean=7.741940 max=7.741940
+MIXED_THROUGHPUT round=0 variant=mix16 threads=1 ns_per_step_min=10.322585 mean=10.322585 max=10.322585
+MIXED_THROUGHPUT round=0 variant=mix18 threads=1 ns_per_step_min=11.612908 mean=11.612908 max=11.612908
+MIXED_THROUGHPUT round=0 variant=vec2 threads=1 ns_per_step_min=1.693553 mean=1.693553 max=1.693553
+MIXED_THROUGHPUT round=0 variant=vec4 threads=1 ns_per_step_min=1.886605 mean=1.886605 max=1.886605
+MIXED_THROUGHPUT round=0 variant=vec8 threads=1 ns_per_step_min=2.580650 mean=2.580650 max=2.580650
+MIXED_THROUGHPUT round=0 variant=vec16 threads=1 ns_per_step_min=5.161295 mean=5.161295 max=5.161295
+MIXED_THROUGHPUT round=0 variant=vec18 threads=1 ns_per_step_min=5.806457 mean=5.806457 max=5.806457
+MIXED_THROUGHPUT round=1 variant=vec18 threads=1 ns_per_step_min=5.806457 mean=5.806457 max=5.806457
+MIXED_THROUGHPUT round=1 variant=vec16 threads=1 ns_per_step_min=5.161295 mean=5.161295 max=5.161295
+MIXED_THROUGHPUT round=1 variant=vec8 threads=1 ns_per_step_min=2.580650 mean=2.580650 max=2.580650
+MIXED_THROUGHPUT round=1 variant=vec4 threads=1 ns_per_step_min=1.886580 mean=1.886580 max=1.886580
+MIXED_THROUGHPUT round=1 variant=vec2 threads=1 ns_per_step_min=1.612912 mean=1.612912 max=1.612912
+MIXED_THROUGHPUT round=1 variant=mix18 threads=1 ns_per_step_min=11.612908 mean=11.612908 max=11.612908
+MIXED_THROUGHPUT round=1 variant=mix16 threads=1 ns_per_step_min=10.322585 mean=10.322585 max=10.322585
+MIXED_THROUGHPUT round=1 variant=mix12 threads=1 ns_per_step_min=7.741940 mean=7.741940 max=7.741940
+MIXED_THROUGHPUT round=1 variant=mix10 threads=1 ns_per_step_min=6.451615 mean=6.451615 max=6.451615
+MIXED_THROUGHPUT round=1 variant=mix8 threads=1 ns_per_step_min=5.161295 mean=5.161295 max=5.161295
+MIXED_THROUGHPUT round=1 variant=mix6 threads=1 ns_per_step_min=5.161295 mean=5.161295 max=5.161295
+MIXED_THROUGHPUT round=1 variant=mix4 threads=1 ns_per_step_min=5.161295 mean=5.161295 max=5.161295
+MIXED_THROUGHPUT round=1 variant=mix2 threads=1 ns_per_step_min=5.161295 mean=5.161295 max=5.161295
+MIXED_THROUGHPUT round=1 variant=mix0 threads=1 ns_per_step_min=5.161295 mean=5.161295 max=5.161295
+MIXED_THROUGHPUT round=2 variant=mix0 threads=1 ns_per_step_min=5.161295 mean=5.161295 max=5.161295
+MIXED_THROUGHPUT round=2 variant=mix2 threads=1 ns_per_step_min=5.161295 mean=5.161295 max=5.161295
+MIXED_THROUGHPUT round=2 variant=mix4 threads=1 ns_per_step_min=5.161295 mean=5.161295 max=5.161295
+MIXED_THROUGHPUT round=2 variant=mix6 threads=1 ns_per_step_min=5.161295 mean=5.161295 max=5.161295
+MIXED_THROUGHPUT round=2 variant=mix8 threads=1 ns_per_step_min=5.161295 mean=5.161295 max=5.161295
+MIXED_THROUGHPUT round=2 variant=mix10 threads=1 ns_per_step_min=6.451618 mean=6.451618 max=6.451618
+MIXED_THROUGHPUT round=2 variant=mix12 threads=1 ns_per_step_min=7.741940 mean=7.741940 max=7.741940
+MIXED_THROUGHPUT round=2 variant=mix16 threads=1 ns_per_step_min=10.322585 mean=10.322585 max=10.322585
+MIXED_THROUGHPUT round=2 variant=mix18 threads=1 ns_per_step_min=11.612908 mean=11.612908 max=11.612908
+MIXED_THROUGHPUT round=2 variant=vec2 threads=1 ns_per_step_min=1.612910 mean=1.612910 max=1.612910
+MIXED_THROUGHPUT round=2 variant=vec4 threads=1 ns_per_step_min=1.886602 mean=1.886602 max=1.886602
+MIXED_THROUGHPUT round=2 variant=vec8 threads=1 ns_per_step_min=2.580650 mean=2.580650 max=2.580650
+MIXED_THROUGHPUT round=2 variant=vec16 threads=1 ns_per_step_min=5.161295 mean=5.161295 max=5.161295
+MIXED_THROUGHPUT round=2 variant=vec18 threads=1 ns_per_step_min=5.806455 mean=5.806455 max=5.806455
+1549999
+MIXED_BEGIN threads=38 2026-09-13T02:17:18+08:00
+1549999
+MIXED_TIMER_HZ 100000000 threads=38 outer_iters=1000000 steps_per_iter=4
+MIXED_THROUGHPUT round=0 variant=mix0 threads=38 ns_per_step_min=5.161295 mean=5.161637 max=5.174308
+MIXED_THROUGHPUT round=0 variant=mix2 threads=38 ns_per_step_min=5.161295 mean=5.161646 max=5.174640
+MIXED_THROUGHPUT round=0 variant=mix4 threads=38 ns_per_step_min=5.161295 mean=5.161501 max=5.169123
+MIXED_THROUGHPUT round=0 variant=mix6 threads=38 ns_per_step_min=5.161295 mean=5.163074 max=5.228890
+MIXED_THROUGHPUT round=0 variant=mix8 threads=38 ns_per_step_min=5.161295 mean=5.161503 max=5.169210
+MIXED_THROUGHPUT round=0 variant=mix10 threads=38 ns_per_step_min=6.451615 mean=6.455561 max=6.601463
+MIXED_THROUGHPUT round=0 variant=mix12 threads=38 ns_per_step_min=7.741937 mean=7.742444 max=7.761105
+MIXED_THROUGHPUT round=0 variant=mix16 threads=38 ns_per_step_min=10.322582 mean=10.323920 max=10.373310
+MIXED_THROUGHPUT round=0 variant=mix18 threads=38 ns_per_step_min=11.612905 mean=11.614628 max=11.678285
+MIXED_THROUGHPUT round=0 variant=vec2 threads=38 ns_per_step_min=1.612910 mean=1.614744 max=1.682557
+MIXED_THROUGHPUT round=0 variant=vec4 threads=38 ns_per_step_min=1.854867 mean=1.885884 max=1.891067
+MIXED_THROUGHPUT round=0 variant=vec8 threads=38 ns_per_step_min=2.580647 mean=2.580962 max=2.592460
+MIXED_THROUGHPUT round=0 variant=vec16 threads=38 ns_per_step_min=5.161293 mean=5.165283 max=5.312850
+MIXED_THROUGHPUT round=0 variant=vec18 threads=38 ns_per_step_min=5.806455 mean=5.807371 max=5.841193
+MIXED_THROUGHPUT round=1 variant=vec18 threads=38 ns_per_step_min=5.806455 mean=5.807029 max=5.828238
+MIXED_THROUGHPUT round=1 variant=vec16 threads=38 ns_per_step_min=5.161295 mean=5.161621 max=5.173675
+MIXED_THROUGHPUT round=1 variant=vec8 threads=38 ns_per_step_min=2.580647 mean=2.580781 max=2.585640
+MIXED_THROUGHPUT round=1 variant=vec4 threads=38 ns_per_step_min=1.886600 mean=1.887698 max=1.928268
+MIXED_THROUGHPUT round=1 variant=vec2 threads=38 ns_per_step_min=1.612910 mean=1.613557 max=1.637452
+MIXED_THROUGHPUT round=1 variant=mix18 threads=38 ns_per_step_min=11.612905 mean=11.613411 max=11.632062
+MIXED_THROUGHPUT round=1 variant=mix16 threads=38 ns_per_step_min=10.322582 mean=10.323081 max=10.341430
+MIXED_THROUGHPUT round=1 variant=mix12 threads=38 ns_per_step_min=7.741937 mean=7.742250 max=7.753737
+MIXED_THROUGHPUT round=1 variant=mix10 threads=38 ns_per_step_min=6.451615 mean=6.451909 max=6.462702
+MIXED_THROUGHPUT round=1 variant=mix8 threads=38 ns_per_step_min=5.161295 mean=5.162181 max=5.194970
+MIXED_THROUGHPUT round=1 variant=mix6 threads=38 ns_per_step_min=5.161293 mean=5.161531 max=5.170278
+MIXED_THROUGHPUT round=1 variant=mix4 threads=38 ns_per_step_min=5.161295 mean=5.162208 max=5.195997
+MIXED_THROUGHPUT round=1 variant=mix2 threads=38 ns_per_step_min=5.161295 mean=5.161491 max=5.168753
+MIXED_THROUGHPUT round=1 variant=mix0 threads=38 ns_per_step_min=5.161295 mean=5.161600 max=5.172890
+MIXED_THROUGHPUT round=2 variant=mix0 threads=38 ns_per_step_min=5.161295 mean=5.161501 max=5.169123
+MIXED_THROUGHPUT round=2 variant=mix2 threads=38 ns_per_step_min=5.161295 mean=5.161521 max=5.169885
+MIXED_THROUGHPUT round=2 variant=mix4 threads=38 ns_per_step_min=5.161295 mean=5.161608 max=5.173188
+MIXED_THROUGHPUT round=2 variant=mix6 threads=38 ns_per_step_min=5.161295 mean=5.161545 max=5.170797
+MIXED_THROUGHPUT round=2 variant=mix8 threads=38 ns_per_step_min=5.161295 mean=5.161633 max=5.174125
+MIXED_THROUGHPUT round=2 variant=mix10 threads=38 ns_per_step_min=6.451615 mean=6.451869 max=6.461177
+MIXED_THROUGHPUT round=2 variant=mix12 threads=38 ns_per_step_min=7.741937 mean=7.742294 max=7.755388
+MIXED_THROUGHPUT round=2 variant=mix16 threads=38 ns_per_step_min=10.322582 mean=10.323174 max=10.344993
+MIXED_THROUGHPUT round=2 variant=mix18 threads=38 ns_per_step_min=11.612908 mean=11.613448 max=11.633455
+MIXED_THROUGHPUT round=2 variant=vec2 threads=38 ns_per_step_min=1.612910 mean=1.613544 max=1.636963
+MIXED_THROUGHPUT round=2 variant=vec4 threads=38 ns_per_step_min=1.886600 mean=1.886684 max=1.889743
+MIXED_THROUGHPUT round=2 variant=vec8 threads=38 ns_per_step_min=2.580647 mean=2.580767 max=2.585097
+MIXED_THROUGHPUT round=2 variant=vec16 threads=38 ns_per_step_min=5.161293 mean=5.161488 max=5.168653
+MIXED_THROUGHPUT round=2 variant=vec18 threads=38 ns_per_step_min=5.806455 mean=5.807073 max=5.829883
+1549999
+MIXED_PROBE_DONE 2026-09-13T02:17:20+08:00
