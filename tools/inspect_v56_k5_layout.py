@@ -8,7 +8,7 @@ parser.add_argument('--experiment',choices=['k5-layout','k5-cost'],default='k5-l
 args=parser.parse_args()
 root=Path('build/v56/experiments')/args.experiment/'disassembly'
 out=Path('results/v56/experiments')/args.experiment
-report=[];reference=None
+report=[];reference=None;functions={}
 variants=['baseline','triplet','k5cost','tailcost'] if args.experiment=='k5-cost' else ['baseline','triplet','baseline_out','triplet_out']
 for v in variants:
     rows=[];symbol=None
@@ -18,6 +18,7 @@ for v in variants:
         m=re.match(r'\s*([0-9a-f]+):\s+([0-9a-f]{8})\s+(.*)',line)
         if m:rows.append((int(m[1],16),m[2],re.sub(r'\s+',' ',m[3].strip()),symbol,line))
     counts=Counter(r[3] for r in rows);hits=[]
+    functions[v]={name:[(r[0],r[1]) for r in rows if r[3]==name] for name in ['k5','roll_worker']}
     for i,x in enumerate(rows):
         if x[3]!='roll_worker' and not x[3].startswith('k16pairf4'): continue
         if (x[2].startswith('ld1rqw') and i+16<len(rows) and
@@ -36,5 +37,9 @@ for v in variants:
         if symbol=='roll_worker' or symbol.startswith(('k16pairf4','k5.')) or symbol=='k5':
             report.append(f'{v} function={symbol} disassembled_instruction_count={n}')
 report.append('All 12 extracted F4 steps have identical arithmetic instruction words. Counts include compiler scaffolding and padding, not dynamic execution counts.')
+if args.experiment=='k5-cost':
+    for name in ['k5','roll_worker']:
+        same=all(functions[v][name]==functions['triplet'][name] for v in ['k5cost','tailcost'])
+        report.append(f'K5 cost variants function={name} full_instruction_addresses_and_words_identical={same}')
 (out/'machine_code.txt').write_text('\n'.join(report)+'\n')
 print('\n'.join(report))

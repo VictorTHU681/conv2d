@@ -27,7 +27,25 @@ The kernel worker, output dependency/claim functions and group dispatcher are
 byte-identical between the three K5 variants. New cost values may change work
 piece boundaries, so output ownership gets fresh runtime checks.
 
-Job **1583403**, cn20481, is running: 261 signed bitwise state cases per variant,
-54 output ownership cases for each new cost variant, then a four-order Williams
-design over four shapes and each allowed memory placement. Disassembly is saved
-for code-layout verification. No speedup or correctness result is claimed yet.
+Job **1583403**, cn20481, 04:24:19–04:27:43, succeeded: 1,044 signed
+bitwise state cases, 108 runtime output-ownership cases with zero active conflicts,
+and 640 timed output hashes. Four Williams-design orders balance process position
+and immediate predecessor, with separate DDR/HBM comparisons.
+
+The result rejects these cost changes for adoption. Against ordinary K5,
+k5cost changes KH 41 by -0.42% DDR / -0.60% HBM; tailcost changes it by
+-0.40% / -0.62%. Tailcost additionally regresses KH 39 by 1.12% DDR and
+1.41% HBM. The mathematically smaller step count does not produce a better
+end-to-end schedule under the existing empirical weights and chunking scheme.
+Do not claim the padded-step discrepancy caused the observed imbalance.
+
+The three K5 variants' entire k5 and roll_worker functions have identical
+instruction addresses and words in these binaries, not just identical F4
+arithmetic bodies. Cost changes still alter host planning and piece boundaries,
+and other code/data layout or noise remain possible influences. Full results
+and machine-code checks are in results/v56/experiments/k5-cost/.
+
+The ordinary K5 candidate's independent original-benchmark comparison is now
+complete; it retains the original scheduling costs and is in archive acceptance.
+Further scheduling investigation should identify the longest-duration workers'
+actual main/tail workloads before changing weights again.

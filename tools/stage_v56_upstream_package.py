@@ -6,12 +6,12 @@ import subprocess
 import argparse
 
 parser=argparse.ArgumentParser()
-parser.add_argument('--experiment',choices=['upstream-gate','kf-share'],default='upstream-gate')
+parser.add_argument('--experiment',choices=['upstream-gate','kf-share','k5-layout'],default='upstream-gate')
 args=parser.parse_args()
 root=Path('build/v56/experiments')/args.experiment;stage=root/'package'
 (stage/'tools').mkdir(parents=True,exist_ok=True)
 (stage/'submissions').mkdir(exist_ok=True)
-shutil.copyfile(root/'merged.c',stage/'conv2d.c')
+shutil.copyfile(root/('triplet.c' if args.experiment=='k5-layout' else 'merged.c'),stage/'conv2d.c')
 for name in ['bench_conv.c','run.sh','run_diag.sh','tools/mkdiag.py','tools/package_v56.py']:
     shutil.copyfile(name,stage/name)
 readme='''# Local v56 upstream F4 gate integration candidate
@@ -35,5 +35,11 @@ if args.experiment=='kf-share':
     readme=readme.replace('upstream F4 gate integration candidate','shared folded coefficient tables candidate').replace(
         "Integrates upstream 87fa5d7's long-row F4 copy overlap and alignment gate.",
         "Integrates upstream 76ec03d's within-call sharing of equal folded coefficient tables.\nOnly each table owner writes; consumers wait for its group to publish completion.\nThe accepted F4 gate remains in place; the K9 weight default stays 140.")
+elif args.experiment=='k5-layout':
+    readme=readme.replace('upstream F4 gate integration candidate','K5 residual folding candidate').replace(
+        "Integrates upstream 87fa5d7's long-row F4 copy overlap and alignment gate.",
+        "Retains the accepted F4 gate and adds a structural 36+5 residual grouping.\nFive-row tails use three interleaved column classes and exact KW+2 execution.\nThis selects the ordinary K5 source; F4 outlining and cost controls are excluded.")
+    readme=readme.replace('outside the validated scope. K5 experiments are not included.',
+                         'outside the validated scope. Rejected kf sharing is not included.')
 (stage/'README.md').write_text(readme)
 subprocess.run(['python3',str(stage/'tools/package_v56.py')],check=True)

@@ -1,0 +1,27 @@
+  423df4:	d503201f 	nop
+  423df8:	d503201f 	nop
+  423dfc:	d503201f 	nop
+  423e00:	a540a200 	ld1w	{z0.s}, p0/z, [x16]
+  423e04:	a541a201 	ld1w	{z1.s}, p0/z, [x16, #1, mul vl]
+  423e08:	a540a042 	ld1w	{z2.s}, p0/z, [x2]
+  423e0c:	a540a063 	ld1w	{z3.s}, p0/z, [x3]
+  423e10:	a50021a4 	ld1rqw	{z4.s}, p0/z, [x13]
+  423e14:	80820000 	fmopa	za0.s, p0/m, p0/m, z0.s, z2.s
+  423e18:	80820021 	fmopa	za1.s, p0/m, p0/m, z1.s, z2.s
+  423e1c:	80830002 	fmopa	za2.s, p0/m, p0/m, z0.s, z3.s
+  423e20:	80830023 	fmopa	za3.s, p0/m, p0/m, z1.s, z3.s
+  423e24:	64a4000a 	fmla	z10.s, z0.s, z4.s[0]
+  423e28:	64a4002b 	fmla	z11.s, z1.s, z4.s[0]
+  423e2c:	64ac000c 	fmla	z12.s, z0.s, z4.s[1]
+  423e30:	64ac002d 	fmla	z13.s, z1.s, z4.s[1]
+  423e34:	64b4000e 	fmla	z14.s, z0.s, z4.s[2]
+  423e38:	64b4002f 	fmla	z15.s, z1.s, z4.s[2]
+  423e3c:	64bc0010 	fmla	z16.s, z0.s, z4.s[3]
+  423e40:	64bc0031 	fmla	z17.s, z1.s, z4.s[3]
+  423e44:	910041ad 	add	x13, x13, #0x10
+  423e48:	91001210 	add	x16, x16, #0x4
+  423e4c:	91010042 	add	x2, x2, #0x40
+  423e50:	91010063 	add	x3, x3, #0x40
+  423e54:	f10005ef 	subs	x15, x15, #0x1
+  423e58:	54fffd41 	b.ne	423e00 <roll_worker+0x1bdc>  // b.any
+  423e5c:	eb05005f 	cmp	x2, x5

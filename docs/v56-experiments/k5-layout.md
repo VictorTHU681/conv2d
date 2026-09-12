@@ -48,8 +48,22 @@ The grouping and output dependency/claim functions are byte-identical to the
 historical K5 source's host-tested extracted functions; hashes record that
 limited equivalence rather than claim a new full-operator host execution.
 
-**1583387**, cn20483, runs the three-way original benchmark comparison over
-all six permutations, four shapes and allowed memory placements. It is pending.
+**1583387**, cn20483, 04:16:17–04:28:35, succeeded: 144 full original-reference
+checks over all six permutations, four shapes and both memory placements, all
+maximum errors zero. Median six process-average GFLOPS, five timings each:
+
+| KH | Plain K5 DDR | Plain K5 HBM | Outlined K5 DDR | Outlined K5 HBM |
+| --- | ---: | ---: | ---: | ---: |
+| 39 | +0.28% | +0.23% | +0.14% | +0.25% |
+| 41 | +1.06% | +0.81% | +0.74% | +0.98% |
+| 55 | -0.01% | +0.04% | -0.11% | -0.02% |
+| 81 | -0.03% | +0.31% | -0.15% | +0.01% |
+
+These compare against accepted 4817eff, not published v55. The official comparison
+does not reproduce the initial KH 39 slowdown, but the negative screening record
+remains relevant evidence of variability; do not erase it. Select ordinary K5
+for archive acceptance because its overall comparison is preferable to outlined
+K5. **1583413**, cn20483, is currently validating its three staged archives.
 **1583390**, cn20481, 04:19:18–04:20:12, succeeded: 72 profiled processes,
 504 call records and 360 timed hashes. Baseline/plain K5/outlined K5 use all
 six permutations on KH 39 and 41. Full phase results are in profile_summary.md.
@@ -66,7 +80,7 @@ absent from the historical K5 extended driver; no old acceptance was assumed.
 The [executed-step cost control](k5-cost.md) now tests the specific discrepancy
 between padded packing steps and actual kernel work.
 
-None of these candidates is adopted. Existing K5 guards from the historical
+The ordinary K5 candidate is awaiting archive acceptance before adoption. Existing K5 guards from the historical
 source are useful background, not acceptance of this rebased/outlined source.
 Any candidate with a measured benefit still needs relevant extended checks,
 original benchmark comparison and package acceptance before replacing the root.
