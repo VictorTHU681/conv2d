@@ -21,6 +21,13 @@ def rep1(src, old, new, tag):
     assert n == 1, f"anchor {tag}: expected 1 hit, got {n}"
     return src.replace(old, new)
 
+SMEM_OLD = '           (long)sysconf(_SC_PAGESIZE), thp, cur, mx, gov, (long)sysconf(_SC_NPROCESSORS_ONLN));'
+SMEM_NEW = SMEM_OLD + '''
+    { FILE* g = fopen("/proc/self/smaps_rollup", "r");   // 本进程实际拿到的匿名大页（call 1 时基准的输入/输出已分配并触碰）
+      if (g) { char line[256]; printf("[conv-diag] self-mem:"); while (fgets(line, sizeof line, g))
+                   if (!strncmp(line, "Rss:", 4) || !strncmp(line, "AnonHugePages:", 14)) { line[strcspn(line, "\\n")] = 0; printf(" |%s", line); }
+               printf("\\n"); fclose(g); } }'''
+
 def main():
     src = open(sys.argv[1]).read()
     src = rep1(src, ANCHOR, ANCHOR + "\n" + DIAG_DEFS, "defs")
@@ -29,6 +36,7 @@ def main():
     src = rep1(src, ROLLT_OLD, ROLLT_NEW, "rolltail")
     src = rep1(src, EH_OLD, EH_NEW, "entryhead")
     src = rep1(src, ET_OLD, ET_NEW, "entrytail")
+    src = rep1(src, SMEM_OLD, SMEM_NEW, "selfmem")
     open(sys.argv[2], "w").write(src)
     print(f"mkdiag ok: {sys.argv[2]} ({len(src)} bytes)")
 
