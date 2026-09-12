@@ -2016,8 +2016,11 @@ static int roll_groups(long KH, long KW, rgrp_t* G)
     // rem == 9 或 1 且有 pair 组：最后一个 pair 升级为 pair+fmla（kind 33，第 33 个残差 = KH-1，
     // 用 fmopa 旁的免费 fmla 累加），余数变 8/0 → 8×2 满槽 / 无 K4（k41: 32+8+1 → 33+8；k81: 64+16+1 → 65+16）
     int fmla = (npair >= 1 && (rem == 9 || rem == 1)) ? 1 : 0;   // pair+1fmla：k41(32+8+1→33+8)、k81(64+16+1→65+16)
-    int nf = (npair >= 1 && rem == 7) ? ((n16 & 1) ? 3 : 4) : 0;   // pair+3/4fmla 消掉 8×2；无 single16 组（n16 偶）时用 4 链更快（k39），有则 3 链（k55），同节点 A/B 实测
-    { int e = env_int("CONV_NF", -1); if (e >= 0 && npair >= 1 && rem == 7 && e <= 4 && e != 1 && e != 2) nf = e; }   // 实验：余数 7 时的折叠链数（0/3/4）
+#ifndef CONV_NF_REM7
+#define CONV_NF_REM7 0   // rem==7 的折叠链数默认：0 = 自动（n16 偶→4，奇→3）；编译期定为 3 可关掉零余量的 pairf4（线上对照用）
+#endif
+    int nf = (npair >= 1 && rem == 7) ? (CONV_NF_REM7 ? CONV_NF_REM7 : ((n16 & 1) ? 3 : 4)) : 0;   // pair+3/4fmla 消掉 8×2（n16 偶且自动时用 4 链，探针实测本机更快，但零余量 fmla 在高延迟下可能翻车）
+    { int e = env_int("CONV_NF", -1); if (e >= 0 && npair >= 1 && rem == 7 && e <= 4 && e != 1 && e != 2) nf = e; }   // 运行期覆盖：余数 7 时的折叠链数（0/3/4）
     int pk = nf == 4 ? 35 : 34;
     for (int i = 0; i < npair; i++) { G[ng++] = (rgrp_t){(i == npair - 1 && nf) ? pk : (i == npair - 1 && fmla) ? 33 : 32, s, 16, 16, 32, KW, 0, NULL, 0}; s += 32; }
     if (n16 & 1) { G[ng++] = (rgrp_t){16, s, 16, 0, 64, KW, 0, NULL, 0}; s += 16; }
