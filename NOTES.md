@@ -10,9 +10,11 @@
 = 每次调用诚实打包的合规代价（v52 memoization 跳过计时轮打包）。
 对合规 v51（旧无缓存最好版，c2a418e）直接 A/B（cn20483 ×3）：DDR k39 **+25.9%**、k55 +4.8%、
 k81 +1.2%、k41 ±1%；HBM k39 +3.0%、k81 +1.5%、k41/k55 持平——受压 DDR 大幅占优、安静内存不劣。
-打包验收（cn20482）：
-`conv.zip`(nf4) md5 673c455b、`conv_nf3.zip` 98af47b0、`conv_diag.zip` aa644cd8，三包端到端
-`bash run.sh` 全 PASS；本地留档 `conv_submit_{nf4,nf3}_8ea57ec.zip`、`conv_submit_diag_aa644cd8.zip`。
+HBM `--preferred` 经用户批准恢复（commit 5b108e3）：run.sh/run_diag.sh 探测最近纯内存节点
+（无 CPU、1–32 GB、距离 ≤ 70）加 `--preferred`，CPU 仍题面 node1；HBM 腿同节点 A/B 无一例慢于
+DDR，受压日 k39 +41%（端到端 14018 vs 9950）。最终打包（cn20481，端到端 `bash run.sh` 选中
+node=1 hbm=17 全 PASS）：`conv.zip`(nf4) md5 9edad737、`conv_nf3.zip` ff2a8182、`conv_diag.zip`
+c67c6efc；本地留档 `conv_submit_{nf4,nf3}_5b108e3.zip`、`conv_submit_diag_c67c6efc.zip`。
 详见 [v53 移植、A/B 及验收](docs/v53.md)，原始日志在 `results/v53/`。
 
 ## v51 合规整改（2026-09-12）

@@ -1,0 +1,122 @@
+=== HOST
+cn20481
+Sat Sep 12 19:13:45 CST 2026
+--- 泛化位精确 A（nf4 默认）
+ALL PASS: 103/103 通过
+--- 泛化位精确 B（nf3）
+ALL PASS: 103/103 通过
+--- 官方 bench A（nf4）
+  4096 x  6144     39 x    39         7.58    9949.8418     0.00e+00     PASS
+  6144 x  4096     41 x    41         9.70    8582.2273     0.00e+00     PASS
+  4256 x  6390     55 x    55        14.64   11000.0831     0.00e+00     PASS
+  6390 x  4256     81 x    81        24.06   14371.4628     0.00e+00     PASS
+--- 官方 bench B（nf3，仅 k39 应变化，其余不变）
+  4096 x  6144     39 x    39         9.65    7809.5392     0.00e+00     PASS
+  6144 x  4096     41 x    41         9.19    9058.0783     0.00e+00     PASS
+  4256 x  6390     55 x    55        14.41   11176.6236     0.00e+00     PASS
+  6390 x  4256     81 x    81        23.93   14448.2933     0.00e+00     PASS
+packed submissions/conv.zip md5=9edad73730dc75441da430d032c9a5f5
+22:if ! gcc -O3 -march=armv9-a+sme+sve2 -fopenmp bench_conv.c conv2d.c -o conv2d_test -lm 2>/dev/null; then
+30:cpunode=1
+32:    if [[ -n "$(cat /sys/devices/system/node/node$n/cpulist 2>/dev/null)" ]] && numactl -N $n true >/dev/null 2>&1; then cpunode=$n; break; fi
+packed submissions/conv_nf3.zip md5=ff2a8182e4ac37bffe402aac33c966e0
+22:if ! gcc -O3 -march=armv9-a+sme+sve2 -DCONV_NF_REM7=3 -fopenmp bench_conv.c conv2d.c -o conv2d_test -lm 2>/dev/null; then
+30:cpunode=1
+32:    if [[ -n "$(cat /sys/devices/system/node/node$n/cpulist 2>/dev/null)" ]] && numactl -N $n true >/dev/null 2>&1; then cpunode=$n; break; fi
+--- 端到端解压 bash run.sh（确认绑到 node 5 + 四例 PASS），A 包
+[run.sh] host=cn20481 node=1 hbm=17 threads=38
+  4096 x  6144     39 x    39         5.38   14018.4179     0.00e+00     PASS
+  6144 x  4096     41 x    41         5.97   13936.1878     0.00e+00     PASS
+  4256 x  6390     55 x    55        11.26   14303.6900     0.00e+00     PASS
+  6390 x  4256     81 x    81        24.15   14316.5888     0.00e+00     PASS
+--- 端到端 B 包
+[run.sh] host=cn20481 node=1 hbm=17 threads=38
+  4096 x  6144     39 x    39         5.54   13596.4421     0.00e+00     PASS
+  6144 x  4096     41 x    41         5.95   14000.7479     0.00e+00     PASS
+  4256 x  6390     55 x    55        11.38   14159.2513     0.00e+00     PASS
+  6390 x  4256     81 x    81        23.96   14431.4888     0.00e+00     PASS
+=== DONE
+Sat Sep 12 19:16:11 CST 2026
+=== HOST
+cn20481
+Sat Sep 12 19:16:11 CST 2026
+mkdiag ok: build/conv2d_diag.c (151214 bytes)
+--- 位精确（CONV_DIAG=0 静默，80 例）
+ALL PASS: 83/83 通过
+--- 位精确（CONV_DIAG=1 冒烟 3 例，看输出格式）
+[conv-diag] call 5 64x64 k3x3: region 0.774 ms | thr total min/avg/max 0.001/0.104/0.300 ms | ghz@end min/avg/max 1.550/1.551/1.552 | kern cyc/step: -
+[conv-diag] call 6 70x600 k7x7: region 0.475 ms | thr total min/avg/max 0.005/0.007/0.010 ms | ghz@end min/avg/max 1.550/1.551/1.552 | kern cyc/step: -
+[conv-diag] call 7 4x1100 k1x40: region 0.477 ms | thr total min/avg/max 0.001/0.002/0.006 ms | ghz@end min/avg/max 1.550/1.552/1.553 | kern cyc/step: -
+[conv-diag] call 8 45x45 k41x41: region 1.245 ms | thr total min/avg/max 0.131/0.546/0.697 ms | ghz@end min/avg/max 1.550/1.551/1.553 | kern cyc/step: -
+[conv-diag] call 9 100x1200 k39x39: region 1.717 ms | thr total min/avg/max 0.536/0.676/0.779 ms | ghz@end min/avg/max 1.550/1.551/1.552 | kern cyc/step: pair 35.98 4x4 37.44
+[conv-diag] call 10 300x700 k39x39: region 0.425 ms | thr total min/avg/max 0.002/0.069/0.096 ms | ghz@end min/avg/max 1.550/1.551/1.553 | kern cyc/step: pair 2.87 4x4 2.69
+--- 官方 bench 诊断构建（-march，k39 与 k81）
+[conv-diag] env: threads 38 | cpu part 0xd22 | affinity 1 cpus, cpu0=38 | svl 64 B | dczid 0x4 | cntfrq 100000000 | page 4096 | thp [always] madvise never | cpufreq cur 1548030 max 2000000 gov userspace | nprocs 608
+[conv-diag] self-mem: |Rss:              409668 kB |AnonHugePages:    405504 kB
+[conv-diag] call 1 4096x6144 k39x39: region 15.254 ms | thr total min/avg/max 0.006/5.988/11.935 ms | ghz@end min/avg/max 1.543/1.550/1.552 | kern cyc/step: pair 2.29 4x4 4.18
+[conv-diag] call 2 4096x6144 k39x39: region 95.034 ms | thr total min/avg/max 0.001/5.213/12.720 ms | ghz@end min/avg/max 1.510/1.549/1.552 | kern cyc/step: pair 2.11 4x4 2.80
+[conv-diag] probes: ghz@start min/avg/max 1.549/1.550/1.551 | fmopa ns min/avg/max 1.290/1.290/1.290 (= 2.00 cyc @ avg ghz) | bw GB/s read 151.9, st1w 147.7, pstl2keep+st1w 62.4, stnt1w 138.4
+[conv-diag] all-core fmopa burst 15 ms: ns avg/max 1.290/1.293 (= 1.55 GHz if 2 cyc) | ghz after burst min/avg/max 1.549/1.550/1.552 | droop vs start 0.0% | half(19 cores) 1.290 ns ghz 1.445 | quarter(9) 1.290 ns
+  4096 x  6144     39 x    39         7.34   10270.4229     0.00e+00     PASS
+[conv-diag] call 3 4096x6144 k39x39: region 7.336 ms | thr total min/avg/max 5.979/6.480/7.224 ms | ghz@end min/avg/max 1.550/1.551/1.553 | kern cyc/step: pair 2.45 4x4 4.69
+
+[conv-diag] env: threads 38 | cpu part 0xd22 | affinity 1 cpus, cpu0=38 | svl 64 B | dczid 0x4 | cntfrq 100000000 | page 4096 | thp [always] madvise never | cpufreq cur 1548030 max 2000000 gov userspace | nprocs 608
+[conv-diag] self-mem: |Rss:              436032 kB |AnonHugePages:    432128 kB
+[conv-diag] call 1 6390x4256 k81x81: region 32.571 ms | thr total min/avg/max 2.738/23.642/29.871 ms | ghz@end min/avg/max 1.540/1.550/1.552 | kern cyc/step: pair 2.04 single 2.08
+[conv-diag] call 2 6390x4256 k81x81: region 112.277 ms | thr total min/avg/max 15.441/23.585/30.922 ms | ghz@end min/avg/max 1.550/1.551/1.552 | kern cyc/step: pair 2.03 single 2.08
+[conv-diag] probes: ghz@start min/avg/max 1.549/1.550/1.551 | fmopa ns min/avg/max 1.290/1.290/1.290 (= 2.00 cyc @ avg ghz) | bw GB/s read 152.7, st1w 149.0, pstl2keep+st1w 62.6, stnt1w 140.3
+[conv-diag] all-core fmopa burst 15 ms: ns avg/max 1.290/1.293 (= 1.55 GHz if 2 cyc) | ghz after burst min/avg/max 1.549/1.550/1.552 | droop vs start 0.0% | half(19 cores) 1.290 ns ghz 1.487 | quarter(9) 1.290 ns
+  6390 x  4256     81 x    81        24.25   14256.3913     0.00e+00     PASS
+[conv-diag] call 3 6390x4256 k81x81: region 24.252 ms | thr total min/avg/max 23.668/23.844/24.214 ms | ghz@end min/avg/max 1.549/1.551/1.552 | kern cyc/step: pair 2.03 single 2.08
+
+--- 官方 bench 诊断构建（无 -march 题面命令，k39）
+  4096 x  6144     39 x    39         7.20   10466.3050     0.00e+00     PASS
+packed submissions/conv_diag.zip md5=c67c6efccfc64128524b0c3cd0a246f4
+--- 端到端解压 bash run.sh（诊断包全流程）
+[run-diag] host=cn20481 kernel=5.10.0-285.5.v2403.ky10p.aarch64 date=2026-09-12 19:17:03 gcc=12.3.1
+[run-diag] loadavg=20.97 20.13 46.51 4/5963 3677555
+[run-diag] CPU(s):                             608
+[run-diag] NUMA node(s):                       32
+[run-diag] thp=[always] madvise never
+[run-diag] MemFree: 467207700 kB
+[run-diag] AnonHugePages: 0 kB
+[run-diag] node=1 hbm=17 threads=38 firstcpu=38 numa_free=node 1 free: 18449 MB
+[run-diag] case '4096 6144 39 39 1' start=19:17:16 loadavg=17.50 19.41 45.85 freq_kHz=1548030
+[conv-diag] env: threads 38 | cpu part 0xd22 | affinity 1 cpus, cpu0=38 | svl 64 B | dczid 0x4 | cntfrq 100000000 | page 4096 | thp [always] madvise never | cpufreq cur 1548030 max 2000000 gov userspace | nprocs 608
+[conv-diag] self-mem: |Rss:              409672 kB |AnonHugePages:    405504 kB
+[conv-diag] call 1 4096x6144 k39x39: region 19.857 ms | thr total min/avg/max 0.008/5.225/10.984 ms | ghz@end min/avg/max 1.549/1.550/1.552 | kern cyc/step: pair 2.15 4x4 2.59
+[conv-diag] call 2 4096x6144 k39x39: region 75.032 ms | thr total min/avg/max 0.002/5.152/12.682 ms | ghz@end min/avg/max 1.549/1.551/1.552 | kern cyc/step: pair 2.11 4x4 2.58
+[conv-diag] probes: ghz@start min/avg/max 0.666/1.527/1.551 | fmopa ns min/avg/max 1.290/1.290/1.290 (= 1.97 cyc @ avg ghz) | bw GB/s read 327.2, st1w 332.0, pstl2keep+st1w 202.8, stnt1w 318.0
+[conv-diag] all-core fmopa burst 15 ms: ns avg/max 1.290/1.293 (= 1.55 GHz if 2 cyc) | ghz after burst min/avg/max 1.549/1.550/1.552 | droop vs start -1.5% | half(19 cores) 1.290 ns ghz 1.389 | quarter(9) 1.290 ns
+  4096 x  6144     39 x    39         5.37   14048.3467     0.00e+00     PASS
+[conv-diag] call 3 4096x6144 k39x39: region 5.362 ms | thr total min/avg/max 5.160/5.197/5.225 ms | ghz@end min/avg/max 1.550/1.551/1.552 | kern cyc/step: pair 2.13 4x4 2.61
+[run-diag] case '6144 4096 41 41 1' start=19:17:19 loadavg=20.18 19.93 45.88 freq_kHz=1548030
+[conv-diag] env: threads 38 | cpu part 0xd22 | affinity 1 cpus, cpu0=38 | svl 64 B | dczid 0x4 | cntfrq 100000000 | page 4096 | thp [always] madvise never | cpufreq cur 1548030 max 2000000 gov userspace | nprocs 608
+[conv-diag] self-mem: |Rss:              405332 kB |AnonHugePages:    401408 kB
+[conv-diag] call 1 6144x4096 k41x41: region 20.236 ms | thr total min/avg/max 0.006/5.794/11.921 ms | ghz@end min/avg/max 1.549/1.550/1.552 | kern cyc/step: pair 2.10 8x2 2.17
+[conv-diag] call 2 6144x4096 k41x41: region 76.273 ms | thr total min/avg/max 0.002/5.733/12.588 ms | ghz@end min/avg/max 1.549/1.551/1.552 | kern cyc/step: pair 2.08 8x2 2.15
+[conv-diag] probes: ghz@start min/avg/max 1.549/1.550/1.551 | fmopa ns min/avg/max 1.290/1.290/1.290 (= 2.00 cyc @ avg ghz) | bw GB/s read 328.4, st1w 330.6, pstl2keep+st1w 203.1, stnt1w 321.1
+[conv-diag] all-core fmopa burst 15 ms: ns avg/max 1.292/1.345 (= 1.55 GHz if 2 cyc) | ghz after burst min/avg/max 1.549/1.550/1.552 | droop vs start 0.0% | half(19 cores) 1.290 ns ghz 1.304 | quarter(9) 1.290 ns
+  6144 x  4096     41 x    41         5.98   13922.7303     0.00e+00     PASS
+[conv-diag] call 3 6144x4096 k41x41: region 5.974 ms | thr total min/avg/max 5.742/5.774/5.851 ms | ghz@end min/avg/max 1.549/1.551/1.552 | kern cyc/step: pair 2.09 8x2 2.18
+[run-diag] case '4256 6390 55 55 1' start=19:17:21 loadavg=20.18 19.93 45.88 freq_kHz=1548030
+[conv-diag] env: threads 38 | cpu part 0xd22 | affinity 1 cpus, cpu0=38 | svl 64 B | dczid 0x4 | cntfrq 100000000 | page 4096 | thp [always] madvise never | cpufreq cur 1548030 max 2000000 gov userspace | nprocs 608
+[conv-diag] self-mem: |Rss:              445372 kB |AnonHugePages:    440320 kB
+[conv-diag] call 1 4256x6390 k55x55: region 21.395 ms | thr total min/avg/max 0.008/10.994/16.648 ms | ghz@end min/avg/max 1.549/1.550/1.552 | kern cyc/step: pair 2.10 single 2.09 4x4 2.45
+[conv-diag] call 2 4256x6390 k55x55: region 81.980 ms | thr total min/avg/max 4.079/10.941/17.986 ms | ghz@end min/avg/max 1.538/1.550/1.552 | kern cyc/step: pair 2.08 single 2.09 4x4 2.45
+[conv-diag] probes: ghz@start min/avg/max 1.549/1.550/1.551 | fmopa ns min/avg/max 1.290/1.290/1.290 (= 2.00 cyc @ avg ghz) | bw GB/s read 325.6, st1w 333.3, pstl2keep+st1w 202.9, stnt1w 319.9
+[conv-diag] all-core fmopa burst 15 ms: ns avg/max 1.292/1.346 (= 1.55 GHz if 2 cyc) | ghz after burst min/avg/max 1.549/1.550/1.550 | droop vs start 0.0% | half(19 cores) 1.290 ns ghz 1.367 | quarter(9) 1.290 ns
+  4256 x  6390     55 x    55        11.41   14119.0534     0.00e+00     PASS
+[conv-diag] call 3 4256x6390 k55x55: region 11.405 ms | thr total min/avg/max 10.994/11.225/11.358 ms | ghz@end min/avg/max 1.498/1.550/1.553 | kern cyc/step: pair 2.08 single 2.09 4x4 2.45
+[run-diag] case '6390 4256 81 81 1' start=19:17:26 loadavg=23.53 20.63 45.97 freq_kHz=1548030
+[conv-diag] env: threads 38 | cpu part 0xd22 | affinity 1 cpus, cpu0=38 | svl 64 B | dczid 0x4 | cntfrq 100000000 | page 4096 | thp [always] madvise never | cpufreq cur 1548030 max 2000000 gov userspace | nprocs 608
+[conv-diag] self-mem: |Rss:              436024 kB |AnonHugePages:    430080 kB
+[conv-diag] call 1 6390x4256 k81x81: region 32.832 ms | thr total min/avg/max 2.747/23.704/29.756 ms | ghz@end min/avg/max 1.549/1.550/1.552 | kern cyc/step: pair 2.04 single 2.08
+[conv-diag] call 2 6390x4256 k81x81: region 193.900 ms | thr total min/avg/max 0.008/23.636/30.828 ms | ghz@end min/avg/max 1.541/1.550/1.552 | kern cyc/step: pair 2.04 single 2.08
+[conv-diag] probes: ghz@start min/avg/max 1.314/1.543/1.551 | fmopa ns min/avg/max 1.290/1.290/1.290 (= 1.99 cyc @ avg ghz) | bw GB/s read 328.8, st1w 329.9, pstl2keep+st1w 204.8, stnt1w 323.3
+[conv-diag] all-core fmopa burst 15 ms: ns avg/max 1.292/1.339 (= 1.55 GHz if 2 cyc) | ghz after burst min/avg/max 1.549/1.550/1.552 | droop vs start -0.5% | half(19 cores) 1.290 ns ghz 1.366 | quarter(9) 1.290 ns
+  6390 x  4256     81 x    81        24.15   14319.6861     0.00e+00     PASS
+[conv-diag] call 3 6390x4256 k81x81: region 24.143 ms | thr total min/avg/max 23.724/23.839/24.090 ms | ghz@end min/avg/max 1.498/1.549/1.553 | kern cyc/step: pair 2.04 single 2.08
+[run-diag] all done 19:17:35 loadavg=27.88 21.65 46.02
+=== DONE
+Sat Sep 12 19:17:35 CST 2026
