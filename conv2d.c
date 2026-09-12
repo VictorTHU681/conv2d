@@ -50,6 +50,9 @@
 #ifdef __ARM_FEATURE_SVE
 #include <arm_sve.h>
 #endif
+#if defined(__aarch64__)
+#include <arm_neon.h>   // 打包（非流式模式）用 NEON 128 位：与 SVL 无关，任何 aarch64 都可用
+#endif
 
 typedef float CONVFLOAT;
 typedef int CONVINT;
@@ -801,6 +804,7 @@ typedef struct {
     int SP, prof, pf_in, pf_out, pool, slice_ovl, postart_env, store_asm, pf_l2;
     const int* TB; uint64_t c_pre; prof_t* prs; uint64_t call_id;
     int mode; const void* rp;  // mode 1 = 滚动形态（rp 指向 rplan_t）
+    int pk_overlap;            // 滚动打包：1 = 主线程按组打包并逐组放行（工作线程用到该组前等待），0 = 全体并行 chunk
 } ctx_t;
 
 // ---- 边界行（BR）方案的辅助：sweep 队列、ZA 初值装入、ZA 抽取
@@ -1975,9 +1979,62 @@ static void k4(const kp_t* P)
 }
 // b 表：kind 16: R[y][X][c] = k[(y-c) mod KH][X]（残差 s_base+c ≥ KH → 0）；kind 8: c=2s+ic → k[(y-s) mod KH][X-ic]；kind 4: c=4s+ic
 // 每次调用都重建（不缓存打包结果），按行构建：kj 只依赖 (y,c)，提出内层（无逐元素取模），X 方向三段拷贝/清零
-static void roll_build_R_row(float* R, const float* k, long KH, long KW, long steps, long s_base, int kind, long y)
+// 构建 R 的第 y 行。seq=1（同组行按 y 升序在同一线程内构建，串行打包路径）时用对角快速路径：
+// R[y][X][c] = k[(y-sidx) mod KH][X-ic] 与 R[y-1][X][c-S]（S = 每 sidx 的列数）的 kj/ic 完全一致，
+// 因此整行 = 上一行右移 S 列 + 每个 X 新写 S 个 c<S 的鲜值（+ 对越界 sidx 重清零）。逐位与标量路径相同。
+// seq=0（并行 chunk：行可能乱序/跨线程）只走标量路径。
+static void roll_build_R_row(float* R, const float* k, long KH, long KW, long steps, long s_base, int kind, long y, int seq)
 {
     float* Ry = R + y * steps * 16;
+#if defined(__aarch64__)
+    if (seq && y > 0) {
+        const float* Rp = Ry - steps * 16;
+        const float* ky = k + y * KW;                          // 鲜值行：c 的 sidx=0 → kj = y（y < KH）
+        if (kind == 16 && s_base + 15 < KH) {                  // 16 族（steps=KW，X 全在界内）：右移 1
+            for (long X = 0; X < steps; X++) {
+                const float* s = Rp + X * 16; float* d = Ry + X * 16;
+                float32x4_t a0 = vld1q_f32(s), a1 = vld1q_f32(s + 4), a2 = vld1q_f32(s + 8), a3 = vld1q_f32(s + 12);
+                float32x4_t vf = vdupq_n_f32(X < KW ? ky[X] : 0.f);
+                vst1q_f32(d,      vextq_f32(vf, a0, 3));
+                vst1q_f32(d + 4,  vextq_f32(a0, a1, 3));
+                vst1q_f32(d + 8,  vextq_f32(a1, a2, 3));
+                vst1q_f32(d + 12, vextq_f32(a2, a3, 3));
+            }
+            return;
+        }
+        if (kind == 8 && s_base + 7 < KH) {                    // 8×2：右移 2，鲜值 ic=0/1
+            for (long X = 0; X < steps; X++) {
+                const float* s = Rp + X * 16; float* d = Ry + X * 16;
+                float32x4_t a0 = vld1q_f32(s), a1 = vld1q_f32(s + 4), a2 = vld1q_f32(s + 8), a3 = vld1q_f32(s + 12);
+                float32x4_t vf = vdupq_n_f32(0.f);
+                if (X < KW)             vf = vsetq_lane_f32(ky[X], vf, 2);
+                if (X >= 1 && X <= KW)  vf = vsetq_lane_f32(ky[X - 1], vf, 3);
+                vst1q_f32(d,      vextq_f32(vf, a0, 2));
+                vst1q_f32(d + 4,  vextq_f32(a0, a1, 2));
+                vst1q_f32(d + 8,  vextq_f32(a1, a2, 2));
+                vst1q_f32(d + 12, vextq_f32(a2, a3, 2));
+            }
+            return;
+        }
+        if (kind == 4) {                                       // 4×4：右移 4（整 q 复制），鲜值 ic=0..3，越界 sidx 重清零
+            const long nv = (KH - s_base < 4) ? KH - s_base : 4;   // 有效 sidx 数（≥ 1）
+            for (long X = 0; X < steps; X++) {
+                const float* s = Rp + X * 16; float* d = Ry + X * 16;
+                float32x4_t a0 = vld1q_f32(s), a1 = vld1q_f32(s + 4), a2 = vld1q_f32(s + 8);
+                float32x4_t vf = vdupq_n_f32(0.f);
+                if (X < KW)                 vf = vsetq_lane_f32(ky[X], vf, 0);
+                if (X >= 1 && X <= KW)      vf = vsetq_lane_f32(ky[X - 1], vf, 1);
+                if (X >= 2 && X <= KW + 1)  vf = vsetq_lane_f32(ky[X - 2], vf, 2);
+                if (X >= 3 && X <= KW + 2)  vf = vsetq_lane_f32(ky[X - 3], vf, 3);
+                vst1q_f32(d, vf); vst1q_f32(d + 4, a0); vst1q_f32(d + 8, a1); vst1q_f32(d + 12, a2);
+                for (long sx = nv; sx < 4; sx++) vst1q_f32(d + 4 * sx, vdupq_n_f32(0.f));
+            }
+            return;
+        }
+    }
+#else
+    (void)seq;
+#endif
     for (long c = 0; c < 16; c++) {
         long sidx, ic;
         if (kind == 16) { sidx = c; ic = 0; } else if (kind == 8) { sidx = c >> 1; ic = c & 1; } else { sidx = c >> 2; ic = c & 3; }
@@ -1990,7 +2047,7 @@ static void roll_build_R_row(float* R, const float* k, long KH, long KW, long st
         for (long X = x1; X < steps; X++) Ry[X * 16 + c] = 0.f;
     }
 }
-typedef struct { int kind; long s_base, nvA, nvB, width, steps, RSB; float* R; size_t Rcap; float* kf; size_t kfcap; } rgrp_t;   // kind 32=pair,16=single,8,4; 33/34=pair+fmla；kf = pairf3 的三链 b 打包 [KH][steps][4]
+typedef struct { int kind; long s_base, nvA, nvB, width, steps, RSB; float* R; size_t Rcap; float* kf; size_t kfcap; int rshare; } rgrp_t;   // kind 32=pair,16=single,8,4; 33/34=pair+fmla；kf = pairf3 的三链 b 打包 [KH][steps][4]；rshare ≥ 0: R 与该组共享（内容逐位相同，见 roll_prepare）
 typedef struct { int g; long base; } ritem_t;
 typedef struct { int item; long ja, jb; } rpiece_t;
 typedef struct {
@@ -2002,26 +2059,51 @@ typedef struct {
 static rplan_t g_rp;
 static padded_u64 g_rwork[1024] __attribute__((aligned(64)));   // 每线程片段游标 (end<<32 | cur)，CAS 认领 + 空了从别人尾部偷
 
-// R/kf 打包的并行化：chunk = (组 g, 行 y)，id = g*KH + y。内容由 (kernel, 形状) 唯一决定 → 幂等，可重复执行。
+// R/kf 打包的并行化：chunk = (组 g, 8 行块)，id = g*nblk + blk。块内首行走标量构建、其余 7 行对角快速构建
+//（只依赖块内上一行 → 块自包含），内容由 (kernel, 形状) 唯一决定 → 幂等，可重复执行、可乱序认领。
 // 全体线程原子认领；认领耗尽后空闲线程直接重做未完成的 chunk（不自旋等慢线程，分时/换出不放大）。
+#define PK_BLK 8
 static uint32_t g_pk_next;
 static uint8_t g_pk_done[4096];
-static int g_pk_nc = 0;
+static int g_pk_nc = 0, g_pk_nblk = 1;
+static padded_u64 g_pk_gdone[12];        // 按组重叠打包：主线程写完组 g 后置 1（每组一条缓存线，避免自旋者互扰）
+static uint64_t g_pk_cyc = 0;            // 主线程打包耗时（prof 用）
 static void roll_pack_chunk(const rplan_t* P, const float* k, long KH, long KW, int i)
 {
-    const rgrp_t* G = &P->G[i / (int)KH];
-    const long y = i % KH;
-    roll_build_R_row(G->R, k, KH, KW, G->steps, G->s_base,
-                     (G->kind == 32 || G->kind == 33 || G->kind == 34 || G->kind == 35 || G->kind == 17) ? 16 : G->kind, y);
+    const rgrp_t* G = &P->G[i / g_pk_nblk];
+    const long y0 = (long)(i % g_pk_nblk) * PK_BLK;
+    long y1 = y0 + PK_BLK; if (y1 > KH) y1 = KH;
+    if (G->rshare < 0)                          // R 与更早的组共享时本组不打包（同一次调用内内容逐位相同，见 roll_prepare）
+        for (long y = y0; y < y1; y++)
+            roll_build_R_row(G->R, k, KH, KW, G->steps, G->s_base,
+                             (G->kind == 32 || G->kind == 33 || G->kind == 34 || G->kind == 35 || G->kind == 17) ? 16 : G->kind, y, y > y0);
     if (G->kind == 34 || G->kind == 35) {       // kf[a][X] = {k[a][X], k[(a+1)%KH][X], k[(a+2)%KH][X], (k[(a+3)%KH][X])}，a = y
-        const long a = y;
-        const long a1 = a + 1 >= KH ? a + 1 - KH : a + 1, a2 = a + 2 >= KH ? a + 2 - KH : a + 2, a3 = a + 3 >= KH ? a + 3 - KH : a + 3;
-        float* d = G->kf + a * G->steps * 4;
-        for (long X = 0; X < G->steps; X++, d += 4) {
-            d[0] = X < KW ? k[a * KW + X] : 0.f;
-            d[1] = X < KW ? k[a1 * KW + X] : 0.f;
-            d[2] = X < KW ? k[a2 * KW + X] : 0.f;
-            d[3] = (G->kind == 35 && X < KW) ? k[a3 * KW + X] : 0.f;
+        for (long a = y0; a < y1; a++) {
+            const long a1 = a + 1 >= KH ? a + 1 - KH : a + 1, a2 = a + 2 >= KH ? a + 2 - KH : a + 2, a3 = a + 3 >= KH ? a + 3 - KH : a + 3;
+            float* d = G->kf + a * G->steps * 4;
+            const float *r0 = k + a * KW, *r1 = k + a1 * KW, *r2 = k + a2 * KW, *r3 = k + a3 * KW;
+            long X = 0;
+#if defined(__aarch64__)
+            {   // 主体交织用 st4（d[4X+j] = 行 j 的第 X 个元素），尾部/填充回落标量
+                float32x4x4_t v; v.val[3] = vdupq_n_f32(0.f);
+                if (G->kind == 35)
+                    for (; X + 4 <= KW; X += 4, d += 16) {
+                        v.val[0] = vld1q_f32(r0 + X); v.val[1] = vld1q_f32(r1 + X); v.val[2] = vld1q_f32(r2 + X); v.val[3] = vld1q_f32(r3 + X);
+                        vst4q_f32(d, v);
+                    }
+                else
+                    for (; X + 4 <= KW; X += 4, d += 16) {
+                        v.val[0] = vld1q_f32(r0 + X); v.val[1] = vld1q_f32(r1 + X); v.val[2] = vld1q_f32(r2 + X);
+                        vst4q_f32(d, v);
+                    }
+            }
+#endif
+            for (; X < G->steps; X++, d += 4) {
+                d[0] = X < KW ? r0[X] : 0.f;
+                d[1] = X < KW ? r1[X] : 0.f;
+                d[2] = X < KW ? r2[X] : 0.f;
+                d[3] = (G->kind == 35 && X < KW) ? r3[X] : 0.f;
+            }
         }
     }
 }
@@ -2092,11 +2174,30 @@ static void roll_prepare(const float* k, long H, long W, long KH, long KW, int n
     static struct { float* R; size_t Rcap; float* kf; size_t kfcap; } g_rbuf[12];
     {
         P->ng = roll_groups(KH, KW, P->G);
+        // R 共享：16 族组（kind 32/33/34/35/16/17）的 R[y][X][c] = k[(y-c) mod KH][X]，内容只依赖 (KH, KW, steps) 与
+        // 零掩码（s_base+15 ≥ KH 的列清零）。无零掩码且 steps 相同的组逐位相同 → 指向首个此类组的缓冲，仅打包一次。
+        // s_base 的差异由内核起始计数器（yA0/cA0 等）承担，与表内容无关。
+        {
+            int owner = -1;
+            for (int g = 0; g < P->ng; g++) {
+                rgrp_t* G = &P->G[g];
+                const int fam16 = (G->kind == 32 || G->kind == 33 || G->kind == 34 || G->kind == 35 || G->kind == 16 || G->kind == 17);
+                G->rshare = -1;
+                if (fam16 && G->s_base + 15 < KH) {
+                    if (owner < 0) owner = g;
+                    else if (P->G[owner].steps == G->steps && P->G[owner].RSB == G->RSB) G->rshare = owner;
+                }
+            }
+        }
         for (int g = 0; g < P->ng; g++) {
             rgrp_t* G = &P->G[g];
-            size_t need = (size_t)KH * G->RSB;
-            if (g_rbuf[g].Rcap < need) { free(g_rbuf[g].R); g_rbuf[g].R = alloc_aligned(need); g_rbuf[g].Rcap = g_rbuf[g].R ? need : 0; }
-            G->R = g_rbuf[g].R; G->Rcap = g_rbuf[g].Rcap;
+            if (G->rshare < 0) {
+                size_t need = (size_t)KH * G->RSB;
+                if (g_rbuf[g].Rcap < need) { free(g_rbuf[g].R); g_rbuf[g].R = alloc_aligned(need); g_rbuf[g].Rcap = g_rbuf[g].R ? need : 0; }
+                G->R = g_rbuf[g].R; G->Rcap = g_rbuf[g].Rcap;
+            } else {
+                G->R = P->G[G->rshare].R; G->Rcap = 0;         // 共享组不占独立缓冲（持久槽留给未来形状复用）
+            }
             if (G->kind == 34 || G->kind == 35) {
                 size_t kfneed = (size_t)KH * G->steps * 4 * sizeof(float);
                 if (g_rbuf[g].kfcap < kfneed) { free(g_rbuf[g].kf); g_rbuf[g].kf = alloc_aligned(kfneed); g_rbuf[g].kfcap = g_rbuf[g].kf ? kfneed : 0; }
@@ -2159,7 +2260,23 @@ static void roll_worker(int tid, int nth, const ctx_t* c)
     rdiag_t* D = &g_rdiag[tid]; uint64_t t_start = 0;
     if (g_roll_diag) { memset(D, 0, sizeof(*D)); t_start = cyc(); }
     if (tid >= nth || tid >= P->pnth) return;
-    roll_pack_all(P, c->k, KH, KW);   // 每次调用全体线程并行重打包 R/kf（幂等 chunk），完成后才进入计算
+    // 每次调用无条件重打包 R/kf（不跨调用缓存）。两种执行方式：
+    // pk_overlap：主线程按组串行打包（单写者局部性最好），写完一组放行一组；工作线程先认领工作项，
+    //             在用到某组的表之前等该组标志（多数首片在组 0，比"全部打包完再放行"早开工）。
+    // 否则：全体线程并行认领 chunk（幂等，可重做），全部完成后进入计算。
+    if (c->pk_overlap) {
+        if (tid == 0) {
+            const uint64_t t0 = c->prof ? cyc() : 0;
+            for (int g = 0; g < P->ng; g++) {
+                const int i0 = g * g_pk_nblk;
+                for (int i = i0; i < i0 + g_pk_nblk; i++) roll_pack_chunk(P, c->k, KH, KW, i);
+                __atomic_store_n(&g_pk_gdone[g].v, 1, __ATOMIC_RELEASE);
+            }
+            if (c->prof) g_pk_cyc = cyc() - t0;
+        }
+    } else {
+        roll_pack_all(P, c->k, KH, KW);   // 完成后才进入计算
+    }
     sme_start();
     int victim = tid;
     for (;;) {
@@ -2187,7 +2304,10 @@ static void roll_worker(int tid, int nth, const ctx_t* c)
         }
         const rpiece_t* pc = &P->pieces[pi];
         const long ja = pc->ja, jb = pc->jb;
-        const rgrp_t* g = &P->G[P->items[pc->item].g];
+        const int gi = P->items[pc->item].g;
+        const rgrp_t* g = &P->G[gi];
+        if (c->pk_overlap)      // 主线程打包完所有组才进入本循环，标志必已置位；工作线程等所需组放行
+            while (!__atomic_load_n(&g_pk_gdone[gi].v, __ATOMIC_ACQUIRE)) asm volatile("yield" ::: "memory");
         const long base = P->items[pc->item].base;
         uint64_t t0 = g_roll_diag ? cyc() : 0;
         kp_t K = { c->in + ja * W + base, W * 4, g->R, g->RSB, KH, g->steps, jb - ja + KH - 1,
@@ -2323,22 +2443,41 @@ static void conv2d_roll(const CONVFLOAT* in, CONVINT H, CONVINT W, const CONVFLO
     read_knobs();
     g_roll_pd = g_knobs.roll_pd;
     g_roll_diag = env_int("CONV_ROLL_DIAG", 0);
+    const uint64_t c_ent = g_knobs.prof ? cyc() : 0;
     roll_prepare(k, H, W, KH, KW, nth);
-    g_pk_nc = g_rp.ng * (int)KH; g_pk_next = 0;            // 重置打包 chunk 游标/完成标志（ng ≤ 12、KH ≤ 256 → nc ≤ 3072）
+    const uint64_t c_prep = g_knobs.prof ? cyc() : 0;
+    g_pk_nblk = ((int)KH + PK_BLK - 1) / PK_BLK;           // 重置打包 chunk 游标/完成标志（ng ≤ 12、KH ≤ 256 → nc ≤ 384）
+    g_pk_nc = g_rp.ng * g_pk_nblk; g_pk_next = 0;
     memset(g_pk_done, 0, (size_t)g_pk_nc);
-    long pk_el = 0;                                        // 打包总元素数（R 16/步 + kf 4/步）
-    for (int g = 0; g < g_rp.ng; g++) pk_el += KH * g_rp.G[g].steps * ((g_rp.G[g].kind == 34 || g_rp.G[g].kind == 35) ? 20 : 16);
+    long pk_el = 0;                                        // 打包总元素数（R 16/步，共享组不重复计 + kf 4/步）
+    for (int g = 0; g < g_rp.ng; g++)
+        pk_el += KH * g_rp.G[g].steps * ((g_rp.G[g].rshare < 0 ? 16 : 0) + ((g_rp.G[g].kind == 34 || g_rp.G[g].kind == 35) ? 4 : 0));
+    // 打包执行方式：1 = 主线程串行 + 按组重叠放行（默认，单写者局部性 + 工作线程早开工）；
+    // 0 = 全体并行 chunk（超大表）；2 = 主线程串行、打包完再放行（对照用）。每种方式都每次调用全量重建。
     int ps = g_knobs.pack_ser;
-    if (ps < 0) ps = pk_el <= (1L << 17);                  // 小表主线程串行（并行认领/扫描的同步开销 ≥ 打包本身），大表全体并行
-    if (ps) {
+    if (ps < 0) ps = pk_el <= (1L << 17);
+    ctx_t ctx; memset(&ctx, 0, sizeof(ctx));
+    ctx.pk_overlap = (ps == 1);
+    g_pk_cyc = 0;
+    if (ps == 1) {
+        for (int g = 0; g < 12; g++) g_pk_gdone[g].v = 0;
+        g_pk_next = (uint32_t)g_pk_nc;                     // 并行认领路径关闭（主线程在 roll_worker 内按组打包）
+    } else if (ps == 2) {
+        const uint64_t t0 = g_knobs.prof ? cyc() : 0;
         for (int i = 0; i < g_pk_nc; i++) { roll_pack_chunk(&g_rp, k, KH, KW, i); g_pk_done[i] = 1; }
         g_pk_next = (uint32_t)g_pk_nc;
+        if (g_knobs.prof) g_pk_cyc = cyc() - t0;
     }
-    ctx_t ctx; memset(&ctx, 0, sizeof(ctx));
+    const uint64_t c_pack = g_knobs.prof ? cyc() : 0;
     ctx.in = in; ctx.k = k; ctx.out = out; ctx.H = H; ctx.W = W; ctx.KH = KH; ctx.KW = KW; ctx.outH = H - KH + 1; ctx.outW = W - KW + 1;
-    ctx.mode = 1; ctx.rp = &g_rp;
+    ctx.mode = 1; ctx.rp = &g_rp; ctx.prof = g_knobs.prof;
     for (int t = 0; t < nth; t++) g_rwork[t].v = ((uint64_t)g_rp.pstart[t + 1] << 32) | (uint32_t)g_rp.pstart[t];
     run_parallel(nth, &ctx, g_knobs.pool);
+    if (g_knobs.prof) {
+        const double us = 1e6 / (double)cyc_hz();
+        fprintf(stderr, "[roll prof] prep %.1f us | pack %.1f us (ps %d, %ld el, %d chunks) | region %.3f ms\n",
+                (c_prep - c_ent) * us, g_pk_cyc * us, ps, pk_el, g_pk_nc, (cyc() - c_pack) * us / 1e3);
+    }
     if (g_roll_diag) roll_diag_print(nth);
 }
 
