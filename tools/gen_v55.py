@@ -10,6 +10,8 @@ from v55_orientation import horizontal
 from v55_overlap import overlap
 from v55_cache import non_temporal_copy
 from v55_nine import nine
+from v55_nine_planes import planar_nine
+from v55_nine_select import selected_nine
 from gen_v54 import phase_profile
 
 BASE = 'be7b462'
@@ -89,6 +91,13 @@ def main():
     variants['ntspare']=non_temporal_copy(overlap(source,['k16pair','k16pairf','k16pairf3','k16single']))
     variants['nine_reload']=nine(source)
     variants['nine_ext']=nine(source,use_ext=True)
+    variants['nine_plane_reload']=planar_nine(variants['nine_reload'])
+    variants['nine_plane_ext']=planar_nine(variants['nine_ext'],use_ext=True)
+    for name in ('nine_reload','nine_plane_reload','nine_plane_ext'):
+        variants[name+'_phase']=phase_profile(variants[name])
+    variants['nine_w130']=selected_nine(variants['nine_plane_reload'])
+    variants['nine_w140']=selected_nine(variants['nine_plane_reload'],weight=140)
+    variants['nine_outline']=selected_nine(variants['nine_plane_reload'],outline=True)
     out=Path('build/v55');out.mkdir(parents=True,exist_ok=True)
     for n,s in variants.items():
         (out/(n+'.c')).write_text(s)
