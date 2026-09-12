@@ -73,7 +73,8 @@ int main(int argc, char** argv)
     // 固定边界用例
     int fixed[][4] = {{1, 1, 1, 1}, {5, 5, 5, 5}, {5, 300, 1, 1}, {300, 5, 1, 1}, {64, 64, 3, 3}, {70, 600, 7, 7},
                       {4, 1100, 1, 40}, {45, 45, 41, 41}, {100, 1200, 39, 39}, {300, 700, 39, 39}, {200, 2100, 81, 81},
-                      {130, 530, 5, 81}, {130, 530, 81, 5}, {17, 1030, 3, 9}, {1030, 17, 9, 3}, {90, 320, 2, 2}};
+                      {130, 530, 5, 81}, {130, 530, 81, 5}, {17, 1030, 3, 9}, {1030, 17, 9, 3}, {90, 320, 2, 2},
+                      {40, 800, 16, 17}, {60, 900, 17, 3}, {80, 700, 23, 55}, {96, 640, 29, 29}, {50, 1300, 19, 121}};
     for (size_t i = 0; i < sizeof(fixed) / sizeof(fixed[0]); i++) {
         total++;
         pass += run_case(fixed[i][0], fixed[i][1], fixed[i][2], fixed[i][3], seed + (int)i, 1);
@@ -82,7 +83,7 @@ int main(int argc, char** argv)
     int s = seed * 7919 + 13;
     for (int t = 0; t < n; t++) {
         int KH = 1 + (int)(rand_lcg(&s) * 14), KW = 1 + (int)(rand_lcg(&s) * 14);
-        if (t % 5 == 0) { KH = 30 + (int)(rand_lcg(&s) * 60); KW = 30 + (int)(rand_lcg(&s) * 60); }
+        if (t % 5 == 0) { KH = 16 + (int)(rand_lcg(&s) * 74), KW = 16 + (int)(rand_lcg(&s) * 74); }   // 覆盖滚动形态全部分组组合（含 KH 16–29 无 pair 组段）
         int H = KH + (int)(rand_lcg(&s) * 120), W = KW + (int)(rand_lcg(&s) * 1200);
         total++;
         pass += run_case(H, W, KH, KW, s, 0);

@@ -26,10 +26,9 @@ if ! gcc -O3 -march=armv9-a+sme+sve2 -fopenmp bench_conv.c conv2d.c -o conv2d_te
     fi
 fi
 
-# 判题口径：38 线程、单一 NUMA 节点。CPU 节点取 5（不存在或无 CPU 时依次回退 1、0）。绑核在 conv2d.c 内部完成；
-# 这里的 OMP 变量只让基准程序自带的参考实现也能用满核，不影响被测函数。
-cpunode=5
-for n in 5 1 0; do
+# 判题口径（题面）：OMP_NUM_THREADS=38 numactl -N 1。节点 1 无 CPU 时回落节点 0；numactl 不可用则直接运行。
+cpunode=1
+for n in 1 0; do
     if [[ -n "$(cat /sys/devices/system/node/node$n/cpulist 2>/dev/null)" ]] && numactl -N $n true >/dev/null 2>&1; then cpunode=$n; break; fi
 done
 NCPU=$(numactl -N $cpunode nproc 2>/dev/null || nproc 2>/dev/null || echo 38)
@@ -41,33 +40,12 @@ export OMP_PLACES=cores
 export OMP_DYNAMIC=FALSE
 unset GOMP_CPU_AFFINITY OMP_THREAD_LIMIT 2>/dev/null || true
 
-# 内存放置：若 CPU 节点旁挂有纯内存节点（HBM：无 CPU、1～32 GB、距离 ≤ 70；本机/判题机为 node 16+t），用 --preferred 让
-# 基准程序的输入/输出矩阵（四例合计 < 600 MB）落进 HBM（读改写 ~330 GB/s，且与 DDR 通道分开）。放不下时内核自动回落本地 DDR；
-# 探测不到则不加该参数。CONV_HBM=0 可关。
-hbm=""
-if [[ "${CONV_HBM:-1}" != "0" && -r /sys/devices/system/node/node$cpunode/distance ]]; then
-    read -ra dist < /sys/devices/system/node/node$cpunode/distance
-    best=999
-    for n in "${!dist[@]}"; do
-        [[ -d /sys/devices/system/node/node$n ]] || continue
-        [[ -z "$(cat /sys/devices/system/node/node$n/cpulist 2>/dev/null)" ]] || continue     # 只考虑无 CPU 的纯内存节点
-        totkb=$(awk '/MemTotal:/{print $4}' /sys/devices/system/node/node$n/meminfo 2>/dev/null)
-        [[ "$totkb" =~ ^[0-9]+$ ]] || continue
-        (( totkb >= 1048576 && totkb <= 33554432 )) || continue                              # 1～32 GB 才像 HBM
-        if (( dist[n] < best )); then best=${dist[n]}; hbm=$n; fi
-    done
-    (( best > 70 )) && hbm=""
-fi
-MEMOPT=""
-if [[ -n "$hbm" ]] && numactl -N $cpunode --preferred=$hbm true >/dev/null 2>&1; then MEMOPT="--preferred=$hbm"; fi
-
 if command -v numactl >/dev/null 2>&1 && numactl -N $cpunode true >/dev/null 2>&1; then
-    RUN="numactl -N $cpunode $MEMOPT"
+    RUN="numactl -N $cpunode"
 else
     echo "[run.sh] numactl 不可用或节点 $cpunode 不可用，直接运行" >&2
     RUN=""
 fi
-echo "[run.sh] host=$(hostname 2>/dev/null) node=$cpunode cpus=$NCPU threads=$NT run='$RUN ./conv2d_test'" >&2
 
 $RUN ./conv2d_test 4096 6144 39 39 1
 $RUN ./conv2d_test 6144 4096 41 41 1

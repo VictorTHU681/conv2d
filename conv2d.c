@@ -47,8 +47,6 @@
 #include <sys/mman.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include <signal.h>
-#include <ucontext.h>
 #ifdef __ARM_FEATURE_SVE
 #include <arm_sve.h>
 #endif
@@ -83,9 +81,8 @@ static int env_int(const char* name, int def)
 }
 
 // 可调参数只在首次调用时读环境（getenv 每次要扫整个环境表，~2 µs/次，一次调用 9 次就是 ~0.3%）
-typedef struct { int inited, slice, sp, prof, pf_in, pf_out, postart, uzp, poolwfe, pool, store_asm, pf_fresh, pf_l2, br, sw_dense, diag_l1, pf_st, zva, roll, roll_pd; } knobs_t;
+typedef struct { int inited, slice, sp, prof, pf_in, pf_out, postart, uzp, poolwfe, pool, store_asm, pf_fresh, pf_l2, br, sw_dense, pf_st, zva, roll, roll_pd, roll_w8, roll_w4, roll_w16; } knobs_t;
 static knobs_t g_knobs;
-static int g_diag_on = 0;   // 线上诊断输出（见 diag_*）
 #ifdef CONV_ROWPROF
 static uint64_t* g_rowts = NULL;      // 线程 0 的逐行时间戳：行首 cntvct；pass 末追加 (cyc | 1<<63) 作结束标记
 static uint64_t* g_rowts_cur = NULL;
@@ -101,8 +98,11 @@ static void read_knobs(void)
     g_knobs.pf_in = env_int("CONV_PFIN", 1);
     g_knobs.pf_out = env_int("CONV_PFOUT", 1);
     g_knobs.pf_st = env_int("CONV_PFST", 1);
-    g_knobs.roll = env_int("CONV_ROLL", -1);        // 滚动 16×1 形态：-1 按形状自动，0 关，1 强制
+    g_knobs.roll = env_int("CONV_ROLL", -1);        // 滚动 16×1 形态：默认按结构条件（roll_shape_ok）启用，0 强制关
     g_knobs.roll_pd = env_int("CONV_ROLL_PD", 3);   // 滚动形态的行预取提前量
+    g_knobs.roll_w8 = env_int("CONV_ROLL_W8", 104);   // 静态划分的相对慢速权重（%）：8×2 / 4×4 / single16
+    g_knobs.roll_w4 = env_int("CONV_ROLL_W4", 123);
+    g_knobs.roll_w16 = env_int("CONV_ROLL_W16", 102);
     // -DCONV_ZVA_CURSOR 实验用：输出线 dc zva 预清零（不从 DRAM 读 RFO，每次调用少读 ~100 MB），需 zva 块 64 B 且允许
     { uint64_t dczid; asm volatile("mrs %0, dczid_el0" : "=r"(dczid));
       g_knobs.zva = env_int("CONV_ZVA", 1) && !(dczid & 0x10) && (4L << (dczid & 0xf)) == 64; }
@@ -112,16 +112,9 @@ static void read_knobs(void)
     g_knobs.pool = env_int("CONV_POOL", 1);
     g_knobs.store_asm = env_int("CONV_STORE", -1); // 1: jc=3/2/1 行的回写与 pass 末三行的 fmopa 重叠；0: 全部由 C 回写；-1 自动
     g_knobs.pf_l2 = env_int("CONV_PFL2", -1);      // 1: DRAM 预取到 L2；0: L1；-1 自动（长 pass 用 L2）
-    g_knobs.diag_l1 = env_int("CONV_DIAG_L1", 0);    // 诊断（结果错误）：1 a 数据 L1 驻留；2 a+b 都 L1 驻留
     g_knobs.pf_fresh = env_int("CONV_PFFRESH", 1); // 整环重建前先预取全部行
     g_knobs.br = env_int("CONV_BR", 1);            // 边界行 fmla 方案（0 关；1 自动选去掉的行数）
     g_knobs.sw_dense = env_int("CONV_SWDENSE", -1); // 半步密度：1 稠密 / 0 稀疏 / -1 按容量自动
-#ifdef CONV_DIAG_ONLINE
-    g_diag_on = env_int("CONV_DIAG", 1);
-#else
-    g_diag_on = env_int("CONV_DIAG", 0);
-#endif
-
     g_pf_fresh = g_knobs.pf_fresh;
     g_knobs.inited = 1;
 }
@@ -210,113 +203,6 @@ static inline void sme_start(void) { asm volatile("smstart\n\t" ::: "memory", VC
 static inline void sme_stop(void) { asm volatile("smstop\n\t" ::: "memory", VCLOB, PCLOB); }
 static inline void sme_zero_za(void) { asm volatile("zero {za}\n\t" ::: "memory"); }
 
-
-// ---- 线上诊断（编译期 -DCONV_DIAG_ONLINE 或环境 CONV_DIAG=1；输出到 stdout，供评测机日志回看）
-//  每次调用：分相计时 + 各线程末尾的主频（8 条相依 add 链，cntvct 计时）；第 2 次调用（基准的预热，不计时）另测：
-//  起始主频、fmopa 吞吐（4 tile 轮转，期望 2 周期/条）、38 线程 DRAM 带宽（读 / 整线写 / pstl2keep 预取+写 / stnt1w）
-typedef struct { double ghz0, ghz1, ghz_fm, fmopa_ns, fmopa_ns2, fm_half, fm_quarter, ghz_half, t_rd, t_wr, t_pfwr, t_nt; uint64_t c0, c1; } diag_t;
-static diag_t g_diag[1024];
-static volatile uint64_t g_diag_bar __attribute__((aligned(64)));
-static inline double diag_ghz(long iters)   // 每次迭代 8 条相依 add = 8 周期
-{
-    uint64_t t0 = cyc(); uint64_t x = 0;
-    asm volatile("1:\n\t add %0, %0, #1\n\t add %0, %0, #1\n\t add %0, %0, #1\n\t add %0, %0, #1\n\t"
-                 "add %0, %0, #1\n\t add %0, %0, #1\n\t add %0, %0, #1\n\t add %0, %0, #1\n\t subs %1, %1, #1\n\t b.ne 1b\n\t"
-                 : "+r"(x), "+r"(iters) : : "cc");
-    uint64_t t1 = cyc();
-    return (double)x / ((double)(t1 - t0) * 1e9 / (double)cyc_hz());
-}
-static inline double diag_fmopa_ns(long iters)   // 流式模式内：8 条 fmopa（4 tile × 2）/迭代
-{
-    const long n = iters;
-    asm volatile("ptrue p0.s\n\t zero {za}\n\t" ::: "memory");
-    uint64_t t0 = cyc();
-    asm volatile("1:\n\t"
-                 "fmopa za0.s, p0/m, p0/m, z0.s, z1.s\n\t fmopa za1.s, p0/m, p0/m, z0.s, z1.s\n\t"
-                 "fmopa za2.s, p0/m, p0/m, z0.s, z1.s\n\t fmopa za3.s, p0/m, p0/m, z0.s, z1.s\n\t"
-                 "fmopa za0.s, p0/m, p0/m, z0.s, z1.s\n\t fmopa za1.s, p0/m, p0/m, z0.s, z1.s\n\t"
-                 "fmopa za2.s, p0/m, p0/m, z0.s, z1.s\n\t fmopa za3.s, p0/m, p0/m, z0.s, z1.s\n\t"
-                 "subs %0, %0, #1\n\t b.ne 1b\n\t" : "+r"(iters) : : "cc", "memory");
-    uint64_t t1 = cyc();
-    return (double)(t1 - t0) * 1e9 / (double)cyc_hz() / (8.0 * (double)n);
-}
-static void diag_barrier(int nth, int phase)
-{
-    __atomic_add_fetch(&g_diag_bar, 1, __ATOMIC_ACQ_REL);
-    while (__atomic_load_n(&g_diag_bar, __ATOMIC_ACQUIRE) < (uint64_t)nth * (uint64_t)phase) asm volatile("yield" ::: "memory");
-}
-// 每线程 16 MB 私有区（调用方在流式模式外 mmap+memset，因为系统调用会让内核退出流式模式并清 ZA）：4 种访问各计时（秒）
-#define DIAG_BW_BYTES (16L << 20)
-static void diag_bw(int nth, diag_t* d, char* buf)
-{
-    const long n = DIAG_BW_BYTES;
-    const double tick = 1.0 / (double)cyc_hz();
-    if (!buf) { d->t_rd = d->t_wr = d->t_pfwr = d->t_nt = 0; for (int ph = 4; ph <= 7; ph++) diag_barrier(nth, ph); return; }
-    double t0, t1;
-    diag_barrier(nth, 4); t0 = (double)cyc() * tick;
-    { volatile long acc = 0; long sacc = 0; for (long i = 0; i < n; i += 64) sacc += *(volatile long*)(buf + i); acc = sacc; (void)acc; }
-    t1 = (double)cyc() * tick; d->t_rd = t1 - t0;
-    diag_barrier(nth, 5); t0 = (double)cyc() * tick;
-    for (long i = 0; i < n; i += 256)
-        asm volatile("ptrue p0.s\n\t st1w {z0.s}, p0, [%0]\n\t st1w {z0.s}, p0, [%0, #1, mul vl]\n\t st1w {z0.s}, p0, [%0, #2, mul vl]\n\t st1w {z0.s}, p0, [%0, #3, mul vl]\n\t" :: "r"(buf + i) : "memory", "p0");
-    t1 = (double)cyc() * tick; d->t_wr = t1 - t0;
-    diag_barrier(nth, 6); t0 = (double)cyc() * tick;
-    for (long i = 0; i < n; i += 256)
-        asm volatile("ptrue p0.s\n\t prfm pstl2keep, [%0, #4096]\n\t prfm pstl2keep, [%0, #4160]\n\t prfm pstl2keep, [%0, #4224]\n\t prfm pstl2keep, [%0, #4288]\n\t"
-                     "st1w {z0.s}, p0, [%0]\n\t st1w {z0.s}, p0, [%0, #1, mul vl]\n\t st1w {z0.s}, p0, [%0, #2, mul vl]\n\t st1w {z0.s}, p0, [%0, #3, mul vl]\n\t" :: "r"(buf + i) : "memory", "p0");
-    t1 = (double)cyc() * tick; d->t_pfwr = t1 - t0;
-    diag_barrier(nth, 7); t0 = (double)cyc() * tick;
-    for (long i = 0; i < n; i += 256)
-        asm volatile("ptrue p0.s\n\t stnt1w {z0.s}, p0, [%0]\n\t stnt1w {z0.s}, p0, [%0, #1, mul vl]\n\t stnt1w {z0.s}, p0, [%0, #2, mul vl]\n\t stnt1w {z0.s}, p0, [%0, #3, mul vl]\n\t" :: "r"(buf + i) : "memory", "p0");
-    t1 = (double)cyc() * tick; d->t_nt = t1 - t0;
-}
-static void diag_sigill(int sig, siginfo_t* si, void* uc_)
-{
-    ucontext_t* uc = (ucontext_t*)uc_;
-    unsigned long pc = uc->uc_mcontext.pc;
-    unsigned insn = *(volatile unsigned*)pc;
-    char buf[160]; int n = snprintf(buf, sizeof buf, "[conv-diag] SIGILL sig %d code %d pc 0x%lx insn 0x%08x addr %p\n", sig, si->si_code, pc, insn, si->si_addr);
-    if (write(1, buf, (size_t)n) < 0) {}
-    _exit(132);
-}
-// 计时调用（第 3 次）的汇总不在函数内格式化/打印（printf 的浮点格式化 + 写 stdout 有 ~0.1 ms），只存原始数据，进程退出时打印
-typedef struct { unsigned long call; long H, W, KH, KW; double region, pre, tn, ta, tx, g1n, g1a, g1x, total; } diag_sum_t;
-static diag_sum_t g_diag_deferred[8];
-static int g_diag_deferred_n = 0;
-static double g_diag_thr_ms[1024]; static int g_diag_thr_n = 0;
-static void diag_atexit(void)
-{
-    if (g_diag_thr_n) { printf("[conv-diag] thr total ms: "); for (int t = 0; t < g_diag_thr_n; t++) printf("%d:%.1f ", t, g_diag_thr_ms[t]); printf("\n"); }
-    for (int i = 0; i < g_diag_deferred_n; i++) {
-        const diag_sum_t* d = &g_diag_deferred[i];
-        printf("[conv-diag] call %lu %ldx%ld k%ldx%ld: region %.3f ms | pre %.3f | thr total min/avg/max %.3f/%.3f/%.3f ms | ghz@end min/avg/max %.3f/%.3f/%.3f | conv2d() total %.3f ms\n",
-               d->call, d->H, d->W, d->KH, d->KW, d->region, d->pre, d->tn, d->ta, d->tx, d->g1n, d->g1a, d->g1x, d->total);
-    }
-    fflush(stdout);
-}
-static void diag_read_line(const char* path, char* out, size_t n)
-{
-    out[0] = 0; FILE* f = fopen(path, "r"); if (!f) { snprintf(out, n, "?"); return; }
-    if (!fgets(out, (int)n, f)) snprintf(out, n, "?");
-    fclose(f);
-    size_t l = strlen(out); while (l && (out[l - 1] == '\n' || out[l - 1] == ' ')) out[--l] = 0;
-}
-static void diag_print_env(int nth)
-{
-    char part[64] = "?", thp[96] = "?", cur[32] = "?", mx[32] = "?", gov[32] = "?", path[128];
-    FILE* f = fopen("/proc/cpuinfo", "r");
-    if (f) { char line[256]; while (fgets(line, sizeof line, f)) if (!strncmp(line, "CPU part", 8)) { char* c = strchr(line, ':'); if (c) snprintf(part, sizeof part, "%s", c + 2); part[strcspn(part, "\n")] = 0; break; } fclose(f); }
-    diag_read_line("/sys/kernel/mm/transparent_hugepage/enabled", thp, sizeof thp);
-    int cpu = sched_getcpu();
-    snprintf(path, sizeof path, "/sys/devices/system/cpu/cpu%d/cpufreq/scaling_cur_freq", cpu); diag_read_line(path, cur, sizeof cur);
-    snprintf(path, sizeof path, "/sys/devices/system/cpu/cpu%d/cpufreq/cpuinfo_max_freq", cpu); diag_read_line(path, mx, sizeof mx);
-    snprintf(path, sizeof path, "/sys/devices/system/cpu/cpu%d/cpufreq/scaling_governor", cpu); diag_read_line(path, gov, sizeof gov);
-    cpu_set_t cs; int ncpu = -1; if (sched_getaffinity(0, sizeof cs, &cs) == 0) ncpu = CPU_COUNT(&cs);
-    uint64_t svl = 0, dczid = 0; asm volatile("rdsvl %0, #1" : "=r"(svl)); asm volatile("mrs %0, dczid_el0" : "=r"(dczid));
-    printf("[conv-diag] env: threads %d | cpu part %s | affinity %d cpus, cpu0=%d | svl %lu B | dczid 0x%lx | cntfrq %lu | page %ld | thp %s | "
-           "cpufreq cur %s max %s gov %s | nprocs %ld\n", nth, part, ncpu, cpu, (unsigned long)svl, (unsigned long)dczid, (unsigned long)cyc_hz(),
-           (long)sysconf(_SC_PAGESIZE), thp, cur, mx, gov, (long)sysconf(_SC_NPROCESSORS_ONLN));
-}
 
 // 1×4 tile 排布：tile t ↔ 输出列 c0+64t..+63，4 个 tile 同一行组（j0..j0+3），共用 b 向量。
 // 步 (Y, X)：输入行 j0+Y，a_t = plane_q[m + 16t + r]（q = X%4, m = X/4），b = R[Y][X]，4 条 fmopa 共 8 周期。
@@ -860,7 +746,6 @@ static size_t g_Kpcap = 0;
 typedef struct { uint64_t w; char pad[56]; } work_t;
 static work_t g_work[1024] __attribute__((aligned(64)));
 typedef struct { uint64_t v; char pad[56]; } padded_u64;
-static padded_u64 g_rcount __attribute__((aligned(64)));    // R 打包完成计数（每次调用前清零，到 nt 即全部完成）
 static uint64_t g_call = 0;
 static float* g_P = NULL;
 static size_t g_Pcap = 0;
@@ -913,7 +798,6 @@ typedef struct {
     long BW, NB, G, NS, RS, m4, rem, PW, slot_floats, ring_stride, Wtot;
     long KPS, br_pre, br_post;       // Kp 行距（float）；边界行方案去掉的首/尾行数（0 = 不用）
     int SP, prof, pf_in, pf_out, pool, slice_ovl, postart_env, store_asm, pf_l2;
-    int rpacked;               // 1 = R/Kp 已由主线程打包（kernel 与上次相同，缓存命中），工作线程不打包、无起始屏障
     const int* TB; uint64_t c_pre; prof_t* prs; uint64_t call_id;
     int mode; const void* rp;  // mode 1 = 滚动形态（rp 指向 rplan_t）
 } ctx_t;
@@ -983,37 +867,12 @@ static void conv_worker(int tid, int nt_, const ctx_t* c)
     if (prof) { t_start = cyc(); pr.enter = t_start - c_pre; }
     if (prof) pr.cpu = (uint64_t)sched_getcpu();      // 系统调用 ~20 µs，放在 enter 计时之后（否则 enter 全被它撑大）
 
-    // 1) 主线程打包 kernel：R[Y][X'][jc] = kpad[Y-3+jc][X'-3]（30–60 µs，与其他线程的唤醒重叠；
-    //    不用 barrier：早到的线程等标志，晚到的线程的工作项会被别人偷走）
+    // R/Kp 已由主线程在唤醒线程池之前打包（每次调用都重打包），工作线程只认领工作项
     pos_t ps = locate(Wtot * tid / nt_, NB, G, TB);
     pos_t pe = locate(Wtot * (tid + 1) / nt_, NB, G, TB);
     {
         uint64_t n0 = (uint64_t)(ps.b * G + ps.g), n1 = (uint64_t)(pe.b * G + pe.g);
         __atomic_store_n(&g_work[tid].w, (n1 << 32) | n0, __ATOMIC_RELEASE);
-    }
-    if (!c->rpacked) {
-        // 各线程打包自己的一段 Y，然后计数屏障。共享判题机上这道屏障会把某个被分时线程的一个调度时间片（本机 12 ms）
-        // 传给全体，因此正常路径（kernel 与上次相同）由主线程在唤醒线程池之前打包并缓存，这里不再执行。
-        const long y0 = NS * tid / nt_, y1 = NS * (tid + 1) / nt_;
-        for (long Y = y0; Y < y1; Y++) {
-            float* r = g_R + Y * RS;
-            for (long Xp = 0; Xp < KW + 6; Xp++) {
-                long x = Xp - 3;
-                for (int jc = 0; jc < 4; jc++) {
-                    long y = Y - 3 + jc;
-                    r[Xp * 4 + jc] = (y >= 0 && y < KH && x >= 0 && x < KW) ? k[y * KW + x] : 0.0f;
-                }
-            }
-        }
-        if (br_pre) {   // Kp：零填充 kernel 行（fmla 扫描的 ld1rqw 读 Kp[kj][X'..X'+3]）
-            const long k0 = KH * tid / nt_, k1 = KH * (tid + 1) / nt_;
-            for (long kj = k0; kj < k1; kj++) {
-                float* r = g_Kp + kj * KPS;
-                for (long z = 0; z < KPS; z++) r[z] = (z >= 3 && z < KW + 3) ? k[kj * KW + z - 3] : 0.0f;
-            }
-        }
-        __atomic_fetch_add(&g_rcount.v, 1, __ATOMIC_ACQ_REL);
-        while (__atomic_load_n(&g_rcount.v, __ATOMIC_ACQUIRE) < (uint64_t)nt_) asm volatile("yield" ::: "memory");
     }
     float* P = g_P + (size_t)tid * ring_stride;
     float tmp[4 * 64] __attribute__((aligned(256)));
@@ -1021,7 +880,6 @@ static void conv_worker(int tid, int nt_, const ctx_t* c)
     // 槽表：tab[i] = 槽 (i mod NS) 的平面 0 字节地址，2NS+1 项，使从任意起点连续走 NS+1 项（含末行预载）无需取模
     uint64_t* slot_tab = g_tab + (size_t)tid * g_tab_stride;
     for (long i = 0; i < 2 * NS + 1; i++) slot_tab[i] = (uint64_t)(uintptr_t)(P + (i % NS) * slot_floats);
-    if (g_knobs.diag_l1) for (long i = 0; i < 2 * NS + 1; i++) slot_tab[i] = (uint64_t)(uintptr_t)P;   // 诊断：a 全走槽 0（L1 驻留，结果错误）
     const float* R = g_R;
     const long sht = (((m4 - 1) & 15) + 1) * 4;    // 尾步相对对齐基址的字节偏移
     const long chunks = (m4 + 14) / 16;            // 每行执行切片的块组数（最后一块组若只含块 0 则不执行切片）
@@ -1029,7 +887,7 @@ static void conv_worker(int tid, int nt_, const ctx_t* c)
     pass_t pa;
     memset(&pa, 0, sizeof(pa));
     pa.pbrow = R; pa.Y = NS; pa.rowts = NULL; pa.zi[0] = pa.zi[1] = NULL; pa.zx[0] = pa.zx[1] = NULL;
-    pa.PWb = PW * 4; pa.PW2b = PW * 8; pa.PW3b = PW * 12; pa.RSB = g_knobs.diag_l1 >= 2 ? 0 : RS * 4; /* 诊断 2：b 只读 R 行 0 */ pa.m4 = m4; pa.rem = rem; pa.sht = sht;
+    pa.PWb = PW * 4; pa.PW2b = PW * 8; pa.PW3b = PW * 12; pa.RSB = RS * 4; pa.m4 = m4; pa.rem = rem; pa.sht = sht;
     pa.istride = (long)W * 4; pa.ostride = outW * 4;
     pa.sdummy = dummy; pa.sdcnt = chunks;
     // 边界行方案：每线程暂存（按 pass 序号 p）——前半初值 pre_st[p][3-jc]、后半抽取 post_st[p][jc]，各 16 向量；
@@ -2093,7 +1951,6 @@ typedef struct {
     ritem_t* items; double* cost; int nit, itcap; double C;
     rpiece_t* pieces; int* pstart; int npieces, pcap, pnth;      // 静态划分：线程 t 的片段 pieces[pstart[t] .. pstart[t+1])
     float* rings; float* scratch; int nthr_alloc;
-    float* kcopy; size_t kcopy_n; long KH, KW, outW;
 } rplan_t;
 static rplan_t g_rp;
 static padded_u64 g_rwork[1024] __attribute__((aligned(64)));   // 每线程片段游标 (end<<32 | cur)，CAS 认领 + 空了从别人尾部偷
@@ -2121,7 +1978,7 @@ static int roll_groups(long KH, long KW, rgrp_t* G)
     for (int g = 0; g < ng; g++) G[g].RSB = G[g].steps * 64;
     return ng;
 }
-// 形状是否适合滚动形态：KW 奇数（8×2 的步数 KW+1 为偶数且末条带读不越界）、最宽组的条带放得下、行数足够
+// 滚动形态的结构性开关（与具体用例尺寸无关）：KH ≥ 16 才有 16 残差组、KW 在条带步数上限内、每个组的条带放得下、行数足够
 static int roll_shape_ok(long H, long W, long KH, long KW)
 {
     if (KH < 16 || KW < 3 || KW > 400) return 0;
@@ -2131,19 +1988,12 @@ static int roll_shape_ok(long H, long W, long KH, long KW)
     if (outH < 1) return 0;
     return 1;
 }
-static int roll_auto(long H, long W, long KH, long KW)
-{
-    (void)H; (void)W;
-    return (KH == 39 && KW == 39) || (KH == 41 && KW == 41) || (KH == 55 && KW == 55) || (KH == 81 && KW == 81);   // 四例全滚动：pair+fmla（1/3 条链）消掉余数组
-}
-
 static void roll_prepare(const float* k, long H, long W, long KH, long KW, int nth)
 {
     rplan_t* P = &g_rp;
     const long outW = W - KW + 1, outH = H - KH + 1;
-    const size_t kn = (size_t)KH * KW;
-    int same = P->kcopy && P->kcopy_n == kn && P->KH == KH && P->KW == KW && P->outW == outW && memcmp(P->kcopy, k, kn * 4) == 0;
-    if (!same) {
+    // 每次调用都重新打包 R/kf 并重建工作项（不缓存/比对 kernel 内容）
+    {
         P->ng = roll_groups(KH, KW, P->G);
         for (int g = 0; g < P->ng; g++) {
             rgrp_t* G = &P->G[g];
@@ -2173,16 +2023,13 @@ static void roll_prepare(const float* k, long H, long W, long KH, long KW, int n
             for (long st = 0; st < nstrip; st++) {
                 long base = st * G->width; if (base + G->width > outW) base = outW - G->width;
                 P->items[P->nit] = (ritem_t){g, base};
-                double w = G->kind == 8 ? env_int("CONV_ROLL_W8", 104) / 100.0 : G->kind == 4 ? env_int("CONV_ROLL_W4", 123) / 100.0 : (G->kind == 16 || G->kind == 17) ? env_int("CONV_ROLL_W16", 102) / 100.0 : 1.0;
+                double w = G->kind == 8 ? g_knobs.roll_w8 / 100.0 : G->kind == 4 ? g_knobs.roll_w4 / 100.0 : (G->kind == 16 || G->kind == 17) ? g_knobs.roll_w16 / 100.0 : 1.0;
                 P->cost[P->nit] = (double)G->steps * outH * w;   // ∝ tile-步数（各类都是 4 tile）× 相对慢速权重
                 P->C += P->cost[P->nit]; P->nit++;
             }
         }
-        if (P->kcopy_n < kn) { free(P->kcopy); P->kcopy = malloc(kn * 4); P->kcopy_n = P->kcopy ? kn : 0; }
-        if (P->kcopy) memcpy(P->kcopy, k, kn * 4);
-        P->KH = KH; P->KW = KW; P->outW = outW;
     }
-    if (!same || P->pnth != nth) {
+    {
         // 精确静态划分：片段代价 = 权重 × 步数 × (行数 + KH-1)，贪心填到目标，整项放不下就按行切开
         const long ovh = KH - 1;
         int need = 2 * P->nit + 2 * nth + 4;
@@ -2302,34 +2149,10 @@ static void roll_diag_print(int nth)
     }
 }
 
-static void conv_worker_diag(int tid, int nt_, const ctx_t* c)
+static void worker_entry(int tid, int nt_, const ctx_t* c)
 {
     if (c->mode == 1) { roll_worker(tid, nt_, c); return; }
-    if (!g_diag_on) { conv_worker(tid, nt_, c); return; }
-    diag_t* dg = &g_diag[tid];
-    dg->ghz0 = dg->fmopa_ns = 0;
-    if (c->call_id == 2) {
-        char* dbuf = mmap(NULL, DIAG_BW_BYTES, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-        if (dbuf == MAP_FAILED) dbuf = NULL; else memset(dbuf, 1, DIAG_BW_BYTES);
-        sme_start();
-        diag_ghz(256); dg->ghz0 = diag_ghz(4096); diag_fmopa_ns(2000); dg->fmopa_ns = diag_fmopa_ns(20000);
-        diag_barrier(nt_, 1);                          // 全部核同时做 ~15 ms 的 fmopa 满载，再测主频：功耗降频在这里现形
-        dg->fmopa_ns2 = diag_fmopa_ns(1500000);
-        diag_ghz(256); dg->ghz_fm = diag_ghz(2048);
-        // 只有一半 / 四分之一的核满载时的 fmopa 速率与主频：若评测机按活跃核数提频，少线程可能反而更快
-        dg->fm_half = dg->fm_quarter = dg->ghz_half = 0;
-        diag_barrier(nt_, 2);
-        if (tid < nt_ / 2) { dg->fm_half = diag_fmopa_ns(1500000); diag_ghz(256); dg->ghz_half = diag_ghz(2048); }
-        diag_barrier(nt_, 3);
-        if (tid < nt_ / 4) dg->fm_quarter = diag_fmopa_ns(1500000);
-        diag_bw(nt_, dg, dbuf);
-        sme_stop();
-        if (dbuf) munmap(dbuf, DIAG_BW_BYTES);
-    }
-    dg->c0 = cyc();
     conv_worker(tid, nt_, c);
-    dg->c1 = cyc();
-    diag_ghz(256); dg->ghz1 = diag_ghz(2048);   // 负载下主频（其他线程多半还在算）：先热身（冷链路 ~4% 偏低），再 16384 周期 ≈ 10 µs
 }
 
 // ---------------------------------------------------------------- 自有线程池（可选）：调用之间自旋等待，省去 OpenMP 唤醒 ~0.1–0.2 ms
@@ -2364,7 +2187,7 @@ static void* pool_worker(void* arg)
             while ((g = __atomic_load_n(go, __ATOMIC_ACQUIRE)) == seen) asm volatile("yield" ::: "memory");
         }
         seen = g;
-        conv_worker_diag(tid, g_pool_nth, g_pool_ctx);
+        worker_entry(tid, g_pool_nth, g_pool_ctx);
         __atomic_fetch_add(&g_done.v, 1, __ATOMIC_ACQ_REL);
     }
     return NULL;
@@ -2393,13 +2216,13 @@ static void run_parallel(int nth, const ctx_t* c, int use_pool)
         if (c->prof) g_prof_c_go2 = cyc();
         if (g_pool_wfe) asm volatile("sev" ::: "memory");
         if (!g_main_pinned) { pin_self(0); g_main_pinned = 1; }
-        conv_worker_diag(0, nth, c);
+        worker_entry(0, nth, c);
         while (__atomic_load_n(&g_done.v, __ATOMIC_ACQUIRE) != (uint64_t)(nth - 1)) asm volatile("yield" ::: "memory");
         return;
     }
 #pragma omp parallel num_threads(nth)
     {
-        conv_worker_diag(omp_get_thread_num(), omp_get_num_threads(), c);
+        worker_entry(omp_get_thread_num(), omp_get_num_threads(), c);
     }
 }
 
@@ -2463,7 +2286,7 @@ static void conv2d_sme(const CONVFLOAT* in, CONVINT H, CONVINT W, const CONVFLOA
     const long ring_floats = NS * slot_floats;
     const long ring_stride = (ring_floats + 1023) & ~1023L;    // 线程间 4 KB 对齐
     // 诊断模式：第 1/2 次调用（基准的校验与预热，不计时）开分相计时；第 3 次（计时）只记每线程总时长与主频，汇总延后到进程退出时打印
-    const int prof = g_knobs.prof ? g_knobs.prof : (g_diag_on && g_call + 1 <= 2);
+    const int prof = g_knobs.prof;
     const int pf_in = g_knobs.pf_in;                  // 预取下一行组的原始输入行
     const int pf_out = g_knobs.pf_out;                // 预取本行组的输出行（写）
     const int postart_env = g_knobs.postart;          // >0 覆盖输出预取起始行数（调参用）
@@ -2524,35 +2347,23 @@ static void conv2d_sme(const CONVFLOAT* in, CONVINT H, CONVINT W, const CONVFLOA
 #ifdef CONV_DEBUG_BR
     { static int once = 0; if (!once) { once = 1; br_selftest(); } }
 #endif
-    // kernel 缓存：与上次调用的 kernel 逐字节相同（且 R/Kp 缓冲未重分配、形状相同）→ 直接复用打包结果；否则主线程现在打包
-    static float* kcopy = NULL; static size_t kcopy_n = 0; static long ck_KH = -1, ck_KW = -1, ck_NS = -1, ck_RS = -1, ck_KPS = -1, ck_br = -1;
-    static float* ck_R = NULL; static float* ck_Kp = NULL;
-    const size_t kn = (size_t)KH * KW;
-    int rpacked = (kcopy && kcopy_n == kn && ck_KH == KH && ck_KW == KW && ck_NS == NS && ck_RS == RS && ck_KPS == KPS && ck_br == br_pre &&
-                   ck_R == g_R && ck_Kp == g_Kp && memcmp(kcopy, k, kn * sizeof(float)) == 0);
-    if (!rpacked) {
-        if (kcopy_n < kn) { free(kcopy); kcopy = malloc(kn * sizeof(float)); kcopy_n = kcopy ? kn : 0; }
-        if (kcopy) memcpy(kcopy, k, kn * sizeof(float));
-        for (long Y = 0; Y < NS; Y++) {
-            float* r = g_R + Y * RS;
-            for (long Xp = 0; Xp < KW + 6; Xp++) {
-                const long x = Xp - 3;
-                for (int jc = 0; jc < 4; jc++) { const long y = Y - 3 + jc; r[Xp * 4 + jc] = (y >= 0 && y < KH && x >= 0 && x < KW) ? k[y * KW + x] : 0.0f; }
-            }
+    // 每次调用都由主线程重新打包 R/Kp（工作线程不打包、无起始屏障；不缓存打包结果）
+    for (long Y = 0; Y < NS; Y++) {
+        float* r = g_R + Y * RS;
+        for (long Xp = 0; Xp < KW + 6; Xp++) {
+            const long x = Xp - 3;
+            for (int jc = 0; jc < 4; jc++) { const long y = Y - 3 + jc; r[Xp * 4 + jc] = (y >= 0 && y < KH && x >= 0 && x < KW) ? k[y * KW + x] : 0.0f; }
         }
-        if (br_pre) for (long kj = 0; kj < KH; kj++) { float* r = g_Kp + kj * KPS; for (long z = 0; z < KPS; z++) r[z] = (z >= 3 && z < KW + 3) ? k[kj * KW + z - 3] : 0.0f; }
-        ck_KH = KH; ck_KW = KW; ck_NS = NS; ck_RS = RS; ck_KPS = KPS; ck_br = br_pre; ck_R = g_R; ck_Kp = g_Kp;
-        rpacked = (kcopy != NULL);   // 复制失败则下次仍走并行打包
     }
-    double t_pre = (prof || g_diag_on) ? omp_get_wtime() : 0;
+    if (br_pre) for (long kj = 0; kj < KH; kj++) { float* r = g_Kp + kj * KPS; for (long z = 0; z < KPS; z++) r[z] = (z >= 3 && z < KW + 3) ? k[kj * KW + z - 3] : 0.0f; }
+    double t_pre = prof ? omp_get_wtime() : 0;
     uint64_t c_pre = prof ? cyc() : 0;
     prof_t* prs = prof ? calloc(nth, sizeof(prof_t)) : NULL;
     const uint64_t call_id = ++g_call;
 
     ctx_t ctx = { in, k, out, H, W, KH, KW, outH, outW, BW, NB, G, NS, RS, m4, rem, PW, slot_floats, ring_stride, Wtot,
                   KPS, br_pre, br_post,
-                  SP, prof, pf_in, pf_out, 0, slice_ovl, postart_env, store_asm, pf_l2, rpacked, TB, c_pre, prs, call_id };
-    __atomic_store_n(&g_rcount.v, 0, __ATOMIC_RELEASE);
+                  SP, prof, pf_in, pf_out, 0, slice_ovl, postart_env, store_asm, pf_l2, TB, c_pre, prs, call_id };
     g_pool_wfe = g_knobs.poolwfe;
 #ifdef CONV_ROWPROF
     if (call_id == 2) { size_t n = 1u << 22; g_rowts = malloc(n * sizeof(uint64_t)); g_rowts_cur = g_rowts; g_rowts_end = g_rowts ? g_rowts + n : NULL; }
@@ -2596,26 +2407,6 @@ static void conv2d_sme(const CONVFLOAT* in, CONVINT H, CONVINT W, const CONVFLOA
         free(g_rowts); g_rowts = g_rowts_cur = g_rowts_end = NULL;
     }
 #endif
-    if (g_diag_on) {
-        static int env_done = 0;
-        if (!env_done) { env_done = 1; diag_print_env(nth); struct sigaction sa; memset(&sa, 0, sizeof sa); sa.sa_sigaction = diag_sigill; sa.sa_flags = SA_SIGINFO; sigaction(SIGILL, &sa, NULL); sigaction(SIGSEGV, &sa, NULL); sigaction(SIGBUS, &sa, NULL); atexit(diag_atexit); }
-        const double tick_ms = 1e3 / (double)cyc_hz();
-        double g1n = 1e9, g1x = 0, g1s = 0; uint64_t tn = ~0ull, tx = 0; double ts = 0;
-        for (int t = 0; t < nth; t++) { const diag_t* d = &g_diag[t]; double g = d->ghz1; if (g < g1n) g1n = g; if (g > g1x) g1x = g; g1s += g;
-                                        uint64_t tt = d->c1 - d->c0; if (tt < tn) tn = tt; if (tt > tx) tx = tt; ts += (double)tt; }
-        const diag_sum_t ds = { (unsigned long)call_id, (long)H, (long)W, (long)KH, (long)KW, (omp_get_wtime() - t_pre) * 1e3, (t_pre - t_entry) * 1e3,
-                                tn * tick_ms, ts / nth * tick_ms, tx * tick_ms, g1n, g1s / nth, g1x, 0 };
-        if (call_id <= 2) {
-            if (call_id == 1)
-                printf("[conv-diag] params %ldx%ld k%ldx%ld: SP %d NS %ld PW %ld br %ld/%ld long_pass %d pf_l2 %d store_asm %d slice %d pf_in %d pf_out %d items %ld\n",
-                       (long)H, (long)W, (long)KH, (long)KW, SP, NS, PW, br_pre, br_post, long_pass, pf_l2, store_asm, slice_ovl, pf_in, pf_out, Wtot);
-            printf("[conv-diag] call %lu %ldx%ld k%ldx%ld: region %.3f ms | pre %.3f | thr total min/avg/max %.3f/%.3f/%.3f ms | ghz@end min/avg/max %.3f/%.3f/%.3f\n",
-                   ds.call, ds.H, ds.W, ds.KH, ds.KW, ds.region, ds.pre, ds.tn, ds.ta, ds.tx, ds.g1n, ds.g1a, ds.g1x);
-        } else if (g_diag_deferred_n < 8) {
-            g_diag_deferred[g_diag_deferred_n++] = ds;
-            if (getenv("CONV_DIAG_THR")) { for (int t = 0; t < nth; t++) g_diag_thr_ms[t] = (g_diag[t].c1 - g_diag[t].c0) * tick_ms; g_diag_thr_n = nth; }
-        }
-    }
     if (prof) {
         double ms = 1e3 / (double)cyc_hz();
         prof_t mn = prs[0], mx = prs[0], sum = {0, 0, 0, 0, 0, 0, 0, 0};
@@ -2625,33 +2416,6 @@ static void conv2d_sme(const CONVFLOAT* in, CONVINT H, CONVINT W, const CONVFLOA
             ACC(build); ACC(kern); ACC(store); ACC(total); ACC(enter);
 #undef ACC
         }
-        if (g_diag_on) {
-            printf("[conv-diag] call %lu phases: kern avg/max %.3f/%.3f ms | build avg/max %.3f/%.3f | store avg/max %.3f/%.3f | enter max %.3f | items/thread %.1f\n",
-                   (unsigned long)call_id, sum.kern * ms / nth, mx.kern * ms, sum.build * ms / nth, mx.build * ms, sum.store * ms / nth, mx.store * ms, mx.enter * ms,
-                   (double)Wtot / nth);
-            if (call_id == 2) {
-                double g0n = 1e9, g0x = 0, g0s = 0, fn = 1e9, fx = 0, fs = 0, trd = 0, twr = 0, tpf = 0, tnt = 0, gfn = 1e9, gfx = 0, gfs = 0, f2s = 0, f2x = 0;
-                for (int t = 0; t < nth; t++) {
-                    const diag_t* d = &g_diag[t];
-                    g0n = d->ghz0 < g0n ? d->ghz0 : g0n; g0x = d->ghz0 > g0x ? d->ghz0 : g0x; g0s += d->ghz0;
-                    fn = d->fmopa_ns < fn ? d->fmopa_ns : fn; fx = d->fmopa_ns > fx ? d->fmopa_ns : fx; fs += d->fmopa_ns;
-                    trd = d->t_rd > trd ? d->t_rd : trd; twr = d->t_wr > twr ? d->t_wr : twr; tpf = d->t_pfwr > tpf ? d->t_pfwr : tpf; tnt = d->t_nt > tnt ? d->t_nt : tnt;
-                    gfn = d->ghz_fm < gfn ? d->ghz_fm : gfn; gfx = d->ghz_fm > gfx ? d->ghz_fm : gfx; gfs += d->ghz_fm; f2s += d->fmopa_ns2; f2x = d->fmopa_ns2 > f2x ? d->fmopa_ns2 : f2x;
-                }
-                const double bytes = (double)nth * (double)DIAG_BW_BYTES;
-                printf("[conv-diag] probes: ghz@start min/avg/max %.3f/%.3f/%.3f | fmopa ns min/avg/max %.3f/%.3f/%.3f (= %.2f cyc @ avg ghz) | "
-                       "bw GB/s read %.1f, st1w %.1f, pstl2keep+st1w %.1f, stnt1w %.1f\n", g0n, g0s / nth, g0x, fn, fs / nth, fx, (fs / nth) * (g0s / nth),
-                       trd > 0 ? bytes / trd / 1e9 : 0, twr > 0 ? bytes / twr / 1e9 : 0, tpf > 0 ? bytes / tpf / 1e9 : 0, tnt > 0 ? bytes / tnt / 1e9 : 0);
-                printf("[conv-diag] all-core fmopa burst 15 ms: fmopa ns avg/max %.3f/%.3f (= %.2f GHz if 2 cyc) | ghz right after burst min/avg/max %.3f/%.3f/%.3f | "
-                       "droop vs start %.1f%%\n", f2s / nth, f2x, 2.0 / (f2s / nth), gfn, gfs / nth, gfx, 100.0 * (1.0 - (gfs / nth) / (g0s / nth)));
-                { double hs = 0, qs = 0, gh = 0; int hn = 0, qn2 = 0;
-                  for (int t = 0; t < nth; t++) { if (g_diag[t].fm_half > 0) { hs += g_diag[t].fm_half; gh += g_diag[t].ghz_half; hn++; } if (g_diag[t].fm_quarter > 0) { qs += g_diag[t].fm_quarter; qn2++; } }
-                  printf("[conv-diag] partial-core bursts: half (%d cores) fmopa ns %.3f (= %.2f GHz) ghz %.3f | quarter (%d cores) fmopa ns %.3f (= %.2f GHz)\n",
-                         hn, hn ? hs / hn : 0, hn ? 2.0 / (hs / hn) : 0, hn ? gh / hn : 0, qn2, qn2 ? qs / qn2 : 0, qn2 ? 2.0 / (qs / qn2) : 0); }
-            }
-            fflush(stdout);
-        }
-        if (g_knobs.prof && !g_diag_on)
         fprintf(stderr, "[conv prof] SP %d br %ld/%ld | pre %.3f ms | region %.3f ms | go at %.4f..%.4f enter max %.3f | thread total min/avg/max %.3f/%.3f/%.3f | "
                         "build %.3f/%.3f | kern %.3f/%.3f | store %.3f/%.3f (avg/max ms)\n",
                 SP, br_pre, br_post,
@@ -2676,18 +2440,16 @@ void conv2d(const CONVFLOAT* input, CONVINT inputHeight, CONVINT inputWidth,
     if (outH <= 0 || outW <= 0 || kernelHeight <= 0 || kernelWidth <= 0) return;
 #ifdef CONV_SME
     if (sme_available()) {
-        const double t_in = g_diag_on ? omp_get_wtime() : 0;
         discover_cpus();
         int nth = omp_get_max_threads();
         if (g_ncpu > 0 && nth > g_ncpu) nth = g_ncpu;
         if (nth < 1) nth = 1;
         read_knobs();
-        int use_roll = g_knobs.roll > 0 || (g_knobs.roll < 0 && roll_auto(inputHeight, inputWidth, kernelHeight, kernelWidth));
-        if (use_roll && roll_shape_ok(inputHeight, inputWidth, kernelHeight, kernelWidth))
+        int use_roll = g_knobs.roll != 0 && roll_shape_ok(inputHeight, inputWidth, kernelHeight, kernelWidth);
+        if (use_roll)
             conv2d_roll(input, inputHeight, inputWidth, kernel, kernelHeight, kernelWidth, output, nth);
         else
             conv2d_sme(input, inputHeight, inputWidth, kernel, kernelHeight, kernelWidth, output, nth);
-        if (g_diag_on && g_diag_deferred_n > 0) g_diag_deferred[g_diag_deferred_n - 1].total = (omp_get_wtime() - t_in) * 1e3;   // 函数级总时长
         return;
     }
 #endif
