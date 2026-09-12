@@ -1,0 +1,82 @@
+HOST cn20482 2026-09-13T00:12:46+08:00
+pid 434536's current affinity list: 37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+PLACEMENT cpu_node=1 hbm_node=17
+Cpus_allowed_list:	37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+Mems_allowed_list:	0-31
+1199721
+policy: default
+preferred node: current
+physcpubind: 37 75 113 151 189 227 265 303 341 379 417 455 493 531 569 607 
+cpubind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+nodebind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 
+preferred: 
+EFFECTIVE_PLACEMENT
+policy: preferred
+preferred node: 17
+physcpubind: 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 
+cpubind: 1 
+nodebind: 1 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 
+preferred: 17 
+PHASE memory=DDR variant=baseline shape=6390 4256 81 81
+[roll] thr ms min/avg/max 7.337/28.672/35.296 | 周期/tile步: pair 2.71 single 0.00 8x2 3.03 4x4 0.00 | 份额 %: 87.5 0.0 12.5 0.0
+[roll] thr ms min/avg/max 28.353/28.517/28.643 | 周期/tile步: pair 2.71 single 0.00 8x2 2.93 4x4 0.00 | 份额 %: 87.9 0.0 12.1 0.0
+[roll] thr ms min/avg/max 28.342/28.522/28.669 | 周期/tile步: pair 2.71 single 0.00 8x2 2.95 4x4 0.00 | 份额 %: 87.8 0.0 12.2 0.0
+[roll] thr ms min/avg/max 28.336/28.506/28.650 | 周期/tile步: pair 2.71 single 0.00 8x2 2.93 4x4 0.00 | 份额 %: 87.9 0.0 12.1 0.0
+[roll] thr ms min/avg/max 28.358/28.503/28.635 | 周期/tile步: pair 2.71 single 0.00 8x2 2.93 4x4 0.00 | 份额 %: 87.9 0.0 12.1 0.0
+  6390 x  4256     81 x    81 run0   29.061 ms    11898.1 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   29.035 ms    11909.0 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   28.982 ms    11930.5 GFLOPS PASS
+  6390 x  4256     81 x    81 best   28.982 ms    11930.5 GFLOPS | avg   29.026 ms    11912.5 GFLOPS  PASS
+PHASE memory=DDR variant=unroll2 shape=6390 4256 81 81
+[roll] thr ms min/avg/max 17.756/28.543/34.225 | 周期/tile步: pair 2.71 single 0.00 8x2 2.93 4x4 0.00 | 份额 %: 87.9 0.0 12.1 0.0
+[roll] thr ms min/avg/max 28.301/28.491/28.611 | 周期/tile步: pair 2.71 single 0.00 8x2 2.93 4x4 0.00 | 份额 %: 87.9 0.0 12.1 0.0
+[roll] thr ms min/avg/max 28.312/28.478/28.605 | 周期/tile步: pair 2.70 single 0.00 8x2 2.93 4x4 0.00 | 份额 %: 87.9 0.0 12.1 0.0
+[roll] thr ms min/avg/max 28.313/28.491/28.620 | 周期/tile步: pair 2.71 single 0.00 8x2 2.93 4x4 0.00 | 份额 %: 87.9 0.0 12.1 0.0
+[roll] thr ms min/avg/max 28.353/28.524/28.642 | 周期/tile步: pair 2.70 single 0.00 8x2 2.96 4x4 0.00 | 份额 %: 87.7 0.0 12.3 0.0
+  6390 x  4256     81 x    81 run0   28.962 ms    11938.7 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   28.991 ms    11927.0 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   28.983 ms    11930.1 GFLOPS PASS
+  6390 x  4256     81 x    81 best   28.962 ms    11938.7 GFLOPS | avg   28.979 ms    11931.9 GFLOPS  PASS
+PHASE memory=DDR variant=pipeline2 shape=6390 4256 81 81
+[roll] thr ms min/avg/max 18.017/28.576/35.563 | 周期/tile步: pair 2.71 single 0.00 8x2 2.98 4x4 0.00 | 份额 %: 87.7 0.0 12.3 0.0
+[roll] thr ms min/avg/max 28.374/28.531/28.683 | 周期/tile步: pair 2.70 single 0.00 8x2 2.97 4x4 0.00 | 份额 %: 87.7 0.0 12.3 0.0
+[roll] thr ms min/avg/max 28.364/28.528/28.669 | 周期/tile步: pair 2.70 single 0.00 8x2 2.98 4x4 0.00 | 份额 %: 87.7 0.0 12.3 0.0
+[roll] thr ms min/avg/max 28.373/28.535/28.687 | 周期/tile步: pair 2.70 single 0.00 8x2 2.97 4x4 0.00 | 份额 %: 87.7 0.0 12.3 0.0
+[roll] thr ms min/avg/max 28.395/28.536/28.682 | 周期/tile步: pair 2.70 single 0.00 8x2 2.98 4x4 0.00 | 份额 %: 87.7 0.0 12.3 0.0
+  6390 x  4256     81 x    81 run0   29.044 ms    11905.0 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   29.052 ms    11901.8 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   29.031 ms    11910.4 GFLOPS PASS
+  6390 x  4256     81 x    81 best   29.031 ms    11910.4 GFLOPS | avg   29.042 ms    11905.7 GFLOPS  PASS
+PHASE memory=HBM variant=baseline shape=6390 4256 81 81
+[roll] thr ms min/avg/max 17.202/28.565/36.069 | 周期/tile步: pair 2.71 single 0.00 8x2 2.95 4x4 0.00 | 份额 %: 87.8 0.0 12.2 0.0
+[roll] thr ms min/avg/max 28.378/28.524/28.688 | 周期/tile步: pair 2.71 single 0.00 8x2 2.95 4x4 0.00 | 份额 %: 87.8 0.0 12.2 0.0
+[roll] thr ms min/avg/max 28.346/28.511/28.665 | 周期/tile步: pair 2.71 single 0.00 8x2 2.95 4x4 0.00 | 份额 %: 87.8 0.0 12.2 0.0
+[roll] thr ms min/avg/max 28.369/28.531/28.685 | 周期/tile步: pair 2.71 single 0.00 8x2 2.95 4x4 0.00 | 份额 %: 87.8 0.0 12.2 0.0
+[roll] thr ms min/avg/max 28.402/28.549/28.707 | 周期/tile步: pair 2.71 single 0.00 8x2 2.97 4x4 0.00 | 份额 %: 87.7 0.0 12.3 0.0
+  6390 x  4256     81 x    81 run0   29.046 ms    11904.1 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   29.058 ms    11899.5 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   29.056 ms    11900.2 GFLOPS PASS
+  6390 x  4256     81 x    81 best   29.046 ms    11904.1 GFLOPS | avg   29.053 ms    11901.3 GFLOPS  PASS
+PHASE memory=HBM variant=unroll2 shape=6390 4256 81 81
+[roll] thr ms min/avg/max 17.386/28.573/34.925 | 周期/tile步: pair 2.71 single 0.00 8x2 2.93 4x4 0.00 | 份额 %: 87.9 0.0 12.1 0.0
+[roll] thr ms min/avg/max 28.380/28.527/28.714 | 周期/tile步: pair 2.71 single 0.00 8x2 2.93 4x4 0.00 | 份额 %: 87.9 0.0 12.1 0.0
+[roll] thr ms min/avg/max 28.386/28.515/28.684 | 周期/tile步: pair 2.71 single 0.00 8x2 2.93 4x4 0.00 | 份额 %: 87.9 0.0 12.1 0.0
+[roll] thr ms min/avg/max 28.410/28.532/28.729 | 周期/tile步: pair 2.71 single 0.00 8x2 2.93 4x4 0.00 | 份额 %: 87.9 0.0 12.1 0.0
+[roll] thr ms min/avg/max 28.402/28.532/28.724 | 周期/tile步: pair 2.71 single 0.00 8x2 2.93 4x4 0.00 | 份额 %: 87.9 0.0 12.1 0.0
+  6390 x  4256     81 x    81 run0   29.046 ms    11904.3 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   29.079 ms    11890.6 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   29.054 ms    11900.9 GFLOPS PASS
+  6390 x  4256     81 x    81 best   29.046 ms    11904.3 GFLOPS | avg   29.060 ms    11898.6 GFLOPS  PASS
+PHASE memory=HBM variant=pipeline2 shape=6390 4256 81 81
+[roll] thr ms min/avg/max 7.350/28.567/34.663 | 周期/tile步: pair 2.71 single 0.00 8x2 2.93 4x4 0.00 | 份额 %: 87.9 0.0 12.1 0.0
+[roll] thr ms min/avg/max 28.375/28.516/28.692 | 周期/tile步: pair 2.71 single 0.00 8x2 2.93 4x4 0.00 | 份额 %: 87.9 0.0 12.1 0.0
+[roll] thr ms min/avg/max 28.360/28.507/28.674 | 周期/tile步: pair 2.71 single 0.00 8x2 2.93 4x4 0.00 | 份额 %: 87.9 0.0 12.1 0.0
+[roll] thr ms min/avg/max 28.379/28.516/28.688 | 周期/tile步: pair 2.71 single 0.00 8x2 2.93 4x4 0.00 | 份额 %: 87.9 0.0 12.1 0.0
+[roll] thr ms min/avg/max 28.385/28.521/28.698 | 周期/tile步: pair 2.71 single 0.00 8x2 2.93 4x4 0.00 | 份额 %: 87.9 0.0 12.1 0.0
+  6390 x  4256     81 x    81 run0   29.057 ms    11899.9 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   29.069 ms    11894.9 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   29.053 ms    11901.5 GFLOPS PASS
+  6390 x  4256     81 x    81 best   29.053 ms    11901.5 GFLOPS | avg   29.059 ms    11898.8 GFLOPS  PASS
+V59_DIAG_DONE 2026-09-13T00:13:19+08:00
