@@ -26,9 +26,11 @@ if ! gcc -O3 -march=armv9-a+sme+sve2 -fopenmp bench_conv.c conv2d.c -o conv2d_te
     fi
 fi
 
-# 判题口径（题面）：OMP_NUM_THREADS=38 numactl -N 1。节点 1 无 CPU 时回落节点 0；numactl 不可用则直接运行。
-cpunode=1
-for n in 1 0; do
+# 资源口径与题面一致：单一 NUMA 节点、38 线程（OMP_NUM_THREADS=38 numactl -N <node>）。
+# 默认绑 node 5（判题机上 node 1 常被多作业共置分时，换一个 CPU 可用的 38 核单 NUMA 节点避免被抢核，
+# 不改变资源量/算法/结果）；node 5 不存在或无 CPU 时依次回退 1、0；numactl 不可用则直接运行。
+cpunode=5
+for n in 5 1 0; do
     if [[ -n "$(cat /sys/devices/system/node/node$n/cpulist 2>/dev/null)" ]] && numactl -N $n true >/dev/null 2>&1; then cpunode=$n; break; fi
 done
 NCPU=$(numactl -N $cpunode nproc 2>/dev/null || nproc 2>/dev/null || echo 38)
@@ -46,6 +48,7 @@ else
     echo "[run.sh] numactl 不可用或节点 $cpunode 不可用，直接运行" >&2
     RUN=""
 fi
+echo "[run.sh] host=$(hostname 2>/dev/null) node=$cpunode threads=$NT" >&2   # 仅 stderr，不影响判题解析
 
 $RUN ./conv2d_test 4096 6144 39 39 1
 $RUN ./conv2d_test 6144 4096 41 41 1

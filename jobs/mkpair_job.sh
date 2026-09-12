@@ -29,7 +29,13 @@ for V in a b; do
   OUT=$([[ $V == a ]] && echo submissions/conv.zip || echo submissions/conv_nf3.zip)
   (cd "$TMP" && rm -f out.zip && zip -q -r out.zip conv) && cp "$TMP/out.zip" "$OUT"
   echo "packed $OUT md5=$(md5sum "$OUT" | cut -d' ' -f1)"
-  grep -n "CONV_NF_REM7\|march=armv9" "$D/run.sh" | head
+  grep -n "CONV_NF_REM7\|march=armv9\|cpunode=" "$D/run.sh" | head
 done
 rm -rf "$TMP"
+echo "--- 端到端解压 bash run.sh（确认绑到 node 5 + 四例 PASS），A 包"
+Z=$(mktemp -d /tmp/za.XXXX); (cd "$Z" && unzip -q "$OLDPWD/submissions/conv.zip" && cd conv && unset OMP_NUM_THREADS OMP_PROC_BIND OMP_PLACES OMP_DYNAMIC && bash ./run.sh 2>&1 | grep -E "node=|host=|PASS|FAIL|run.sh")
+rm -rf "$Z"
+echo "--- 端到端 B 包"
+Z=$(mktemp -d /tmp/zb.XXXX); (cd "$Z" && unzip -q "$OLDPWD/submissions/conv_nf3.zip" && cd conv && unset OMP_NUM_THREADS OMP_PROC_BIND OMP_PLACES OMP_DYNAMIC && bash ./run.sh 2>&1 | grep -E "node=|host=|PASS|FAIL|run.sh")
+rm -rf "$Z"
 echo "=== DONE"; date
