@@ -12,7 +12,7 @@ bash run.sh    # 编译 + 四个用例（题面判题口径：OMP_NUM_THREADS=38
 或手动：
 
 ```bash
-gcc -O3 bench_conv.c conv2d.c -o conv2d_test -lm -fopenmp
+gcc -O3 -march=armv9-a+sme+sve2 -fopenmp bench_conv.c conv2d.c -o conv2d_test -lm   # 或题面的 gcc -O3 ...（文件内 pragma 打开 SME）
 OMP_NUM_THREADS=38 numactl -N 1 ./conv2d_test 4096 6144 39 39 1
 ```
 
