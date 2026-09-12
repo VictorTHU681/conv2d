@@ -1,10 +1,11 @@
 # Next v56 candidate: five residual rows with three-way folding
 
 Status: design derived from the completed mixed-arithmetic profile; no K5
-implementation or performance result yet. The accepted operator is unchanged.
+implementation or performance result yet. The accepted operator now uses source
+`43933469…09d121`, including the validated output write-order correction.
 The indexed-FMLA follow-up 1582779 has now independently confirmed the same
-eight-FMLA arithmetic-only budget. Implementation is deferred while addressing
-the newly found [output overlap race](output-ownership.md).
+eight-FMLA arithmetic-only budget. The [output overlap race](output-ownership.md)
+has been corrected; K5 may now proceed while preserving row-chunk dependencies.
 
 ## Why change the grouping
 

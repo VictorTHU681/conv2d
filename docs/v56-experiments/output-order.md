@@ -1,7 +1,9 @@
 # v56 output write ordering candidates
 
-These isolated candidates address the [overlapping-writer finding](output-ownership.md).
-They do not introduce a new version or change the root source pending acceptance.
+These candidates address the [overlapping-writer finding](output-ownership.md).
+The pipelined candidate is now adopted in the root source and packages after
+acceptance. This remains local v56, with no push and no new version number.
+Accepted SHA-256: `4393346986d6c0c71c7db9ecd804ed76c22839923f8ed963f07488854809d121`.
 Immutable baseline is `54dc05d`, source `695c449c…3530b`.
 
 ## Changes and ordering argument
@@ -52,9 +54,14 @@ boundaries and the official benchmark/build command remain unchanged.
 - **1582878**, cn20483, 02:52:45–02:59:34, succeeds for ordered: 1,305 state
   cases across five packing modes, 224 guards and 64 full-reference official
   checks with zero maximum errors. All four rounds completed in each memory mode.
-- **1582930** tests pipelined with the same checks plus the runtime overlap
-  diagnostic. **1582948** validates its three isolated archives. These remain
-  pending completion at this checkpoint; acceptance follows terminal logs.
+- **1582930**, cn20481, 02:58:29–03:05:32, succeeds for pipelined: 1,305 state
+  cases, 224 guards, 54 signed bitwise runtime overlap checks (7,861 kernel calls,
+  zero active conflicts) and 64 official complete-reference checks, errors zero.
+- **1582948**, cn20481, 03:05:40–03:07:44, succeeds with all 12 complete checks
+  across the normal, three-chain control and diagnostic archives. Its pending
+  node preference was changed from cn20483 to cn20481 with `dmod`; the same job
+  was retained. Current archives update README only; program members match the
+  tested archives byte-for-byte. The diagnostic archive remains diagnostic-only.
 
 The completed **ordered** comparison below explains why it will not replace
 the current source. Waiting for complete pieces extends the final critical
@@ -68,8 +75,21 @@ GFLOPS values, with five timed calls per process and alternating process order.
 | 55 | +0.07% | +0.16% |
 | 81 | -9.11% | -9.00% |
 
-Full values: `results/v56/experiments/output-order/summary.md`. Pipelined
-performance will be reported separately after all rounds finish.
+Full values: `results/v56/experiments/output-order/summary.md`.
+
+The adopted **pipelined** comparison is a separate same-node job against the
+same immutable baseline; do not subtract measurements from different nodes.
+
+| KH=KW | DDR change | HBM change |
+| --- | ---: | ---: |
+| 39 | -0.25% | -0.31% |
+| 41 | -0.25% | -0.02% |
+| 55 | -0.09% | -0.18% |
+| 81 | -0.24% | -0.18% |
+
+The small measured cost is retained to correct the output race. It is not
+reported as a gain or assumed to be zero merely because the percentages are
+small. Full values: `results/v56/experiments/output-order/pipeline_summary.md`.
 
 Reproduction: `gen_v56_output_order.py`, `test_v56_output_order.py` (add
 `--pipeline` for chunked ownership), `gen_v56_output_overlap_audit.py`, the

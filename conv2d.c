@@ -1217,7 +1217,7 @@ _Static_assert(offsetof(ka_t, carry) == 280 && offsetof(ka_t, resume) == 288, "r
 _Static_assert(offsetof(ka_t, ovn) == 296 && offsetof(ka_t, ovr) == 304, "overlapped-copy assembly offsets");
 typedef struct {
     const float* in_row; long rsb; const float* R; long RSB; long KH, steps, nrows;
-    float* out_row0; float* scratch; long cA0, cB0, yA0, yB0, nvA, nvB; float* ring; long KW; long osb;   // osb: 输出行距（字节）
+    uintptr_t out_row0; float* scratch; long cA0, cB0, yA0, yB0, nvA, nvB; float* ring; long KW; long osb;   // osb: 输出行距（字节）
     const float* kb0; const float* kbase; const float* kend; long cf0;   // pair+fmla：第 33 残差的 kernel 行游标与事件计数值
     const float* kb20; long cf20;                                         // single16+2fmla：第二条 fmla 残差
     float* carry; long resume;
@@ -2496,7 +2496,7 @@ static void roll_build_R_row(float* R, const float* k, long KH, long KW, long st
 }
 typedef struct { int kind; long s_base, nvA, nvB, width, steps, RSB; float* R; size_t Rcap; float* kf; size_t kfcap; int Rowner; int sf; } rgrp_t;   // kind 32=pair,16=single,8,4; 33/34=pair+fmla；kf = pairf3 的三链 b 打包 [KH][steps][4]
 typedef struct { int g; long base; } ritem_t;
-typedef struct { int item; long ja, jb; } rpiece_t;
+typedef struct { int item; long ja, jb; int dep_first, dep_end; } rpiece_t;
 typedef struct {
     rgrp_t G[12]; int ng;
     ritem_t* items; double* cost; int nit, itcap; double C;
@@ -2617,6 +2617,30 @@ static int roll_shape_ok(long H, long W, long KH, long KW)
     if (outH < 1) return 0;
     return 1;
 }
+// A clamped final strip overlaps only its immediate predecessor. Order
+// intersecting row pieces, leaving disjoint rows and all other strips parallel.
+// Dependencies point strictly to earlier items, so the claim graph is acyclic.
+static void roll_link_output_dependencies(rplan_t* P)
+{
+    for (int i = 0; i < P->npieces; i++) {
+        rpiece_t* pc = &P->pieces[i];
+        pc->dep_first = pc->dep_end = 0;
+        const int item = pc->item;
+        if (item == 0) continue;
+        const ritem_t* current = &P->items[item];
+        const ritem_t* previous = &P->items[item - 1];
+        if (previous->g != current->g ||
+            previous->base + P->G[current->g].width <= current->base) continue;
+        for (int j = i - 1; j >= 0; j--) {
+            const rpiece_t* other = &P->pieces[j];
+            if (other->item < item - 1) break;
+            if (other->item != item - 1 || other->jb <= pc->ja || other->ja >= pc->jb) continue;
+            if (!pc->dep_end) pc->dep_end = j + 1;
+            pc->dep_first = j;
+        }
+    }
+}
+
 static void roll_prepare(const float* k, long H, long W, long KH, long KW, int nth)
 {
     rplan_t* P = &g_rp;
@@ -2688,6 +2712,7 @@ static void roll_prepare(const float* k, long H, long W, long KH, long KW, int n
             }
         }
         P->pstart[nth] = np; P->npieces = np; P->pnth = nth;
+        roll_link_output_dependencies(P);
     }
     if (P->nthr_alloc < nth) {
         free(P->rings); free(P->scratch);
@@ -2739,6 +2764,28 @@ static int resume_claim(const rplan_t* P, int first, int last, int* cursor, long
         uint64_t w = __atomic_load_n(&P->ready[i].v, __ATOMIC_RELAXED);
         long total = P->pieces[i].jb - P->pieces[i].ja + KH - 1;
         if (w >= (uint64_t)total) continue; // Includes the high-bit busy marker.
+        // Wait only for the rows this chunk will actually write. A busy
+        // predecessor still publishes its completed prefix in the low bits;
+        // acquire observes that earlier release through the CAS release sequence.
+        const rpiece_t* pc = &P->pieces[i];
+        if (pc->dep_first != pc->dep_end) {
+            long step = g_roll_step * KH; if (step < KH) step = KH;
+            long rows = total - (long)w; if (rows > step) rows = step;
+            long lo = pc->ja + (long)w - KH + 1; if (lo < pc->ja) lo = pc->ja;
+            long hi = pc->ja + (long)w + rows - KH + 1;
+            int pending = 0;
+            for (int j = pc->dep_first; j < pc->dep_end; j++) {
+                const rpiece_t* previous = &P->pieces[j];
+                long begin = lo > previous->ja ? lo : previous->ja;
+                long end = hi < previous->jb ? hi : previous->jb;
+                if (begin >= end) continue;
+                uint64_t need = (uint64_t)(end - previous->ja + KH - 1);
+                uint64_t done = __atomic_load_n(&P->ready[j].v, __ATOMIC_ACQUIRE);
+                done &= ~((uint64_t)1 << 63);
+                if (done < need) { pending = 1; break; }
+            }
+            if (pending) continue;
+        }
         uint64_t nw = w | ((uint64_t)1 << 63);
         if (__atomic_compare_exchange_n(&P->ready[i].v, &w, nw, 0, __ATOMIC_ACQUIRE, __ATOMIC_RELAXED)) {
             *off = (long)w; return i;
@@ -2809,7 +2856,7 @@ static void roll_worker(int tid, int nth, const ctx_t* c)
         const long base = P->items[pc->item].base;
         uint64_t t0 = g_roll_diag ? cyc() : 0;
         kp_t K = { c->in + ja * W + base, W * 4, g->R, g->RSB, KH, g->steps, rows,
-                   c->out + (ja - KH + 1) * c->outW + base, scr,
+                   (uintptr_t)c->out + (uintptr_t)((ja - KH + 1) * c->outW + base) * sizeof(float), scr,
                    ((ja + 1 - g->s_base) % KH + KH) % KH, ((ja + 1 - g->s_base - 16) % KH + KH) % KH,
                    ((ja - g->s_base) % KH + KH) % KH, ((ja - g->s_base - 16) % KH + KH) % KH, g->nvA, g->nvB, ring, KW, c->outW * 4,
                    NULL, NULL, NULL, 0, NULL, 0 };

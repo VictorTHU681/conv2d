@@ -1,8 +1,10 @@
-# v56 output ownership audit: unresolved overlapping writers
+# v56 output ownership audit: overlapping writers found in 54dc05d
 
 Source under review: `54dc05d:conv2d.c`, SHA-256
 `695c449ccdc0b234ae16812a49b26afc7a7d0153d5d0b33983c7b3a281f3530b`.
-This audit concerns the current source and packages, not a new kernel.
+This historical finding concerns the source before the output-order correction.
+Current accepted source `43933469…09d121` incorporates the validated
+[row-chunk dependency fix](output-order.md).
 
 ## Finding
 
@@ -31,24 +33,25 @@ Results: [ownership/claim table](../../results/v56/experiments/output-ownership/
 
 ## Status and repair requirements
 
-**Unfixed in the current operator and all three current packages.** Earlier
+**Fixed by the adopted row-chunk dependency candidate.** Earlier
 input-copy and coefficient-packing fixes do not address output ownership.
 Existing reference/guard tests passing does not disprove this issue.
-Isolated [ordering candidates](output-order.md) are now undergoing acceptance;
-the first runtime control has confirmed active conflicts in the baseline and
-zero in the candidate that orders complete pieces. That candidate's large
-performance regression motivates ordering only the intersecting row chunks.
+The [ordering candidates](output-order.md) have completed acceptance. Runtime
+controls confirm active conflicts in the baseline and zero in both fixes.
+The first candidate's large performance regression motivated ordering only
+the intersecting row chunks, which is the adopted implementation.
 
 Prefer giving each output column a single writer, including masked final-strip
 stores for every rolling kernel family and folded FMLA output. Alternatively,
 order overlapping output pieces explicitly using acquire/release completion,
 without introducing claim deadlocks or overlooking split/resumed pieces.
-Any repair needs an ownership-specific check plus signed bitwise, boundary,
+The repair required an ownership-specific check plus signed bitwise, boundary,
 multi-chunk, all packing modes and official performance validation before
-replacing the accepted source. Defer the K5 optimization until this is resolved.
+replacing the accepted source. Those checks and archive validation now pass.
 
 Separately, `roll_worker` forms `c->out + (ja-KH+1)*outW + base` before the output
 object during initial warmup rows. Assembly selects scratch for those rows,
 but that does not make the preceding C pointer arithmetic valid. This is a
 separate language-level defect, not evidence that warmup stores hit external
-memory. It also remains to be corrected and verified.
+memory. The accepted fix changes the warmup cursor to integer address arithmetic;
+that specific invalid C pointer formation is corrected and the output checks pass.
