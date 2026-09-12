@@ -1932,16 +1932,21 @@ static void k4(const kp_t* P)
         : XCLOB, "z0", "z1", "z2", "z3", "z4", "z31", "p0", "p3", "p4", "memory", "cc");
 }
 // b 表：kind 16: R[y][X][c] = k[(y-c) mod KH][X]（残差 s_base+c ≥ KH → 0）；kind 8: c=2s+ic → k[(y-s) mod KH][X-ic]；kind 4: c=4s+ic
-static void roll_build_R(float* R, const float* k, long KH, long KW, long steps, long s_base, int kind)
+// 每次调用都重建（不缓存打包结果），按行构建：kj 只依赖 (y,c)，提出内层（无逐元素取模），X 方向三段拷贝/清零
+static void roll_build_R_row(float* R, const float* k, long KH, long KW, long steps, long s_base, int kind, long y)
 {
-    for (long y = 0; y < KH; y++)
-        for (long X = 0; X < steps; X++)
-            for (long c = 0; c < 16; c++) {
-                long sidx, ic;
-                if (kind == 16) { sidx = c; ic = 0; } else if (kind == 8) { sidx = c >> 1; ic = c & 1; } else { sidx = c >> 2; ic = c & 3; }
-                long ki = X - ic, kj = ((y - sidx) % KH + KH) % KH;
-                R[(y * steps + X) * 16 + c] = (ki >= 0 && ki < KW && s_base + sidx < KH) ? k[kj * KW + ki] : 0.f;
-            }
+    float* Ry = R + y * steps * 16;
+    for (long c = 0; c < 16; c++) {
+        long sidx, ic;
+        if (kind == 16) { sidx = c; ic = 0; } else if (kind == 8) { sidx = c >> 1; ic = c & 1; } else { sidx = c >> 2; ic = c & 3; }
+        long kj = y - sidx; if (kj < 0) kj += KH;              // 0 ≤ sidx ≤ 15 < KH（shape_ok 保证 KH ≥ 16）
+        if (s_base + sidx >= KH) { for (long X = 0; X < steps; X++) Ry[X * 16 + c] = 0.f; continue; }
+        const float* kr = k + kj * KW - ic;                    // kr[X] = k[kj][X - ic]
+        long x1 = KW + ic; if (x1 > steps) x1 = steps;
+        for (long X = 0; X < ic; X++) Ry[X * 16 + c] = 0.f;
+        for (long X = ic; X < x1; X++) Ry[X * 16 + c] = kr[X];
+        for (long X = x1; X < steps; X++) Ry[X * 16 + c] = 0.f;
+    }
 }
 typedef struct { int kind; long s_base, nvA, nvB, width, steps, RSB; float* R; size_t Rcap; float* kf; size_t kfcap; } rgrp_t;   // kind 32=pair,16=single,8,4; 33/34=pair+fmla；kf = pairf3 的三链 b 打包 [KH][steps][4]
 typedef struct { int g; long base; } ritem_t;
@@ -1954,6 +1959,49 @@ typedef struct {
 } rplan_t;
 static rplan_t g_rp;
 static padded_u64 g_rwork[1024] __attribute__((aligned(64)));   // 每线程片段游标 (end<<32 | cur)，CAS 认领 + 空了从别人尾部偷
+
+// R/kf 打包的并行化：chunk = (组 g, 行 y)，id = g*KH + y。内容由 (kernel, 形状) 唯一决定 → 幂等，可重复执行。
+// 全体线程原子认领；认领耗尽后空闲线程直接重做未完成的 chunk（不自旋等慢线程，分时/换出不放大）。
+static uint32_t g_pk_next;
+static uint8_t g_pk_done[4096];
+static int g_pk_nc = 0;
+static void roll_pack_chunk(const rplan_t* P, const float* k, long KH, long KW, int i)
+{
+    const rgrp_t* G = &P->G[i / (int)KH];
+    const long y = i % KH;
+    roll_build_R_row(G->R, k, KH, KW, G->steps, G->s_base,
+                     (G->kind == 32 || G->kind == 33 || G->kind == 34 || G->kind == 35 || G->kind == 17) ? 16 : G->kind, y);
+    if (G->kind == 34 || G->kind == 35) {       // kf[a][X] = {k[a][X], k[(a+1)%KH][X], k[(a+2)%KH][X], (k[(a+3)%KH][X])}，a = y
+        const long a = y;
+        const long a1 = a + 1 >= KH ? a + 1 - KH : a + 1, a2 = a + 2 >= KH ? a + 2 - KH : a + 2, a3 = a + 3 >= KH ? a + 3 - KH : a + 3;
+        float* d = G->kf + a * G->steps * 4;
+        for (long X = 0; X < G->steps; X++, d += 4) {
+            d[0] = X < KW ? k[a * KW + X] : 0.f;
+            d[1] = X < KW ? k[a1 * KW + X] : 0.f;
+            d[2] = X < KW ? k[a2 * KW + X] : 0.f;
+            d[3] = (G->kind == 35 && X < KW) ? k[a3 * KW + X] : 0.f;
+        }
+    }
+}
+static void roll_pack_all(const rplan_t* P, const float* k, long KH, long KW)
+{
+    const int nc = g_pk_nc;
+    for (;;) {
+        uint32_t i = __atomic_fetch_add(&g_pk_next, 1, __ATOMIC_RELAXED);
+        if (i >= (uint32_t)nc) break;
+        roll_pack_chunk(P, k, KH, KW, (int)i);
+        __atomic_store_n(&g_pk_done[i], 1, __ATOMIC_RELEASE);
+    }
+    for (;;) {   // 兜底：把仍未完成的 chunk 直接重做（幂等，写入值相同），全部完成即进入计算
+        int all = 1;
+        for (int i = 0; i < nc; i++)
+            if (!__atomic_load_n(&g_pk_done[i], __ATOMIC_ACQUIRE)) {
+                all = 0; roll_pack_chunk(P, k, KH, KW, i);
+                __atomic_store_n(&g_pk_done[i], 1, __ATOMIC_RELEASE);
+            }
+        if (all) break;
+    }
+}
 static int g_roll_diag = 0;
 typedef struct { uint64_t tk[4]; long ts[4]; uint64_t tot; } rdiag_t;   // 每线程：各类内核的 cntvct 计时与 tile-步数
 static rdiag_t g_rdiag[1024];
@@ -1978,10 +2026,11 @@ static int roll_groups(long KH, long KW, rgrp_t* G)
     for (int g = 0; g < ng; g++) G[g].RSB = G[g].steps * 64;
     return ng;
 }
-// 滚动形态的结构性开关（与具体用例尺寸无关）：KH ≥ 16 才有 16 残差组、KW 在条带步数上限内、每个组的条带放得下、行数足够
+// 滚动形态的结构性开关（与具体用例尺寸无关）：KH ≥ 16 才有 16 残差组（≤ 256 保证分组数 ≤ 12）、
+// KW 在条带步数上限内、每个组的条带放得下、行数足够
 static int roll_shape_ok(long H, long W, long KH, long KW)
 {
-    if (KH < 16 || KW < 3 || KW > 400) return 0;
+    if (KH < 16 || KH > 256 || KW < 3 || KW > 400) return 0;
     rgrp_t G[12]; int ng = roll_groups(KH, KW, G);
     long outW = W - KW + 1, outH = H - KH + 1;
     for (int g = 0; g < ng; g++) if (outW < G[g].width) return 0;
@@ -1992,25 +2041,16 @@ static void roll_prepare(const float* k, long H, long W, long KH, long KW, int n
 {
     rplan_t* P = &g_rp;
     const long outW = W - KW + 1, outH = H - KH + 1;
-    // 每次调用都重新打包 R/kf 并重建工作项（不缓存/比对 kernel 内容）
+    // 每次调用都重新分组、重建工作项；R/kf 的打包写入由全体线程按 (组, 行) chunk 并行完成（见 roll_pack_chunk）
     {
         P->ng = roll_groups(KH, KW, P->G);
         for (int g = 0; g < P->ng; g++) {
             rgrp_t* G = &P->G[g];
             size_t need = (size_t)KH * G->RSB;
             if (G->Rcap < need) { free(G->R); G->R = alloc_aligned(need); G->Rcap = G->R ? need : 0; }
-            roll_build_R(G->R, k, KH, KW, G->steps, G->s_base, (G->kind == 32 || G->kind == 33 || G->kind == 34 || G->kind == 35 || G->kind == 17) ? 16 : G->kind);
             if (G->kind == 34 || G->kind == 35) {
                 size_t kfneed = (size_t)KH * G->steps * 4 * sizeof(float);
                 if (G->kfcap < kfneed) { free(G->kf); G->kf = alloc_aligned(kfneed); G->kfcap = G->kf ? kfneed : 0; }
-                for (long a = 0; a < KH; a++)               // kf[a][X] = {k[a][X], k[(a+1)%KH][X], k[(a+2)%KH][X], 0}
-                    for (long X = 0; X < G->steps; X++) {
-                        float* d = G->kf + (a * G->steps + X) * 4;
-                        d[0] = X < KW ? k[a * KW + X] : 0.f;
-                        d[1] = X < KW ? k[((a + 1) % KH) * KW + X] : 0.f;
-                        d[2] = X < KW ? k[((a + 2) % KH) * KW + X] : 0.f;
-                        d[3] = (G->kind == 35 && X < KW) ? k[((a + 3) % KH) * KW + X] : 0.f;
-                    }
             }
         }
         int nit = 0;
@@ -2069,6 +2109,7 @@ static void roll_worker(int tid, int nth, const ctx_t* c)
     rdiag_t* D = &g_rdiag[tid]; uint64_t t_start = 0;
     if (g_roll_diag) { memset(D, 0, sizeof(*D)); t_start = cyc(); }
     if (tid >= nth || tid >= P->pnth) return;
+    roll_pack_all(P, c->k, KH, KW);   // 每次调用全体线程并行重打包 R/kf（幂等 chunk），完成后才进入计算
     sme_start();
     int victim = tid;
     for (;;) {
@@ -2233,6 +2274,8 @@ static void conv2d_roll(const CONVFLOAT* in, CONVINT H, CONVINT W, const CONVFLO
     g_roll_pd = g_knobs.roll_pd;
     g_roll_diag = env_int("CONV_ROLL_DIAG", 0);
     roll_prepare(k, H, W, KH, KW, nth);
+    g_pk_nc = g_rp.ng * (int)KH; g_pk_next = 0;            // 重置打包 chunk 游标/完成标志（ng ≤ 12、KH ≤ 256 → nc ≤ 3072）
+    memset(g_pk_done, 0, (size_t)g_pk_nc);
     ctx_t ctx; memset(&ctx, 0, sizeof(ctx));
     ctx.in = in; ctx.k = k; ctx.out = out; ctx.H = H; ctx.W = W; ctx.KH = KH; ctx.KW = KW; ctx.outH = H - KH + 1; ctx.outW = W - KW + 1;
     ctx.mode = 1; ctx.rp = &g_rp;
