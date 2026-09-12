@@ -1227,7 +1227,7 @@ static void fill_args(ka_t* A, const kp_t* P, long div, long slot_unused, long n
     // 拷贝源对齐到 64 B：ld1w/st1w 两侧全对齐（否则跨 4 KB 页的非对齐 L2 载入每行 +40 周期，
     // 且非对齐 L2 命中 2.5 周期/条）；a 基址 = 槽 + sh4。
     const long sh = ncp ? (((uintptr_t)P->in_row >> 2) & 15) : 0;
-    const float* src = P->in_row - sh;
+    const float* src = (const float*)((uintptr_t)P->in_row - (uintptr_t)sh * sizeof(float));
     ncp += sh;
     const long slot = ncp ? ((ncp * 4 + 63) & ~63L) : 0;
     A->ncp_full = ncp / 16; A->ncp_tail = ncp % 16;
@@ -1237,7 +1237,7 @@ static void fill_args(ka_t* A, const kp_t* P, long div, long slot_unused, long n
     A->KH = P->KH; A->steps = P->steps; A->nrows = P->nrows; A->out = (int64_t)P->out_row0; A->scr = (int64_t)P->scratch;
     A->cA0 = P->cA0; A->cB0 = P->cB0; A->va = P->resume ? 0 : P->KH - 1; A->nvA = P->nvA; A->nvB = P->nvB; A->pf = g_roll_pd * P->rsb; A->it = P->steps / div; A->PD = g_roll_pd;
     A->ring = (int64_t)P->ring; A->slot = slot; A->osb = P->osb; A->pfo = g_roll_pd * P->osb;
-    if (ncp) roll_copy_row(P->ring, src, ncp);   // 第 0 行进槽 0；K4 自己做去交织拷贝
+    if (ncp) roll_copy_row(P->ring + sh, P->in_row, ncp - sh);   // 第 0 行进槽 0；K4 自己做去交织拷贝
 }
 // 寄存器约定：x0 行指针(输入) x1 rsb x2 bA x3 bB x4 R x5 Rend x6 KH x7 steps/it x8 行计数 x9 out 行 x10 scr x11 Y x12/x13 切片号
 //  x14 va x15 步计数 x16 a 指针(环槽) x17 环槽当前 x19 cB x20 out/scr 选择 x21 预取地址 x22/x23 临时 x24 nvA x25 nvB x26 pf x27 cA x28 环基址
