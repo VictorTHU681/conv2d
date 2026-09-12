@@ -1,0 +1,39 @@
+=== HOST
+cn20482
+Sat Sep 12 20:32:37 CST 2026
+--- 泛化位精确 A（nf4 默认）
+ALL PASS: 103/103 通过
+--- 泛化位精确 B（nf3）
+ALL PASS: 103/103 通过
+--- 官方 bench A（nf4）
+  4096 x  6144     39 x    39         8.44    8925.6841     0.00e+00     PASS
+  6144 x  4096     41 x    41         9.21    9034.7243     0.00e+00     PASS
+  4256 x  6390     55 x    55        14.33   11240.1074     0.00e+00     PASS
+  6390 x  4256     81 x    81        30.71   11259.6899     0.00e+00     PASS
+--- 官方 bench B（nf3，仅 k39 应变化，其余不变）
+  4096 x  6144     39 x    39         9.92    7594.4872     0.00e+00     PASS
+  6144 x  4096     41 x    41         9.14    9103.2193     0.00e+00     PASS
+  4256 x  6390     55 x    55        14.35   11226.5833     0.00e+00     PASS
+  6390 x  4256     81 x    81        30.71   11259.9997     0.00e+00     PASS
+packed submissions/conv.zip md5=8615cdda3b7e49161025966abe661873
+22:if ! gcc -O3 -march=armv9-a+sme+sve2 -fopenmp bench_conv.c conv2d.c -o conv2d_test -lm 2>/dev/null; then
+30:cpunode=1
+32:    if [[ -n "$(cat /sys/devices/system/node/node$n/cpulist 2>/dev/null)" ]] && numactl -N $n true >/dev/null 2>&1; then cpunode=$n; break; fi
+packed submissions/conv_nf3.zip md5=d9ff9d611f8d9ec84b321f9b92fb9114
+22:if ! gcc -O3 -march=armv9-a+sme+sve2 -DCONV_NF_REM7=3 -fopenmp bench_conv.c conv2d.c -o conv2d_test -lm 2>/dev/null; then
+30:cpunode=1
+32:    if [[ -n "$(cat /sys/devices/system/node/node$n/cpulist 2>/dev/null)" ]] && numactl -N $n true >/dev/null 2>&1; then cpunode=$n; break; fi
+--- 端到端解压 bash run.sh（确认绑到 node 5 + 四例 PASS），A 包
+[run.sh] host=cn20482 node=1 hbm=17 threads=38
+  4096 x  6144     39 x    39         6.79   11107.3949     0.00e+00     PASS
+  6144 x  4096     41 x    41         7.58   10984.5490     0.00e+00     PASS
+  4256 x  6390     55 x    55        14.36   11213.3400     0.00e+00     PASS
+  6390 x  4256     81 x    81        30.90   11190.1820     0.00e+00     PASS
+--- 端到端 B 包
+[run.sh] host=cn20482 node=1 hbm=17 threads=38
+  4096 x  6144     39 x    39         6.75   11159.7201     0.00e+00     PASS
+  6144 x  4096     41 x    41         7.61   10943.9047     0.00e+00     PASS
+  4256 x  6390     55 x    55        14.39   11195.4571     0.00e+00     PASS
+  6390 x  4256     81 x    81        30.91   11185.6574     0.00e+00     PASS
+=== DONE
+Sat Sep 12 20:35:48 CST 2026
