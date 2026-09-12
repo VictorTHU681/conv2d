@@ -2041,16 +2041,20 @@ static void roll_prepare(const float* k, long H, long W, long KH, long KW, int n
 {
     rplan_t* P = &g_rp;
     const long outW = W - KW + 1, outH = H - KH + 1;
-    // 每次调用都重新分组、重建工作项；R/kf 的打包写入由全体线程按 (组, 行) chunk 并行完成（见 roll_pack_chunk）
+    // 每次调用都重新分组、重建工作项；R/kf 的打包写入由全体线程按 (组, 行) chunk 并行完成（见 roll_pack_chunk）。
+    // 缓冲区挂在独立于 roll_groups 的持久槽上按容量复用（roll_groups 会重置 G[] 的所有字段），只有容量增长才重新分配。
+    static struct { float* R; size_t Rcap; float* kf; size_t kfcap; } g_rbuf[12];
     {
         P->ng = roll_groups(KH, KW, P->G);
         for (int g = 0; g < P->ng; g++) {
             rgrp_t* G = &P->G[g];
             size_t need = (size_t)KH * G->RSB;
-            if (G->Rcap < need) { free(G->R); G->R = alloc_aligned(need); G->Rcap = G->R ? need : 0; }
+            if (g_rbuf[g].Rcap < need) { free(g_rbuf[g].R); g_rbuf[g].R = alloc_aligned(need); g_rbuf[g].Rcap = g_rbuf[g].R ? need : 0; }
+            G->R = g_rbuf[g].R; G->Rcap = g_rbuf[g].Rcap;
             if (G->kind == 34 || G->kind == 35) {
                 size_t kfneed = (size_t)KH * G->steps * 4 * sizeof(float);
-                if (G->kfcap < kfneed) { free(G->kf); G->kf = alloc_aligned(kfneed); G->kfcap = G->kf ? kfneed : 0; }
+                if (g_rbuf[g].kfcap < kfneed) { free(g_rbuf[g].kf); g_rbuf[g].kf = alloc_aligned(kfneed); g_rbuf[g].kfcap = g_rbuf[g].kf ? kfneed : 0; }
+                G->kf = g_rbuf[g].kf; G->kfcap = g_rbuf[g].kfcap;
             }
         }
         int nit = 0;
