@@ -54,11 +54,54 @@ Root and archives unchanged.
 
 ## Matched-binary follow-up
 
-Job **1584858**, cn20483, is submitted using one grow2 instrumented binary.
-For KH41 its explicit CONV_ROLL_STEP=2 mode disables guidance but retains the
-same base step; unset mode enables guidance. Six alternating AB/BA rounds,
-five timings/process and separate DDR/HBM compare identical machine-code layout.
-The helper branch and chunk policy differ at runtime. Parameter parsing remains
-inside the call; this is an attribution control, not an official score or a
-replacement for the accepted-root comparison. Log: `same_binary.log`.
-No outcome is claimed until it completes. Root and archives unchanged.
+Job **1584858**, cn20483 06:51:33–06:51:57, succeeds using one grow2
+instrumented binary. For KH41 explicit CONV_ROLL_STEP=2 disables guidance while
+retaining base step; unset enables guidance. Six alternating AB/BA rounds,
+five timings/process, separate DDR/HBM: 24 processes, 6,384 phase records,
+120 timed hashes validate. Saves equal resumes and work/piece counts are unchanged.
+[Matched summary](../../results/v56/experiments/guided-chunks/same_binary_summary.md).
+
+DDR fixed/guided mean end is 5795.4/5789.0 us, while last end is 5845.6/5898.0 us.
+The paired per-call end spread increases 47.8 -> 106.9 us. Guided setup, restore
+and publish save roughly 28.6 + 10.5 + 23.5 us/thread, but kernel-region time rises
+62.9 us and the longer tail costs another ~59 us. HBM last end improves
+5808.9 -> 5756.1 us, with spread 28.0 -> 34.3 us. These within-job results remove
+binary-layout differences as the sole explanation for the DDR tail, while keeping
+all instrumentation limitations. The kernel-region difference is not yet assigned
+to a specific cache or hardware event. Parameter parsing remains inside the call.
+
+This attribution does not replace accepted-root uninstrumented screening 1584781,
+which remains running. No candidate is adopted from profile data. Root and archives
+remain 1d3f5071.
+
+## Completed uninstrumented screening
+
+Job **1584781**, cn20481 06:46:30–06:53:34, succeeded. All 3,580 state/guard,
+156 ownership cases and 720 timed hashes pass. Each of the four long diagnostic
+processes observes both large and small chunks, with zero active output conflicts.
+[Screen summary](../../results/v56/experiments/guided-chunks/summary.md).
+
+| KH | DDR grow2/base | DDR grow4/base | HBM grow2/base | HBM grow4/base |
+| --- | ---: | ---: | ---: | ---: |
+| 39 | -0.07% | +0.13% | -0.02% | -0.14% |
+| 41 | -0.57% | -2.31% | +0.73% | +0.61% |
+| 55 | -0.29% | -0.29% | -0.36% | -0.38% |
+| 81 | +0.22% | +0.20% | +0.07% | +0.35% |
+
+**Both rejected** for the DDR target. The HBM gain does not justify selecting by
+memory-placement or hiding DDR regressions. Non-K5 code does not enable guidance,
+but source/layout changes can still affect those shapes. Original full-reference
+performance and archive acceptance are not claimed for these rejected controls.
+All preceding pending screening statements describe the earlier checkpoint;
+this completed outcome supersedes them. Root remains 1d3f5071, no push.
+
+## Further matched-binary attribution
+
+PMU job **1584918**, cn20483, is submitted using one uninstrumented grow2 binary,
+fixed step2 versus guidance in six alternating rounds, separate DDR/HBM, 200 timed
+calls/process. Immutable steady driver is staged beside source. Events are user
+cycles, instructions, L1 loads and L1 load misses. Counters cover the whole process,
+including setup, two initial calls, and spinning; the driver's output sample is
+not complete correctness validation. They are not operator-only counts or the
+original allocation/timing protocol. Full correctness evidence is the completed
+screen above. This measurement is pending; no hardware-event cause is claimed yet.
