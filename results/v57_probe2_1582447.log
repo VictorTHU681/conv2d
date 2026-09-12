@@ -1,0 +1,79 @@
+HOST cn20482 2026-09-13T01:45:46+08:00
+pid 970024's current affinity list: 37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+PLACEMENT cpu_node=1 hbm_node=17
+Cpus_allowed_list:	37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+Mems_allowed_list:	0-31
+1198259
+policy: default
+preferred node: current
+physcpubind: 37 75 113 151 189 227 265 303 341 379 417 455 493 531 569 607 
+cpubind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+nodebind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 
+preferred: 
+EFFECTIVE_PLACEMENT
+policy: preferred
+preferred node: 17
+physcpubind: 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 
+cpubind: 1 
+nodebind: 1 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 
+preferred: 17 
+=== MOVAZ probe
+clang: /work_ssd/software/compiler-kupl/bin/clang
+MOVAZ_RC=132
+P2 memory=HBM round=1 variant=base      shape=4096 6144 39 39   4096 x  6144     39 x    39 best    6.703 ms    11245.0 GFLOPS | avg    6.711 ms    11231.3 GFLOPS  PASS
+P2 memory=HBM round=1 variant=k4_noprf  shape=4096 6144 39 39   4096 x  6144     39 x    39 best    7.766 ms     9705.7 GFLOPS | avg    7.921 ms     9516.1 GFLOPS  PASS
+P2 memory=HBM round=1 variant=k9_noprf  shape=4096 6144 39 39   4096 x  6144     39 x    39 best    6.718 ms    11220.0 GFLOPS | avg    6.720 ms    11216.5 GFLOPS  PASS
+P2 memory=HBM round=1 variant=base      shape=4256 6390 55 55   4256 x  6390     55 x    55 best   14.185 ms    11355.3 GFLOPS | avg   14.188 ms    11353.2 GFLOPS  PASS
+P2 memory=HBM round=1 variant=k4_noprf  shape=4256 6390 55 55   4256 x  6390     55 x    55 best   15.095 ms    10670.4 GFLOPS | avg   15.275 ms    10544.9 GFLOPS  PASS
+P2 memory=HBM round=1 variant=k9_noprf  shape=4256 6390 55 55   4256 x  6390     55 x    55 best   14.151 ms    11382.4 GFLOPS | avg   14.161 ms    11374.8 GFLOPS  PASS
+P2 memory=HBM round=1 variant=base      shape=6390 4256 81 81   6390 x  4256     81 x    81 best   29.292 ms    11804.5 GFLOPS | avg   29.303 ms    11799.7 GFLOPS  PASS
+P2 memory=HBM round=1 variant=k4_noprf  shape=6390 4256 81 81   6390 x  4256     81 x    81 best   29.315 ms    11794.9 GFLOPS | avg   29.347 ms    11782.1 GFLOPS  PASS
+P2 memory=HBM round=1 variant=k9_noprf  shape=6390 4256 81 81   6390 x  4256     81 x    81 best   30.666 ms    11275.4 GFLOPS | avg   30.765 ms    11239.1 GFLOPS  PASS
+P2 memory=HBM round=2 variant=base      shape=4096 6144 39 39   4096 x  6144     39 x    39 best    6.714 ms    11226.0 GFLOPS | avg    6.722 ms    11213.4 GFLOPS  PASS
+P2 memory=HBM round=2 variant=k4_noprf  shape=4096 6144 39 39   4096 x  6144     39 x    39 best    7.854 ms     9596.6 GFLOPS | avg    7.929 ms     9506.6 GFLOPS  PASS
+P2 memory=HBM round=2 variant=k9_noprf  shape=4096 6144 39 39   4096 x  6144     39 x    39 best    6.700 ms    11250.4 GFLOPS | avg    6.711 ms    11231.5 GFLOPS  PASS
+P2 memory=HBM round=2 variant=base      shape=4256 6390 55 55   4256 x  6390     55 x    55 best   14.177 ms    11361.9 GFLOPS | avg   14.182 ms    11357.5 GFLOPS  PASS
+P2 memory=HBM round=2 variant=k4_noprf  shape=4256 6390 55 55   4256 x  6390     55 x    55 best   15.060 ms    10695.4 GFLOPS | avg   15.223 ms    10580.7 GFLOPS  PASS
+P2 memory=HBM round=2 variant=k9_noprf  shape=4256 6390 55 55   4256 x  6390     55 x    55 best   14.153 ms    11381.1 GFLOPS | avg   14.163 ms    11373.2 GFLOPS  PASS
+P2 memory=HBM round=2 variant=base      shape=6390 4256 81 81   6390 x  4256     81 x    81 best   29.337 ms    11786.3 GFLOPS | avg   29.350 ms    11780.8 GFLOPS  PASS
+P2 memory=HBM round=2 variant=k4_noprf  shape=6390 4256 81 81   6390 x  4256     81 x    81 best   29.257 ms    11818.3 GFLOPS | avg   29.290 ms    11805.1 GFLOPS  PASS
+P2 memory=HBM round=2 variant=k9_noprf  shape=6390 4256 81 81   6390 x  4256     81 x    81 best   30.747 ms    11245.8 GFLOPS | avg   30.817 ms    11220.2 GFLOPS  PASS
+P2 memory=HBM round=3 variant=base      shape=4096 6144 39 39   4096 x  6144     39 x    39 best    6.718 ms    11220.2 GFLOPS | avg    6.725 ms    11208.1 GFLOPS  PASS
+P2 memory=HBM round=3 variant=k4_noprf  shape=4096 6144 39 39   4096 x  6144     39 x    39 best    7.901 ms     9540.3 GFLOPS | avg    7.981 ms     9444.1 GFLOPS  PASS
+P2 memory=HBM round=3 variant=k9_noprf  shape=4096 6144 39 39   4096 x  6144     39 x    39 best    6.718 ms    11219.3 GFLOPS | avg    6.727 ms    11204.4 GFLOPS  PASS
+P2 memory=HBM round=3 variant=base      shape=4256 6390 55 55   4256 x  6390     55 x    55 best   14.189 ms    11352.4 GFLOPS | avg   14.194 ms    11348.0 GFLOPS  PASS
+P2 memory=HBM round=3 variant=k4_noprf  shape=4256 6390 55 55   4256 x  6390     55 x    55 best   15.162 ms    10623.6 GFLOPS | avg   15.324 ms    10510.9 GFLOPS  PASS
+P2 memory=HBM round=3 variant=k9_noprf  shape=4256 6390 55 55   4256 x  6390     55 x    55 best   14.160 ms    11375.1 GFLOPS | avg   14.163 ms    11373.1 GFLOPS  PASS
+P2 memory=HBM round=3 variant=base      shape=6390 4256 81 81   6390 x  4256     81 x    81 best   29.302 ms    11800.2 GFLOPS | avg   29.312 ms    11796.2 GFLOPS  PASS
+P2 memory=HBM round=3 variant=k4_noprf  shape=6390 4256 81 81   6390 x  4256     81 x    81 best   29.362 ms    11776.2 GFLOPS | avg   29.369 ms    11773.4 GFLOPS  PASS
+P2 memory=HBM round=3 variant=k9_noprf  shape=6390 4256 81 81   6390 x  4256     81 x    81 best   30.668 ms    11274.6 GFLOPS | avg   30.712 ms    11258.7 GFLOPS  PASS
+P2 memory=DDR round=1 variant=base      shape=4096 6144 39 39   4096 x  6144     39 x    39 best    6.719 ms    11218.0 GFLOPS | avg    6.725 ms    11207.5 GFLOPS  PASS
+P2 memory=DDR round=1 variant=k4_noprf  shape=4096 6144 39 39   4096 x  6144     39 x    39 best    8.066 ms     9345.0 GFLOPS | avg    8.102 ms     9303.1 GFLOPS  PASS
+P2 memory=DDR round=1 variant=k9_noprf  shape=4096 6144 39 39   4096 x  6144     39 x    39 best    6.705 ms    11241.6 GFLOPS | avg    6.714 ms    11226.7 GFLOPS  PASS
+P2 memory=DDR round=1 variant=base      shape=4256 6390 55 55   4256 x  6390     55 x    55 best   14.163 ms    11372.8 GFLOPS | avg   14.168 ms    11368.5 GFLOPS  PASS
+P2 memory=DDR round=1 variant=k4_noprf  shape=4256 6390 55 55   4256 x  6390     55 x    55 best   15.386 ms    10469.0 GFLOPS | avg   15.440 ms    10432.4 GFLOPS  PASS
+P2 memory=DDR round=1 variant=k9_noprf  shape=4256 6390 55 55   4256 x  6390     55 x    55 best   14.141 ms    11390.3 GFLOPS | avg   14.150 ms    11383.0 GFLOPS  PASS
+P2 memory=DDR round=1 variant=base      shape=6390 4256 81 81   6390 x  4256     81 x    81 best   29.273 ms    11811.8 GFLOPS | avg   29.288 ms    11805.9 GFLOPS  PASS
+P2 memory=DDR round=1 variant=k4_noprf  shape=6390 4256 81 81   6390 x  4256     81 x    81 best   29.308 ms    11798.1 GFLOPS | avg   29.323 ms    11791.7 GFLOPS  PASS
+P2 memory=DDR round=1 variant=k9_noprf  shape=6390 4256 81 81   6390 x  4256     81 x    81 best   30.779 ms    11233.9 GFLOPS | avg   30.947 ms    11173.0 GFLOPS  PASS
+P2 memory=DDR round=2 variant=base      shape=4096 6144 39 39   4096 x  6144     39 x    39 best    6.720 ms    11216.2 GFLOPS | avg    6.723 ms    11211.1 GFLOPS  PASS
+P2 memory=DDR round=2 variant=k4_noprf  shape=4096 6144 39 39   4096 x  6144     39 x    39 best    7.933 ms     9501.9 GFLOPS | avg    8.027 ms     9390.1 GFLOPS  PASS
+P2 memory=DDR round=2 variant=k9_noprf  shape=4096 6144 39 39   4096 x  6144     39 x    39 best    6.721 ms    11214.8 GFLOPS | avg    6.728 ms    11203.8 GFLOPS  PASS
+P2 memory=DDR round=2 variant=base      shape=4256 6390 55 55   4256 x  6390     55 x    55 best   14.162 ms    11373.6 GFLOPS | avg   14.165 ms    11371.4 GFLOPS  PASS
+P2 memory=DDR round=2 variant=k4_noprf  shape=4256 6390 55 55   4256 x  6390     55 x    55 best   15.419 ms    10446.2 GFLOPS | avg   15.443 ms    10430.6 GFLOPS  PASS
+P2 memory=DDR round=2 variant=k9_noprf  shape=4256 6390 55 55   4256 x  6390     55 x    55 best   14.127 ms    11401.6 GFLOPS | avg   14.141 ms    11390.5 GFLOPS  PASS
+P2 memory=DDR round=2 variant=base      shape=6390 4256 81 81   6390 x  4256     81 x    81 best   29.361 ms    11776.7 GFLOPS | avg   29.401 ms    11760.4 GFLOPS  PASS
+P2 memory=DDR round=2 variant=k4_noprf  shape=6390 4256 81 81   6390 x  4256     81 x    81 best   29.309 ms    11797.3 GFLOPS | avg   29.324 ms    11791.5 GFLOPS  PASS
+P2 memory=DDR round=2 variant=k9_noprf  shape=6390 4256 81 81   6390 x  4256     81 x    81 best   30.778 ms    11234.3 GFLOPS | avg   30.869 ms    11201.2 GFLOPS  PASS
+P2 memory=DDR round=3 variant=base      shape=4096 6144 39 39   4096 x  6144     39 x    39 best    6.705 ms    11241.1 GFLOPS | avg    6.715 ms    11225.5 GFLOPS  PASS
+P2 memory=DDR round=3 variant=k4_noprf  shape=4096 6144 39 39   4096 x  6144     39 x    39 best    7.987 ms     9437.0 GFLOPS | avg    8.066 ms     9345.2 GFLOPS  PASS
+P2 memory=DDR round=3 variant=k9_noprf  shape=4096 6144 39 39   4096 x  6144     39 x    39 best    6.713 ms    11228.4 GFLOPS | avg    6.717 ms    11220.9 GFLOPS  PASS
+P2 memory=DDR round=3 variant=base      shape=4256 6390 55 55   4256 x  6390     55 x    55 best   14.161 ms    11374.7 GFLOPS | avg   14.168 ms    11368.5 GFLOPS  PASS
+P2 memory=DDR round=3 variant=k4_noprf  shape=4256 6390 55 55   4256 x  6390     55 x    55 best   15.391 ms    10465.4 GFLOPS | avg   15.431 ms    10438.7 GFLOPS  PASS
+P2 memory=DDR round=3 variant=k9_noprf  shape=4256 6390 55 55   4256 x  6390     55 x    55 best   14.131 ms    11399.0 GFLOPS | avg   14.144 ms    11387.8 GFLOPS  PASS
+P2 memory=DDR round=3 variant=base      shape=6390 4256 81 81   6390 x  4256     81 x    81 best   29.315 ms    11795.2 GFLOPS | avg   29.328 ms    11789.7 GFLOPS  PASS
+P2 memory=DDR round=3 variant=k4_noprf  shape=6390 4256 81 81   6390 x  4256     81 x    81 best   29.219 ms    11834.0 GFLOPS | avg   29.250 ms    11821.4 GFLOPS  PASS
+P2 memory=DDR round=3 variant=k9_noprf  shape=6390 4256 81 81   6390 x  4256     81 x    81 best   30.830 ms    11215.3 GFLOPS | avg   30.905 ms    11188.1 GFLOPS  PASS
+V57_PROBE2_DONE 2026-09-13T01:46:47+08:00

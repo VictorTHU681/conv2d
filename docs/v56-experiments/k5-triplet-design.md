@@ -3,8 +3,10 @@
 Status: an isolated K5 implementation now exists and passes extended correctness
 checks, but has no stable uninstrumented speedup. It is not adopted; see the
 [implementation, profiles and rejected controls](k5-triplet.md).
-The accepted operator still uses source
-`43933469…09d121`, including the validated output write-order correction.
+The accepted operator now uses source `4689e38f…015319`, integrating the
+upstream F4 gate while retaining the output write-order correction. Historical
+K5 candidates and their results remain based on immutable `68f0276` / `43933469`;
+they have not been rebased or adopted.
 The indexed-FMLA follow-up 1582779 has now independently confirmed the same
 eight-FMLA arithmetic-only budget. The [output overlap race](output-ownership.md)
 has been corrected; all K5 experiments preserve row-chunk dependencies.

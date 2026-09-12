@@ -1,4 +1,4 @@
-# Incoming upstream F4 long-row gate: integration candidate
+# Incoming upstream F4 long-row gate: local integration
 
 The main checkout pulled **87fa5d7** from origin, following **7e9f3b6**. Both
 are upstream CJ commits, not publications from this local optimization branch.
@@ -20,13 +20,12 @@ locally corrected source.
 | Local accepted | 68f0276 | 4393346986d6c0c71c7db9ecd804ed76c22839923f8ed963f07488854809d121 |
 | Common | b9591de | 756e11735fc63918ed0c853bb23193a6342c1a232fd9c5479b43878ec4954831 |
 | Upstream | 87fa5d7 | c83cc95173ab93542cbda27f5b6dccb5552662c263a5152d0dbbc9ba5ed1dc84 |
-| Merged candidate | Not adopted | 4689e38fbabc93a453541052b2260d9092473d0d2552311ddbb9126118015319 |
+| Accepted merged | Local v56 | 4689e38fbabc93a453541052b2260d9092473d0d2552311ddbb9126118015319 |
 
 The generator requires the local first-copy helper, planar first-copy helper,
 output dependency builder and claim function to survive byte-for-byte. The
 earlier K9 reuse and K8/K9/K4 boundary corrections are retained; K5 experiments
-are not included. This is an isolated source candidate, not a completed Git
-merge or an adopted package.
+are not included. The tested candidate is now integrated into the root operator and packages.
 
 **1583171**, cn20481, 03:37:51–03:46:08, succeeds with 1,305 state cases across
 five packing modes, 272 guards including KW 63/64/65, 54 runtime ownership
@@ -47,8 +46,9 @@ gain. Do not replace the measured result or combine percentages from unrelated
 baselines. Raw log and strict summary are under `results/v56/experiments/upstream-gate/`.
 
 **1583190**, cn20483, 03:41:16–03:44:35, validates all three staged archives:
-12 complete checks pass. The actual Git merge and root package update follow
-this accepted source/package evidence; staged source SHA remains 4689e38f.
+12 complete checks pass. The local Git merge and root package update use this accepted evidence.
+Program members are byte-identical to staged archives; only README changes.
+Current and runtime archive hashes are recorded in separate root manifests.
 
 Machine-code inspection finds identical 21-word F4 arithmetic steps (5 loads,
 4 FMOPA, 8 FMLA, 4 pointer increments). It does **not** establish an unchanged
@@ -56,8 +56,13 @@ entire short path: the baseline short loop starts at mod128=0, while the merged
 short loop starts at mod128=120. The merged overlap step starts at mod128=32
 and its long pure loop at mod128=0. See `machine_code.txt` and instruction excerpts.
 An isolated `short128` control restores two NOPs before the short row loop;
-**1583215** runs all six process permutations against baseline and merged. It
-is still pending completion and is not part of the accepted source.
+**1583215**, cn20483, 03:45:17–03:46:44, completed all six process permutations,
+with 720 timed output hashes passing. Against merged, short128 changes DDR
+KH 39/41/55/81 by -0.28/-0.25/+0.09/+0.16% and HBM by
++0.22/+0.10/+0.06/-0.15%. This does not establish a consistent benefit;
+short128 is rejected for adoption. The same screen sees merged KH 39/41
+regressions of 0.39–0.75% against baseline, despite gains on 55/81. Keep this
+separate evidence; do not claim a universal improvement. See shortalign_summary.md.
 
 Upstream also adds `FBENCH_FORCE` to its diagnostic fbench, permitting timing
 after an initial validation failure for attribution experiments. This is not
@@ -66,6 +71,6 @@ job explicitly unsets that variable and uses the unchanged official benchmark
 for performance comparisons. Incorrect-result attribution controls and their
 numbers cannot be treated as eligible optimized implementations.
 
-Complete this integration before continuing K5 F4 layout controls, since it
+This integration precedes further K5 F4 layout controls, since it
 changes precisely the main kernel under investigation. Do not adopt short128
 without its own measured benefit and relevant validation.

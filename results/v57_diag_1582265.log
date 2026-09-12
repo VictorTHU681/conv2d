@@ -1,0 +1,87 @@
+HOST cn20481 2026-09-13T01:23:24+08:00
+pid 1766278's current affinity list: 37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+PLACEMENT cpu_node=1 hbm_node=17
+Cpus_allowed_list:	37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+Mems_allowed_list:	0-31
+1548342
+policy: default
+preferred node: current
+physcpubind: 37 75 113 151 189 227 265 303 341 379 417 455 493 531 569 607 
+cpubind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+nodebind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 
+preferred: 
+EFFECTIVE_PLACEMENT
+policy: preferred
+preferred node: 17
+physcpubind: 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 
+cpubind: 1 
+nodebind: 1 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 
+preferred: 17 
+756e11735fc63918ed0c853bb23193a6342c1a232fd9c5479b43878ec4954831  build/v54_stack/candidate.c
+=== DIAG per-kind cycles (HBM, merged)
+DIAG memory=HBM shape=4096 6144 39 39
+[roll] thr ms min/avg/max 0.006/5.202/10.903 | 周期/tile步: pair 2.15 single 0.00 8x2 0.00 4x4 2.37 | 份额 %: 86.5 0.0 0.0 13.5
+[roll] thr ms min/avg/max 5.149/5.172/5.227 | 周期/tile步: pair 2.13 single 0.00 8x2 0.00 4x4 2.35 | 份额 %: 86.5 0.0 0.0 13.5
+[roll] thr ms min/avg/max 5.150/5.172/5.221 | 周期/tile步: pair 2.13 single 0.00 8x2 0.00 4x4 2.35 | 份额 %: 86.5 0.0 0.0 13.5
+[roll] thr ms min/avg/max 3.882/5.170/5.361 | 周期/tile步: pair 2.13 single 0.00 8x2 0.00 4x4 2.35 | 份额 %: 86.5 0.0 0.0 13.5
+[roll] thr ms min/avg/max 5.148/5.169/5.217 | 周期/tile步: pair 2.13 single 0.00 8x2 0.00 4x4 2.35 | 份额 %: 86.5 0.0 0.0 13.5
+  4096 x  6144     39 x    39 best    5.314 ms    14184.5 GFLOPS | avg    5.365 ms    14049.7 GFLOPS  PASS
+DIAG memory=HBM shape=6144 4096 41 41
+[roll] thr ms min/avg/max 0.006/5.863/10.674 | 周期/tile步: pair 2.11 single 0.00 8x2 2.17 4x4 0.00 | 份额 %: 79.0 0.0 21.0 0.0
+[roll] thr ms min/avg/max 5.789/5.817/5.838 | 周期/tile步: pair 2.09 single 0.00 8x2 2.15 4x4 0.00 | 份额 %: 79.0 0.0 21.0 0.0
+[roll] thr ms min/avg/max 5.782/5.812/5.839 | 周期/tile步: pair 2.09 single 0.00 8x2 2.15 4x4 0.00 | 份额 %: 79.0 0.0 21.0 0.0
+[roll] thr ms min/avg/max 5.777/5.808/5.835 | 周期/tile步: pair 2.09 single 0.00 8x2 2.15 4x4 0.00 | 份额 %: 79.0 0.0 21.0 0.0
+[roll] thr ms min/avg/max 5.776/5.805/5.829 | 周期/tile步: pair 2.09 single 0.00 8x2 2.15 4x4 0.00 | 份额 %: 79.0 0.0 21.0 0.0
+  6144 x  4096     41 x    41 best    5.923 ms    14051.9 GFLOPS | avg    5.930 ms    14036.3 GFLOPS  PASS
+DIAG memory=HBM shape=4256 6390 55 55
+[roll] thr ms min/avg/max 0.007/10.999/16.611 | 周期/tile步: pair 2.10 single 2.11 8x2 0.00 4x4 2.28 | 份额 %: 60.5 30.4 0.0 9.1
+[roll] thr ms min/avg/max 10.943/10.988/11.034 | 周期/tile步: pair 2.09 single 2.11 8x2 0.00 4x4 2.28 | 份额 %: 60.4 30.5 0.0 9.1
+[roll] thr ms min/avg/max 10.942/10.984/11.028 | 周期/tile步: pair 2.09 single 2.11 8x2 0.00 4x4 2.28 | 份额 %: 60.4 30.5 0.0 9.1
+[roll] thr ms min/avg/max 10.946/10.985/11.035 | 周期/tile步: pair 2.09 single 2.11 8x2 0.00 4x4 2.28 | 份额 %: 60.4 30.5 0.0 9.1
+[roll] thr ms min/avg/max 10.943/10.980/11.029 | 周期/tile步: pair 2.09 single 2.11 8x2 0.00 4x4 2.27 | 份额 %: 60.4 30.5 0.0 9.1
+  4256 x  6390     55 x    55 best   11.135 ms    14465.3 GFLOPS | avg   11.140 ms    14458.8 GFLOPS  PASS
+DIAG memory=HBM shape=6390 4256 81 81
+[roll] thr ms min/avg/max 0.008/22.662/27.437 | 周期/tile步: pair 2.11 single 0.00 8x2 2.66 4x4 0.00 | 份额 %: 86.1 0.0 13.9 0.0
+[roll] thr ms min/avg/max 22.518/22.655/22.760 | 周期/tile步: pair 2.10 single 0.00 8x2 2.66 4x4 0.00 | 份额 %: 86.1 0.0 13.9 0.0
+[roll] thr ms min/avg/max 22.595/22.704/22.838 | 周期/tile步: pair 2.10 single 0.00 8x2 2.67 4x4 0.00 | 份额 %: 86.0 0.0 14.0 0.0
+[roll] thr ms min/avg/max 22.576/22.673/22.785 | 周期/tile步: pair 2.10 single 0.00 8x2 2.67 4x4 0.00 | 份额 %: 86.0 0.0 14.0 0.0
+[roll] thr ms min/avg/max 22.544/22.658/22.776 | 周期/tile步: pair 2.10 single 0.00 8x2 2.66 4x4 0.00 | 份额 %: 86.1 0.0 13.9 0.0
+  6390 x  4256     81 x    81 best   22.890 ms    15106.1 GFLOPS | avg   22.912 ms    15091.2 GFLOPS  PASS
+=== DIAG thread spread k81 (HBM)
+[roll] thr ms min/avg/max 0.007/22.621/27.922 | 周期/tile步: pair 2.10 single 0.00 8x2 2.66 4x4 0.00 | 份额 %: 86.1 0.0 13.9 0.0
+[roll] thr ms min/avg/max 22.507/22.639/22.738 | 周期/tile步: pair 2.10 single 0.00 8x2 2.66 4x4 0.00 | 份额 %: 86.1 0.0 13.9 0.0
+[roll] thr ms min/avg/max 22.517/22.658/22.761 | 周期/tile步: pair 2.10 single 0.00 8x2 2.66 4x4 0.00 | 份额 %: 86.1 0.0 13.9 0.0
+[roll] thr ms min/avg/max 22.476/22.629/22.717 | 周期/tile步: pair 2.10 single 0.00 8x2 2.66 4x4 0.00 | 份额 %: 86.1 0.0 13.9 0.0
+  6390 x  4256     81 x    81 best   23.125 ms    14952.0 GFLOPS | avg   23.142 ms    14941.2 GFLOPS  PASS
+=== DIAG per-kind cycles (DDR)
+DIAG memory=DDR shape=4096 6144 39 39
+[roll] thr ms min/avg/max 0.005/5.217/9.656 | 周期/tile步: pair 2.15 single 0.00 8x2 0.00 4x4 2.41 | 份额 %: 86.3 0.0 0.0 13.7
+[roll] thr ms min/avg/max 5.222/5.241/5.274 | 周期/tile步: pair 2.15 single 0.00 8x2 0.00 4x4 2.44 | 份额 %: 86.1 0.0 0.0 13.9
+[roll] thr ms min/avg/max 5.237/5.254/5.296 | 周期/tile步: pair 2.15 single 0.00 8x2 0.00 4x4 2.46 | 份额 %: 86.1 0.0 0.0 13.9
+[roll] thr ms min/avg/max 5.215/5.235/5.263 | 周期/tile步: pair 2.15 single 0.00 8x2 0.00 4x4 2.45 | 份额 %: 86.1 0.0 0.0 13.9
+[roll] thr ms min/avg/max 5.227/5.249/5.277 | 周期/tile步: pair 2.15 single 0.00 8x2 0.00 4x4 2.46 | 份额 %: 86.1 0.0 0.0 13.9
+  4096 x  6144     39 x    39 best    5.372 ms    14031.4 GFLOPS | avg    5.388 ms    13988.7 GFLOPS  PASS
+DIAG memory=DDR shape=6144 4096 41 41
+[roll] thr ms min/avg/max 0.004/5.871/10.657 | 周期/tile步: pair 2.10 single 0.00 8x2 2.21 4x4 0.00 | 份额 %: 78.7 0.0 21.3 0.0
+[roll] thr ms min/avg/max 5.986/6.014/6.047 | 周期/tile步: pair 2.15 single 0.00 8x2 2.26 4x4 0.00 | 份额 %: 78.6 0.0 21.4 0.0
+[roll] thr ms min/avg/max 5.966/5.991/6.025 | 周期/tile步: pair 2.14 single 0.00 8x2 2.25 4x4 0.00 | 份额 %: 78.6 0.0 21.4 0.0
+[roll] thr ms min/avg/max 5.931/5.958/5.995 | 周期/tile步: pair 2.13 single 0.00 8x2 2.25 4x4 0.00 | 份额 %: 78.6 0.0 21.4 0.0
+[roll] thr ms min/avg/max 5.977/6.007/6.078 | 周期/tile步: pair 2.15 single 0.00 8x2 2.27 4x4 0.00 | 份额 %: 78.6 0.0 21.4 0.0
+  6144 x  4096     41 x    41 best    6.092 ms    13663.0 GFLOPS | avg    6.136 ms    13564.6 GFLOPS  PASS
+DIAG memory=DDR shape=4256 6390 55 55
+[roll] thr ms min/avg/max 3.640/11.045/16.086 | 周期/tile步: pair 2.11 single 2.12 8x2 0.00 4x4 2.28 | 份额 %: 60.5 30.5 0.0 9.0
+[roll] thr ms min/avg/max 11.002/11.040/11.084 | 周期/tile步: pair 2.10 single 2.12 8x2 0.00 4x4 2.28 | 份额 %: 60.4 30.6 0.0 9.1
+[roll] thr ms min/avg/max 10.992/11.026/11.080 | 周期/tile步: pair 2.09 single 2.12 8x2 0.00 4x4 2.28 | 份额 %: 60.4 30.6 0.0 9.0
+[roll] thr ms min/avg/max 10.987/11.030/11.071 | 周期/tile步: pair 2.10 single 2.12 8x2 0.00 4x4 2.28 | 份额 %: 60.4 30.6 0.0 9.0
+[roll] thr ms min/avg/max 10.988/11.029/11.078 | 周期/tile步: pair 2.10 single 2.12 8x2 0.00 4x4 2.28 | 份额 %: 60.4 30.5 0.0 9.1
+  4256 x  6390     55 x    55 best   11.174 ms    14414.9 GFLOPS | avg   11.181 ms    14406.7 GFLOPS  PASS
+DIAG memory=DDR shape=6390 4256 81 81
+[roll] thr ms min/avg/max 15.406/22.695/28.795 | 周期/tile步: pair 2.10 single 0.00 8x2 2.71 4x4 0.00 | 份额 %: 85.9 0.0 14.1 0.0
+[roll] thr ms min/avg/max 22.624/22.702/22.857 | 周期/tile步: pair 2.10 single 0.00 8x2 2.71 4x4 0.00 | 份额 %: 85.9 0.0 14.1 0.0
+[roll] thr ms min/avg/max 22.656/22.734/22.903 | 周期/tile步: pair 2.10 single 0.00 8x2 2.71 4x4 0.00 | 份额 %: 85.9 0.0 14.1 0.0
+[roll] thr ms min/avg/max 22.625/22.708/22.866 | 周期/tile步: pair 2.10 single 0.00 8x2 2.71 4x4 0.00 | 份额 %: 85.9 0.0 14.1 0.0
+[roll] thr ms min/avg/max 22.591/22.694/22.832 | 周期/tile步: pair 2.10 single 0.00 8x2 2.70 4x4 0.00 | 份额 %: 85.9 0.0 14.1 0.0
+  6390 x  4256     81 x    81 best   22.938 ms    15074.0 GFLOPS | avg   22.973 ms    15051.5 GFLOPS  PASS
+V57_DIAG_DONE 2026-09-13T01:23:38+08:00
