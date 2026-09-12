@@ -5,6 +5,10 @@ from statistics import median
 from collections import defaultdict,Counter
 import re,sys
 s=Path(sys.argv[1]).read_text();assert 'PIECE_V55_DONE' in s and 'FAIL' not in s
+for digest in ['489948afe02f83758a88fc7903be6f06b3ab06b00d6c65e9f189ebd48cc52d61',
+               '1d3f5071d51cd4f8c88720b8d4fa91983515ffd83bdeb4983377a991df2b871a',
+               '2548861ae7e29826e454b4c0b098d682f7f04996222e664cd1ea9bc92dd2e927']:
+    assert re.search(r'^'+digest+r'\s+',s,re.M),digest
 m=re.search(r'^PLACEMENT cpu_node=\d+ hbm_node=(-?\d+)$',s,re.M);assert m
 memories=['DDR'] if int(m[1])<0 else ['DDR','HBM'];data={};order=defaultdict(list);key=None
 shapes={39:(4096,6144,39,39),41:(6144,4096,41,41),55:(4256,6390,55,55),81:(6390,4256,81,81)}
@@ -31,3 +35,11 @@ for m in memories:
     for k in shapes:
         a,b=[median(data[m,r,v,k] for r in range(6)) for v in ['v55','current']]
         print(f'| {m} | {k} | {a:.1f} | {b:.1f} | {100*(b/a-1):+.2f}% |')
+
+print('\nObserved within-round ranges are not confidence intervals.')
+print('\n| Memory | KH | Median paired change | Paired range | Positive rounds |')
+print('| --- | ---: | ---: | --- | ---: |')
+for m in memories:
+    for k in shapes:
+        ratios=[100*(data[m,r,'current',k]/data[m,r,'v55',k]-1) for r in range(6)]
+        print(f'| {m} | {k} | {median(ratios):+.2f}% | {min(ratios):+.2f}% to {max(ratios):+.2f}% | {sum(x>0 for x in ratios)}/6 |')

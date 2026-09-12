@@ -64,6 +64,25 @@ Fresh published-v55 comparison submitted as **1584490**, cn20483,
 `jobs/v56_piece_v55_job.sh`; immutable snapshots are staged under
 `build/v56/experiments/piece-v55`. The original benchmark and six AB/BA rounds
 are retained. Log: `results/v56/experiments/piece-v55/official.log`.
-This job is pending and no new direct-v55 net result is claimed yet.
+Job succeeded 06:34:26: 96 full checks PASS, maximum error zero. Direct DDR KH39/41/55/81 gains are +1.64%/+4.14%/+1.37%/+2.43%; HBM -0.25%/+0.89%/+1.14%/+2.52%. See [fresh direct-v55 evidence](piece-v55.md).
 Main worktree pull on this checkpoint was already up to date at 364b46d.
 Private SSH root operator and all three archives match the local accepted hashes.
+
+## Attribution after adoption
+
+Job **1584518**, cn20481 06:27:51–06:30:02, succeeds: four Williams orders,
+five timed calls/process, 32 processes, 8,512 phase records and 160 timed hashes
+all validate. Every call processes 916,936 row work units across 186 pieces;
+saves equal resumes. [Profile summary](../../results/v56/experiments/piece-carry/profile_summary.md).
+The setup log reports ~1.20 GHz; do not compare these absolute times with older
+1.55 GHz runs. Within this job DDR setup is 78.8 us/thread baseline vs 35.5 us
+combined; restore/zero is 42.7 vs 57.2 us and save/publish is 66.8 vs 66.9 us.
+Cached-only restore is 68.8 us, so carry4 lowers that region relative to cached,
+while combined setup rises from cached's 30.7 to 35.5 us. Host prepare increases
+9.9 to 12.6 us; it remains inside the measured call.
+
+Instrumentation changes layout and execution and cannot assign the accepted
+end-to-end gain entirely to these regions. In particular restore timings depend
+on preceding setup as well as transfer instructions. The remaining transfer and
+control cost motivates a bounded [wider-loop control](carry-width.md), with no
+new root change before its uninstrumented acceptance.

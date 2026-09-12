@@ -6,13 +6,14 @@ from statistics import median,mean
 from itertools import permutations
 import re,sys
 s=Path(sys.argv[1]).read_text()
+combo='PIECE_CARRY_PROFILE_DONE' in s
 piece='PIECE_PHASE_PROFILE_DONE' in s
 setup55='CHUNK_SETUP55_PROFILE_DONE' in s
-setup=piece or setup55 or 'CHUNK_SETUP_PROFILE_DONE' in s
-assert ('PIECE_PHASE_PROFILE_DONE' if piece else 'CHUNK_SETUP55_PROFILE_DONE' if setup55 else 'CHUNK_SETUP_PROFILE_DONE' if setup else 'CHUNK_OVERHEAD_DONE') in s and 'FAIL' not in s
+setup=combo or piece or setup55 or 'CHUNK_SETUP_PROFILE_DONE' in s
+assert ('PIECE_CARRY_PROFILE_DONE' if combo else 'PIECE_PHASE_PROFILE_DONE' if piece else 'CHUNK_SETUP55_PROFILE_DONE' if setup55 else 'CHUNK_SETUP_PROFILE_DONE' if setup else 'CHUNK_OVERHEAD_DONE') in s and 'FAIL' not in s
 m=re.search(r'^PLACEMENT cpu_node=\d+ hbm_node=(-?\d+)$',s,re.M);assert m
 memories=['DDR'] if int(m[1])<0 else ['DDR','HBM']
-variants=['baseline','phase','cached'] if piece else ['baseline','phase','carry4','both'] if setup else ['s8','s2','s4']
+variants=['baseline','cached','carry4','combined'] if combo else ['baseline','phase','cached'] if piece else ['baseline','phase','carry4','both'] if setup else ['s8','s2','s4']
 rounds=range(4 if setup and not piece else 6)
 data={};threads={};costs={};hosts={};counts=defaultdict(int);orders=defaultdict(list);key=None
 for line in s.splitlines():
@@ -92,7 +93,7 @@ if setup55:
                 for b in vals:vals[b].append(median(costs[m,r,v,c,b][1] for c in range(3,8)))
             print(f'| {m} | {v} | '+ ' | '.join(f'{median(vals[b]):.3f}' for b in [0,1,3])+' |')
 
-if piece:
+if piece or combo:
     assert set(hosts)=={k+(c,) for k in blocks for c in range(1,8)}
     print('\nHost phases are separately timed around preparation/dispatch/join; metadata preparation is included, not hidden outside the measured call.')
     print('\n| Memory | Variant | Prepare us | Dispatch us | Workers us | Mean pack us/thread |')
