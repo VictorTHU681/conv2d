@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
 """Instrument live source-copy intervals; not every SME memory instruction."""
 from pathlib import Path
-import hashlib
+import hashlib,argparse
 
-root=Path('build/v56/experiments/k5-triplet')
-s=(root/'triplet.c').read_text()
+parser=argparse.ArgumentParser()
+parser.add_argument('--root',type=Path,default=Path('build/v56/experiments/k5-triplet'))
+parser.add_argument('--variant',default='triplet')
+args=parser.parse_args()
+root=args.root
+s=(root/(args.variant+'.c')).read_text()
 defs='''static uintptr_t audit_lo,audit_hi;
 static unsigned long audit_calls,audit_outside;
 static void audit_span(uintptr_t p,size_t bytes) {
@@ -39,5 +43,5 @@ for sig,count in [('static __attribute__((noinline)) void k8f(',32),('static voi
     s=s[:b]+extra+s[b:]
 a=s.index('void conv2d(const CONVFLOAT* input,');b=s.index('{',a)+1
 s=s[:b]+'\n    audit_lo=(uintptr_t)input; audit_hi=audit_lo+(size_t)inputHeight*inputWidth*4;\n'+s[b:]
-p=root/'triplet_audit.c';p.write_text(s)
+p=root/(args.variant+'_audit.c');p.write_text(s)
 print(hashlib.sha256(s.encode()).hexdigest(),p)

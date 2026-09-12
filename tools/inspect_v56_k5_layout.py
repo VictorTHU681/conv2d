@@ -1,0 +1,36 @@
+#!/usr/bin/env python3
+"""Identify F4 bodies and actual inlining in all matched screening binaries."""
+from pathlib import Path
+from collections import Counter
+import hashlib,re
+root=Path('build/v56/experiments/k5-layout/disassembly')
+out=Path('results/v56/experiments/k5-layout')
+report=[];reference=None
+for v in ['baseline','triplet','baseline_out','triplet_out']:
+    rows=[];symbol=None
+    for line in (root/(v+'.txt')).read_text().splitlines():
+        m=re.match(r'^\s*[0-9a-f]+ <(.+)>:$',line)
+        if m:symbol=m[1]
+        m=re.match(r'\s*([0-9a-f]+):\s+([0-9a-f]{8})\s+(.*)',line)
+        if m:rows.append((int(m[1],16),m[2],re.sub(r'\s+',' ',m[3].strip()),symbol,line))
+    counts=Counter(r[3] for r in rows);hits=[]
+    for i,x in enumerate(rows):
+        if x[3]!='roll_worker' and not x[3].startswith('k16pairf4'): continue
+        if (x[2].startswith('ld1rqw') and i+16<len(rows) and
+            sum(y[2].startswith('fmla ') for y in rows[i+1:i+13])==8):
+            block=rows[i-4:i+17];assert len(block)==21 and sum(y[2].startswith('fmopa ') for y in block)==4
+            words=[y[1] for y in block]
+            if reference is None:reference=words
+            assert words==reference,(v,hex(block[0][0]))
+            symbol=block[0][3];assert all(y[3]==symbol for y in block)
+            assert symbol.startswith('k16pairf4') if v.endswith('_out') else symbol=='roll_worker'
+            hits.append(block[0][0])
+            report.append(f'{v} F4_step_{len(hits)} function={symbol} start=0x{block[0][0]:x} mod128={block[0][0]%128} words_sha256={hashlib.sha256(" ".join(words).encode()).hexdigest()}')
+            (out/f'{v}.f4_step{len(hits)}.txt').write_text('\n'.join(y[4] for y in rows[i-7:i+20])+'\n')
+    assert len(hits)==3,(v,len(hits))
+    for symbol,n in counts.items():
+        if symbol=='roll_worker' or symbol.startswith(('k16pairf4','k5.')) or symbol=='k5':
+            report.append(f'{v} function={symbol} disassembled_instruction_count={n}')
+report.append('All 12 extracted F4 steps have identical arithmetic instruction words. Counts include compiler scaffolding and padding, not dynamic execution counts.')
+(out/'machine_code.txt').write_text('\n'.join(report)+'\n')
+print('\n'.join(report))
