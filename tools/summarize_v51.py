@@ -8,10 +8,24 @@ import statistics
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('log', type=Path)
+parser.add_argument('--official', action='store_true', help='Summarize alternating official-reference acceptance runs')
 args = parser.parse_args()
 data = defaultdict(list)
 key = None
 for line in args.log.read_text().splitlines():
+    if args.official:
+        if line.startswith('PLAIN_ACCEPT'):
+            key = None
+        m = re.match(r'OFFICIAL_ACCEPT round=(\d+) variant=(\S+) shape=(.*)', line)
+        if m:
+            key = (m[2], int(m[3].split()[2]))
+        m = re.match(r'\s*\d+ x\s*\d+\s+\d+ x\s*\d+\s+[\d.]+\s+([\d.]+)\s+(\S+)\s+(PASS|FAIL)', line)
+        if m and key:
+            if m[3] != 'PASS':
+                raise SystemExit('An official output failed validation: ' + line)
+            data[key].append(float(m[1]))
+            key = None
+        continue
     if line.startswith(('OFFICIAL_BASELINE', 'BASELINE_LOCAL_DDR',
                         'BASELINE_KERNEL_PROFILE', 'MEMORY_AND_KERNEL')):
         key = None
