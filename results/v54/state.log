@@ -1,0 +1,211 @@
+HOST cn20483 2026-09-12T19:53:37+08:00
+pid 1873569's current affinity list: 37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+PLACEMENT cpu_node=1 hbm_node=17
+Cpus_allowed_list:	37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+Mems_allowed_list:	0-31
+1550002
+policy: default
+preferred node: current
+physcpubind: 37 75 113 151 189 227 265 303 341 379 417 455 493 531 569 607 
+cpubind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+nodebind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 
+preferred: 
+EFFECTIVE_PLACEMENT
+policy: preferred
+preferred node: 17
+physcpubind: 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 
+cpubind: 1 
+nodebind: 1 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 
+preferred: 17 
+STATE_BEGIN variant=shared256 plain_compile=yes
+   572 x 567  k  39 x  7 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   614 x 569  k  81 x  9 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   588 x 571  k  55 x 11 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   574 x 573  k  41 x 13 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   646 x 575  k 113 x 15 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   678 x 577  k 145 x 17 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   710 x 579  k 177 x 19 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   742 x 581  k 209 x 21 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   774 x 583  k 241 x 23 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   572 x 585  k  39 x 25 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   573 x 567  k  39 x  7 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   615 x 569  k  81 x  9 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   589 x 571  k  55 x 11 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   575 x 573  k  41 x 13 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   647 x 575  k 113 x 15 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   679 x 577  k 145 x 17 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   711 x 579  k 177 x 19 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   743 x 581  k 209 x 21 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   775 x 583  k 241 x 23 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   573 x 585  k  39 x 25 : ok  maxerr 0  bad 0/300135  bitdiff 0
+STATE_SWEEP PASS cases=261
+round=0 k=81 bitwise=PASS aligned_calls=7 live=14680064
+round=0 k=39 bitwise=PASS aligned_calls=8 live=16777216
+round=0 k=39 bitwise=PASS aligned_calls=8 live=16777216
+round=0 k=55 bitwise=PASS aligned_calls=9 live=16777216
+round=1 k=81 bitwise=PASS aligned_calls=9 live=16777216
+round=1 k=39 bitwise=PASS aligned_calls=9 live=16777216
+round=1 k=39 bitwise=PASS aligned_calls=9 live=16777216
+round=1 k=55 bitwise=PASS aligned_calls=9 live=16777216
+round=2 k=81 bitwise=PASS aligned_calls=9 live=16777216
+round=2 k=39 bitwise=PASS aligned_calls=9 live=16777216
+round=2 k=39 bitwise=PASS aligned_calls=9 live=16777216
+round=2 k=55 bitwise=PASS aligned_calls=9 live=16777216
+round=3 k=81 bitwise=PASS aligned_calls=9 live=16777216
+round=3 k=39 bitwise=PASS aligned_calls=9 live=16777216
+round=3 k=39 bitwise=PASS aligned_calls=9 live=16777216
+round=3 k=55 bitwise=PASS aligned_calls=9 live=16777216
+round=4 k=81 bitwise=PASS aligned_calls=9 live=16777216
+round=4 k=39 bitwise=PASS aligned_calls=9 live=16777216
+round=4 k=39 bitwise=PASS aligned_calls=9 live=16777216
+round=4 k=55 bitwise=PASS aligned_calls=9 live=16777216
+round=5 k=81 bitwise=PASS aligned_calls=9 live=16777216
+round=5 k=39 bitwise=PASS aligned_calls=9 live=16777216
+round=5 k=39 bitwise=PASS aligned_calls=9 live=16777216
+round=5 k=55 bitwise=PASS aligned_calls=9 live=16777216
+round=6 k=81 bitwise=PASS aligned_calls=9 live=16777216
+round=6 k=39 bitwise=PASS aligned_calls=9 live=16777216
+round=6 k=39 bitwise=PASS aligned_calls=9 live=16777216
+round=6 k=55 bitwise=PASS aligned_calls=9 live=16777216
+round=7 k=81 bitwise=PASS aligned_calls=9 live=16777216
+round=7 k=39 bitwise=PASS aligned_calls=9 live=16777216
+round=7 k=39 bitwise=PASS aligned_calls=9 live=16777216
+round=7 k=55 bitwise=PASS aligned_calls=9 live=16777216
+PACK_REUSE bitwise=PASS extra_allocations=0 peak_bytes=16777216 PASS
+STATE_BEGIN variant=shared512 plain_compile=yes
+   572 x 567  k  39 x  7 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   614 x 569  k  81 x  9 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   588 x 571  k  55 x 11 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   574 x 573  k  41 x 13 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   646 x 575  k 113 x 15 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   678 x 577  k 145 x 17 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   710 x 579  k 177 x 19 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   742 x 581  k 209 x 21 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   774 x 583  k 241 x 23 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   572 x 585  k  39 x 25 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   573 x 567  k  39 x  7 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   615 x 569  k  81 x  9 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   589 x 571  k  55 x 11 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   575 x 573  k  41 x 13 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   647 x 575  k 113 x 15 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   679 x 577  k 145 x 17 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   711 x 579  k 177 x 19 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   743 x 581  k 209 x 21 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   775 x 583  k 241 x 23 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   573 x 585  k  39 x 25 : ok  maxerr 0  bad 0/300135  bitdiff 0
+STATE_SWEEP PASS cases=261
+round=0 k=81 bitwise=PASS aligned_calls=7 live=14680064
+round=0 k=39 bitwise=PASS aligned_calls=8 live=16777216
+round=0 k=39 bitwise=PASS aligned_calls=8 live=16777216
+round=0 k=55 bitwise=PASS aligned_calls=9 live=16777216
+round=1 k=81 bitwise=PASS aligned_calls=9 live=16777216
+round=1 k=39 bitwise=PASS aligned_calls=9 live=16777216
+round=1 k=39 bitwise=PASS aligned_calls=9 live=16777216
+round=1 k=55 bitwise=PASS aligned_calls=9 live=16777216
+round=2 k=81 bitwise=PASS aligned_calls=9 live=16777216
+round=2 k=39 bitwise=PASS aligned_calls=9 live=16777216
+round=2 k=39 bitwise=PASS aligned_calls=9 live=16777216
+round=2 k=55 bitwise=PASS aligned_calls=9 live=16777216
+round=3 k=81 bitwise=PASS aligned_calls=9 live=16777216
+round=3 k=39 bitwise=PASS aligned_calls=9 live=16777216
+round=3 k=39 bitwise=PASS aligned_calls=9 live=16777216
+round=3 k=55 bitwise=PASS aligned_calls=9 live=16777216
+round=4 k=81 bitwise=PASS aligned_calls=9 live=16777216
+round=4 k=39 bitwise=PASS aligned_calls=9 live=16777216
+round=4 k=39 bitwise=PASS aligned_calls=9 live=16777216
+round=4 k=55 bitwise=PASS aligned_calls=9 live=16777216
+round=5 k=81 bitwise=PASS aligned_calls=9 live=16777216
+round=5 k=39 bitwise=PASS aligned_calls=9 live=16777216
+round=5 k=39 bitwise=PASS aligned_calls=9 live=16777216
+round=5 k=55 bitwise=PASS aligned_calls=9 live=16777216
+round=6 k=81 bitwise=PASS aligned_calls=9 live=16777216
+round=6 k=39 bitwise=PASS aligned_calls=9 live=16777216
+round=6 k=39 bitwise=PASS aligned_calls=9 live=16777216
+round=6 k=55 bitwise=PASS aligned_calls=9 live=16777216
+round=7 k=81 bitwise=PASS aligned_calls=9 live=16777216
+round=7 k=39 bitwise=PASS aligned_calls=9 live=16777216
+round=7 k=39 bitwise=PASS aligned_calls=9 live=16777216
+round=7 k=55 bitwise=PASS aligned_calls=9 live=16777216
+PACK_REUSE bitwise=PASS extra_allocations=0 peak_bytes=16777216 PASS
+build/v54/foldshared.c: In function ‘roll_groups’:
+build/v54/foldshared.c:2214:45: warning: implicit declaration of function ‘fabs’ [-Wimplicit-function-declaration]
+ 2214 |                 if (cost < best - 1e-12 || (fabs(cost - best) < 1e-12 && fold < bestfold)) {
+      |                                             ^~~~
+build/v54/foldshared.c:52:1: note: include ‘<math.h>’ or provide a declaration of ‘fabs’
+   51 | #include <arm_sve.h>
+  +++ |+#include <math.h>
+   52 | #endif
+build/v54/foldshared.c:2214:45: warning: incompatible implicit declaration of built-in function ‘fabs’ [-Wbuiltin-declaration-mismatch]
+ 2214 |                 if (cost < best - 1e-12 || (fabs(cost - best) < 1e-12 && fold < bestfold)) {
+      |                                             ^~~~
+build/v54/foldshared.c:2214:45: note: include ‘<math.h>’ or provide a declaration of ‘fabs’
+build/v54/foldshared.c: In function ‘roll_groups’:
+build/v54/foldshared.c:2214:45: warning: implicit declaration of function ‘fabs’ [-Wimplicit-function-declaration]
+ 2214 |                 if (cost < best - 1e-12 || (fabs(cost - best) < 1e-12 && fold < bestfold)) {
+      |                                             ^~~~
+build/v54/foldshared.c:52:1: note: include ‘<math.h>’ or provide a declaration of ‘fabs’
+   51 | #include <arm_sve.h>
+  +++ |+#include <math.h>
+   52 | #endif
+build/v54/foldshared.c:2214:45: warning: incompatible implicit declaration of built-in function ‘fabs’ [-Wbuiltin-declaration-mismatch]
+ 2214 |                 if (cost < best - 1e-12 || (fabs(cost - best) < 1e-12 && fold < bestfold)) {
+      |                                             ^~~~
+build/v54/foldshared.c:2214:45: note: include ‘<math.h>’ or provide a declaration of ‘fabs’
+STATE_BEGIN variant=foldshared plain_compile=yes
+   572 x 567  k  39 x  7 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   614 x 569  k  81 x  9 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   588 x 571  k  55 x 11 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   574 x 573  k  41 x 13 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   646 x 575  k 113 x 15 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   678 x 577  k 145 x 17 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   710 x 579  k 177 x 19 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   742 x 581  k 209 x 21 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   774 x 583  k 241 x 23 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   572 x 585  k  39 x 25 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   573 x 567  k  39 x  7 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   615 x 569  k  81 x  9 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   589 x 571  k  55 x 11 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   575 x 573  k  41 x 13 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   647 x 575  k 113 x 15 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   679 x 577  k 145 x 17 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   711 x 579  k 177 x 19 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   743 x 581  k 209 x 21 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   775 x 583  k 241 x 23 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   573 x 585  k  39 x 25 : ok  maxerr 0  bad 0/300135  bitdiff 0
+STATE_SWEEP PASS cases=261
+round=0 k=81 bitwise=PASS aligned_calls=9 live=18874368
+round=0 k=39 bitwise=PASS aligned_calls=9 live=18874368
+round=0 k=39 bitwise=PASS aligned_calls=9 live=18874368
+round=0 k=55 bitwise=PASS aligned_calls=9 live=18874368
+round=1 k=81 bitwise=PASS aligned_calls=9 live=18874368
+round=1 k=39 bitwise=PASS aligned_calls=9 live=18874368
+round=1 k=39 bitwise=PASS aligned_calls=9 live=18874368
+round=1 k=55 bitwise=PASS aligned_calls=9 live=18874368
+round=2 k=81 bitwise=PASS aligned_calls=9 live=18874368
+round=2 k=39 bitwise=PASS aligned_calls=9 live=18874368
+round=2 k=39 bitwise=PASS aligned_calls=9 live=18874368
+round=2 k=55 bitwise=PASS aligned_calls=9 live=18874368
+round=3 k=81 bitwise=PASS aligned_calls=9 live=18874368
+round=3 k=39 bitwise=PASS aligned_calls=9 live=18874368
+round=3 k=39 bitwise=PASS aligned_calls=9 live=18874368
+round=3 k=55 bitwise=PASS aligned_calls=9 live=18874368
+round=4 k=81 bitwise=PASS aligned_calls=9 live=18874368
+round=4 k=39 bitwise=PASS aligned_calls=9 live=18874368
+round=4 k=39 bitwise=PASS aligned_calls=9 live=18874368
+round=4 k=55 bitwise=PASS aligned_calls=9 live=18874368
+round=5 k=81 bitwise=PASS aligned_calls=9 live=18874368
+round=5 k=39 bitwise=PASS aligned_calls=9 live=18874368
+round=5 k=39 bitwise=PASS aligned_calls=9 live=18874368
+round=5 k=55 bitwise=PASS aligned_calls=9 live=18874368
+round=6 k=81 bitwise=PASS aligned_calls=9 live=18874368
+round=6 k=39 bitwise=PASS aligned_calls=9 live=18874368
+round=6 k=39 bitwise=PASS aligned_calls=9 live=18874368
+round=6 k=55 bitwise=PASS aligned_calls=9 live=18874368
+round=7 k=81 bitwise=PASS aligned_calls=9 live=18874368
+round=7 k=39 bitwise=PASS aligned_calls=9 live=18874368
+round=7 k=39 bitwise=PASS aligned_calls=9 live=18874368
+round=7 k=55 bitwise=PASS aligned_calls=9 live=18874368
+PACK_REUSE bitwise=PASS extra_allocations=0 peak_bytes=18874368 PASS
+STATE_DONE 2026-09-12T19:55:03+08:00

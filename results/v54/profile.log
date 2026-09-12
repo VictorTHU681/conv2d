@@ -1,0 +1,438 @@
+HOST cn20482 2026-09-12T19:14:08+08:00
+pid 2910630's current affinity list: 37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+PLACEMENT cpu_node=1 hbm_node=17
+Cpus_allowed_list:	37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+Mems_allowed_list:	0-31
+1199504
+policy: default
+preferred node: current
+physcpubind: 37 75 113 151 189 227 265 303 341 379 417 455 493 531 569 607 
+cpubind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+nodebind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 
+preferred: 
+EFFECTIVE_PLACEMENT
+policy: preferred
+preferred node: 17
+physcpubind: 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 
+cpubind: 1 
+nodebind: 1 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 
+preferred: 17 
+PROFILE_INPUT
+[always] madvise never
+Node 1, zone   Normal   1724  11337   4147   4196  15912  15547   4970   1639    908    961   2694 
+perf version 5.10.0-279.1.v2403.ky10p.aarch64
+  branch-misses                                      [Hardware event]
+  cache-misses                                       [Hardware event]
+  cache-references                                   [Hardware event]
+  cpu-cycles OR cycles                               [Hardware event]
+  instructions                                       [Hardware event]
+  stalled-cycles-backend OR idle-cycles-backend      [Hardware event]
+  stalled-cycles-frontend OR idle-cycles-frontend    [Hardware event]
+  alignment-faults                                   [Software event]
+  bpf-output                                         [Software event]
+  cgroup-switches                                    [Software event]
+  context-switches OR cs                             [Software event]
+  cpu-clock                                          [Software event]
+  cpu-migrations OR migrations                       [Software event]
+  dummy                                              [Software event]
+  emulation-faults                                   [Software event]
+  major-faults                                       [Software event]
+  minor-faults                                       [Software event]
+  page-faults OR faults                              [Software event]
+  task-clock                                         [Software event]
+  duration_time                                      [Tool event]
+  L1-dcache-load-misses                              [Hardware cache event]
+  L1-dcache-loads                                    [Hardware cache event]
+  L1-icache-load-misses                              [Hardware cache event]
+  L1-icache-loads                                    [Hardware cache event]
+  LLC-load-misses                                    [Hardware cache event]
+  LLC-loads                                          [Hardware cache event]
+  branch-load-misses                                 [Hardware cache event]
+  branch-loads                                       [Hardware cache event]
+  dTLB-load-misses                                   [Hardware cache event]
+  dTLB-loads                                         [Hardware cache event]
+  iTLB-load-misses                                   [Hardware cache event]
+  iTLB-loads                                         [Hardware cache event]
+  br_mis_pred OR armv8_pmuv3_0/br_mis_pred/          [Kernel PMU event]
+  br_mis_pred_retired OR armv8_pmuv3_0/br_mis_pred_retired/ [Kernel PMU event]
+  br_pred OR armv8_pmuv3_0/br_pred/                  [Kernel PMU event]
+  br_retired OR armv8_pmuv3_0/br_retired/            [Kernel PMU event]
+  br_return_retired OR armv8_pmuv3_0/br_return_retired/ [Kernel PMU event]
+  bus_access OR armv8_pmuv3_0/bus_access/            [Kernel PMU event]
+  cid_write_retired OR armv8_pmuv3_0/cid_write_retired/ [Kernel PMU event]
+  cpu_cycles OR armv8_pmuv3_0/cpu_cycles/            [Kernel PMU event]
+  dtlb_walk OR armv8_pmuv3_0/dtlb_walk/              [Kernel PMU event]
+  exc_return OR armv8_pmuv3_0/exc_return/            [Kernel PMU event]
+  exc_taken OR armv8_pmuv3_0/exc_taken/              [Kernel PMU event]
+  inst_retired OR armv8_pmuv3_0/inst_retired/        [Kernel PMU event]
+  inst_spec OR armv8_pmuv3_0/inst_spec/              [Kernel PMU event]
+  itlb_walk OR armv8_pmuv3_0/itlb_walk/              [Kernel PMU event]
+  l1d_cache OR armv8_pmuv3_0/l1d_cache/              [Kernel PMU event]
+  l1d_cache_allocate OR armv8_pmuv3_0/l1d_cache_allocate/ [Kernel PMU event]
+  l1d_cache_lmiss_rd OR armv8_pmuv3_0/l1d_cache_lmiss_rd/ [Kernel PMU event]
+  l1d_cache_refill OR armv8_pmuv3_0/l1d_cache_refill/ [Kernel PMU event]
+  l1d_cache_wb OR armv8_pmuv3_0/l1d_cache_wb/        [Kernel PMU event]
+  l1d_tlb OR armv8_pmuv3_0/l1d_tlb/                  [Kernel PMU event]
+  l1d_tlb_refill OR armv8_pmuv3_0/l1d_tlb_refill/    [Kernel PMU event]
+  l1i_cache OR armv8_pmuv3_0/l1i_cache/              [Kernel PMU event]
+  l1i_cache_lmiss OR armv8_pmuv3_0/l1i_cache_lmiss/  [Kernel PMU event]
+  l1i_cache_refill OR armv8_pmuv3_0/l1i_cache_refill/ [Kernel PMU event]
+  l1i_tlb OR armv8_pmuv3_0/l1i_tlb/                  [Kernel PMU event]
+  l1i_tlb_refill OR armv8_pmuv3_0/l1i_tlb_refill/    [Kernel PMU event]
+  l2d_cache OR armv8_pmuv3_0/l2d_cache/              [Kernel PMU event]
+  l2d_cache_refill OR armv8_pmuv3_0/l2d_cache_refill/ [Kernel PMU event]
+PROFILE memory=DDR shape=4096 6144 39 39
+[fbench] 参考计算 2.4 s，哈希 ce6efc3b661cf368 已缓存到 ./refcache/4096_6144_39_39_nt38.hash
+[roll] thr ms min/avg/max 0.013/6.787/11.960 | 周期/tile步: pair 2.75 single 0.00 8x2 0.00 4x4 3.60 | 份额 %: 84.4 0.0 0.0 15.6
+[roll] thr ms min/avg/max 6.899/7.207/8.358 | 周期/tile步: pair 2.83 single 0.00 8x2 0.00 4x4 4.47 | 份额 %: 81.7 0.0 0.0 18.3
+[roll] thr ms min/avg/max 6.863/7.172/8.320 | 周期/tile步: pair 2.82 single 0.00 8x2 0.00 4x4 4.44 | 份额 %: 81.8 0.0 0.0 18.2
+[roll] thr ms min/avg/max 6.883/7.194/8.343 | 周期/tile步: pair 2.83 single 0.00 8x2 0.00 4x4 4.45 | 份额 %: 81.8 0.0 0.0 18.2
+[roll] thr ms min/avg/max 6.925/7.261/8.388 | 周期/tile步: pair 2.85 single 0.00 8x2 0.00 4x4 4.55 | 份额 %: 81.5 0.0 0.0 18.5
+  4096 x  6144     39 x    39 run0    8.665 ms     8698.8 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    8.689 ms     8675.2 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    8.705 ms     8659.0 GFLOPS PASS
+  4096 x  6144     39 x    39 best    8.665 ms     8698.8 GFLOPS | avg    8.686 ms     8677.6 GFLOPS  PASS
+PACK_CONTROL memory=DDR serial=0 shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    8.549 ms     8816.8 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    8.494 ms     8873.8 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    8.519 ms     8847.8 GFLOPS PASS
+  4096 x  6144     39 x    39 best    8.494 ms     8873.8 GFLOPS | avg    8.521 ms     8846.1 GFLOPS  PASS
+PACK_CONTROL memory=DDR serial=1 shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    8.487 ms     8880.9 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    8.498 ms     8870.2 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    8.529 ms     8837.2 GFLOPS PASS
+  4096 x  6144     39 x    39 best    8.487 ms     8880.9 GFLOPS | avg    8.505 ms     8862.7 GFLOPS  PASS
+PMU memory=DDR shape=4096 6144 39 39
+ 4096 x 6144 k 39: best    8.436 ms =   8934.9 GFLOPS | avg    8.523 ms =   8844.2 GFLOPS
+
+ Performance counter stats for 'numactl -N 1 build/v54/drv 4096 6144 39 39 80':
+
+       96788026760      cycles:u                                                    
+      341043497475      instructions:u            #    3.52  insn per cycle         
+         571928104      r03:u                                                       
+       85313907619      r04:u                                                       
+           5209204      r05:u                                                       
+            612774      r34:u                                                       
+
+       2.296445808 seconds time elapsed
+
+      80.570704000 seconds user
+       0.976797000 seconds sys
+
+
+PROFILE memory=DDR shape=6144 4096 41 41
+[fbench] 参考计算 2.7 s，哈希 d101bd921ce667b3 已缓存到 ./refcache/6144_4096_41_41_nt38.hash
+[roll] thr ms min/avg/max 0.648/8.119/14.515 | 周期/tile步: pair 2.92 single 0.00 8x2 3.12 4x4 0.00 | 份额 %: 78.4 0.0 21.6 0.0
+[roll] thr ms min/avg/max 8.600/8.756/9.273 | 周期/tile步: pair 3.15 single 0.00 8x2 3.37 4x4 0.00 | 份额 %: 78.4 0.0 21.6 0.0
+[roll] thr ms min/avg/max 8.544/8.689/9.177 | 周期/tile步: pair 3.13 single 0.00 8x2 3.35 4x4 0.00 | 份额 %: 78.4 0.0 21.6 0.0
+[roll] thr ms min/avg/max 8.553/8.702/9.218 | 周期/tile步: pair 3.13 single 0.00 8x2 3.35 4x4 0.00 | 份额 %: 78.4 0.0 21.6 0.0
+[roll] thr ms min/avg/max 8.584/8.736/9.286 | 周期/tile步: pair 3.14 single 0.00 8x2 3.36 4x4 0.00 | 份额 %: 78.4 0.0 21.6 0.0
+  6144 x  4096     41 x    41 run0    9.488 ms     8772.3 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    9.553 ms     8712.9 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    9.592 ms     8677.5 GFLOPS PASS
+  6144 x  4096     41 x    41 best    9.488 ms     8772.3 GFLOPS | avg    9.545 ms     8720.7 GFLOPS  PASS
+PACK_CONTROL memory=DDR serial=0 shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    9.561 ms     8705.7 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    9.455 ms     8803.4 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    9.396 ms     8858.8 GFLOPS PASS
+  6144 x  4096     41 x    41 best    9.396 ms     8858.8 GFLOPS | avg    9.471 ms     8788.9 GFLOPS  PASS
+PACK_CONTROL memory=DDR serial=1 shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    9.450 ms     8808.1 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    9.681 ms     8597.7 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    9.549 ms     8716.9 GFLOPS PASS
+  6144 x  4096     41 x    41 best    9.450 ms     8808.1 GFLOPS | avg    9.560 ms     8706.7 GFLOPS  PASS
+PMU memory=DDR shape=6144 4096 41 41
+ 6144 x 4096 k 41: best    9.198 ms =   9049.3 GFLOPS | avg    9.430 ms =   8826.9 GFLOPS
+
+ Performance counter stats for 'numactl -N 1 build/v54/drv 6144 4096 41 41 80':
+
+      100039722529      cycles:u                                                    
+      323112797057      instructions:u            #    3.23  insn per cycle         
+         393373921      r03:u                                                       
+       85467626607      r04:u                                                       
+           6057122      r05:u                                                       
+            716632      r34:u                                                       
+
+       2.361134898 seconds time elapsed
+
+      83.193203000 seconds user
+       1.053401000 seconds sys
+
+
+PROFILE memory=DDR shape=4256 6390 55 55
+[fbench] 参考计算 5.1 s，哈希 bdef4e7ae05daa99 已缓存到 ./refcache/4256_6390_55_55_nt38.hash
+[roll] thr ms min/avg/max 6.885/14.089/19.395 | 周期/tile步: pair 2.70 single 2.68 8x2 0.00 4x4 3.07 | 份额 %: 60.5 30.1 0.0 9.5
+[roll] thr ms min/avg/max 13.978/14.217/14.468 | 周期/tile步: pair 2.68 single 2.69 8x2 0.00 4x4 3.08 | 份额 %: 60.3 30.2 0.0 9.5
+[roll] thr ms min/avg/max 13.864/14.173/14.403 | 周期/tile步: pair 2.68 single 2.68 8x2 0.00 4x4 3.12 | 份额 %: 60.2 30.2 0.0 9.6
+[roll] thr ms min/avg/max 13.851/14.177/14.459 | 周期/tile步: pair 2.68 single 2.69 8x2 0.00 4x4 3.09 | 份额 %: 60.2 30.2 0.0 9.6
+[roll] thr ms min/avg/max 13.909/14.170/14.422 | 周期/tile步: pair 2.68 single 2.70 8x2 0.00 4x4 3.12 | 份额 %: 60.1 30.2 0.0 9.6
+  4256 x  6390     55 x    55 run0   14.619 ms    11018.4 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   14.687 ms    10967.2 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   14.631 ms    11009.1 GFLOPS PASS
+  4256 x  6390     55 x    55 best   14.619 ms    11018.4 GFLOPS | avg   14.646 ms    10998.2 GFLOPS  PASS
+PACK_CONTROL memory=DDR serial=0 shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   14.365 ms    11213.0 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   14.497 ms    11111.3 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   14.371 ms    11208.4 GFLOPS PASS
+  4256 x  6390     55 x    55 best   14.365 ms    11213.0 GFLOPS | avg   14.411 ms    11177.4 GFLOPS  PASS
+PACK_CONTROL memory=DDR serial=1 shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   14.523 ms    11091.3 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   14.540 ms    11077.7 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   14.565 ms    11059.3 GFLOPS PASS
+  4256 x  6390     55 x    55 best   14.523 ms    11091.3 GFLOPS | avg   14.543 ms    11076.1 GFLOPS  PASS
+PMU memory=DDR shape=4256 6390 55 55
+ 4256 x 6390 k 55: best   14.355 ms =  11221.1 GFLOPS | avg   14.464 ms =  11136.0 GFLOPS
+
+ Performance counter stats for 'numactl -N 1 build/v54/drv 4256 6390 55 55 80':
+
+      126857927452      cycles:u                                                    
+      410096649005      instructions:u            #    3.23  insn per cycle         
+         730721122      r03:u                                                       
+      107433695705      r04:u                                                       
+           8421996      r05:u                                                       
+            657679      r34:u                                                       
+
+       2.943841104 seconds time elapsed
+
+     105.536766000 seconds user
+       1.151585000 seconds sys
+
+
+PROFILE memory=DDR shape=6390 4256 81 81
+[fbench] 参考计算 10.3 s，哈希 08edff4c42a7d5ce 已缓存到 ./refcache/6390_4256_81_81_nt38.hash
+[roll] thr ms min/avg/max 23.382/30.467/37.983 | 周期/tile步: pair 2.63 single 2.68 8x2 0.00 4x4 0.00 | 份额 %: 79.6 20.4 0.0 0.0
+[roll] thr ms min/avg/max 30.348/30.581/31.559 | 周期/tile步: pair 2.62 single 2.67 8x2 0.00 4x4 0.00 | 份额 %: 79.6 20.4 0.0 0.0
+[roll] thr ms min/avg/max 30.654/30.886/31.932 | 周期/tile步: pair 2.62 single 2.67 8x2 0.00 4x4 0.00 | 份额 %: 79.6 20.4 0.0 0.0
+[roll] thr ms min/avg/max 30.360/30.566/31.163 | 周期/tile步: pair 2.62 single 2.67 8x2 0.00 4x4 0.00 | 份额 %: 79.6 20.4 0.0 0.0
+[roll] thr ms min/avg/max 30.394/30.634/31.003 | 周期/tile步: pair 2.62 single 2.67 8x2 0.00 4x4 0.00 | 份额 %: 79.6 20.4 0.0 0.0
+  6390 x  4256     81 x    81 run0   32.168 ms    10749.0 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   31.396 ms    11013.2 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   31.215 ms    11077.1 GFLOPS PASS
+  6390 x  4256     81 x    81 best   31.215 ms    11077.1 GFLOPS | avg   31.593 ms    10944.6 GFLOPS  PASS
+PACK_CONTROL memory=DDR serial=0 shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   31.199 ms    11082.9 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   30.991 ms    11157.2 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   31.063 ms    11131.1 GFLOPS PASS
+  6390 x  4256     81 x    81 best   30.991 ms    11157.2 GFLOPS | avg   31.084 ms    11123.7 GFLOPS  PASS
+PACK_CONTROL memory=DDR serial=1 shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   31.891 ms    10842.1 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   31.210 ms    11078.8 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   31.216 ms    11076.6 GFLOPS PASS
+  6390 x  4256     81 x    81 best   31.210 ms    11078.8 GFLOPS | avg   31.439 ms    10998.1 GFLOPS  PASS
+PMU memory=DDR shape=6390 4256 81 81
+ 6390 x 4256 k 81: best   30.770 ms =  11237.4 GFLOPS | avg   31.138 ms =  11104.5 GFLOPS
+
+ Performance counter stats for 'numactl -N 1 build/v54/drv 6390 4256 81 81 80':
+
+      184943174195      cycles:u                                                    
+      495056100581      instructions:u            #    2.68  insn per cycle         
+        1289538245      r03:u                                                       
+      138600797632      r04:u                                                       
+          10587464      r05:u                                                       
+            557024      r34:u                                                       
+
+       4.280097946 seconds time elapsed
+
+     153.998022000 seconds user
+       1.034716000 seconds sys
+
+
+SAMPLE memory=DDR
+ 4096 x 6144 k 39: best    8.969 ms =   8404.4 GFLOPS | avg    9.222 ms =   8173.0 GFLOPS
+Error:
+The results/v54/DDR.perf data has no samples!
+# To display the perf.data header info, please use --header/--header-only options.
+#
+#
+# Total Lost Samples: 0
+#
+# Samples: 871K of event 'cycles:u'
+# Event count (approx.): 87180615340
+#
+# Overhead  Command  Shared Object          Symbol                      
+# ........  .......  .....................  ............................
+#
+    73.81%  drv      drv                    [.] pool_worker
+    24.05%  drv      drv                    [.] roll_worker
+
+
+#
+# (Tip: Generate a script for your data: perf script -g <lang>)
+#
+PROFILE memory=HBM shape=4096 6144 39 39
+[roll] thr ms min/avg/max 0.004/6.673/11.889 | 周期/tile步: pair 2.76 single 0.00 8x2 0.00 4x4 3.16 | 份额 %: 86.0 0.0 0.0 14.0
+[roll] thr ms min/avg/max 6.454/6.652/6.802 | 周期/tile步: pair 2.75 single 0.00 8x2 0.00 4x4 3.19 | 份额 %: 85.9 0.0 0.0 14.1
+[roll] thr ms min/avg/max 6.452/6.633/6.810 | 周期/tile步: pair 2.74 single 0.00 8x2 0.00 4x4 3.17 | 份额 %: 85.9 0.0 0.0 14.1
+[roll] thr ms min/avg/max 6.422/6.637/6.733 | 周期/tile步: pair 2.75 single 0.00 8x2 0.00 4x4 3.17 | 份额 %: 85.9 0.0 0.0 14.1
+[roll] thr ms min/avg/max 6.466/6.650/6.755 | 周期/tile步: pair 2.75 single 0.00 8x2 0.00 4x4 3.19 | 份额 %: 85.9 0.0 0.0 14.1
+  4096 x  6144     39 x    39 run0    7.140 ms    10556.7 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    7.054 ms    10685.8 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    7.057 ms    10681.6 GFLOPS PASS
+  4096 x  6144     39 x    39 best    7.054 ms    10685.8 GFLOPS | avg    7.083 ms    10641.0 GFLOPS  PASS
+PACK_CONTROL memory=HBM serial=0 shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    7.057 ms    10680.5 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    7.014 ms    10746.0 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    6.889 ms    10941.8 GFLOPS PASS
+  4096 x  6144     39 x    39 best    6.889 ms    10941.8 GFLOPS | avg    6.987 ms    10788.3 GFLOPS  PASS
+PACK_CONTROL memory=HBM serial=1 shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    6.890 ms    10940.5 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    6.867 ms    10976.4 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    6.886 ms    10945.9 GFLOPS PASS
+  4096 x  6144     39 x    39 best    6.867 ms    10976.4 GFLOPS | avg    6.881 ms    10954.2 GFLOPS  PASS
+PMU memory=HBM shape=4096 6144 39 39
+ 4096 x 6144 k 39: best    6.831 ms =  11034.2 GFLOPS | avg    6.876 ms =  10962.4 GFLOPS
+
+ Performance counter stats for 'numactl -N 1 --preferred=17 build/v54/drv 4096 6144 39 39 80':
+
+       83555460464      cycles:u                                                    
+      296849624450      instructions:u            #    3.55  insn per cycle         
+         536331894      r03:u                                                       
+       74260596501      r04:u                                                       
+           4083320      r05:u                                                       
+            251277      r34:u                                                       
+
+       1.993121319 seconds time elapsed
+
+      69.479225000 seconds user
+       0.864158000 seconds sys
+
+
+PROFILE memory=HBM shape=6144 4096 41 41
+[roll] thr ms min/avg/max 0.005/7.433/11.408 | 周期/tile步: pair 2.70 single 0.00 8x2 2.76 4x4 0.00 | 份额 %: 79.1 0.0 20.9 0.0
+[roll] thr ms min/avg/max 7.336/7.426/7.467 | 周期/tile步: pair 2.69 single 0.00 8x2 2.77 4x4 0.00 | 份额 %: 79.0 0.0 21.0 0.0
+[roll] thr ms min/avg/max 7.336/7.404/7.445 | 周期/tile步: pair 2.69 single 0.00 8x2 2.77 4x4 0.00 | 份额 %: 79.0 0.0 21.0 0.0
+[roll] thr ms min/avg/max 7.334/7.416/7.458 | 周期/tile步: pair 2.69 single 0.00 8x2 2.77 4x4 0.00 | 份额 %: 79.0 0.0 21.0 0.0
+[roll] thr ms min/avg/max 7.324/7.411/7.462 | 周期/tile步: pair 2.69 single 0.00 8x2 2.77 4x4 0.00 | 份额 %: 79.0 0.0 21.0 0.0
+  6144 x  4096     41 x    41 run0    7.729 ms    10768.8 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    7.785 ms    10692.2 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    7.763 ms    10721.6 GFLOPS PASS
+  6144 x  4096     41 x    41 best    7.729 ms    10768.8 GFLOPS | avg    7.759 ms    10727.4 GFLOPS  PASS
+PACK_CONTROL memory=HBM serial=0 shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    7.656 ms    10871.8 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    7.719 ms    10783.8 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    7.640 ms    10895.0 GFLOPS PASS
+  6144 x  4096     41 x    41 best    7.640 ms    10895.0 GFLOPS | avg    7.672 ms    10850.0 GFLOPS  PASS
+PACK_CONTROL memory=HBM serial=1 shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    7.701 ms    10807.9 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    7.692 ms    10820.7 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    7.667 ms    10856.5 GFLOPS PASS
+  6144 x  4096     41 x    41 best    7.667 ms    10856.5 GFLOPS | avg    7.687 ms    10828.3 GFLOPS  PASS
+PMU memory=HBM shape=6144 4096 41 41
+ 6144 x 4096 k 41: best    7.566 ms =  11001.2 GFLOPS | avg    7.827 ms =  10634.8 GFLOPS
+
+ Performance counter stats for 'numactl -N 1 --preferred=17 build/v54/drv 6144 4096 41 41 80':
+
+       93075133299      cycles:u                                                    
+      314166228459      instructions:u            #    3.38  insn per cycle         
+         369916883      r03:u                                                       
+       83232657761      r04:u                                                       
+           5090682      r05:u                                                       
+            695928      r34:u                                                       
+
+       2.205367815 seconds time elapsed
+
+      77.398794000 seconds user
+       0.979029000 seconds sys
+
+
+PROFILE memory=HBM shape=4256 6390 55 55
+[roll] thr ms min/avg/max 3.674/14.123/21.144 | 周期/tile步: pair 2.70 single 2.69 8x2 0.00 4x4 3.07 | 份额 %: 60.4 30.1 0.0 9.5
+[roll] thr ms min/avg/max 13.855/14.128/14.359 | 周期/tile步: pair 2.69 single 2.69 8x2 0.00 4x4 3.06 | 份额 %: 60.3 30.2 0.0 9.5
+[roll] thr ms min/avg/max 13.981/14.243/14.483 | 周期/tile步: pair 2.68 single 2.70 8x2 0.00 4x4 3.07 | 份额 %: 60.2 30.3 0.0 9.5
+[roll] thr ms min/avg/max 13.869/14.169/14.458 | 周期/tile步: pair 2.68 single 2.69 8x2 0.00 4x4 3.07 | 份额 %: 60.3 30.2 0.0 9.5
+[roll] thr ms min/avg/max 13.849/14.139/14.411 | 周期/tile步: pair 2.69 single 2.69 8x2 0.00 4x4 3.07 | 份额 %: 60.3 30.2 0.0 9.5
+  4256 x  6390     55 x    55 run0   14.699 ms    10958.1 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   14.695 ms    10961.2 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   14.623 ms    11015.5 GFLOPS PASS
+  4256 x  6390     55 x    55 best   14.623 ms    11015.5 GFLOPS | avg   14.672 ms    10978.2 GFLOPS  PASS
+PACK_CONTROL memory=HBM serial=0 shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   14.435 ms    11158.5 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   14.354 ms    11221.2 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   14.432 ms    11160.9 GFLOPS PASS
+  4256 x  6390     55 x    55 best   14.354 ms    11221.2 GFLOPS | avg   14.407 ms    11180.1 GFLOPS  PASS
+PACK_CONTROL memory=HBM serial=1 shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   14.605 ms    11028.6 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   14.573 ms    11053.2 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   14.565 ms    11058.9 GFLOPS PASS
+  4256 x  6390     55 x    55 best   14.565 ms    11058.9 GFLOPS | avg   14.581 ms    11046.9 GFLOPS  PASS
+PMU memory=HBM shape=4256 6390 55 55
+ 4256 x 6390 k 55: best   14.385 ms =  11197.2 GFLOPS | avg   14.517 ms =  11095.5 GFLOPS
+
+ Performance counter stats for 'numactl -N 1 --preferred=17 build/v54/drv 4256 6390 55 55 80':
+
+      118952018605      cycles:u                                                    
+      378301304181      instructions:u            #    3.18  insn per cycle         
+         728581450      r03:u                                                       
+       99479175662      r04:u                                                       
+           7908009      r05:u                                                       
+            392479      r34:u                                                       
+
+       2.835497360 seconds time elapsed
+
+      98.921773000 seconds user
+       1.009895000 seconds sys
+
+
+PROFILE memory=HBM shape=6390 4256 81 81
+[roll] thr ms min/avg/max 18.740/30.539/38.326 | 周期/tile步: pair 2.63 single 2.68 8x2 0.00 4x4 0.00 | 份额 %: 79.6 20.4 0.0 0.0
+[roll] thr ms min/avg/max 30.401/30.641/32.104 | 周期/tile步: pair 2.63 single 2.69 8x2 0.00 4x4 0.00 | 份额 %: 79.5 20.5 0.0 0.0
+[roll] thr ms min/avg/max 30.699/30.951/32.235 | 周期/tile步: pair 2.63 single 2.68 8x2 0.00 4x4 0.00 | 份额 %: 79.5 20.5 0.0 0.0
+[roll] thr ms min/avg/max 30.434/30.626/31.854 | 周期/tile步: pair 2.63 single 2.68 8x2 0.00 4x4 0.00 | 份额 %: 79.5 20.5 0.0 0.0
+[roll] thr ms min/avg/max 30.433/30.655/31.761 | 周期/tile步: pair 2.63 single 2.68 8x2 0.00 4x4 0.00 | 份额 %: 79.5 20.5 0.0 0.0
+  6390 x  4256     81 x    81 run0   32.475 ms    10647.5 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   32.090 ms    10775.1 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   31.978 ms    10812.9 GFLOPS PASS
+  6390 x  4256     81 x    81 best   31.978 ms    10812.9 GFLOPS | avg   32.181 ms    10744.7 GFLOPS  PASS
+PACK_CONTROL memory=HBM serial=0 shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   31.104 ms    11116.6 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   31.026 ms    11144.6 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   30.837 ms    11213.1 GFLOPS PASS
+  6390 x  4256     81 x    81 best   30.837 ms    11213.1 GFLOPS | avg   30.989 ms    11158.0 GFLOPS  PASS
+PACK_CONTROL memory=HBM serial=1 shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   31.222 ms    11074.8 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   31.039 ms    11139.9 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   31.052 ms    11135.4 GFLOPS PASS
+  6390 x  4256     81 x    81 best   31.039 ms    11139.9 GFLOPS | avg   31.104 ms    11116.6 GFLOPS  PASS
+PMU memory=HBM shape=6390 4256 81 81
+ 6390 x 4256 k 81: best   30.827 ms =  11216.4 GFLOPS | avg   31.123 ms =  11110.0 GFLOPS
+
+ Performance counter stats for 'numactl -N 1 --preferred=17 build/v54/drv 6390 4256 81 81 80':
+
+      183540194727      cycles:u                                                    
+      488907375262      instructions:u            #    2.66  insn per cycle         
+        1282000803      r03:u                                                       
+      137066658364      r04:u                                                       
+           6765445      r05:u                                                       
+            492879      r34:u                                                       
+
+       4.188458831 seconds time elapsed
+
+     152.850652000 seconds user
+       0.997148000 seconds sys
+
+
+SAMPLE memory=HBM
+ 4096 x 6144 k 39: best    7.332 ms =  10279.7 GFLOPS | avg    7.727 ms =   9755.1 GFLOPS
+Error:
+The results/v54/HBM.perf data has no samples!
+# To display the perf.data header info, please use --header/--header-only options.
+#
+#
+# Total Lost Samples: 0
+#
+# Samples: 829K of event 'cycles:u'
+# Event count (approx.): 82918987495
+#
+# Overhead  Command  Shared Object          Symbol                         
+# ........  .......  .....................  ...............................
+#
+    75.07%  drv      drv                    [.] pool_worker
+    22.72%  drv      drv                    [.] roll_worker
+
+
+#
+# (Tip: Search options using a keyword: perf report -h <keyword>)
+#
+PROFILE_DONE 2026-09-12T19:16:19+08:00

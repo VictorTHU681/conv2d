@@ -1,0 +1,26 @@
+# To display the perf.data header info, please use --header/--header-only options.
+#
+#
+# Total Lost Samples: 0
+#
+# Samples: 7M of event 'cycles:u'
+# Event count (approx.): 757751231855
+#
+# Overhead  Command         Shared Object     Symbol                   
+# ........  ..............  ................  .........................
+#
+    99.07%  profile_driver  profile_driver    [.] pool_worker
+     0.92%  profile_driver  profile_driver    [.] roll_worker
+
+
+# Samples: 0  of event 'dummy:HGu'
+# Event count (approx.): 0
+#
+# Overhead  Command  Shared Object  Symbol
+# ........  .......  .............  ......
+#
+
+
+#
+# (Tip: Search options using a keyword: perf report -h <keyword>)
+#
