@@ -12,6 +12,9 @@ args = parser.parse_args()
 data = defaultdict(list)
 key = None
 for line in args.log.read_text().splitlines():
+    if line.startswith(('OFFICIAL_BASELINE', 'BASELINE_LOCAL_DDR',
+                        'BASELINE_KERNEL_PROFILE', 'MEMORY_AND_KERNEL')):
+        key = None
     m = re.match(r'MEASURE round=(\d+) variant=(\S+) shape=(.*)', line)
     if m:
         key = (m[2], int(m[3].split()[2]))

@@ -81,9 +81,14 @@ def output_prefetch(source, mode):
         start = source.index('static void ' + name + '(')
         end = source.index('\n}\n', start) + 3
         f = source[start:end]
-        if mode == 'none':
+        if mode in ('none', 'clean'):
             f, count = re.subn(r'"prfm pstl2keep, \[x21(?:, #\d+)?\]\\n\\t"', '""', f)
             assert count in (2, 4), (name, count)
+            if mode == 'clean':
+                setup = ('"ldr x21, [%[A], #232]\\n\\t"', '"add x21, x9, x21\\n\\t"') if name == 'k16single' else ('"ldr x25, [%[A], #232]\\n\\t"', '"add x21, x9, x25\\n\\t"')
+                for instruction in setup:
+                    assert f.count(instruction) == 1, (name, instruction)
+                    f = f.replace(instruction, '""')
         elif mode == 'l1':
             assert f.count('prfm pstl2keep') in (2, 4)
             f = f.replace('prfm pstl2keep', 'prfm pstl1keep')
@@ -94,6 +99,74 @@ def output_prefetch(source, mode):
             f = f.replace(old, old + f' "prfm pstl2keep, [x21, #{last+64}]\\n\\t"')
         else:
             raise ValueError(mode)
+        source = source[:start] + f + source[end:]
+    return source
+
+
+def height_fix(source):
+    replacements = (
+        ('long KH, KW, outW;', 'long KH, KW, outW, outH;'),
+        ('if (!same || P->pnth != nth) {', 'if (!same || P->pnth != nth || P->outH != outH) {'),
+        ('P->npieces = np; P->pnth = nth;', 'P->npieces = np; P->pnth = nth; P->outH = outH;'))
+    for old, new in replacements:
+        assert source.count(old) == 1, old
+        source = source.replace(old, new)
+    return source
+
+
+def compact_kernel(source):
+    def replace(old, new):
+        nonlocal source
+        assert source.count(old) == 1, old[:100]
+        source = source.replace(old, new)
+
+    replace('    const float* kb20; long cf20;',
+            '    int compact;\n    const float* kb20; long cf20;')
+    # Explicit flag avoids inferring a layout from dimensions or pointer values.
+    replace('                   NULL, NULL, NULL, 0, NULL, 0 };',
+            '                   NULL, NULL, NULL, 0, 0, NULL, 0 };\n'
+            '        K.compact = (g->kind >= 16);')
+    replace('A->Rend = (int64_t)(P->R + P->KH * P->RSB / 4);',
+            'A->Rend = P->compact ? P->steps * P->RSB + 4 : (int64_t)(P->R + P->KH * P->RSB / 4);')
+    for side in ('A', 'B'):
+        replace(f'A->b{side} = (int64_t)(P->R + P->y{side}0 * P->RSB / 4);',
+                f'A->b{side} = (int64_t)(P->R + (P->compact ? (P->KH - P->y{side}0) % P->KH : P->y{side}0 * P->RSB / 4));')
+    replace('    if (ncp) roll_copy_row(P->ring, src, ncp);',
+            '    A->khkw4 = P->RSB;\n'
+            '    if (ncp) roll_copy_row(P->ring, src, ncp);')
+    # Each column contains a reversed cyclic kernel-height sequence with 15
+    # extra elements. Adjacent y windows share 15/16 values, without rounding.
+    replace('    for (int g = 0; g < ng; g++) G[g].RSB = G[g].steps * 64;',
+            '    for (int g = 0; g < ng; g++) G[g].RSB = G[g].kind >= 16 ? ((KH + 30) & ~15L) * 4 : G[g].steps * 64;')
+    replace('            size_t need = (size_t)KH * G->RSB;',
+            '            size_t need = (size_t)(G->kind >= 16 ? G->steps : KH) * G->RSB;')
+    old = '            roll_build_R(G->R, k, KH, KW, G->steps, G->s_base, (G->kind == 32 || G->kind == 33 || G->kind == 34 || G->kind == 35 || G->kind == 17) ? 16 : G->kind);'
+    replace(old,
+            '            if (G->kind >= 16) {\n'
+            '                for (long x = 0; x < G->steps; x++)\n'
+            '                    for (long y = 0; y < G->RSB / 4; y++)\n'
+            '                        G->R[x * (G->RSB / 4) + y] = x < KW ? k[((KH - y % KH) % KH) * KW + x] : 0.0f;\n'
+            '            } else {\n' + old + '\n            }')
+    # x5 holds the byte span plus four; a completed row returns to the
+    # previous element of the first column, wrapping by KH elements.
+    for name in ('k16pair', 'k16pairf', 'k16pairf3', 'k16pairf4', 'k16single', 'k16singlef2'):
+        start = source.index('static void ' + name + '(')
+        end = source.index('\n}\n', start) + 3
+        f = source[start:end]
+        old = '        "mov x15, x7\\n\\t"\n'
+        assert f.count(old) == 1
+        f = f.replace(old, '        "ldr x12, [%[A], #272]\\n\\t"\n' + old)
+        for reg in ('x2', 'x3'):
+            old = f'"add {reg}, {reg}, #64\\n\\t"'
+            if old in f:
+                f = f.replace(old, f'"add {reg}, {reg}, x12\\n\\t"')
+            old = f'WRAP_B({reg})'
+            if old in f:
+                new = (f'"sub {reg}, {reg}, x5\\n\\t" '
+                       f'"cmp {reg}, x4\\n\\t" '
+                       f'"add x21, {reg}, x6, lsl #2\\n\\t" '
+                       f'"csel {reg}, x21, {reg}, lo\\n\\t"')
+                f = f.replace(old, new)
         source = source[:start] + f + source[end:]
     return source
 
@@ -133,7 +206,10 @@ def main():
                 'offset2': unroll(source, 2, True), 'offset4': unroll(source, 4, True),
                 'full': full_unroll(source), 'nopfo': output_prefetch(source, 'none'),
                 'pfol1': output_prefetch(source, 'l1'),
-                'pfoextra': output_prefetch(source, 'extra')}
+                'pfoextra': output_prefetch(source, 'extra'),
+                'compact': compact_kernel(source), 'heightfix': height_fix(source),
+                'nopfo_clean': height_fix(output_prefetch(source, 'clean')),
+                'combo': height_fix(output_prefetch(k4_tail(source), 'clean'))}
     for name, contents in variants.items():
         path = args.out / (name + '.c')
         path.write_text(contents)

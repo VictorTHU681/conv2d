@@ -2093,7 +2093,7 @@ typedef struct {
     ritem_t* items; double* cost; int nit, itcap; double C;
     rpiece_t* pieces; int* pstart; int npieces, pcap, pnth;      // 静态划分：线程 t 的片段 pieces[pstart[t] .. pstart[t+1])
     float* rings; float* scratch; int nthr_alloc;
-    float* kcopy; size_t kcopy_n; long KH, KW, outW;
+    float* kcopy; size_t kcopy_n; long KH, KW, outW, outH;
 } rplan_t;
 static rplan_t g_rp;
 static padded_u64 g_rwork[1024] __attribute__((aligned(64)));   // 每线程片段游标 (end<<32 | cur)，CAS 认领 + 空了从别人尾部偷
@@ -2182,7 +2182,7 @@ static void roll_prepare(const float* k, long H, long W, long KH, long KW, int n
         if (P->kcopy) memcpy(P->kcopy, k, kn * 4);
         P->KH = KH; P->KW = KW; P->outW = outW;
     }
-    if (!same || P->pnth != nth) {
+    if (!same || P->pnth != nth || P->outH != outH) {
         // 精确静态划分：片段代价 = 权重 × 步数 × (行数 + KH-1)，贪心填到目标，整项放不下就按行切开
         const long ovh = KH - 1;
         int need = 2 * P->nit + 2 * nth + 4;
@@ -2205,7 +2205,7 @@ static void roll_prepare(const float* k, long H, long W, long KH, long KW, int n
                 break;
             }
         }
-        P->pstart[nth] = np; P->npieces = np; P->pnth = nth;
+        P->pstart[nth] = np; P->npieces = np; P->pnth = nth; P->outH = outH;
     }
     if (P->nthr_alloc < nth) {
         free(P->rings); free(P->scratch);
