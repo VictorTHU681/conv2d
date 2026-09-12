@@ -34,6 +34,10 @@ Results: [ownership/claim table](../../results/v56/experiments/output-ownership/
 **Unfixed in the current operator and all three current packages.** Earlier
 input-copy and coefficient-packing fixes do not address output ownership.
 Existing reference/guard tests passing does not disprove this issue.
+Isolated [ordering candidates](output-order.md) are now undergoing acceptance;
+the first runtime control has confirmed active conflicts in the baseline and
+zero in the candidate that orders complete pieces. That candidate's large
+performance regression motivates ordering only the intersecting row chunks.
 
 Prefer giving each output column a single writer, including masked final-strip
 stores for every rolling kernel family and folded FMLA output. Alternatively,
