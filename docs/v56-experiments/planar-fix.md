@@ -1,8 +1,9 @@
 # v56 rolling-copy correction and upstream integration
 
-Status: correctness and package acceptance passed, but K39 HBM performance is
-unstable in the formal comparison. Promotion is deferred while profiling that
-result. Root source and release programs remain `595d7f7d…`. No push.
+Status: complete integrated candidate `695c449c…` accepted locally after
+correctness/package acceptance and a balanced K39 follow-up. The initial K39
+HBM slowdown was not stable across the follow-up, but its cause remains open.
+Root source and release program members now match the validated candidate. No push.
 
 ## Changes
 
@@ -124,3 +125,27 @@ timings; separate subsequent runs enable existing per-kernel/per-thread counters
 The earlier cyclic-order job 1582481 was deliberately cancelled before using
 its data because it did not balance predecessor pairs. No result from that job
 is evidence of gain or loss. Follow-up log: `planar-fix-full/k39_order_balanced.log`.
+
+### Balanced K39 follow-up and adoption
+
+1582487 succeeded on cn20481, 01:51:39–01:53:23. All 36 uninstrumented official
+checks and 6 subsequent diagnostic checks have maximum error zero. Baseline
+median is 14347.2 GFLOPS; integrated default is 14323.0 (-0.17%); its unchanged
+explicit mode-3 control is 14354.4 (+0.05%). Mode 1 is -0.02%, mode 2 +0.07%.
+These small differences do not justify selecting a new packing mode. The
+explicit mode-3 control still has one 14123.2 GFLOPS process; the intermittent
+slowdown has not been explained, and the earlier -2.21% must remain recorded.
+
+Separate runtime profiles exclude validation/warmup and summarize the two
+timed calls. The integrated main pair group accounts for about 86% of kernel
+time and K4 for 14%. Existing normalized cycles/tile-step are about 2.13 and
+2.44 respectively (baseline 2.13/2.52). This identifies where computation is
+spent, not individual-instruction latency, IPC, or the cause of the slow runs.
+`tools/summarize_v56_k39_order.py` validates the predecessor/position balance and
+keeps instrumented runs out of throughput medians.
+
+Adopt the integrated source to eliminate the verified invalid reads and pack
+race, retain local K9 performance, and obtain the measured DDR/other-shape gains.
+Do not claim uniformly stable acceleration. The default mode-3/mode-1 rule is
+retained; no timing-stage-dependent dispatch or answer reuse is introduced.
+Current packages differ from the accepted candidate archives only in README.
