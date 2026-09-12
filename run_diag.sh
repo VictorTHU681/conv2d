@@ -45,14 +45,32 @@ export OMP_PLACES=cores
 export OMP_DYNAMIC=FALSE
 unset GOMP_CPU_AFFINITY OMP_THREAD_LIMIT 2>/dev/null || true
 
+# 内存放置：与正式包 run.sh 相同的 HBM --preferred 探测（无 CPU、1～32 GB、距离 ≤ 70 的最近纯内存节点）。CONV_HBM=0 可关。
+hbm=""
+if [[ "${CONV_HBM:-1}" != "0" && -r /sys/devices/system/node/node$cpunode/distance ]]; then
+    read -ra dist < /sys/devices/system/node/node$cpunode/distance
+    best=999
+    for n in "${!dist[@]}"; do
+        [[ -d /sys/devices/system/node/node$n ]] || continue
+        [[ -z "$(cat /sys/devices/system/node/node$n/cpulist 2>/dev/null)" ]] || continue
+        totkb=$(awk '/MemTotal:/{print $4}' /sys/devices/system/node/node$n/meminfo 2>/dev/null)
+        [[ "$totkb" =~ ^[0-9]+$ ]] || continue
+        (( totkb >= 1048576 && totkb <= 33554432 )) || continue
+        if (( dist[n] < best )); then best=${dist[n]}; hbm=$n; fi
+    done
+    (( best > 70 )) && hbm=""
+fi
+MEMOPT=""
+if [[ -n "$hbm" ]] && numactl -N $cpunode --preferred=$hbm true >/dev/null 2>&1; then MEMOPT="--preferred=$hbm"; fi
+
 if command -v numactl >/dev/null 2>&1 && numactl -N $cpunode true >/dev/null 2>&1; then
-    RUN="numactl -N $cpunode"
+    RUN="numactl -N $cpunode $MEMOPT"
 else
     echo "[run.sh] numactl 不可用或节点 $cpunode 不可用，直接运行" >&2
     RUN=""
 fi
 FIRSTCPU=$(sed 's/[-,].*//' /sys/devices/system/node/node$cpunode/cpulist 2>/dev/null)
-echo "[run-diag] node=$cpunode threads=$NT firstcpu=${FIRSTCPU:-?} numa_free=$(numactl -H 2>/dev/null | grep "node $cpunode free" | tr -s ' ')"
+echo "[run-diag] node=$cpunode hbm=${hbm:-none} threads=$NT firstcpu=${FIRSTCPU:-?} numa_free=$(numactl -H 2>/dev/null | grep "node $cpunode free" | tr -s ' ')"
 
 for args in "4096 6144 39 39 1" "6144 4096 41 41 1" "4256 6390 55 55 1" "6390 4256 81 81 1"; do
     echo "[run-diag] case '$args' start=$(date '+%T') loadavg=$(cut -d' ' -f1-3 /proc/loadavg 2>/dev/null) freq_kHz=$(cat /sys/devices/system/cpu/cpu${FIRSTCPU:-0}/cpufreq/scaling_cur_freq 2>/dev/null)"

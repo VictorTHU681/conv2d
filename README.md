@@ -9,6 +9,11 @@ FP32 二维 valid 卷积 `conv2d(in, H, W, k, KH, KW, out)` 的 SME（FMOPA）�
 bash run.sh    # 编译 + 四个用例（题面判题口径：OMP_NUM_THREADS=38 numactl -N 1）
 ```
 
+`run.sh` 在 CPU 节点旁探测到纯内存节点（HBM，无 CPU、1～32 GB、距离 ≤ 70）时会加
+`--preferred=<node>`，让基准数据（四例合计 < 600 MB）落入 HBM；放不下自动回落本地
+DDR，探测不到则不加参数（即题面原命令）。`CONV_HBM=0` 可关闭。资源仍为单一 NUMA
+节点的 38 个 CPU，不改变算法与结果。
+
 或手动：
 
 ```bash

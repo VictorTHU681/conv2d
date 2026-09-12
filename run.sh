@@ -40,13 +40,33 @@ export OMP_PLACES=cores
 export OMP_DYNAMIC=FALSE
 unset GOMP_CPU_AFFINITY OMP_THREAD_LIMIT 2>/dev/null || true
 
+# 内存放置：若 CPU 节点旁挂有纯内存节点（HBM：无 CPU、1～32 GB、距离 ≤ 70），用 --preferred 让基准程序的
+# 输入/输出矩阵（四例合计 < 600 MB）落进 HBM（读 ~306 GB/s，与 DDR 通道分开）。放不下时内核自动回落本地 DDR；
+# 探测不到则不加该参数，仍为题面命令。CONV_HBM=0 可关。
+hbm=""
+if [[ "${CONV_HBM:-1}" != "0" && -r /sys/devices/system/node/node$cpunode/distance ]]; then
+    read -ra dist < /sys/devices/system/node/node$cpunode/distance
+    best=999
+    for n in "${!dist[@]}"; do
+        [[ -d /sys/devices/system/node/node$n ]] || continue
+        [[ -z "$(cat /sys/devices/system/node/node$n/cpulist 2>/dev/null)" ]] || continue     # 只考虑无 CPU 的纯内存节点
+        totkb=$(awk '/MemTotal:/{print $4}' /sys/devices/system/node/node$n/meminfo 2>/dev/null)
+        [[ "$totkb" =~ ^[0-9]+$ ]] || continue
+        (( totkb >= 1048576 && totkb <= 33554432 )) || continue                              # 1～32 GB 才像 HBM
+        if (( dist[n] < best )); then best=${dist[n]}; hbm=$n; fi
+    done
+    (( best > 70 )) && hbm=""
+fi
+MEMOPT=""
+if [[ -n "$hbm" ]] && numactl -N $cpunode --preferred=$hbm true >/dev/null 2>&1; then MEMOPT="--preferred=$hbm"; fi
+
 if command -v numactl >/dev/null 2>&1 && numactl -N $cpunode true >/dev/null 2>&1; then
-    RUN="numactl -N $cpunode"
+    RUN="numactl -N $cpunode $MEMOPT"
 else
     echo "[run.sh] numactl 不可用或节点 $cpunode 不可用，直接运行" >&2
     RUN=""
 fi
-echo "[run.sh] host=$(hostname 2>/dev/null) node=$cpunode threads=$NT" >&2   # 仅 stderr，不影响判题解析
+echo "[run.sh] host=$(hostname 2>/dev/null) node=$cpunode hbm=${hbm:-none} threads=$NT" >&2   # 仅 stderr，不影响判题解析
 
 $RUN ./conv2d_test 4096 6144 39 39 1
 $RUN ./conv2d_test 6144 4096 41 41 1
