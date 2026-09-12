@@ -1,40 +1,54 @@
 # conv2d on Kunpeng SME — 鲲鹏 HPC 挑战赛 S2 CONV 赛题
 
-FP32 二维 valid 卷积 `conv2d(in, H, W, k, KH, KW, out)` 的 SME（FMOPA）实现，要求与参考实现逐位一致
-（校验 1e-5 绝对误差，低于输出量级的 1 ulp），按 GFLOPS 计分；四个用例见 `docs/problem.md`。
+FP32 二维 valid 相关运算 `conv2d(in, H, W, k, KH, KW, out)`，核不翻转。
+严格保持参考实现的 `(kernel row, kernel column)` FMA 累加顺序；题目校验为
+`1e-5` **绝对误差**。四个正式用例与编译命令见 [题面](docs/problem.md)。
 
-## 成绩（本机 38 核 1.55 GHz 判题口径，`OMP_NUM_THREADS=38 numactl -N 1`）
+## 当前版本 v51
 
-| 用例 | 4096×6144 k39 | 6144×4096 k41 | 4256×6390 k55 | 6390×4256 k81 |
-|---|---|---|---|---|
-| GFLOPS | 12827 | 12752 | 13840 | 14043 |
-| 纯 fmopa 形态下限 | 13000 | 13090 | 13560 | 14020 |
+2026-09-12，cn20493，38 核、约 1.55 GHz，CPU NUMA 1 + HBM 17。
+下表使用官方 `bench_conv.c`：同节点交替运行基线与候选，各三轮，每轮计时三次；
+表中为三轮 GFLOPS 的中位数。**这是服务器实测，不是线上评测机的换算值。**
 
-评测机主频 2.0 GHz，成绩约为本机 × 1.27。方法与全部实测记录见 `NOTES.md`。
+| 用例 | v50 基线 | v51 | 变化 |
+|---|---:|---:|---:|
+| 4096×6144，39×39 | 13774.9 | 14138.1 | +2.64% |
+| 6144×4096，41×41 | 14147.4 | 14121.1 | −0.19% |
+| 4256×6390，55×55 | 14523.6 | 14553.9 | +0.21% |
+| 6390×4256，81×81 | 14341.4 | 14564.7 | +1.56% |
 
-## 核心思路
+主要改动：
 
-- FMOPA 外积对每个 ZA 元素恰是一次 fma，把卷积映射成外积序列并保持 (jk, ik) 行主序 → 逐位精确。
-  tile 行 ↔ 输出列（stride 4），tile 列 ↔ 4×4 kernel 偏移（16 列 tile 的 Minkowski 下界），步数 (KH+3)(KW+3)。
-- 输入行去交织成 4 个平面驻留 L2 环形缓冲；a 向量用对齐载入 + `ext` 生成；整个 pass 的 Y 循环在一段汇编里，
-  DRAM 预取、下一组的 ld4w 切片构建、已完成输出行的回写都作为块组末尾的附加工作与 fmopa 交错。
-- **边界行方案**：Y=0/1/KH+1/KH+2 只有少数列在干活，把它们从 fmopa 循环移出，对应的 (输出行, kernel 行) 对由与
-  fmopa 并发的索引 `fmla`（每 8 步 ≤ 3 个 8 条的半步）完成：前半算成 ZA 初值，后半在 pass 后续完。
-- 自有线程池（调用间自旋）、按 (列块, 4 行组) 静态划分 + relaxed CAS 窃取、按 pass 长度的按用例特化（预取层级、回写方式）。
+- K4 滚动尾核跳过为打包对齐而增加的全零系数计算步，保留原打包行距及有效项顺序。
+- 16 行滚动内核移除输出写预取及其地址计算。
+- 输入高度变化时重建线程任务划分，修复相同卷积核、相同宽度下漏算新增行的问题。
 
-## 目录
+验证：正数和正负混合输入各 166 项严格逐位比较、高度变化回归、题面编译命令及
+显式 `-march` 编译下的四例官方完整校验均通过。官方用例最大绝对误差为 **0**。
+41×41、55×55 的变化接近运行波动，应视为基本持平。
 
-- `conv2d.c` 实现；`bench_conv.c` 官方基准；`run.sh` 判题脚本（编译 + 四例）。
-- `tools/test_conv.c` 泛化位精确测试；`tools/fbench.c` 快速判题口径 bench（参考哈希缓存）；`tools/drv.c` 分相计时。
-- `probe/` 微架构探针；`jobs/` Donau 作业脚本（`validate_job.sh` 完整验证、`fbench_job.sh`、`accept_zip_job.sh`、
-  `prof_job.sh`/`diag_job.sh`/`brmis_job.sh` 深度 profile 与归因诊断、探针）。
-- `submissions/conv.zip` 提交包（`bash run.sh` 即可）；`NOTES.md` 完整笔记。
+未采用有损量化：BF16、FP16，甚至仅舍入掉 FP32 尾数最低一位，都在数值实验中超差。
+无损紧凑系数打包虽然正确且更省空间，实测更慢，也未采用。
+实验方法、失败方向及完整原始日志见 [v51 记录](docs/v51.md) 和 [历史笔记](NOTES.md)。
 
 ## 编译运行
 
 ```bash
-gcc -O3 -march=armv9-a+sme+sve2 -fopenmp bench_conv.c conv2d.c -o conv2d_test -lm   # 或题面的 gcc -O3 ...（文件内 pragma 打开 SME）
+gcc -O3 bench_conv.c conv2d.c -o conv2d_test -lm -fopenmp
 OMP_NUM_THREADS=38 numactl -N 1 ./conv2d_test 4096 6144 39 39 1
-gcc -O3 -march=armv9-a+sme+sve2 -fopenmp tools/fbench.c conv2d.c -o fbench -lm && OMP_NUM_THREADS=38 numactl -N 1 ./fbench 4096 6144 39 39 3
+bash run.sh
 ```
-运行期检测 SME（HWCAP2），没有 SME 或编译器不支持时自动退到 SVE/标量通用实现。
+
+`run.sh` 加载 HPCKit，优先使用 CPU 节点 5（回退 1、0），并在允许时选择邻近 HBM。
+这与上表固定 CPU 节点 1 的测量配置不同；复测时应保持线程、频率及内存放置一致。
+运行期检测 SME + FA64，无 SME 或编译器不支持时使用 SVE/标量通用实现。
+
+## 目录
+
+- `conv2d.c`：四例默认采用滚动 SME FMOPA + FMLA 内核；保留经典 SME 和通用实现。
+- `bench_conv.c`、`run.sh`：官方基准与提交入口。
+- `tools/test_conv.c`：泛化测试；`TEST_BITWISE=1` 启用严格逐位比较，`TEST_SIGNED=1` 使用正负输入。
+- `tools/fbench.c`：带参考哈希缓存的快速测试；最终验收仍使用官方完整参考。
+- `tools/quant_audit.c`、`tools/gen_v51.py`：量化可行性审计与可复现候选生成。
+- `jobs/`、`probe/`：Donau 作业脚本与微架构探针。
+- `results/v51/`：本轮服务器实测日志；`submissions/conv.zip`：正式提交包。
