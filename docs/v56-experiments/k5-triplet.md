@@ -106,5 +106,8 @@ Next isolate code-layout sensitivity of the four-chain pair with matched
 outlining/alignment controls on both baseline and K5, then inspect the main
 loop and tail cost under the same controls. Reassess K5 scheduling weights
 from executed, rather than padded, work if the matrix saving remains useful.
+The subsequent pull found upstream **87fa5d7**, which changes F4's long-row
+copy path; [review and validate its integration first](upstream-gate.md) before
+duplicating controls on an outdated base.
 Any later improvement must retain input boundaries and output ownership and
 pass the full acceptance sequence before replacing the root operator.
