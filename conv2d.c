@@ -2142,7 +2142,7 @@ static void roll_prepare(const float* k, long H, long W, long KH, long KW, int n
                 break;
             }
         }
-        P->pstart[nth] = np; P->npieces = np; P->pnth = nth;
+        P->pstart[nth] = np; P->npieces = np; P->pnth = nth; P->outH = outH;
     }
     if (P->nthr_alloc < nth) {
         free(P->rings); free(P->scratch);

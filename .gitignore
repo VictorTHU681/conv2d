@@ -4,6 +4,7 @@ build/
 *.out
 *.err
 refcache/
+__pycache__/
 # 探针/工具二进制（源码同名）
 probe/smef32
 probe/bw

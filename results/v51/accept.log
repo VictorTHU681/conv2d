@@ -1,0 +1,1104 @@
+HOST cn20493 2026-09-12T14:27:51+08:00
+pid 4082043's current affinity list: 37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+PLACEMENT cpu_node=1 hbm_node=17
+Cpus_allowed_list:	37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+Mems_allowed_list:	0-31
+1549645
+policy: default
+preferred node: current
+physcpubind: 37 75 113 151 189 227 265 303 341 379 417 455 493 531 569 607 
+cpubind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+nodebind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 
+preferred: 
+EFFECTIVE_PLACEMENT
+policy: preferred
+preferred node: 17
+physcpubind: 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 
+cpubind: 1 
+nodebind: 1 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 
+preferred: 17 
+threads=38 samples_per_case=256 tol=1e-5 reference=ordered_fmaf
+k=39 mode=bf16 operands=kernel failed=256/256 max_abs_error=0.0493469238
+k=39 mode=mantissa10 operands=kernel failed=254/256 max_abs_error=0.00387573242
+k=39 mode=mantissa16 operands=kernel failed=227/256 max_abs_error=0.000305175781
+k=39 mode=mantissa20 operands=kernel failed=148/256 max_abs_error=9.15527344e-05
+k=39 mode=mantissa22 operands=kernel failed=76/256 max_abs_error=6.10351562e-05
+k=39 mode=fp16 operands=kernel failed=254/256 max_abs_error=0.00387573242
+k=39 mode=bf16 operands=both failed=256/256 max_abs_error=0.0854797363
+k=39 mode=mantissa10 operands=both failed=254/256 max_abs_error=0.00698852539
+k=39 mode=mantissa16 operands=both failed=228/256 max_abs_error=0.000457763672
+k=39 mode=mantissa20 operands=both failed=168/256 max_abs_error=0.000122070312
+k=39 mode=mantissa22 operands=both failed=101/256 max_abs_error=6.10351562e-05
+k=39 mode=fp16 operands=both failed=254/256 max_abs_error=0.00698852539
+k=41 mode=bf16 operands=kernel failed=256/256 max_abs_error=0.0596923828
+k=41 mode=mantissa10 operands=kernel failed=255/256 max_abs_error=0.00570678711
+k=41 mode=mantissa16 operands=kernel failed=228/256 max_abs_error=0.000396728516
+k=41 mode=mantissa20 operands=kernel failed=176/256 max_abs_error=0.000122070312
+k=41 mode=mantissa22 operands=kernel failed=103/256 max_abs_error=6.10351562e-05
+k=41 mode=fp16 operands=kernel failed=255/256 max_abs_error=0.00570678711
+k=41 mode=bf16 operands=both failed=256/256 max_abs_error=0.0830993652
+k=41 mode=mantissa10 operands=both failed=256/256 max_abs_error=0.00872802734
+k=41 mode=mantissa16 operands=both failed=239/256 max_abs_error=0.000549316406
+k=41 mode=mantissa20 operands=both failed=160/256 max_abs_error=0.000152587891
+k=41 mode=mantissa22 operands=both failed=124/256 max_abs_error=9.15527344e-05
+k=41 mode=fp16 operands=both failed=256/256 max_abs_error=0.00872802734
+k=55 mode=bf16 operands=kernel failed=256/256 max_abs_error=0.0705566406
+k=55 mode=mantissa10 operands=kernel failed=251/256 max_abs_error=0.00671386719
+k=55 mode=mantissa16 operands=kernel failed=232/256 max_abs_error=0.000793457031
+k=55 mode=mantissa20 operands=kernel failed=151/256 max_abs_error=0.000183105469
+k=55 mode=mantissa22 operands=kernel failed=85/256 max_abs_error=0.000183105469
+k=55 mode=fp16 operands=kernel failed=251/256 max_abs_error=0.00671386719
+k=55 mode=bf16 operands=both failed=256/256 max_abs_error=0.112792969
+k=55 mode=mantissa10 operands=both failed=253/256 max_abs_error=0.0111083984
+k=55 mode=mantissa16 operands=both failed=230/256 max_abs_error=0.000854492188
+k=55 mode=mantissa20 operands=both failed=183/256 max_abs_error=0.000244140625
+k=55 mode=mantissa22 operands=both failed=108/256 max_abs_error=0.000183105469
+k=55 mode=fp16 operands=both failed=253/256 max_abs_error=0.0111083984
+k=81 mode=bf16 operands=kernel failed=256/256 max_abs_error=0.0987548828
+k=81 mode=mantissa10 operands=kernel failed=252/256 max_abs_error=0.0102539062
+k=81 mode=mantissa16 operands=kernel failed=234/256 max_abs_error=0.00158691406
+k=81 mode=mantissa20 operands=kernel failed=165/256 max_abs_error=0.00048828125
+k=81 mode=mantissa22 operands=kernel failed=83/256 max_abs_error=0.000366210938
+k=81 mode=fp16 operands=kernel failed=252/256 max_abs_error=0.0102539062
+k=81 mode=bf16 operands=both failed=256/256 max_abs_error=0.190673828
+k=81 mode=mantissa10 operands=both failed=254/256 max_abs_error=0.0179443359
+k=81 mode=mantissa16 operands=both failed=226/256 max_abs_error=0.00183105469
+k=81 mode=mantissa20 operands=both failed=174/256 max_abs_error=0.00048828125
+k=81 mode=mantissa22 operands=both failed=117/256 max_abs_error=0.00048828125
+k=81 mode=fp16 operands=both failed=254/256 max_abs_error=0.0179443359
+GENERALIZE baseline
+     1 x   1  k   1 x  1 : ok  maxerr 0  bad 0/1  bitdiff 0
+     5 x   5  k   5 x  5 : ok  maxerr 0  bad 0/1  bitdiff 0
+     5 x 300  k   1 x  1 : ok  maxerr 0  bad 0/1500  bitdiff 0
+   300 x   5  k   1 x  1 : ok  maxerr 0  bad 0/1500  bitdiff 0
+    64 x  64  k   3 x  3 : ok  maxerr 0  bad 0/3844  bitdiff 0
+    70 x 600  k   7 x  7 : ok  maxerr 0  bad 0/38016  bitdiff 0
+     4 x1100  k   1 x 40 : ok  maxerr 0  bad 0/4244  bitdiff 0
+    45 x  45  k  41 x 41 : ok  maxerr 0  bad 0/25  bitdiff 0
+   100 x1200  k  39 x 39 : ok  maxerr 0  bad 0/72044  bitdiff 0
+   300 x 700  k  39 x 39 : ok  maxerr 0  bad 0/173444  bitdiff 0
+   200 x2100  k  81 x 81 : ok  maxerr 0  bad 0/242400  bitdiff 0
+   130 x 530  k   5 x 81 : ok  maxerr 0  bad 0/56700  bitdiff 0
+   130 x 530  k  81 x  5 : ok  maxerr 0  bad 0/26300  bitdiff 0
+    17 x1030  k   3 x  9 : ok  maxerr 0  bad 0/15330  bitdiff 0
+  1030 x  17  k   9 x  3 : ok  maxerr 0  bad 0/15330  bitdiff 0
+    90 x 320  k   2 x  2 : ok  maxerr 0  bad 0/28391  bitdiff 0
+ALL PASS: 56/56 通过
+GENERALIZE k4tail
+     1 x   1  k   1 x  1 : ok  maxerr 0  bad 0/1  bitdiff 0
+     5 x   5  k   5 x  5 : ok  maxerr 0  bad 0/1  bitdiff 0
+     5 x 300  k   1 x  1 : ok  maxerr 0  bad 0/1500  bitdiff 0
+   300 x   5  k   1 x  1 : ok  maxerr 0  bad 0/1500  bitdiff 0
+    64 x  64  k   3 x  3 : ok  maxerr 0  bad 0/3844  bitdiff 0
+    70 x 600  k   7 x  7 : ok  maxerr 0  bad 0/38016  bitdiff 0
+     4 x1100  k   1 x 40 : ok  maxerr 0  bad 0/4244  bitdiff 0
+    45 x  45  k  41 x 41 : ok  maxerr 0  bad 0/25  bitdiff 0
+   100 x1200  k  39 x 39 : ok  maxerr 0  bad 0/72044  bitdiff 0
+   300 x 700  k  39 x 39 : ok  maxerr 0  bad 0/173444  bitdiff 0
+   200 x2100  k  81 x 81 : ok  maxerr 0  bad 0/242400  bitdiff 0
+   130 x 530  k   5 x 81 : ok  maxerr 0  bad 0/56700  bitdiff 0
+   130 x 530  k  81 x  5 : ok  maxerr 0  bad 0/26300  bitdiff 0
+    17 x1030  k   3 x  9 : ok  maxerr 0  bad 0/15330  bitdiff 0
+  1030 x  17  k   9 x  3 : ok  maxerr 0  bad 0/15330  bitdiff 0
+    90 x 320  k   2 x  2 : ok  maxerr 0  bad 0/28391  bitdiff 0
+ALL PASS: 56/56 通过
+GENERALIZE nopfo_clean
+     1 x   1  k   1 x  1 : ok  maxerr 0  bad 0/1  bitdiff 0
+     5 x   5  k   5 x  5 : ok  maxerr 0  bad 0/1  bitdiff 0
+     5 x 300  k   1 x  1 : ok  maxerr 0  bad 0/1500  bitdiff 0
+   300 x   5  k   1 x  1 : ok  maxerr 0  bad 0/1500  bitdiff 0
+    64 x  64  k   3 x  3 : ok  maxerr 0  bad 0/3844  bitdiff 0
+    70 x 600  k   7 x  7 : ok  maxerr 0  bad 0/38016  bitdiff 0
+     4 x1100  k   1 x 40 : ok  maxerr 0  bad 0/4244  bitdiff 0
+    45 x  45  k  41 x 41 : ok  maxerr 0  bad 0/25  bitdiff 0
+   100 x1200  k  39 x 39 : ok  maxerr 0  bad 0/72044  bitdiff 0
+   300 x 700  k  39 x 39 : ok  maxerr 0  bad 0/173444  bitdiff 0
+   200 x2100  k  81 x 81 : ok  maxerr 0  bad 0/242400  bitdiff 0
+   130 x 530  k   5 x 81 : ok  maxerr 0  bad 0/56700  bitdiff 0
+   130 x 530  k  81 x  5 : ok  maxerr 0  bad 0/26300  bitdiff 0
+    17 x1030  k   3 x  9 : ok  maxerr 0  bad 0/15330  bitdiff 0
+  1030 x  17  k   9 x  3 : ok  maxerr 0  bad 0/15330  bitdiff 0
+    90 x 320  k   2 x  2 : ok  maxerr 0  bad 0/28391  bitdiff 0
+ALL PASS: 56/56 通过
+GENERALIZE combo
+     1 x   1  k   1 x  1 : ok  maxerr 0  bad 0/1  bitdiff 0
+     5 x   5  k   5 x  5 : ok  maxerr 0  bad 0/1  bitdiff 0
+     5 x 300  k   1 x  1 : ok  maxerr 0  bad 0/1500  bitdiff 0
+   300 x   5  k   1 x  1 : ok  maxerr 0  bad 0/1500  bitdiff 0
+    64 x  64  k   3 x  3 : ok  maxerr 0  bad 0/3844  bitdiff 0
+    70 x 600  k   7 x  7 : ok  maxerr 0  bad 0/38016  bitdiff 0
+     4 x1100  k   1 x 40 : ok  maxerr 0  bad 0/4244  bitdiff 0
+    45 x  45  k  41 x 41 : ok  maxerr 0  bad 0/25  bitdiff 0
+   100 x1200  k  39 x 39 : ok  maxerr 0  bad 0/72044  bitdiff 0
+   300 x 700  k  39 x 39 : ok  maxerr 0  bad 0/173444  bitdiff 0
+   200 x2100  k  81 x 81 : ok  maxerr 0  bad 0/242400  bitdiff 0
+   130 x 530  k   5 x 81 : ok  maxerr 0  bad 0/56700  bitdiff 0
+   130 x 530  k  81 x  5 : ok  maxerr 0  bad 0/26300  bitdiff 0
+    17 x1030  k   3 x  9 : ok  maxerr 0  bad 0/15330  bitdiff 0
+  1030 x  17  k   9 x  3 : ok  maxerr 0  bad 0/15330  bitdiff 0
+    90 x 320  k   2 x  2 : ok  maxerr 0  bad 0/28391  bitdiff 0
+ALL PASS: 56/56 通过
+GENERALIZE combo_preload
+     1 x   1  k   1 x  1 : ok  maxerr 0  bad 0/1  bitdiff 0
+     5 x   5  k   5 x  5 : ok  maxerr 0  bad 0/1  bitdiff 0
+     5 x 300  k   1 x  1 : ok  maxerr 0  bad 0/1500  bitdiff 0
+   300 x   5  k   1 x  1 : ok  maxerr 0  bad 0/1500  bitdiff 0
+    64 x  64  k   3 x  3 : ok  maxerr 0  bad 0/3844  bitdiff 0
+    70 x 600  k   7 x  7 : ok  maxerr 0  bad 0/38016  bitdiff 0
+     4 x1100  k   1 x 40 : ok  maxerr 0  bad 0/4244  bitdiff 0
+    45 x  45  k  41 x 41 : ok  maxerr 0  bad 0/25  bitdiff 0
+   100 x1200  k  39 x 39 : ok  maxerr 0  bad 0/72044  bitdiff 0
+   300 x 700  k  39 x 39 : ok  maxerr 0  bad 0/173444  bitdiff 0
+   200 x2100  k  81 x 81 : ok  maxerr 0  bad 0/242400  bitdiff 0
+   130 x 530  k   5 x 81 : ok  maxerr 0  bad 0/56700  bitdiff 0
+   130 x 530  k  81 x  5 : ok  maxerr 0  bad 0/26300  bitdiff 0
+    17 x1030  k   3 x  9 : ok  maxerr 0  bad 0/15330  bitdiff 0
+  1030 x  17  k   9 x  3 : ok  maxerr 0  bad 0/15330  bitdiff 0
+    90 x 320  k   2 x  2 : ok  maxerr 0  bad 0/28391  bitdiff 0
+ALL PASS: 56/56 通过
+HEIGHT_REUSE_BASELINE_EXPECT_FAIL
+     1 x   1  k   1 x  1 : ok  maxerr 0  bad 0/1  bitdiff 0
+     5 x   5  k   5 x  5 : ok  maxerr 0  bad 0/1  bitdiff 0
+     5 x 300  k   1 x  1 : ok  maxerr 0  bad 0/1500  bitdiff 0
+   300 x   5  k   1 x  1 : ok  maxerr 0  bad 0/1500  bitdiff 0
+    64 x  64  k   3 x  3 : ok  maxerr 0  bad 0/3844  bitdiff 0
+    70 x 600  k   7 x  7 : ok  maxerr 0  bad 0/38016  bitdiff 0
+     4 x1100  k   1 x 40 : ok  maxerr 0  bad 0/4244  bitdiff 0
+    45 x  45  k  41 x 41 : ok  maxerr 0  bad 0/25  bitdiff 0
+   100 x1200  k  39 x 39 : ok  maxerr 0  bad 0/72044  bitdiff 0
+   300 x 700  k  39 x 39 : ok  maxerr 0  bad 0/173444  bitdiff 0
+   200 x2100  k  81 x 81 : ok  maxerr 0  bad 0/242400  bitdiff 0
+   130 x 530  k   5 x 81 : ok  maxerr 0  bad 0/56700  bitdiff 0
+   130 x 530  k  81 x  5 : ok  maxerr 0  bad 0/26300  bitdiff 0
+    17 x1030  k   3 x  9 : ok  maxerr 0  bad 0/15330  bitdiff 0
+  1030 x  17  k   9 x  3 : ok  maxerr 0  bad 0/15330  bitdiff 0
+    90 x 320  k   2 x  2 : ok  maxerr 0  bad 0/28391  bitdiff 0
+   100 x1200  k  81 x 81 : ok  maxerr 0  bad 0/22400  bitdiff 0
+    mismatch @22400 (20,0): ref 1636.6704 got 7
+    mismatch @22401 (20,1): ref 1631.3672 got 7
+    mismatch @22402 (20,2): ref 1619.7942 got 7
+   104 x1200  k  81 x 81 : FAIL  maxerr 1.67e+03  bad 4480/26880  bitdiff 4480
+    mismatch @22400 (20,0): ref 1636.6704 got 7
+    mismatch @22401 (20,1): ref 1631.3672 got 7
+    mismatch @22402 (20,2): ref 1619.7942 got 7
+   108 x1200  k  81 x 81 : FAIL  maxerr 1.67e+03  bad 8960/31360  bitdiff 8960
+SOME FAIL: 17/19 通过
+HEIGHT_REUSE_FIXED
+     1 x   1  k   1 x  1 : ok  maxerr 0  bad 0/1  bitdiff 0
+     5 x   5  k   5 x  5 : ok  maxerr 0  bad 0/1  bitdiff 0
+     5 x 300  k   1 x  1 : ok  maxerr 0  bad 0/1500  bitdiff 0
+   300 x   5  k   1 x  1 : ok  maxerr 0  bad 0/1500  bitdiff 0
+    64 x  64  k   3 x  3 : ok  maxerr 0  bad 0/3844  bitdiff 0
+    70 x 600  k   7 x  7 : ok  maxerr 0  bad 0/38016  bitdiff 0
+     4 x1100  k   1 x 40 : ok  maxerr 0  bad 0/4244  bitdiff 0
+    45 x  45  k  41 x 41 : ok  maxerr 0  bad 0/25  bitdiff 0
+   100 x1200  k  39 x 39 : ok  maxerr 0  bad 0/72044  bitdiff 0
+   300 x 700  k  39 x 39 : ok  maxerr 0  bad 0/173444  bitdiff 0
+   200 x2100  k  81 x 81 : ok  maxerr 0  bad 0/242400  bitdiff 0
+   130 x 530  k   5 x 81 : ok  maxerr 0  bad 0/56700  bitdiff 0
+   130 x 530  k  81 x  5 : ok  maxerr 0  bad 0/26300  bitdiff 0
+    17 x1030  k   3 x  9 : ok  maxerr 0  bad 0/15330  bitdiff 0
+  1030 x  17  k   9 x  3 : ok  maxerr 0  bad 0/15330  bitdiff 0
+    90 x 320  k   2 x  2 : ok  maxerr 0  bad 0/28391  bitdiff 0
+   100 x1200  k  81 x 81 : ok  maxerr 0  bad 0/22400  bitdiff 0
+   104 x1200  k  81 x 81 : ok  maxerr 0  bad 0/26880  bitdiff 0
+   108 x1200  k  81 x 81 : ok  maxerr 0  bad 0/31360  bitdiff 0
+ALL PASS: 59/59 通过
+SIGNED_BITWISE_FIXED
+     1 x   1  k   1 x  1 : ok  maxerr 0  bad 0/1  bitdiff 0
+     5 x   5  k   5 x  5 : ok  maxerr 0  bad 0/1  bitdiff 0
+     5 x 300  k   1 x  1 : ok  maxerr 0  bad 0/1500  bitdiff 0
+   300 x   5  k   1 x  1 : ok  maxerr 0  bad 0/1500  bitdiff 0
+    64 x  64  k   3 x  3 : ok  maxerr 0  bad 0/3844  bitdiff 0
+    70 x 600  k   7 x  7 : ok  maxerr 0  bad 0/38016  bitdiff 0
+     4 x1100  k   1 x 40 : ok  maxerr 0  bad 0/4244  bitdiff 0
+    45 x  45  k  41 x 41 : ok  maxerr 0  bad 0/25  bitdiff 0
+   100 x1200  k  39 x 39 : ok  maxerr 0  bad 0/72044  bitdiff 0
+   300 x 700  k  39 x 39 : ok  maxerr 0  bad 0/173444  bitdiff 0
+   200 x2100  k  81 x 81 : ok  maxerr 0  bad 0/242400  bitdiff 0
+   130 x 530  k   5 x 81 : ok  maxerr 0  bad 0/56700  bitdiff 0
+   130 x 530  k  81 x  5 : ok  maxerr 0  bad 0/26300  bitdiff 0
+    17 x1030  k   3 x  9 : ok  maxerr 0  bad 0/15330  bitdiff 0
+  1030 x  17  k   9 x  3 : ok  maxerr 0  bad 0/15330  bitdiff 0
+    90 x 320  k   2 x  2 : ok  maxerr 0  bad 0/28391  bitdiff 0
+ALL PASS: 56/56 通过
+OFFICIAL_BASELINE 4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.62   13410.1117     0.00e+00     PASS
+MEASURE round=1 variant=baseline shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.471 ms    13778.2 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.438 ms    13861.4 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.430 ms    13881.8 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.459 ms    13808.1 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.442 ms    13849.5 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.430 ms    13881.8 GFLOPS | avg    5.448 ms    13835.7 GFLOPS  PASS
+MEASURE round=1 variant=k4tail shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.333 ms    14135.0 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.352 ms    14083.1 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.349 ms    14090.5 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.391 ms    13981.7 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.578 ms    13512.4 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.333 ms    14135.0 GFLOPS | avg    5.401 ms    13956.7 GFLOPS  PASS
+MEASURE round=1 variant=nopfo_clean shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    6.126 ms    12303.4 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.454 ms    13820.4 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.457 ms    13812.2 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.489 ms    13731.0 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.499 ms    13706.4 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.454 ms    13820.4 GFLOPS | avg    5.605 ms    13447.3 GFLOPS  PASS
+MEASURE round=1 variant=combo shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.364 ms    14052.2 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.365 ms    14048.5 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.356 ms    14073.6 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.369 ms    14037.7 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.348 ms    14094.4 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.348 ms    14094.4 GFLOPS | avg    5.360 ms    14061.2 GFLOPS  PASS
+MEASURE round=1 variant=combo_preload shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.378 ms    14016.4 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.415 ms    13920.3 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.356 ms    14074.3 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.374 ms    14026.7 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.372 ms    14031.3 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.356 ms    14074.3 GFLOPS | avg    5.379 ms    14013.6 GFLOPS  PASS
+MEASURE round=2 variant=combo_preload shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.392 ms    13979.7 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.370 ms    14035.5 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.381 ms    14007.5 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.391 ms    13982.6 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.381 ms    14006.9 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.370 ms    14035.5 GFLOPS | avg    5.383 ms    14002.4 GFLOPS  PASS
+MEASURE round=2 variant=combo shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.357 ms    14071.2 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.381 ms    14007.7 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.357 ms    14070.8 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.345 ms    14101.5 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.344 ms    14104.9 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.344 ms    14104.9 GFLOPS | avg    5.357 ms    14071.1 GFLOPS  PASS
+MEASURE round=2 variant=nopfo_clean shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.459 ms    13807.3 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.459 ms    13806.9 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.456 ms    13815.1 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.454 ms    13820.4 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.444 ms    13846.7 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.444 ms    13846.7 GFLOPS | avg    5.454 ms    13819.3 GFLOPS  PASS
+MEASURE round=2 variant=k4tail shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.359 ms    14065.5 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.361 ms    14058.7 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.364 ms    14052.1 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.372 ms    14029.9 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.363 ms    14054.2 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.359 ms    14065.5 GFLOPS | avg    5.364 ms    14052.1 GFLOPS  PASS
+MEASURE round=2 variant=baseline shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.523 ms    13647.5 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.456 ms    13816.0 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.433 ms    13872.7 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.552 ms    13575.9 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.563 ms    13548.4 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.433 ms    13872.7 GFLOPS | avg    5.505 ms    13690.9 GFLOPS  PASS
+MEASURE round=3 variant=baseline shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.460 ms    13805.4 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.439 ms    13859.4 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.434 ms    13870.6 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.432 ms    13874.9 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.518 ms    13660.2 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.432 ms    13874.9 GFLOPS | avg    5.457 ms    13813.6 GFLOPS  PASS
+MEASURE round=3 variant=k4tail shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.372 ms    14030.9 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.409 ms    13936.1 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.352 ms    14084.4 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.400 ms    13957.6 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.362 ms    14057.1 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.352 ms    14084.4 GFLOPS | avg    5.379 ms    14013.0 GFLOPS  PASS
+MEASURE round=3 variant=nopfo_clean shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.435 ms    13868.9 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.449 ms    13832.2 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.438 ms    13861.5 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.463 ms    13796.9 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.456 ms    13815.6 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.435 ms    13868.9 GFLOPS | avg    5.448 ms    13835.0 GFLOPS  PASS
+MEASURE round=3 variant=combo shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.328 ms    14147.6 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.324 ms    14158.6 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.325 ms    14154.6 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.328 ms    14145.8 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.332 ms    14136.5 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.324 ms    14158.6 GFLOPS | avg    5.327 ms    14148.6 GFLOPS  PASS
+MEASURE round=3 variant=combo_preload shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.908 ms    12758.1 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.361 ms    14059.0 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.364 ms    14051.7 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.365 ms    14049.9 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.372 ms    14030.9 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.361 ms    14059.0 GFLOPS | avg    5.474 ms    13769.5 GFLOPS  PASS
+OFFICIAL_BASELINE 6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.86   14207.1784     0.00e+00     PASS
+MEASURE round=1 variant=baseline shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    5.889 ms    14134.0 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    5.860 ms    14204.5 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    5.869 ms    14182.9 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    5.860 ms    14203.5 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    5.892 ms    14126.8 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.860 ms    14204.5 GFLOPS | avg    5.874 ms    14170.3 GFLOPS  PASS
+MEASURE round=1 variant=k4tail shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    5.860 ms    14204.1 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    5.863 ms    14196.1 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    5.861 ms    14201.0 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    5.866 ms    14188.8 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    5.864 ms    14194.3 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.860 ms    14204.1 GFLOPS | avg    5.863 ms    14196.8 GFLOPS  PASS
+MEASURE round=1 variant=nopfo_clean shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    5.848 ms    14232.2 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    5.855 ms    14215.8 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    5.848 ms    14234.2 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    5.866 ms    14189.0 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    5.909 ms    14086.9 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.848 ms    14234.2 GFLOPS | avg    5.865 ms    14191.4 GFLOPS  PASS
+MEASURE round=1 variant=combo shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    5.836 ms    14262.2 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    6.080 ms    13690.7 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    5.851 ms    14225.6 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    5.863 ms    14197.9 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    5.889 ms    14133.1 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.836 ms    14262.2 GFLOPS | avg    5.904 ms    14098.7 GFLOPS  PASS
+MEASURE round=1 variant=combo_preload shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    5.863 ms    14196.6 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    5.870 ms    14180.3 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    5.845 ms    14241.1 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    5.822 ms    14296.6 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    6.134 ms    13570.4 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.822 ms    14296.6 GFLOPS | avg    5.907 ms    14091.8 GFLOPS  PASS
+MEASURE round=2 variant=combo_preload shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    5.856 ms    14213.3 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    5.830 ms    14277.4 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    5.846 ms    14239.2 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    5.867 ms    14186.2 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    5.835 ms    14264.3 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.830 ms    14277.4 GFLOPS | avg    5.847 ms    14236.0 GFLOPS  PASS
+MEASURE round=2 variant=combo shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    5.961 ms    13964.4 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    5.954 ms    13979.9 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    5.981 ms    13916.0 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    5.960 ms    13964.8 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    6.048 ms    13762.6 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.954 ms    13979.9 GFLOPS | avg    5.981 ms    13917.1 GFLOPS  PASS
+MEASURE round=2 variant=nopfo_clean shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    5.824 ms    14293.0 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    5.816 ms    14311.9 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    5.837 ms    14259.8 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    5.835 ms    14266.1 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    6.009 ms    13852.0 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.816 ms    14311.9 GFLOPS | avg    5.864 ms    14194.4 GFLOPS  PASS
+MEASURE round=2 variant=k4tail shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    5.857 ms    14212.4 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    5.860 ms    14205.0 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    5.858 ms    14208.0 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    5.920 ms    14060.2 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    5.862 ms    14199.9 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.857 ms    14212.4 GFLOPS | avg    5.871 ms    14176.9 GFLOPS  PASS
+MEASURE round=2 variant=baseline shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    5.855 ms    14217.0 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    5.875 ms    14167.2 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    5.889 ms    14133.4 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    5.856 ms    14212.9 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    5.852 ms    14224.1 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.852 ms    14224.1 GFLOPS | avg    5.865 ms    14190.8 GFLOPS  PASS
+MEASURE round=3 variant=baseline shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    5.874 ms    14171.3 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    5.979 ms    13920.6 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    5.877 ms    14162.8 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    5.870 ms    14179.7 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    5.861 ms    14201.6 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.861 ms    14201.6 GFLOPS | avg    5.892 ms    14126.4 GFLOPS  PASS
+MEASURE round=3 variant=k4tail shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    5.885 ms    14143.6 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    5.860 ms    14203.5 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    5.886 ms    14142.0 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    5.881 ms    14152.2 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    5.868 ms    14185.9 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.860 ms    14203.5 GFLOPS | avg    5.876 ms    14165.4 GFLOPS  PASS
+MEASURE round=3 variant=nopfo_clean shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    6.351 ms    13105.4 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    5.820 ms    14301.0 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    5.833 ms    14270.4 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    5.889 ms    14133.3 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    5.820 ms    14302.5 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.820 ms    14302.5 GFLOPS | avg    5.943 ms    14006.5 GFLOPS  PASS
+MEASURE round=3 variant=combo shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    5.861 ms    14201.5 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    5.857 ms    14210.8 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    5.853 ms    14220.5 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    5.921 ms    14057.1 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    5.856 ms    14213.9 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.853 ms    14220.5 GFLOPS | avg    5.870 ms    14180.5 GFLOPS  PASS
+MEASURE round=3 variant=combo_preload shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    5.870 ms    14178.7 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    5.860 ms    14204.3 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    5.898 ms    14112.2 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    5.864 ms    14194.2 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    5.853 ms    14221.6 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.853 ms    14221.6 GFLOPS | avg    5.869 ms    14182.1 GFLOPS  PASS
+OFFICIAL_BASELINE 4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.08   14530.9139     0.00e+00     PASS
+MEASURE round=1 variant=baseline shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.092 ms    14522.2 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.121 ms    14484.2 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.126 ms    14477.9 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.124 ms    14480.4 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.105 ms    14504.7 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.092 ms    14522.2 GFLOPS | avg   11.113 ms    14493.9 GFLOPS  PASS
+MEASURE round=1 variant=k4tail shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.103 ms    14506.7 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.111 ms    14497.4 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.118 ms    14487.2 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.114 ms    14493.4 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.113 ms    14493.9 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.103 ms    14506.7 GFLOPS | avg   11.112 ms    14495.7 GFLOPS  PASS
+MEASURE round=1 variant=nopfo_clean shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.057 ms    14567.7 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.085 ms    14531.5 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.115 ms    14491.6 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.096 ms    14516.0 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.092 ms    14521.2 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.057 ms    14567.7 GFLOPS | avg   11.089 ms    14525.6 GFLOPS  PASS
+MEASURE round=1 variant=combo shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.081 ms    14535.6 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.082 ms    14535.0 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.092 ms    14522.1 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.173 ms    14415.8 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.088 ms    14526.4 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.081 ms    14535.6 GFLOPS | avg   11.103 ms    14506.8 GFLOPS  PASS
+MEASURE round=1 variant=combo_preload shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.075 ms    14544.2 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.088 ms    14527.5 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.302 ms    14251.3 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.068 ms    14553.4 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.057 ms    14567.3 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.057 ms    14567.3 GFLOPS | avg   11.118 ms    14487.7 GFLOPS  PASS
+MEASURE round=2 variant=combo_preload shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.080 ms    14537.9 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.087 ms    14528.5 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.066 ms    14555.9 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.072 ms    14547.6 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.105 ms    14504.2 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.066 ms    14555.9 GFLOPS | avg   11.082 ms    14534.8 GFLOPS  PASS
+MEASURE round=2 variant=combo shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.069 ms    14551.4 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.443 ms    14076.3 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.082 ms    14534.6 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.077 ms    14540.8 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.073 ms    14546.7 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.069 ms    14551.4 GFLOPS | avg   11.149 ms    14447.5 GFLOPS  PASS
+MEASURE round=2 variant=nopfo_clean shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.077 ms    14541.8 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.099 ms    14512.5 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.083 ms    14533.7 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.091 ms    14523.3 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.087 ms    14528.4 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.077 ms    14541.8 GFLOPS | avg   11.087 ms    14527.9 GFLOPS  PASS
+MEASURE round=2 variant=k4tail shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.098 ms    14514.3 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.104 ms    14506.3 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.104 ms    14505.5 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.094 ms    14519.1 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.093 ms    14520.4 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.093 ms    14520.4 GFLOPS | avg   11.099 ms    14513.1 GFLOPS  PASS
+MEASURE round=2 variant=baseline shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.104 ms    14505.5 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.113 ms    14494.2 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.117 ms    14489.5 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.122 ms    14482.7 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.118 ms    14488.3 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.104 ms    14505.5 GFLOPS | avg   11.115 ms    14492.0 GFLOPS  PASS
+MEASURE round=3 variant=baseline shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.093 ms    14520.4 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.102 ms    14509.2 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.102 ms    14508.9 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.097 ms    14514.7 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.097 ms    14514.7 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.093 ms    14520.4 GFLOPS | avg   11.098 ms    14513.6 GFLOPS  PASS
+MEASURE round=3 variant=k4tail shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.093 ms    14520.8 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.111 ms    14497.2 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.328 ms    14218.9 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.100 ms    14510.8 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.093 ms    14520.5 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.093 ms    14520.8 GFLOPS | avg   11.145 ms    14452.7 GFLOPS  PASS
+MEASURE round=3 variant=nopfo_clean shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.090 ms    14524.5 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.098 ms    14513.3 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.097 ms    14514.6 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.712 ms    13752.5 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.102 ms    14508.4 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.090 ms    14524.5 GFLOPS | avg   11.220 ms    14356.0 GFLOPS  PASS
+MEASURE round=3 variant=combo shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.069 ms    14551.8 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.065 ms    14556.5 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.070 ms    14550.3 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.072 ms    14547.5 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.068 ms    14552.7 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.065 ms    14556.5 GFLOPS | avg   11.069 ms    14551.8 GFLOPS  PASS
+MEASURE round=3 variant=combo_preload shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.085 ms    14531.4 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.073 ms    14546.1 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.068 ms    14553.5 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.080 ms    14537.9 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.068 ms    14553.4 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.068 ms    14553.5 GFLOPS | avg   11.075 ms    14544.5 GFLOPS  PASS
+OFFICIAL_BASELINE 6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        24.09   14353.9153     0.00e+00     PASS
+MEASURE round=1 variant=baseline shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   24.535 ms    14093.0 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   24.480 ms    14124.6 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   24.611 ms    14049.7 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   24.517 ms    14103.1 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   26.483 ms    13056.3 GFLOPS PASS
+  6390 x  4256     81 x    81 best   24.480 ms    14124.6 GFLOPS | avg   24.925 ms    13872.4 GFLOPS  PASS
+MEASURE round=1 variant=k4tail shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   24.398 ms    14172.3 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   24.380 ms    14182.4 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   24.321 ms    14217.2 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   24.427 ms    14155.4 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   24.934 ms    13867.3 GFLOPS PASS
+  6390 x  4256     81 x    81 best   24.321 ms    14217.2 GFLOPS | avg   24.492 ms    14117.7 GFLOPS  PASS
+MEASURE round=1 variant=nopfo_clean shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   23.818 ms    14517.1 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   23.827 ms    14511.5 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   24.461 ms    14135.6 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   23.831 ms    14509.5 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   23.829 ms    14510.8 GFLOPS PASS
+  6390 x  4256     81 x    81 best   23.818 ms    14517.1 GFLOPS | avg   23.953 ms    14435.3 GFLOPS  PASS
+MEASURE round=1 variant=combo shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   23.722 ms    14575.8 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   23.845 ms    14500.6 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   23.744 ms    14562.6 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   23.736 ms    14567.5 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   23.877 ms    14481.3 GFLOPS PASS
+  6390 x  4256     81 x    81 best   23.722 ms    14575.8 GFLOPS | avg   23.785 ms    14537.5 GFLOPS  PASS
+MEASURE round=1 variant=combo_preload shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   23.687 ms    14597.2 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   23.697 ms    14591.3 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   23.721 ms    14576.9 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   23.835 ms    14506.9 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   23.715 ms    14580.6 GFLOPS PASS
+  6390 x  4256     81 x    81 best   23.687 ms    14597.2 GFLOPS | avg   23.731 ms    14570.5 GFLOPS  PASS
+MEASURE round=2 variant=combo_preload shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   24.082 ms    14358.2 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   24.115 ms    14338.6 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   24.637 ms    14034.5 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   24.087 ms    14355.1 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   24.066 ms    14367.4 GFLOPS PASS
+  6390 x  4256     81 x    81 best   24.066 ms    14367.4 GFLOPS | avg   24.197 ms    14289.6 GFLOPS  PASS
+MEASURE round=2 variant=combo shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   23.737 ms    14566.8 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   23.767 ms    14548.6 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   23.765 ms    14549.5 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   23.770 ms    14546.4 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   23.770 ms    14546.8 GFLOPS PASS
+  6390 x  4256     81 x    81 best   23.737 ms    14566.8 GFLOPS | avg   23.762 ms    14551.6 GFLOPS  PASS
+MEASURE round=2 variant=nopfo_clean shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   23.719 ms    14577.8 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   23.779 ms    14540.8 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   23.772 ms    14545.6 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   23.763 ms    14550.9 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   24.279 ms    14241.8 GFLOPS PASS
+  6390 x  4256     81 x    81 best   23.719 ms    14577.8 GFLOPS | avg   23.862 ms    14490.3 GFLOPS  PASS
+MEASURE round=2 variant=k4tail shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   24.026 ms    14391.5 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   24.069 ms    14366.1 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   24.432 ms    14152.6 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   24.101 ms    14347.1 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   24.091 ms    14352.5 GFLOPS PASS
+  6390 x  4256     81 x    81 best   24.026 ms    14391.5 GFLOPS | avg   24.144 ms    14321.4 GFLOPS  PASS
+MEASURE round=2 variant=baseline shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   24.029 ms    14389.7 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   24.043 ms    14381.7 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   24.020 ms    14395.1 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   24.200 ms    14287.9 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   26.403 ms    13096.0 GFLOPS PASS
+  6390 x  4256     81 x    81 best   24.020 ms    14395.1 GFLOPS | avg   24.539 ms    14090.7 GFLOPS  PASS
+MEASURE round=3 variant=baseline shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   24.027 ms    14390.7 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   24.027 ms    14391.1 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   24.122 ms    14334.0 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   24.204 ms    14285.9 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   24.259 ms    14253.4 GFLOPS PASS
+  6390 x  4256     81 x    81 best   24.027 ms    14391.1 GFLOPS | avg   24.128 ms    14330.8 GFLOPS  PASS
+MEASURE round=3 variant=k4tail shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   24.034 ms    14386.9 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   24.071 ms    14364.7 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   24.068 ms    14366.8 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   24.109 ms    14342.3 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   24.035 ms    14386.2 GFLOPS PASS
+  6390 x  4256     81 x    81 best   24.034 ms    14386.9 GFLOPS | avg   24.063 ms    14369.3 GFLOPS  PASS
+MEASURE round=3 variant=nopfo_clean shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   23.779 ms    14541.0 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   23.821 ms    14515.1 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   23.823 ms    14514.1 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   23.794 ms    14531.7 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   23.823 ms    14513.9 GFLOPS PASS
+  6390 x  4256     81 x    81 best   23.779 ms    14541.0 GFLOPS | avg   23.808 ms    14523.1 GFLOPS  PASS
+MEASURE round=3 variant=combo shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   24.254 ms    14256.1 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   23.766 ms    14548.9 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   23.745 ms    14561.6 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   23.723 ms    14575.2 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   23.728 ms    14572.4 GFLOPS PASS
+  6390 x  4256     81 x    81 best   23.723 ms    14575.2 GFLOPS | avg   23.843 ms    14501.8 GFLOPS  PASS
+MEASURE round=3 variant=combo_preload shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   23.714 ms    14580.6 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   23.746 ms    14561.2 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   23.772 ms    14545.5 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   23.767 ms    14548.2 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   23.765 ms    14549.8 GFLOPS PASS
+  6390 x  4256     81 x    81 best   23.714 ms    14580.6 GFLOPS | avg   23.753 ms    14557.0 GFLOPS  PASS
+MEMORY_AND_KERNEL_DIAGNOSTICS
+BASELINE_LOCAL_DDR shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    9.581 ms     7866.9 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    9.607 ms     7846.3 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    9.648 ms     7812.9 GFLOPS PASS
+  4096 x  6144     39 x    39 best    9.581 ms     7866.9 GFLOPS | avg    9.612 ms     7842.0 GFLOPS  PASS
+BASELINE_KERNEL_PROFILE shape=4096 6144 39 39
+[roll] thr ms min/avg/max 0.007/5.313/10.969 | 周期/tile步: pair 2.18 single 0.00 8x2 0.00 4x4 2.69 | 份额 %: 85.1 0.0 0.0 14.9
+[roll] thr ms min/avg/max 5.265/5.313/5.424 | 周期/tile步: pair 2.17 single 0.00 8x2 0.00 4x4 2.72 | 份额 %: 84.9 0.0 0.0 15.1
+[roll] thr ms min/avg/max 5.238/5.298/5.428 | 周期/tile步: pair 2.17 single 0.00 8x2 0.00 4x4 2.72 | 份额 %: 84.9 0.0 0.0 15.1
+[roll] thr ms min/avg/max 5.245/5.308/5.455 | 周期/tile步: pair 2.17 single 0.00 8x2 0.00 4x4 2.72 | 份额 %: 84.9 0.0 0.0 15.1
+  4096 x  6144     39 x    39 run0    5.589 ms    13485.6 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.640 ms    13365.1 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.589 ms    13485.6 GFLOPS | avg    5.614 ms    13425.1 GFLOPS  PASS
+BASELINE_LOCAL_DDR shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    9.687 ms     8592.6 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    9.260 ms     8989.1 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    9.291 ms     8958.4 GFLOPS PASS
+  6144 x  4096     41 x    41 best    9.260 ms     8989.1 GFLOPS | avg    9.413 ms     8843.0 GFLOPS  PASS
+BASELINE_KERNEL_PROFILE shape=6144 4096 41 41
+[roll] thr ms min/avg/max 0.005/5.807/10.745 | 周期/tile步: pair 2.11 single 0.00 8x2 2.16 4x4 0.00 | 份额 %: 79.1 0.0 20.9 0.0
+[roll] thr ms min/avg/max 5.736/5.774/5.862 | 周期/tile步: pair 2.09 single 0.00 8x2 2.17 4x4 0.00 | 份额 %: 78.9 0.0 21.1 0.0
+[roll] thr ms min/avg/max 5.730/5.764/5.828 | 周期/tile步: pair 2.09 single 0.00 8x2 2.17 4x4 0.00 | 份额 %: 78.8 0.0 21.2 0.0
+[roll] thr ms min/avg/max 5.739/5.770/5.840 | 周期/tile步: pair 2.09 single 0.00 8x2 2.17 4x4 0.00 | 份额 %: 78.8 0.0 21.2 0.0
+  6144 x  4096     41 x    41 run0    5.991 ms    13893.0 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    6.024 ms    13817.3 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.991 ms    13893.0 GFLOPS | avg    6.008 ms    13855.1 GFLOPS  PASS
+BASELINE_LOCAL_DDR shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   15.063 ms    10693.3 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   15.076 ms    10683.9 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   15.055 ms    10699.0 GFLOPS PASS
+  4256 x  6390     55 x    55 best   15.055 ms    10699.0 GFLOPS | avg   15.065 ms    10692.1 GFLOPS  PASS
+BASELINE_KERNEL_PROFILE shape=4256 6390 55 55
+[roll] thr ms min/avg/max 4.119/11.066/16.815 | 周期/tile步: pair 2.10 single 2.12 8x2 0.00 4x4 2.52 | 份额 %: 60.0 30.2 0.0 9.9
+[roll] thr ms min/avg/max 10.880/11.042/11.546 | 周期/tile步: pair 2.09 single 2.12 8x2 0.00 4x4 2.56 | 份额 %: 59.7 30.2 0.0 10.1
+[roll] thr ms min/avg/max 10.855/11.011/11.073 | 周期/tile步: pair 2.09 single 2.12 8x2 0.00 4x4 2.52 | 份额 %: 59.8 30.3 0.0 9.9
+[roll] thr ms min/avg/max 10.869/11.021/11.090 | 周期/tile步: pair 2.09 single 2.12 8x2 0.00 4x4 2.52 | 份额 %: 59.8 30.3 0.0 9.9
+  4256 x  6390     55 x    55 run0   11.301 ms    14253.0 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.270 ms    14292.5 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.270 ms    14292.5 GFLOPS | avg   11.285 ms    14272.7 GFLOPS  PASS
+BASELINE_LOCAL_DDR shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   24.447 ms    14143.6 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   24.265 ms    14250.0 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   24.339 ms    14206.4 GFLOPS PASS
+  6390 x  4256     81 x    81 best   24.265 ms    14250.0 GFLOPS | avg   24.350 ms    14199.8 GFLOPS  PASS
+BASELINE_KERNEL_PROFILE shape=6390 4256 81 81
+[roll] thr ms min/avg/max 10.958/23.801/29.270 | 周期/tile步: pair 2.05 single 2.11 8x2 0.00 4x4 0.00 | 份额 %: 79.4 20.6 0.0 0.0
+[roll] thr ms min/avg/max 23.602/23.735/24.270 | 周期/tile步: pair 2.04 single 2.11 8x2 0.00 4x4 0.00 | 份额 %: 79.3 20.7 0.0 0.0
+[roll] thr ms min/avg/max 23.566/23.707/24.123 | 周期/tile步: pair 2.04 single 2.11 8x2 0.00 4x4 0.00 | 份额 %: 79.3 20.7 0.0 0.0
+[roll] thr ms min/avg/max 23.596/23.732/24.147 | 周期/tile步: pair 2.04 single 2.11 8x2 0.00 4x4 0.00 | 份额 %: 79.3 20.7 0.0 0.0
+  6390 x  4256     81 x    81 run0   24.291 ms    14234.6 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   24.330 ms    14211.5 GFLOPS PASS
+  6390 x  4256     81 x    81 best   24.291 ms    14234.6 GFLOPS | avg   24.311 ms    14223.0 GFLOPS  PASS
+DONE 2026-09-12T14:30:26+08:00
+ACCEPTANCE_BEGIN 2026-09-12T14:30:26+08:00
+SIGNED_BITWISE combo
+     1 x   1  k   1 x  1 : ok  maxerr 0  bad 0/1  bitdiff 0
+     5 x   5  k   5 x  5 : ok  maxerr 0  bad 0/1  bitdiff 0
+     5 x 300  k   1 x  1 : ok  maxerr 0  bad 0/1500  bitdiff 0
+   300 x   5  k   1 x  1 : ok  maxerr 0  bad 0/1500  bitdiff 0
+    64 x  64  k   3 x  3 : ok  maxerr 0  bad 0/3844  bitdiff 0
+    70 x 600  k   7 x  7 : ok  maxerr 0  bad 0/38016  bitdiff 0
+     4 x1100  k   1 x 40 : ok  maxerr 0  bad 0/4244  bitdiff 0
+    45 x  45  k  41 x 41 : ok  maxerr 0  bad 0/25  bitdiff 0
+   100 x1200  k  39 x 39 : ok  maxerr 0  bad 0/72044  bitdiff 0
+   300 x 700  k  39 x 39 : ok  maxerr 0  bad 0/173444  bitdiff 0
+   200 x2100  k  81 x 81 : ok  maxerr 0  bad 0/242400  bitdiff 0
+   130 x 530  k   5 x 81 : ok  maxerr 0  bad 0/56700  bitdiff 0
+   130 x 530  k  81 x  5 : ok  maxerr 0  bad 0/26300  bitdiff 0
+    17 x1030  k   3 x  9 : ok  maxerr 0  bad 0/15330  bitdiff 0
+  1030 x  17  k   9 x  3 : ok  maxerr 0  bad 0/15330  bitdiff 0
+    90 x 320  k   2 x  2 : ok  maxerr 0  bad 0/28391  bitdiff 0
+ALL PASS: 166/166 通过
+POSITIVE_BITWISE combo
+     1 x   1  k   1 x  1 : ok  maxerr 0  bad 0/1  bitdiff 0
+     5 x   5  k   5 x  5 : ok  maxerr 0  bad 0/1  bitdiff 0
+     5 x 300  k   1 x  1 : ok  maxerr 0  bad 0/1500  bitdiff 0
+   300 x   5  k   1 x  1 : ok  maxerr 0  bad 0/1500  bitdiff 0
+    64 x  64  k   3 x  3 : ok  maxerr 0  bad 0/3844  bitdiff 0
+    70 x 600  k   7 x  7 : ok  maxerr 0  bad 0/38016  bitdiff 0
+     4 x1100  k   1 x 40 : ok  maxerr 0  bad 0/4244  bitdiff 0
+    45 x  45  k  41 x 41 : ok  maxerr 0  bad 0/25  bitdiff 0
+   100 x1200  k  39 x 39 : ok  maxerr 0  bad 0/72044  bitdiff 0
+   300 x 700  k  39 x 39 : ok  maxerr 0  bad 0/173444  bitdiff 0
+   200 x2100  k  81 x 81 : ok  maxerr 0  bad 0/242400  bitdiff 0
+   130 x 530  k   5 x 81 : ok  maxerr 0  bad 0/56700  bitdiff 0
+   130 x 530  k  81 x  5 : ok  maxerr 0  bad 0/26300  bitdiff 0
+    17 x1030  k   3 x  9 : ok  maxerr 0  bad 0/15330  bitdiff 0
+  1030 x  17  k   9 x  3 : ok  maxerr 0  bad 0/15330  bitdiff 0
+    90 x 320  k   2 x  2 : ok  maxerr 0  bad 0/28391  bitdiff 0
+ALL PASS: 166/166 通过
+HEIGHT_REUSE combo
+     1 x   1  k   1 x  1 : ok  maxerr 0  bad 0/1  bitdiff 0
+     5 x   5  k   5 x  5 : ok  maxerr 0  bad 0/1  bitdiff 0
+     5 x 300  k   1 x  1 : ok  maxerr 0  bad 0/1500  bitdiff 0
+   300 x   5  k   1 x  1 : ok  maxerr 0  bad 0/1500  bitdiff 0
+    64 x  64  k   3 x  3 : ok  maxerr 0  bad 0/3844  bitdiff 0
+    70 x 600  k   7 x  7 : ok  maxerr 0  bad 0/38016  bitdiff 0
+     4 x1100  k   1 x 40 : ok  maxerr 0  bad 0/4244  bitdiff 0
+    45 x  45  k  41 x 41 : ok  maxerr 0  bad 0/25  bitdiff 0
+   100 x1200  k  39 x 39 : ok  maxerr 0  bad 0/72044  bitdiff 0
+   300 x 700  k  39 x 39 : ok  maxerr 0  bad 0/173444  bitdiff 0
+   200 x2100  k  81 x 81 : ok  maxerr 0  bad 0/242400  bitdiff 0
+   130 x 530  k   5 x 81 : ok  maxerr 0  bad 0/56700  bitdiff 0
+   130 x 530  k  81 x  5 : ok  maxerr 0  bad 0/26300  bitdiff 0
+    17 x1030  k   3 x  9 : ok  maxerr 0  bad 0/15330  bitdiff 0
+  1030 x  17  k   9 x  3 : ok  maxerr 0  bad 0/15330  bitdiff 0
+    90 x 320  k   2 x  2 : ok  maxerr 0  bad 0/28391  bitdiff 0
+   100 x1200  k  81 x 81 : ok  maxerr 0  bad 0/22400  bitdiff 0
+   104 x1200  k  81 x 81 : ok  maxerr 0  bad 0/26880  bitdiff 0
+   108 x1200  k  81 x 81 : ok  maxerr 0  bad 0/31360  bitdiff 0
+ALL PASS: 19/19 通过
+SIGNED_BITWISE combo_preload
+     1 x   1  k   1 x  1 : ok  maxerr 0  bad 0/1  bitdiff 0
+     5 x   5  k   5 x  5 : ok  maxerr 0  bad 0/1  bitdiff 0
+     5 x 300  k   1 x  1 : ok  maxerr 0  bad 0/1500  bitdiff 0
+   300 x   5  k   1 x  1 : ok  maxerr 0  bad 0/1500  bitdiff 0
+    64 x  64  k   3 x  3 : ok  maxerr 0  bad 0/3844  bitdiff 0
+    70 x 600  k   7 x  7 : ok  maxerr 0  bad 0/38016  bitdiff 0
+     4 x1100  k   1 x 40 : ok  maxerr 0  bad 0/4244  bitdiff 0
+    45 x  45  k  41 x 41 : ok  maxerr 0  bad 0/25  bitdiff 0
+   100 x1200  k  39 x 39 : ok  maxerr 0  bad 0/72044  bitdiff 0
+   300 x 700  k  39 x 39 : ok  maxerr 0  bad 0/173444  bitdiff 0
+   200 x2100  k  81 x 81 : ok  maxerr 0  bad 0/242400  bitdiff 0
+   130 x 530  k   5 x 81 : ok  maxerr 0  bad 0/56700  bitdiff 0
+   130 x 530  k  81 x  5 : ok  maxerr 0  bad 0/26300  bitdiff 0
+    17 x1030  k   3 x  9 : ok  maxerr 0  bad 0/15330  bitdiff 0
+  1030 x  17  k   9 x  3 : ok  maxerr 0  bad 0/15330  bitdiff 0
+    90 x 320  k   2 x  2 : ok  maxerr 0  bad 0/28391  bitdiff 0
+ALL PASS: 166/166 通过
+POSITIVE_BITWISE combo_preload
+     1 x   1  k   1 x  1 : ok  maxerr 0  bad 0/1  bitdiff 0
+     5 x   5  k   5 x  5 : ok  maxerr 0  bad 0/1  bitdiff 0
+     5 x 300  k   1 x  1 : ok  maxerr 0  bad 0/1500  bitdiff 0
+   300 x   5  k   1 x  1 : ok  maxerr 0  bad 0/1500  bitdiff 0
+    64 x  64  k   3 x  3 : ok  maxerr 0  bad 0/3844  bitdiff 0
+    70 x 600  k   7 x  7 : ok  maxerr 0  bad 0/38016  bitdiff 0
+     4 x1100  k   1 x 40 : ok  maxerr 0  bad 0/4244  bitdiff 0
+    45 x  45  k  41 x 41 : ok  maxerr 0  bad 0/25  bitdiff 0
+   100 x1200  k  39 x 39 : ok  maxerr 0  bad 0/72044  bitdiff 0
+   300 x 700  k  39 x 39 : ok  maxerr 0  bad 0/173444  bitdiff 0
+   200 x2100  k  81 x 81 : ok  maxerr 0  bad 0/242400  bitdiff 0
+   130 x 530  k   5 x 81 : ok  maxerr 0  bad 0/56700  bitdiff 0
+   130 x 530  k  81 x  5 : ok  maxerr 0  bad 0/26300  bitdiff 0
+    17 x1030  k   3 x  9 : ok  maxerr 0  bad 0/15330  bitdiff 0
+  1030 x  17  k   9 x  3 : ok  maxerr 0  bad 0/15330  bitdiff 0
+    90 x 320  k   2 x  2 : ok  maxerr 0  bad 0/28391  bitdiff 0
+ALL PASS: 166/166 通过
+HEIGHT_REUSE combo_preload
+     1 x   1  k   1 x  1 : ok  maxerr 0  bad 0/1  bitdiff 0
+     5 x   5  k   5 x  5 : ok  maxerr 0  bad 0/1  bitdiff 0
+     5 x 300  k   1 x  1 : ok  maxerr 0  bad 0/1500  bitdiff 0
+   300 x   5  k   1 x  1 : ok  maxerr 0  bad 0/1500  bitdiff 0
+    64 x  64  k   3 x  3 : ok  maxerr 0  bad 0/3844  bitdiff 0
+    70 x 600  k   7 x  7 : ok  maxerr 0  bad 0/38016  bitdiff 0
+     4 x1100  k   1 x 40 : ok  maxerr 0  bad 0/4244  bitdiff 0
+    45 x  45  k  41 x 41 : ok  maxerr 0  bad 0/25  bitdiff 0
+   100 x1200  k  39 x 39 : ok  maxerr 0  bad 0/72044  bitdiff 0
+   300 x 700  k  39 x 39 : ok  maxerr 0  bad 0/173444  bitdiff 0
+   200 x2100  k  81 x 81 : ok  maxerr 0  bad 0/242400  bitdiff 0
+   130 x 530  k   5 x 81 : ok  maxerr 0  bad 0/56700  bitdiff 0
+   130 x 530  k  81 x  5 : ok  maxerr 0  bad 0/26300  bitdiff 0
+    17 x1030  k   3 x  9 : ok  maxerr 0  bad 0/15330  bitdiff 0
+  1030 x  17  k   9 x  3 : ok  maxerr 0  bad 0/15330  bitdiff 0
+    90 x 320  k   2 x  2 : ok  maxerr 0  bad 0/28391  bitdiff 0
+   100 x1200  k  81 x 81 : ok  maxerr 0  bad 0/22400  bitdiff 0
+   104 x1200  k  81 x 81 : ok  maxerr 0  bad 0/26880  bitdiff 0
+   108 x1200  k  81 x 81 : ok  maxerr 0  bad 0/31360  bitdiff 0
+ALL PASS: 19/19 通过
+OFFICIAL_ACCEPT round=1 variant=baseline shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.45   13825.5588     0.00e+00     PASS
+OFFICIAL_ACCEPT round=1 variant=combo shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.33   14138.1070     0.00e+00     PASS
+OFFICIAL_ACCEPT round=1 variant=combo_preload shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.36   14067.9513     0.00e+00     PASS
+OFFICIAL_ACCEPT round=2 variant=combo_preload shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.40   13949.3877     0.00e+00     PASS
+OFFICIAL_ACCEPT round=2 variant=combo shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.34   14107.9392     0.00e+00     PASS
+OFFICIAL_ACCEPT round=2 variant=baseline shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.47   13774.3786     0.00e+00     PASS
+OFFICIAL_ACCEPT round=3 variant=baseline shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.47   13774.8561     0.00e+00     PASS
+OFFICIAL_ACCEPT round=3 variant=combo shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.32   14176.4402     0.00e+00     PASS
+OFFICIAL_ACCEPT round=3 variant=combo_preload shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.53   13641.6284     0.00e+00     PASS
+PLAIN_ACCEPT variant=combo shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.33   14143.4269     0.00e+00     PASS
+PLAIN_ACCEPT variant=combo_preload shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.36   14069.7001     0.00e+00     PASS
+OFFICIAL_ACCEPT round=1 variant=baseline shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.95   13998.8908     0.00e+00     PASS
+OFFICIAL_ACCEPT round=1 variant=combo shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         6.04   13791.7782     0.00e+00     PASS
+OFFICIAL_ACCEPT round=1 variant=combo_preload shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.86   14215.0768     0.00e+00     PASS
+OFFICIAL_ACCEPT round=2 variant=combo_preload shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.83   14284.2841     0.00e+00     PASS
+OFFICIAL_ACCEPT round=2 variant=combo shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.89   14121.1202     0.00e+00     PASS
+OFFICIAL_ACCEPT round=2 variant=baseline shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.87   14186.2051     0.00e+00     PASS
+OFFICIAL_ACCEPT round=3 variant=baseline shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.88   14147.3601     0.00e+00     PASS
+OFFICIAL_ACCEPT round=3 variant=combo shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.88   14148.1224     0.00e+00     PASS
+OFFICIAL_ACCEPT round=3 variant=combo_preload shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.85   14225.8541     0.00e+00     PASS
+PLAIN_ACCEPT variant=combo shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         6.00   13881.8037     0.00e+00     PASS
+PLAIN_ACCEPT variant=combo_preload shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.84   14250.3214     0.00e+00     PASS
+OFFICIAL_ACCEPT round=1 variant=baseline shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.08   14542.9918     0.00e+00     PASS
+OFFICIAL_ACCEPT round=1 variant=combo shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.07   14553.9417     0.00e+00     PASS
+OFFICIAL_ACCEPT round=1 variant=combo_preload shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.51   13990.9654     0.00e+00     PASS
+OFFICIAL_ACCEPT round=2 variant=combo_preload shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.06   14569.1172     0.00e+00     PASS
+OFFICIAL_ACCEPT round=2 variant=combo shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.11   14494.6195     0.00e+00     PASS
+OFFICIAL_ACCEPT round=2 variant=baseline shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.20   14378.2029     0.00e+00     PASS
+OFFICIAL_ACCEPT round=3 variant=baseline shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.09   14523.5894     0.00e+00     PASS
+OFFICIAL_ACCEPT round=3 variant=combo shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.05   14571.2545     0.00e+00     PASS
+OFFICIAL_ACCEPT round=3 variant=combo_preload shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.05   14575.4426     0.00e+00     PASS
+PLAIN_ACCEPT variant=combo shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.06   14569.2147     0.00e+00     PASS
+PLAIN_ACCEPT variant=combo_preload shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.07   14556.5517     0.00e+00     PASS
+OFFICIAL_ACCEPT round=1 variant=baseline shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        24.07   14362.6081     0.00e+00     PASS
+OFFICIAL_ACCEPT round=1 variant=combo shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        23.74   14564.7352     0.00e+00     PASS
+OFFICIAL_ACCEPT round=1 variant=combo_preload shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        23.73   14570.8655     0.00e+00     PASS
+OFFICIAL_ACCEPT round=2 variant=combo_preload shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        23.88   14480.5848     0.00e+00     PASS
+OFFICIAL_ACCEPT round=2 variant=combo shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        23.73   14574.1531     0.00e+00     PASS
+OFFICIAL_ACCEPT round=2 variant=baseline shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        24.17   14305.1138     0.00e+00     PASS
+OFFICIAL_ACCEPT round=3 variant=baseline shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        24.11   14341.3907     0.00e+00     PASS
+OFFICIAL_ACCEPT round=3 variant=combo shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        24.27   14246.9444     0.00e+00     PASS
+OFFICIAL_ACCEPT round=3 variant=combo_preload shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        23.69   14594.1927     0.00e+00     PASS
+PLAIN_ACCEPT variant=combo shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        23.78   14538.9668     0.00e+00     PASS
+PLAIN_ACCEPT variant=combo_preload shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        24.68   14012.4059     0.00e+00     PASS
+ACCEPTANCE_DONE 2026-09-12T14:34:20+08:00
