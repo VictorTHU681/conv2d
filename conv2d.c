@@ -81,7 +81,7 @@ static int env_int(const char* name, int def)
 }
 
 // 可调参数只在首次调用时读环境（getenv 每次要扫整个环境表，~2 µs/次，一次调用 9 次就是 ~0.3%）
-typedef struct { int inited, slice, sp, prof, pf_in, pf_out, postart, uzp, poolwfe, pool, store_asm, pf_fresh, pf_l2, br, sw_dense, pf_st, zva, roll, roll_pd, roll_w8, roll_w4, roll_w16; } knobs_t;
+typedef struct { int inited, slice, sp, prof, pf_in, pf_out, postart, uzp, poolwfe, pool, store_asm, pf_fresh, pf_l2, br, sw_dense, pf_st, zva, roll, roll_pd, roll_w8, roll_w4, roll_w16, pack_ser; } knobs_t;
 static knobs_t g_knobs;
 #ifdef CONV_ROWPROF
 static uint64_t* g_rowts = NULL;      // 线程 0 的逐行时间戳：行首 cntvct；pass 末追加 (cyc | 1<<63) 作结束标记
@@ -103,6 +103,7 @@ static void read_knobs(void)
     g_knobs.roll_w8 = env_int("CONV_ROLL_W8", 104);   // 静态划分的相对慢速权重（%）：8×2 / 4×4 / single16
     g_knobs.roll_w4 = env_int("CONV_ROLL_W4", 123);
     g_knobs.roll_w16 = env_int("CONV_ROLL_W16", 102);
+    g_knobs.pack_ser = env_int("CONV_PACKSER", -1);   // R/kf 打包：1 主线程串行 / 0 全体并行 / -1 按表大小自动
     // -DCONV_ZVA_CURSOR 实验用：输出线 dc zva 预清零（不从 DRAM 读 RFO，每次调用少读 ~100 MB），需 zva 块 64 B 且允许
     { uint64_t dczid; asm volatile("mrs %0, dczid_el0" : "=r"(dczid));
       g_knobs.zva = env_int("CONV_ZVA", 1) && !(dczid & 0x10) && (4L << (dczid & 0xf)) == 64; }
@@ -2280,7 +2281,11 @@ static void conv2d_roll(const CONVFLOAT* in, CONVINT H, CONVINT W, const CONVFLO
     roll_prepare(k, H, W, KH, KW, nth);
     g_pk_nc = g_rp.ng * (int)KH; g_pk_next = 0;            // 重置打包 chunk 游标/完成标志（ng ≤ 12、KH ≤ 256 → nc ≤ 3072）
     memset(g_pk_done, 0, (size_t)g_pk_nc);
-    if (env_int("CONV_PACKSER", 0)) {                      // 实验：主线程串行打包（对照并行认领的争用）
+    long pk_el = 0;                                        // 打包总元素数（R 16/步 + kf 4/步）
+    for (int g = 0; g < g_rp.ng; g++) pk_el += KH * g_rp.G[g].steps * ((g_rp.G[g].kind == 34 || g_rp.G[g].kind == 35) ? 20 : 16);
+    int ps = g_knobs.pack_ser;
+    if (ps < 0) ps = pk_el <= (1L << 17);                  // 小表主线程串行（并行认领/扫描的同步开销 ≥ 打包本身），大表全体并行
+    if (ps) {
         for (int i = 0; i < g_pk_nc; i++) { roll_pack_chunk(&g_rp, k, KH, KW, i); g_pk_done[i] = 1; }
         g_pk_next = (uint32_t)g_pk_nc;
     }
