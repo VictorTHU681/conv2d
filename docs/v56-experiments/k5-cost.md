@@ -51,7 +51,24 @@ it is adopted with the original scheduling costs.
 Further scheduling investigation should identify the longest-duration workers'
 actual main/tail workloads before changing weights again.
 
-Thread-detail job **1583419**, submitted for cn20481, compares baseline 4817eff,
-ordinary K5 and k5cost at KH 41. It records per-thread absolute-relative start/end
-times, durations, packing time and main/tail work after workers have joined.
-It is pending; detailed printing is diagnostic and cannot define production speed.
+Thread-detail job **1583419**, cn20481, 04:34:26–04:35:11, succeeded: 36
+processes, 9,576 thread records and 180 timed output hashes. Thread step totals
+match aggregate kernel counts. Records use the first worker start as a common
+origin, allowing absolute-relative end-time comparisons instead of durations only.
+Printing happens after join and can perturb the benchmark; reported GFLOPS is
+not production performance evidence.
+
+For ordinary K5 the last worker is tail-majority in only 3/30 timed calls in
+each memory placement. Its median last-worker main/tail region times are
+5,964/0 us DDR and 5,751/0 us HBM. Thus the usual last worker is main-F4-heavy,
+not K5-tail-heavy. Its last-end-minus-mean-end gap is about 199 us DDR / 85 us HBM.
+The rejected k5cost shifts the DDR critical worker to tail-majority in 20/30
+calls, but the HBM last worker remains usually main-heavy. This complicates a
+single throughput-ratio explanation and does not overturn the negative ordinary
+screening result. Full per-memory values are in thread_summary.md.
+
+Next compare continuation chunk lengths in the same uninstrumented executable,
+using the existing CONV_ROLL_STEP knob. This tests whether remaining main-group
+work can be distributed with less end-of-call delay, balanced against additional
+carry saves/restores. It does not assume that a K5 kernel instruction is solely
+responsible for the critical path. See [chunk controls](k5-chunks.md).
