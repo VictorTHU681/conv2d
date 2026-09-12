@@ -2280,6 +2280,10 @@ static void conv2d_roll(const CONVFLOAT* in, CONVINT H, CONVINT W, const CONVFLO
     roll_prepare(k, H, W, KH, KW, nth);
     g_pk_nc = g_rp.ng * (int)KH; g_pk_next = 0;            // 重置打包 chunk 游标/完成标志（ng ≤ 12、KH ≤ 256 → nc ≤ 3072）
     memset(g_pk_done, 0, (size_t)g_pk_nc);
+    if (env_int("CONV_PACKSER", 0)) {                      // 实验：主线程串行打包（对照并行认领的争用）
+        for (int i = 0; i < g_pk_nc; i++) { roll_pack_chunk(&g_rp, k, KH, KW, i); g_pk_done[i] = 1; }
+        g_pk_next = (uint32_t)g_pk_nc;
+    }
     ctx_t ctx; memset(&ctx, 0, sizeof(ctx));
     ctx.in = in; ctx.k = k; ctx.out = out; ctx.H = H; ctx.W = W; ctx.KH = KH; ctx.KW = KW; ctx.outH = H - KH + 1; ctx.outW = W - KW + 1;
     ctx.mode = 1; ctx.rp = &g_rp;
