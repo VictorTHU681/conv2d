@@ -5,10 +5,12 @@ from collections import defaultdict,Counter
 from statistics import median,mean
 from itertools import permutations
 import re,sys
-s=Path(sys.argv[1]).read_text();assert 'K5_THREAD_DONE' in s and 'FAIL' not in s
+s=Path(sys.argv[1]).read_text();chunks='K5_CHUNK_THREAD_DONE' in s
+assert ('K5_CHUNK_THREAD_DONE' if chunks else 'K5_THREAD_DONE') in s and 'FAIL' not in s
 placement=re.search(r'^PLACEMENT cpu_node=\d+ hbm_node=(-?\d+)$',s,re.M);assert placement
 memories=['DDR'] if int(placement[1])<0 else ['DDR','HBM']
-variants=['baseline','triplet','k5cost'];data={};counts=defaultdict(int);order=defaultdict(list);steps=defaultdict(int);key=None
+variants=['s8','s2','s4'] if chunks else ['baseline','triplet','k5cost']
+data={};counts=defaultdict(int);order=defaultdict(list);steps=defaultdict(int);key=None
 for line in s.splitlines():
     m=re.match(r'PROFILE memory=(\w+) round=(\d+) variant=(\w+) shape=6144 4096 41 41$',line)
     if m:key=m[1],int(m[2]),m[3];order[key[:2]].append(key[2])

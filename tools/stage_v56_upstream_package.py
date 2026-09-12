@@ -6,12 +6,12 @@ import subprocess
 import argparse
 
 parser=argparse.ArgumentParser()
-parser.add_argument('--experiment',choices=['upstream-gate','kf-share','k5-layout'],default='upstream-gate')
+parser.add_argument('--experiment',choices=['upstream-gate','kf-share','k5-layout','k5-default'],default='upstream-gate')
 args=parser.parse_args()
 root=Path('build/v56/experiments')/args.experiment;stage=root/'package'
 (stage/'tools').mkdir(parents=True,exist_ok=True)
 (stage/'submissions').mkdir(exist_ok=True)
-shutil.copyfile(root/('triplet.c' if args.experiment=='k5-layout' else 'merged.c'),stage/'conv2d.c')
+shutil.copyfile(root/({'k5-layout':'triplet.c','k5-default':'short2.c'}.get(args.experiment,'merged.c')),stage/'conv2d.c')
 for name in ['bench_conv.c','run.sh','run_diag.sh','tools/mkdiag.py','tools/package_v56.py']:
     shutil.copyfile(name,stage/name)
 readme='''# Local v56 upstream F4 gate integration candidate
@@ -35,11 +35,15 @@ if args.experiment=='kf-share':
     readme=readme.replace('upstream F4 gate integration candidate','shared folded coefficient tables candidate').replace(
         "Integrates upstream 87fa5d7's long-row F4 copy overlap and alignment gate.",
         "Integrates upstream 76ec03d's within-call sharing of equal folded coefficient tables.\nOnly each table owner writes; consumers wait for its group to publish completion.\nThe accepted F4 gate remains in place; the K9 weight default stays 140.")
-elif args.experiment=='k5-layout':
+elif args.experiment in ('k5-layout','k5-default'):
     readme=readme.replace('upstream F4 gate integration candidate','K5 residual folding candidate').replace(
         "Integrates upstream 87fa5d7's long-row F4 copy overlap and alignment gate.",
         "Retains the accepted F4 gate and adds a structural 36+5 residual grouping.\nFive-row tails use three interleaved column classes and exact KW+2 execution.\nThis selects the ordinary K5 source; F4 outlining and cost controls are excluded.")
     readme=readme.replace('outside the validated scope. K5 experiments are not included.',
                          'outside the validated scope. Rejected kf sharing is not included.')
+if args.experiment=='k5-default':
+    readme=readme.replace('K5 residual folding candidate','K5 short continuation candidate').replace(
+        'This selects the ordinary K5 source; F4 outlining and cost controls are excluded.',
+        'Only prepared plans containing K5 select continuation step 2; other plans retain 8.\nCONV_ROLL_STEP overrides remain available. No memory-placement detection is added.\nDDR KH41 benefits; HBM KH41 regresses slightly. Both are reported separately.')
 (stage/'README.md').write_text(readme)
 subprocess.run(['python3',str(stage/'tools/package_v56.py')],check=True)

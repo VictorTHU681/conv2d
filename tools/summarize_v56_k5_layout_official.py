@@ -6,8 +6,10 @@ from itertools import permutations
 from collections import defaultdict
 import re,sys
 s=Path(sys.argv[1]).read_text()
-assert 'K5_LAYOUT_OFFICIAL_DONE' in s and 'FAIL' not in s
-variants=['baseline','triplet','triplet_out'];data={};order=defaultdict(list);key=None
+defaults='K5_DEFAULT_OFFICIAL_DONE' in s
+assert ('K5_DEFAULT_OFFICIAL_DONE' if defaults else 'K5_LAYOUT_OFFICIAL_DONE') in s and 'FAIL' not in s
+variants=['baseline','short2','short4'] if defaults else ['baseline','triplet','triplet_out']
+data={};order=defaultdict(list);key=None
 placement=re.search(r'^PLACEMENT cpu_node=\d+ hbm_node=(-?\d+)$',s,re.M);assert placement
 memories=['DDR'] if int(placement[1])<0 else ['DDR','HBM']
 for line in s.splitlines():
@@ -25,8 +27,8 @@ assert set(data)=={(m,r,v,k) for m in memories for r in range(6) for v in varian
 for m in memories:
     for k in [39,41,55,81]: assert {tuple(order[m,r,k]) for r in range(6)}==set(permutations(variants))
 print(f'{len(data)} official full-reference checks PASS, all maximum errors zero. Six permutations; five timings per process.')
-print('Median of six process-average GFLOPS. Baseline is accepted local v56 4817eff, not published v55.')
-print('\n| Memory | KH | Baseline | K5 | K5 outlined | K5/base | K5 out/base |')
+print('Median of six process-average GFLOPS. Baseline is accepted local v56 '+('113d3d6' if defaults else '4817eff')+', not published v55.')
+print('\n| Memory | KH | Baseline | K5 short2 | K5 short4 | Short2/base | Short4/base |' if defaults else '\n| Memory | KH | Baseline | K5 | K5 outlined | K5/base | K5 out/base |')
 print('| --- | ---: | ---: | ---: | ---: | ---: | ---: |')
 for m in memories:
     for k in [39,41,55,81]:

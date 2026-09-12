@@ -3205,8 +3205,10 @@ static void conv2d_roll(const CONVFLOAT* in, CONVINT H, CONVINT W, const CONVFLO
     read_knobs();
     g_roll_pd = g_knobs.roll_pd;
     g_roll_diag = env_int("CONV_ROLL_DIAG", 0);
-    g_roll_step = env_int("CONV_ROLL_STEP", 8);
     roll_prepare(k, H, W, KH, KW, nth);
+    int step_default=8;
+    for(int g=0;g<g_rp.ng;g++) if(g_rp.G[g].kind==5) { step_default=2; break; }
+    g_roll_step = env_int("CONV_ROLL_STEP", step_default);
     g_pk_nc = g_rp.ng * (int)KH; g_pk_next = 0;            // 重置打包 chunk 游标/完成标志（ng ≤ 12、KH ≤ 256 → nc ≤ 3072）
     memset(g_pk_done, 0, (size_t)g_pk_nc);
     long pk_el = 0;                                        // 打包总元素数（R 16/步 + kf 4/步）

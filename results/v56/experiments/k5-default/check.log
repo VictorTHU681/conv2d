@@ -1,0 +1,248 @@
+HOST cn20481 2026-09-13T04:45:54+08:00
+pid 3035831's current affinity list: 37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+PLACEMENT cpu_node=1 hbm_node=17
+Cpus_allowed_list:	37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+Mems_allowed_list:	0-31
+1549479
+policy: default
+preferred node: current
+physcpubind: 37 75 113 151 189 227 265 303 341 379 417 455 493 531 569 607 
+cpubind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+nodebind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 
+preferred: 
+EFFECTIVE_PLACEMENT
+policy: preferred
+preferred node: 17
+physcpubind: 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 
+cpubind: 1 
+nodebind: 1 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 
+preferred: 17 
+DEFAULT_VARIANT short2
+bb82ce3b4826514e9ce6f729ef017a23d5aa08d2396f5d0975a512e39da76819  build/v56/experiments/k5-default/short2.c
+DEFAULT_STATE variant=short2 pack=default
+   572 x 567  k  39 x  7 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   614 x 569  k  81 x  9 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   588 x 571  k  55 x 11 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   574 x 573  k  41 x 13 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   646 x 575  k 113 x 15 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   678 x 577  k 145 x 17 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   710 x 579  k 177 x 19 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   742 x 581  k 209 x 21 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   774 x 583  k 241 x 23 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   572 x 585  k  39 x 25 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   573 x 567  k  39 x  7 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   615 x 569  k  81 x  9 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   589 x 571  k  55 x 11 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   575 x 573  k  41 x 13 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   647 x 575  k 113 x 15 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   679 x 577  k 145 x 17 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   711 x 579  k 177 x 19 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   743 x 581  k 209 x 21 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   775 x 583  k 241 x 23 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   573 x 585  k  39 x 25 : ok  maxerr 0  bad 0/300135  bitdiff 0
+STATE_SWEEP PASS cases=261
+DEFAULT_STATE variant=short2 pack=0
+   572 x 567  k  39 x  7 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   614 x 569  k  81 x  9 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   588 x 571  k  55 x 11 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   574 x 573  k  41 x 13 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   646 x 575  k 113 x 15 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   678 x 577  k 145 x 17 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   710 x 579  k 177 x 19 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   742 x 581  k 209 x 21 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   774 x 583  k 241 x 23 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   572 x 585  k  39 x 25 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   573 x 567  k  39 x  7 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   615 x 569  k  81 x  9 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   589 x 571  k  55 x 11 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   575 x 573  k  41 x 13 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   647 x 575  k 113 x 15 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   679 x 577  k 145 x 17 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   711 x 579  k 177 x 19 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   743 x 581  k 209 x 21 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   775 x 583  k 241 x 23 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   573 x 585  k  39 x 25 : ok  maxerr 0  bad 0/300135  bitdiff 0
+STATE_SWEEP PASS cases=261
+DEFAULT_STATE variant=short2 pack=1
+   572 x 567  k  39 x  7 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   614 x 569  k  81 x  9 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   588 x 571  k  55 x 11 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   574 x 573  k  41 x 13 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   646 x 575  k 113 x 15 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   678 x 577  k 145 x 17 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   710 x 579  k 177 x 19 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   742 x 581  k 209 x 21 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   774 x 583  k 241 x 23 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   572 x 585  k  39 x 25 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   573 x 567  k  39 x  7 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   615 x 569  k  81 x  9 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   589 x 571  k  55 x 11 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   575 x 573  k  41 x 13 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   647 x 575  k 113 x 15 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   679 x 577  k 145 x 17 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   711 x 579  k 177 x 19 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   743 x 581  k 209 x 21 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   775 x 583  k 241 x 23 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   573 x 585  k  39 x 25 : ok  maxerr 0  bad 0/300135  bitdiff 0
+STATE_SWEEP PASS cases=261
+DEFAULT_STATE variant=short2 pack=2
+   572 x 567  k  39 x  7 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   614 x 569  k  81 x  9 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   588 x 571  k  55 x 11 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   574 x 573  k  41 x 13 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   646 x 575  k 113 x 15 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   678 x 577  k 145 x 17 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   710 x 579  k 177 x 19 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   742 x 581  k 209 x 21 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   774 x 583  k 241 x 23 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   572 x 585  k  39 x 25 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   573 x 567  k  39 x  7 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   615 x 569  k  81 x  9 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   589 x 571  k  55 x 11 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   575 x 573  k  41 x 13 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   647 x 575  k 113 x 15 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   679 x 577  k 145 x 17 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   711 x 579  k 177 x 19 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   743 x 581  k 209 x 21 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   775 x 583  k 241 x 23 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   573 x 585  k  39 x 25 : ok  maxerr 0  bad 0/300135  bitdiff 0
+STATE_SWEEP PASS cases=261
+DEFAULT_STATE variant=short2 pack=3
+   572 x 567  k  39 x  7 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   614 x 569  k  81 x  9 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   588 x 571  k  55 x 11 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   574 x 573  k  41 x 13 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   646 x 575  k 113 x 15 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   678 x 577  k 145 x 17 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   710 x 579  k 177 x 19 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   742 x 581  k 209 x 21 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   774 x 583  k 241 x 23 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   572 x 585  k  39 x 25 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   573 x 567  k  39 x  7 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   615 x 569  k  81 x  9 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   589 x 571  k  55 x 11 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   575 x 573  k  41 x 13 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   647 x 575  k 113 x 15 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   679 x 577  k 145 x 17 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   711 x 579  k 177 x 19 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   743 x 581  k 209 x 21 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   775 x 583  k 241 x 23 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   573 x 585  k  39 x 25 : ok  maxerr 0  bad 0/300135  bitdiff 0
+STATE_SWEEP PASS cases=261
+OUTPUT_OVERLAP PASS cases=54 calls=2193 active_conflicts=0 positive_control=0
+DEFAULT_VARIANT short4
+434e151317fd4c512b91e352ceefcd3e3612087e773be4f1eeacaa462cf37727  build/v56/experiments/k5-default/short4.c
+DEFAULT_STATE variant=short4 pack=default
+   572 x 567  k  39 x  7 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   614 x 569  k  81 x  9 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   588 x 571  k  55 x 11 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   574 x 573  k  41 x 13 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   646 x 575  k 113 x 15 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   678 x 577  k 145 x 17 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   710 x 579  k 177 x 19 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   742 x 581  k 209 x 21 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   774 x 583  k 241 x 23 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   572 x 585  k  39 x 25 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   573 x 567  k  39 x  7 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   615 x 569  k  81 x  9 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   589 x 571  k  55 x 11 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   575 x 573  k  41 x 13 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   647 x 575  k 113 x 15 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   679 x 577  k 145 x 17 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   711 x 579  k 177 x 19 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   743 x 581  k 209 x 21 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   775 x 583  k 241 x 23 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   573 x 585  k  39 x 25 : ok  maxerr 0  bad 0/300135  bitdiff 0
+STATE_SWEEP PASS cases=261
+DEFAULT_STATE variant=short4 pack=0
+   572 x 567  k  39 x  7 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   614 x 569  k  81 x  9 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   588 x 571  k  55 x 11 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   574 x 573  k  41 x 13 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   646 x 575  k 113 x 15 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   678 x 577  k 145 x 17 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   710 x 579  k 177 x 19 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   742 x 581  k 209 x 21 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   774 x 583  k 241 x 23 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   572 x 585  k  39 x 25 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   573 x 567  k  39 x  7 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   615 x 569  k  81 x  9 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   589 x 571  k  55 x 11 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   575 x 573  k  41 x 13 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   647 x 575  k 113 x 15 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   679 x 577  k 145 x 17 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   711 x 579  k 177 x 19 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   743 x 581  k 209 x 21 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   775 x 583  k 241 x 23 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   573 x 585  k  39 x 25 : ok  maxerr 0  bad 0/300135  bitdiff 0
+STATE_SWEEP PASS cases=261
+DEFAULT_STATE variant=short4 pack=1
+   572 x 567  k  39 x  7 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   614 x 569  k  81 x  9 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   588 x 571  k  55 x 11 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   574 x 573  k  41 x 13 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   646 x 575  k 113 x 15 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   678 x 577  k 145 x 17 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   710 x 579  k 177 x 19 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   742 x 581  k 209 x 21 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   774 x 583  k 241 x 23 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   572 x 585  k  39 x 25 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   573 x 567  k  39 x  7 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   615 x 569  k  81 x  9 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   589 x 571  k  55 x 11 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   575 x 573  k  41 x 13 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   647 x 575  k 113 x 15 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   679 x 577  k 145 x 17 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   711 x 579  k 177 x 19 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   743 x 581  k 209 x 21 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   775 x 583  k 241 x 23 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   573 x 585  k  39 x 25 : ok  maxerr 0  bad 0/300135  bitdiff 0
+STATE_SWEEP PASS cases=261
+DEFAULT_STATE variant=short4 pack=2
+   572 x 567  k  39 x  7 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   614 x 569  k  81 x  9 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   588 x 571  k  55 x 11 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   574 x 573  k  41 x 13 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   646 x 575  k 113 x 15 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   678 x 577  k 145 x 17 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   710 x 579  k 177 x 19 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   742 x 581  k 209 x 21 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   774 x 583  k 241 x 23 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   572 x 585  k  39 x 25 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   573 x 567  k  39 x  7 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   615 x 569  k  81 x  9 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   589 x 571  k  55 x 11 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   575 x 573  k  41 x 13 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   647 x 575  k 113 x 15 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   679 x 577  k 145 x 17 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   711 x 579  k 177 x 19 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   743 x 581  k 209 x 21 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   775 x 583  k 241 x 23 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   573 x 585  k  39 x 25 : ok  maxerr 0  bad 0/300135  bitdiff 0
+STATE_SWEEP PASS cases=261
+DEFAULT_STATE variant=short4 pack=3
+   572 x 567  k  39 x  7 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   614 x 569  k  81 x  9 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   588 x 571  k  55 x 11 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   574 x 573  k  41 x 13 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   646 x 575  k 113 x 15 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   678 x 577  k 145 x 17 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   710 x 579  k 177 x 19 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   742 x 581  k 209 x 21 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   774 x 583  k 241 x 23 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   572 x 585  k  39 x 25 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   573 x 567  k  39 x  7 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   615 x 569  k  81 x  9 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   589 x 571  k  55 x 11 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   575 x 573  k  41 x 13 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   647 x 575  k 113 x 15 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   679 x 577  k 145 x 17 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   711 x 579  k 177 x 19 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   743 x 581  k 209 x 21 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   775 x 583  k 241 x 23 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   573 x 585  k  39 x 25 : ok  maxerr 0  bad 0/300135  bitdiff 0
+STATE_SWEEP PASS cases=261
+OUTPUT_OVERLAP PASS cases=54 calls=1944 active_conflicts=0 positive_control=0
+K5_DEFAULT_CHECK_DONE 2026-09-13T04:48:37+08:00
