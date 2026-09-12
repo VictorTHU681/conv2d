@@ -13,10 +13,18 @@ for sig in ['static void roll_link_output_dependencies(', 'static void fill_args
         a=x.index(sig);b=x.index('\n}\n',a)+3;return x[a:b]
     assert function(base)==function(s),sig
 (root/'merged.c').write_text(s)
+toggle=s
+sig='static void roll_prepare(const float* k, long H, long W, long KH, long KW, int nth)\n{'
+assert toggle.count(sig)==1
+toggle=toggle.replace(sig,sig+'\n    const int share_kf=env_int("CONV_KF_SHARE",1); // Diagnostic same-binary control.')
+needle='                int shared = 0;\n                for (int p = 0; p < g; p++) {'
+assert toggle.count(needle)==1
+toggle=toggle.replace(needle,'                int shared = 0;\n                for (int p = 0; share_kf && p < g; p++) {')
+(root/'toggle.c').write_text(toggle)
 line='            if ((P->G[gi].kind == 34 || P->G[gi].kind == 35) && ko != gi && !__atomic_load_n(&g_pk_gdone[ko].v, __ATOMIC_ACQUIRE)) continue;'
 assert s.count(line)==1
 (root/'nogate.c').write_text(s.replace(line,'            (void)ko; // Deliberately missing dependency: diagnostic positive control.'))
 guard=Path('tools/test_v56_planar_full_guard.c').read_text().replace('17,39,40,41,399,400','17,39,40,41,63,64,65,399,400').replace('k<14','k<17')
 (root/'guard.c').write_text(guard)
-for name in ['baseline','common','upstream','merged','nogate']:
+for name in ['baseline','common','upstream','merged','nogate','toggle']:
     p=root/(name+'.c');print(hashlib.sha256(p.read_bytes()).hexdigest(),p)

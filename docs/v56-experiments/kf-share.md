@@ -22,7 +22,7 @@ sharing, not content caching across calls or reuse of benchmark answers.
 
 ## Targeted evidence
 
-The acceptance job **1583288** is still running on cn20481. Completed portions:
+The acceptance job **1583288**, cn20481, 03:57:53–04:05:22, succeeded:
 
 - 288 preparation/packing cases over 12 heights, six widths (including 63/64/65),
   changed kernel values and serial reverse-order / seven-thread dynamic packing.
@@ -38,7 +38,20 @@ The acceptance job **1583288** is still running on cn20481. Completed portions:
 - Host extracted scheduler: 21,802 plans, 656,969 dependency edges,
   5,848,227 claims and 771,692 resumes. Existing output guarantees survive.
 
-Official four-round alternating comparison against 4817eff is pending.
+Official four-round alternating comparison against 4817eff completes all 64
+original-reference checks with maximum error zero. Each process times five calls;
+the median of four process-average GFLOPS gives:
+
+| KH | DDR change | HBM change |
+| --- | ---: | ---: |
+| 39 | +0.02% | +0.14% |
+| 41 | -0.12% | -0.05% |
+| 55 | -0.25% | -0.39% |
+| 81 | -0.18% | -0.21% |
+
+**Do not adopt this candidate now.** It does not reproduce upstream's reported
+KH 81 gains on the corrected local source. Preserve the complete result; do not
+substitute profile timing or sum upstream/historical percentages.
 Archive job **1583299**, cn20483, 04:00:22–04:02:40, succeeded: all three
 archives and 12 complete original-reference checks pass with zero maximum error.
 Archive hashes match the staged manifest. Candidate archives are
@@ -71,8 +84,25 @@ The roughly 8 us reduction in maximum packing time is small beside 22.3 ms of
 worker wall time, and packing can overlap computation. Preparation also measures
 3 us lower, but this experiment alone cannot attribute that difference to a
 particular source operation or exclude layout effects. The profiled wall-time
-change is small and inconsistent between DDR/HBM; await official comparison.
+change is small and inconsistent between DDR/HBM; the completed official
+comparison above likewise provides no measured gain supporting adoption.
 
 All logs, source hashes and strict summaries live under
 `results/v56/experiments/kf-share/`. Profiling controls and source generators are
 reproducible; extending the profiler preserves previous default K5 source hashes.
+
+## Instruction placement and same-executable control
+
+Both official binaries contain three identical 21-word F4 steps. Short, overlap
+and long-pure loops retain mod128 positions 120, 32 and 0 respectively; all three
+merged addresses move by +128 bytes. This rules out a change in those arithmetic
+words and mod128 placements, not all binary-layout effects or cache interactions.
+There is no evidence here that the regression is caused by alignment.
+
+`toggle.c` is an isolated source adding CONV_KF_SHARE to enable/disable sharing
+within the same executable. Both settings pay the environment read and branch;
+it is a diagnostic comparison and not an adopted production knob. Job **1583338**
+on cn20481 tests 522 signed bitwise state cases and six alternating pairs for
+KH 39/55/81 in DDR/HBM when allowed. This is pending; its source hash is separate.
+The aim is to distinguish a benefit of table sharing from differences between
+compiled binaries. It does not eliminate memory placement or run-to-run noise.
