@@ -11,6 +11,13 @@ r=subprocess.run(['git','merge-file','-p',str(root/'baseline.c'),str(root/'commo
                  capture_output=True,text=True)
 assert r.returncode==0,r.stderr
 (root/'merged.c').write_text(r.stdout)
+aligned=r.stdout
+a=aligned.index('static void k16pairf4(');b=aligned.index('\n}\n',a)+3
+f=aligned[a:b];label='        "1:\\n\\t"\n'
+assert f.count(label)==1
+f=f.replace(label,'        "nop\\n\\t"\n        "nop\\n\\t"\n'+label)
+aligned=aligned[:a]+f+aligned[b:]
+(root/'short128.c').write_text(aligned)
 # Output ownership and bounded first-copy helpers must survive unchanged.
 base=(root/'baseline.c').read_text()
 for signature in ['static void roll_link_output_dependencies(', 'static int resume_claim(',
@@ -18,7 +25,7 @@ for signature in ['static void roll_link_output_dependencies(', 'static int resu
     def function(s):
         a=s.index(signature);b=s.index('\n}\n',a)+3;return s[a:b]
     assert function(base)==function(r.stdout),signature
-for name in ['baseline','common','upstream','merged']:
+for name in ['baseline','common','upstream','merged','short128']:
     p=root/(name+'.c');print(hashlib.sha256(p.read_bytes()).hexdigest(),p)
 guard=Path('tools/test_v56_planar_full_guard.c').read_text()
 assert '17,39,40,41,399,400' in guard

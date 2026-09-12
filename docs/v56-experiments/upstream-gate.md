@@ -28,10 +28,36 @@ earlier K9 reuse and K8/K9/K4 boundary corrections are retained; K5 experiments
 are not included. This is an isolated source candidate, not a completed Git
 merge or an adopted package.
 
-**1583171** is submitted to cn20481 for five packing modes, 272 guard cases
-(including KW 63/64/65), an instrumented output-ownership check, and four-round
-original-benchmark comparisons against the accepted local source. Its terminal
-log and archive acceptance are still required. No result is claimed yet.
+**1583171**, cn20481, 03:37:51–03:46:08, succeeds with 1,305 state cases across
+five packing modes, 272 guards including KW 63/64/65, 54 runtime ownership
+checks (7,861 kernel calls, zero active conflicts), and 64 complete original
+benchmark checks with zero maximum errors. Four alternating rounds use five
+timings per process; values below compare median process-average GFLOPS.
+
+| KH=KW | DDR change | HBM change |
+| --- | ---: | ---: |
+| 39 | +0.03% | -0.21% |
+| 41 | -0.33% | -0.12% |
+| 55 | +0.46% | +0.57% |
+| 81 | +0.70% | +0.09% |
+
+These compare against local 43933469, not published v55. In particular, the
+HBM KH 81 result does not reproduce upstream's reported approximately 0.9%
+gain. Do not replace the measured result or combine percentages from unrelated
+baselines. Raw log and strict summary are under `results/v56/experiments/upstream-gate/`.
+
+**1583190**, cn20483, 03:41:16–03:44:35, validates all three staged archives:
+12 complete checks pass. The actual Git merge and root package update follow
+this accepted source/package evidence; staged source SHA remains 4689e38f.
+
+Machine-code inspection finds identical 21-word F4 arithmetic steps (5 loads,
+4 FMOPA, 8 FMLA, 4 pointer increments). It does **not** establish an unchanged
+entire short path: the baseline short loop starts at mod128=0, while the merged
+short loop starts at mod128=120. The merged overlap step starts at mod128=32
+and its long pure loop at mod128=0. See `machine_code.txt` and instruction excerpts.
+An isolated `short128` control restores two NOPs before the short row loop;
+**1583215** runs all six process permutations against baseline and merged. It
+is still pending completion and is not part of the accepted source.
 
 Upstream also adds `FBENCH_FORCE` to its diagnostic fbench, permitting timing
 after an initial validation failure for attribution experiments. This is not
@@ -40,6 +66,6 @@ job explicitly unsets that variable and uses the unchanged official benchmark
 for performance comparisons. Incorrect-result attribution controls and their
 numbers cannot be treated as eligible optimized implementations.
 
-Review and validate this integration before continuing K5 F4 layout controls,
-since it changes precisely the main kernel under investigation. Keep current
-root source/packages at 43933469 until the candidate passes the required checks.
+Complete this integration before continuing K5 F4 layout controls, since it
+changes precisely the main kernel under investigation. Do not adopt short128
+without its own measured benefit and relevant validation.
