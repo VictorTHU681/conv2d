@@ -2135,6 +2135,9 @@ static __attribute__((noinline)) void k8f(const kp_t* P)
         "6:\n\t"
         "ldr x12, [%[A], #264]\n\t"
         "mov x15, x7\n\t"
+        // K9 内循环 128B 对齐（跳过式垫；同 F4 的对齐收益路径，K9 循环 ~200B 无对齐指示）
+        "b 2f\n\t"
+        ".p2align 7\n"
         "2:\n\t"
         "ld1w {z0.s}, p0/z, [x16]\n\t"
         "ld1w {z1.s}, p0/z, [x25]\n\t"
@@ -2284,6 +2287,26 @@ static __attribute__((noinline)) void k8f(const kp_t* P)
         "fmopa za1.s, p0/m, p0/m, z1.s, z4.s\n\t" \
         "fmopa za2.s, p0/m, p0/m, z2.s, z4.s\n\t" \
         "fmopa za3.s, p0/m, p0/m, z3.s, z4.s\n\t"
+// K4 滑窗 EXT 版：四平面窗口（16 寄存器）驻留，每外步每平面 1 条边界 ld1w + 4 条 EXT 平移，
+// 替代 16 条 4B 偏移非对齐 ld1w（载入 21→9/外步）；K4 的 fmla 预算全空（32 槽），16 条 EXT 免费。
+// EXT 复现载入值（同字节），逐位一致；边界载入越出平面尾的 lane 不被消费，且落在本线程环内（内存安全）。
+#define K4E_SUB(Z0, Z1, Z2, Z3, BOFF) \
+        "ld1w {z20.s}, p0/z, [x2, #" #BOFF ", mul vl]\n\t" \
+        "fmopa za0.s, p0/m, p0/m, " #Z0 ".s, z20.s\n\t" \
+        "fmopa za1.s, p0/m, p0/m, " #Z1 ".s, z20.s\n\t" \
+        "fmopa za2.s, p0/m, p0/m, " #Z2 ".s, z20.s\n\t" \
+        "fmopa za3.s, p0/m, p0/m, " #Z3 ".s, z20.s\n\t"
+#define K4E_WIN(PQ, Z0, Z1, Z2, Z3) \
+        "ld1w {" #Z0 ".s}, p0/z, [" #PQ "]\n\t" \
+        "ld1w {" #Z1 ".s}, p0/z, [" #PQ ", #1, mul vl]\n\t" \
+        "ld1w {" #Z2 ".s}, p0/z, [" #PQ ", #2, mul vl]\n\t" \
+        "ld1w {" #Z3 ".s}, p0/z, [" #PQ ", #3, mul vl]\n\t"
+#define K4E_ADV(PQ, Z0, Z1, Z2, Z3, ZB) \
+        "ld1w {" #ZB ".s}, p0/z, [" #PQ ", #4, mul vl]\n\t" \
+        "ext " #Z0 ".b, " #Z0 ".b, " #Z1 ".b, #4\n\t" \
+        "ext " #Z1 ".b, " #Z1 ".b, " #Z2 ".b, #4\n\t" \
+        "ext " #Z2 ".b, " #Z2 ".b, " #Z3 ".b, #4\n\t" \
+        "ext " #Z3 ".b, " #Z3 ".b, " #ZB ".b, #4\n\t"
 #define K4_EV(T) \
         "mova z0.s, p0/m, za" #T "v.s[w12, 0]\n\t" \
         "mova z1.s, p0/m, za" #T "v.s[w12, 1]\n\t" \
@@ -2369,16 +2392,24 @@ static void k4(const kp_t* P)
         "ldr x23, [%[A], #208]\n\t" "add x23, x23, x16\n\t"
         "ldr x25, [%[A], #216]\n\t" "add x25, x25, x16\n\t"
         "ldr x20, [%[A], #184]\n\t" "add x16, x16, x20\n\t"
+        K4E_WIN(x16, z0, z1, z2, z3)
+        K4E_WIN(x22, z4, z5, z6, z7)
+        K4E_WIN(x23, z8, z9, z10, z11)
+        K4E_WIN(x25, z12, z13, z14, z15)
         "ldr x20, [%[A], #296]\n\t"
         "mov x15, x7\n\t"
         "cbz x20, 62f\n\t"
         "sub x15, x15, x20\n\t"
         ".p2align 4\n"
         "61:\n\t"
-        K4_STEP(x16, 0)
-        K4_STEP(x22, 1)
-        K4_STEP(x23, 2)
-        K4_STEP(x25, 3)
+        K4E_SUB(z0, z1, z2, z3, 0)
+        K4E_SUB(z4, z5, z6, z7, 1)
+        K4E_SUB(z8, z9, z10, z11, 2)
+        K4E_SUB(z12, z13, z14, z15, 3)
+        K4E_ADV(x16, z0, z1, z2, z3, z16)
+        K4E_ADV(x22, z4, z5, z6, z7, z17)
+        K4E_ADV(x23, z8, z9, z10, z11, z18)
+        K4E_ADV(x25, z12, z13, z14, z15, z19)
         "add x16, x16, #4\n\t"
         "add x22, x22, #4\n\t"
         "add x23, x23, #4\n\t"
@@ -2395,10 +2426,14 @@ static void k4(const kp_t* P)
         "ldr x24, [%[A], #112]\n\t"              // 头部/穿插拷贝用过 x24：恢复 nvA（事件判定用）
         ".p2align 4\n"
         "2:\n\t"
-        K4_STEP(x16, 0)
-        K4_STEP(x22, 1)
-        K4_STEP(x23, 2)
-        K4_STEP(x25, 3)
+        K4E_SUB(z0, z1, z2, z3, 0)
+        K4E_SUB(z4, z5, z6, z7, 1)
+        K4E_SUB(z8, z9, z10, z11, 2)
+        K4E_SUB(z12, z13, z14, z15, 3)
+        K4E_ADV(x16, z0, z1, z2, z3, z16)
+        K4E_ADV(x22, z4, z5, z6, z7, z17)
+        K4E_ADV(x23, z8, z9, z10, z11, z18)
+        K4E_ADV(x25, z12, z13, z14, z15, z19)
         "add x16, x16, #4\n\t"
         "add x22, x22, #4\n\t"
         "add x23, x23, #4\n\t"
@@ -2408,11 +2443,11 @@ static void k4(const kp_t* P)
         "b.ne 2b\n\t"
         "ldr x12, [%[A], #264]\n\t"
         "cbz x12, 42f\n\t"
-        K4_STEP(x16, 0)
+        K4E_SUB(z0, z1, z2, z3, 0)
         "cmp x12, #1\n\t" "b.eq 41f\n\t"
-        K4_STEP(x22, 1)
+        K4E_SUB(z4, z5, z6, z7, 1)
         "cmp x12, #2\n\t" "b.eq 41f\n\t"
-        K4_STEP(x23, 2)
+        K4E_SUB(z8, z9, z10, z11, 2)
         "41:\n\t" "add x2, x2, #256\n\t"
         "42:\n\t"
         WRAP_B(x2) SEL_OUT
@@ -2427,7 +2462,7 @@ static void k4(const kp_t* P)
         ROW_TAIL
         :
         : [A]"r"(&A)
-        : XCLOB, "z0", "z1", "z2", "z3", "z4", "z25", "z26", "z27", "z28", "z31", "p0", "p3", "p4", "memory", "cc");
+        : XCLOB, "z0", "z1", "z2", "z3", "z4", "z5", "z6", "z7", "z8", "z9", "z10", "z11", "z12", "z13", "z14", "z15", "z16", "z17", "z18", "z19", "z20", "z25", "z26", "z27", "z28", "z31", "p0", "p3", "p4", "memory", "cc");
 }
 // b 表：kind 16: R[y][X][c] = k[(y-c) mod KH][X]（残差 s_base+c ≥ KH → 0）；kind 8: c=2s+ic → k[(y-s) mod KH][X-ic]；kind 4: c=4s+ic
 // 每次调用都重建（不缓存打包结果），按行构建：kj 只依赖 (y,c)，提出内层（无逐元素取模），X 方向三段拷贝/清零
