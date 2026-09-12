@@ -1,0 +1,511 @@
+HOST cn20481 2026-09-13T03:26:30+08:00
+pid 2536215's current affinity list: 37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+PLACEMENT cpu_node=1 hbm_node=-1
+Cpus_allowed_list:	37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+Mems_allowed_list:	0-15
+1548857
+policy: default
+preferred node: current
+physcpubind: 37 75 113 151 189 227 265 303 341 379 417 455 493 531 569 607 
+cpubind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+nodebind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+preferred: 
+EFFECTIVE_PLACEMENT
+policy: default
+preferred node: current
+physcpubind: 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 
+cpubind: 1 
+nodebind: 1 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+preferred: 
+4393346986d6c0c71c7db9ecd804ed76c22839923f8ed963f07488854809d121  build/v56/experiments/k5-triplet/baseline.c
+126a9a86bc805cff11a3c5c1c2ed1aa713e03bdadf753b538b3e416a220cc798  build/v56/experiments/k5-triplet/triplet.c
+e0a89b9751045cbd8c56f265a86b77db198a35ed743440c7dce236078bde76ff  build/v56/experiments/k5-triplet/prefetch.c
+   572 x 567  k  39 x  7 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   614 x 569  k  81 x  9 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   588 x 571  k  55 x 11 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   574 x 573  k  41 x 13 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   646 x 575  k 113 x 15 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   678 x 577  k 145 x 17 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   710 x 579  k 177 x 19 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   742 x 581  k 209 x 21 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   774 x 583  k 241 x 23 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   572 x 585  k  39 x 25 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   573 x 567  k  39 x  7 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   615 x 569  k  81 x  9 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   589 x 571  k  55 x 11 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   575 x 573  k  41 x 13 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   647 x 575  k 113 x 15 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   679 x 577  k 145 x 17 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   711 x 579  k 177 x 19 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   743 x 581  k 209 x 21 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   775 x 583  k 241 x 23 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   573 x 585  k  39 x 25 : ok  maxerr 0  bad 0/300135  bitdiff 0
+STATE_SWEEP PASS cases=261
+c1edf4aef1afbb1f496bdf3b0a94e032d8fffe3bb92d63c0e53e7c917c950bac  build/v56/experiments/k5-triplet/overlap.c
+   572 x 567  k  39 x  7 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   614 x 569  k  81 x  9 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   588 x 571  k  55 x 11 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   574 x 573  k  41 x 13 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   646 x 575  k 113 x 15 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   678 x 577  k 145 x 17 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   710 x 579  k 177 x 19 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   742 x 581  k 209 x 21 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   774 x 583  k 241 x 23 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   572 x 585  k  39 x 25 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   573 x 567  k  39 x  7 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   615 x 569  k  81 x  9 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   589 x 571  k  55 x 11 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   575 x 573  k  41 x 13 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   647 x 575  k 113 x 15 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   679 x 577  k 145 x 17 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   711 x 579  k 177 x 19 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   743 x 581  k 209 x 21 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   775 x 583  k 241 x 23 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   573 x 585  k  39 x 25 : ok  maxerr 0  bad 0/300135  bitdiff 0
+STATE_SWEEP PASS cases=261
+ff1257e30d9f8d2be9d2560462e99bc68ce20692f7e3265072ad261128a46715  build/v56/experiments/k5-triplet/both.c
+   572 x 567  k  39 x  7 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   614 x 569  k  81 x  9 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   588 x 571  k  55 x 11 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   574 x 573  k  41 x 13 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   646 x 575  k 113 x 15 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   678 x 577  k 145 x 17 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   710 x 579  k 177 x 19 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   742 x 581  k 209 x 21 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   774 x 583  k 241 x 23 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   572 x 585  k  39 x 25 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   573 x 567  k  39 x  7 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   615 x 569  k  81 x  9 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   589 x 571  k  55 x 11 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   575 x 573  k  41 x 13 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   647 x 575  k 113 x 15 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   679 x 577  k 145 x 17 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   711 x 579  k 177 x 19 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   743 x 581  k 209 x 21 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   775 x 583  k 241 x 23 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   573 x 585  k  39 x 25 : ok  maxerr 0  bad 0/300135  bitdiff 0
+STATE_SWEEP PASS cases=261
+OUTPUT_OVERLAP PASS cases=54 calls=7747 active_conflicts=0 positive_control=0
+MEASURE memory=DDR round=1 variant=baseline shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.290 ms    14248.6 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.279 ms    14278.5 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.280 ms    14275.5 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.274 ms    14290.5 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.283 ms    14267.8 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.274 ms    14290.5 GFLOPS | avg    5.281 ms    14272.2 GFLOPS  PASS
+MEASURE memory=DDR round=1 variant=triplet shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.353 ms    14079.6 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.329 ms    14145.0 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.314 ms    14183.4 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.314 ms    14183.7 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.331 ms    14139.4 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.314 ms    14183.7 GFLOPS | avg    5.328 ms    14146.1 GFLOPS  PASS
+MEASURE memory=DDR round=1 variant=prefetch shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.318 ms    14174.6 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.313 ms    14187.7 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.311 ms    14191.7 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.316 ms    14178.5 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.318 ms    14172.8 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.311 ms    14191.7 GFLOPS | avg    5.315 ms    14181.1 GFLOPS  PASS
+MEASURE memory=DDR round=1 variant=overlap shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.305 ms    14209.5 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.300 ms    14221.0 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.319 ms    14170.2 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.297 ms    14229.5 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.298 ms    14227.4 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.297 ms    14229.5 GFLOPS | avg    5.304 ms    14211.5 GFLOPS  PASS
+MEASURE memory=DDR round=1 variant=both shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.279 ms    14278.7 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.285 ms    14262.7 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.265 ms    14315.0 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.271 ms    14301.1 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.286 ms    14260.4 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.265 ms    14315.0 GFLOPS | avg    5.277 ms    14283.5 GFLOPS  PASS
+MEASURE memory=DDR round=2 variant=both shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.267 ms    14310.9 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.273 ms    14295.6 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.516 ms    13664.9 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.279 ms    14279.2 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.291 ms    14246.7 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.267 ms    14310.9 GFLOPS | avg    5.325 ms    14155.0 GFLOPS  PASS
+MEASURE memory=DDR round=2 variant=overlap shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.289 ms    14250.2 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.284 ms    14264.5 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.292 ms    14242.7 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.304 ms    14210.2 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.290 ms    14249.9 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.284 ms    14264.5 GFLOPS | avg    5.292 ms    14243.5 GFLOPS  PASS
+MEASURE memory=DDR round=2 variant=prefetch shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.282 ms    14270.3 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.279 ms    14278.7 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.272 ms    14298.0 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.259 ms    14332.6 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.283 ms    14267.0 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.259 ms    14332.6 GFLOPS | avg    5.275 ms    14289.3 GFLOPS  PASS
+MEASURE memory=DDR round=2 variant=triplet shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.317 ms    14175.4 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.312 ms    14188.4 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.307 ms    14201.6 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.341 ms    14113.3 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.342 ms    14110.6 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.307 ms    14201.6 GFLOPS | avg    5.324 ms    14157.8 GFLOPS  PASS
+MEASURE memory=DDR round=2 variant=baseline shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.300 ms    14220.5 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.286 ms    14260.3 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.291 ms    14245.2 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.271 ms    14300.1 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.278 ms    14280.1 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.271 ms    14300.1 GFLOPS | avg    5.285 ms    14261.2 GFLOPS  PASS
+MEASURE memory=DDR round=3 variant=baseline shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.281 ms    14271.8 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.309 ms    14198.7 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.277 ms    14284.9 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.291 ms    14245.2 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.267 ms    14310.0 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.267 ms    14310.0 GFLOPS | avg    5.285 ms    14262.0 GFLOPS  PASS
+MEASURE memory=DDR round=3 variant=triplet shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.324 ms    14157.0 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.317 ms    14176.0 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.311 ms    14192.3 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.307 ms    14204.2 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.345 ms    14101.8 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.307 ms    14204.2 GFLOPS | avg    5.321 ms    14166.2 GFLOPS  PASS
+MEASURE memory=DDR round=3 variant=prefetch shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.290 ms    14247.5 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.273 ms    14295.2 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.295 ms    14234.0 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.295 ms    14236.4 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.291 ms    14246.6 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.273 ms    14295.2 GFLOPS | avg    5.289 ms    14251.9 GFLOPS  PASS
+MEASURE memory=DDR round=3 variant=overlap shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.333 ms    14133.5 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.320 ms    14169.0 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.317 ms    14176.6 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.320 ms    14167.8 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.349 ms    14091.7 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.317 ms    14176.6 GFLOPS | avg    5.328 ms    14147.7 GFLOPS  PASS
+MEASURE memory=DDR round=3 variant=both shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.302 ms    14216.0 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.294 ms    14239.1 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.300 ms    14221.6 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.300 ms    14222.8 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.287 ms    14256.5 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.287 ms    14256.5 GFLOPS | avg    5.296 ms    14231.2 GFLOPS  PASS
+MEASURE memory=DDR round=1 variant=baseline shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    6.056 ms    13743.3 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    6.023 ms    13818.5 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    6.072 ms    13708.4 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    6.040 ms    13779.9 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    6.036 ms    13790.6 GFLOPS PASS
+  6144 x  4096     41 x    41 best    6.023 ms    13818.5 GFLOPS | avg    6.046 ms    13768.0 GFLOPS  PASS
+MEASURE memory=DDR round=1 variant=triplet shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    6.134 ms    13570.7 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    6.066 ms    13720.8 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    6.000 ms    13872.7 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    6.042 ms    13777.0 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    6.044 ms    13772.1 GFLOPS PASS
+  6144 x  4096     41 x    41 best    6.000 ms    13872.7 GFLOPS | avg    6.057 ms    13741.9 GFLOPS  PASS
+MEASURE memory=DDR round=1 variant=prefetch shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    6.002 ms    13868.6 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    6.027 ms    13811.5 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    6.134 ms    13570.5 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    6.038 ms    13786.1 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    6.034 ms    13794.7 GFLOPS PASS
+  6144 x  4096     41 x    41 best    6.002 ms    13868.6 GFLOPS | avg    6.047 ms    13765.5 GFLOPS  PASS
+MEASURE memory=DDR round=1 variant=overlap shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    6.101 ms    13643.9 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    6.112 ms    13618.4 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    6.023 ms    13820.1 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    5.996 ms    13882.2 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    6.085 ms    13678.9 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.996 ms    13882.2 GFLOPS | avg    6.063 ms    13727.9 GFLOPS  PASS
+MEASURE memory=DDR round=1 variant=both shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    6.160 ms    13512.9 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    6.304 ms    13204.3 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    6.141 ms    13554.2 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    6.132 ms    13573.7 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    6.062 ms    13731.3 GFLOPS PASS
+  6144 x  4096     41 x    41 best    6.062 ms    13731.3 GFLOPS | avg    6.160 ms    13513.1 GFLOPS  PASS
+MEASURE memory=DDR round=2 variant=both shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    6.028 ms    13807.2 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    6.038 ms    13786.5 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    6.022 ms    13821.7 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    6.153 ms    13528.3 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    6.210 ms    13402.9 GFLOPS PASS
+  6144 x  4096     41 x    41 best    6.022 ms    13821.7 GFLOPS | avg    6.090 ms    13667.2 GFLOPS  PASS
+MEASURE memory=DDR round=2 variant=overlap shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    6.142 ms    13552.1 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    6.194 ms    13438.7 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    6.038 ms    13784.4 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    6.207 ms    13410.8 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    6.135 ms    13568.4 GFLOPS PASS
+  6144 x  4096     41 x    41 best    6.038 ms    13784.4 GFLOPS | avg    6.143 ms    13549.6 GFLOPS  PASS
+MEASURE memory=DDR round=2 variant=prefetch shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    6.017 ms    13832.6 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    6.126 ms    13588.0 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    6.058 ms    13740.4 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    6.015 ms    13838.1 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    6.034 ms    13794.8 GFLOPS PASS
+  6144 x  4096     41 x    41 best    6.015 ms    13838.1 GFLOPS | avg    6.050 ms    13758.2 GFLOPS  PASS
+MEASURE memory=DDR round=2 variant=triplet shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    6.053 ms    13752.0 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    6.056 ms    13744.5 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    6.045 ms    13770.2 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    6.058 ms    13740.8 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    6.075 ms    13700.7 GFLOPS PASS
+  6144 x  4096     41 x    41 best    6.045 ms    13770.2 GFLOPS | avg    6.057 ms    13741.6 GFLOPS  PASS
+MEASURE memory=DDR round=2 variant=baseline shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    6.081 ms    13688.5 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    5.949 ms    13992.7 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    6.008 ms    13853.5 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    5.965 ms    13953.6 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    5.998 ms    13878.0 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.949 ms    13992.7 GFLOPS | avg    6.000 ms    13872.5 GFLOPS  PASS
+MEASURE memory=DDR round=3 variant=baseline shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    6.439 ms    12926.3 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    6.071 ms    13711.0 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    6.016 ms    13834.7 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    6.090 ms    13667.9 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    6.069 ms    13715.4 GFLOPS PASS
+  6144 x  4096     41 x    41 best    6.016 ms    13834.7 GFLOPS | avg    6.137 ms    13562.9 GFLOPS  PASS
+MEASURE memory=DDR round=3 variant=triplet shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    6.017 ms    13832.8 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    6.013 ms    13842.2 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    6.010 ms    13848.8 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    6.028 ms    13809.1 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    6.027 ms    13810.5 GFLOPS PASS
+  6144 x  4096     41 x    41 best    6.010 ms    13848.8 GFLOPS | avg    6.019 ms    13828.7 GFLOPS  PASS
+MEASURE memory=DDR round=3 variant=prefetch shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    6.131 ms    13576.3 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    6.098 ms    13649.5 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    6.085 ms    13678.4 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    6.183 ms    13462.6 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    6.197 ms    13430.8 GFLOPS PASS
+  6144 x  4096     41 x    41 best    6.085 ms    13678.4 GFLOPS | avg    6.139 ms    13558.8 GFLOPS  PASS
+MEASURE memory=DDR round=3 variant=overlap shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    6.212 ms    13398.9 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    6.212 ms    13399.7 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    5.983 ms    13911.7 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    6.029 ms    13806.5 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    6.093 ms    13660.4 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.983 ms    13911.7 GFLOPS | avg    6.106 ms    13632.2 GFLOPS  PASS
+MEASURE memory=DDR round=3 variant=both shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    6.109 ms    13625.3 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    6.166 ms    13498.6 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    6.137 ms    13563.7 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    6.005 ms    13861.4 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    6.183 ms    13461.0 GFLOPS PASS
+  6144 x  4096     41 x    41 best    6.005 ms    13861.4 GFLOPS | avg    6.120 ms    13600.6 GFLOPS  PASS
+MEASURE memory=DDR round=1 variant=baseline shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.123 ms    14481.2 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.108 ms    14500.8 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.116 ms    14490.7 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.109 ms    14499.2 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.120 ms    14485.4 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.108 ms    14500.8 GFLOPS | avg   11.115 ms    14491.5 GFLOPS  PASS
+MEASURE memory=DDR round=1 variant=triplet shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.102 ms    14509.1 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.086 ms    14530.2 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.089 ms    14525.9 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.088 ms    14527.5 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.086 ms    14529.4 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.086 ms    14530.2 GFLOPS | avg   11.090 ms    14524.4 GFLOPS  PASS
+MEASURE memory=DDR round=1 variant=prefetch shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.117 ms    14489.3 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.103 ms    14507.9 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.104 ms    14505.8 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.109 ms    14499.6 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.092 ms    14522.2 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.092 ms    14522.2 GFLOPS | avg   11.105 ms    14505.0 GFLOPS  PASS
+MEASURE memory=DDR round=1 variant=overlap shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.095 ms    14517.6 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.081 ms    14536.3 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.084 ms    14531.6 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.085 ms    14530.5 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.094 ms    14519.3 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.081 ms    14536.3 GFLOPS | avg   11.088 ms    14527.1 GFLOPS  PASS
+MEASURE memory=DDR round=1 variant=both shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.102 ms    14508.0 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.098 ms    14514.0 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.097 ms    14515.3 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.097 ms    14515.0 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.096 ms    14516.0 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.096 ms    14516.0 GFLOPS | avg   11.098 ms    14513.7 GFLOPS  PASS
+MEASURE memory=DDR round=2 variant=both shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.084 ms    14532.2 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.116 ms    14489.7 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.091 ms    14522.7 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.099 ms    14512.7 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.095 ms    14517.7 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.084 ms    14532.2 GFLOPS | avg   11.097 ms    14515.0 GFLOPS  PASS
+MEASURE memory=DDR round=2 variant=overlap shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.093 ms    14520.8 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.095 ms    14517.4 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.100 ms    14511.3 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.084 ms    14531.9 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.105 ms    14504.4 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.084 ms    14531.9 GFLOPS | avg   11.095 ms    14517.2 GFLOPS  PASS
+MEASURE memory=DDR round=2 variant=prefetch shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.097 ms    14514.8 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.101 ms    14509.4 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.088 ms    14527.5 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.076 ms    14542.8 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.086 ms    14530.0 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.076 ms    14542.8 GFLOPS | avg   11.090 ms    14524.9 GFLOPS  PASS
+MEASURE memory=DDR round=2 variant=triplet shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.093 ms    14520.1 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.097 ms    14515.1 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.093 ms    14520.7 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.098 ms    14513.9 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.099 ms    14512.6 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.093 ms    14520.7 GFLOPS | avg   11.096 ms    14516.5 GFLOPS  PASS
+MEASURE memory=DDR round=2 variant=baseline shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.108 ms    14501.3 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.116 ms    14490.7 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.110 ms    14498.0 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.118 ms    14487.3 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.116 ms    14490.2 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.108 ms    14501.3 GFLOPS | avg   11.114 ms    14493.5 GFLOPS  PASS
+MEASURE memory=DDR round=3 variant=baseline shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.125 ms    14479.0 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.119 ms    14486.1 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.118 ms    14487.4 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.110 ms    14498.5 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.130 ms    14472.2 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.110 ms    14498.5 GFLOPS | avg   11.120 ms    14484.7 GFLOPS  PASS
+MEASURE memory=DDR round=3 variant=triplet shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.096 ms    14516.5 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.079 ms    14539.4 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.087 ms    14528.3 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.085 ms    14530.7 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.086 ms    14529.3 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.079 ms    14539.4 GFLOPS | avg   11.087 ms    14528.8 GFLOPS  PASS
+MEASURE memory=DDR round=3 variant=prefetch shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.110 ms    14497.8 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.102 ms    14508.2 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.091 ms    14522.5 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.101 ms    14510.5 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.099 ms    14512.7 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.091 ms    14522.5 GFLOPS | avg   11.101 ms    14510.3 GFLOPS  PASS
+MEASURE memory=DDR round=3 variant=overlap shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.087 ms    14527.8 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.077 ms    14541.2 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.085 ms    14530.9 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.084 ms    14532.2 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.091 ms    14523.6 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.077 ms    14541.2 GFLOPS | avg   11.085 ms    14531.1 GFLOPS  PASS
+MEASURE memory=DDR round=3 variant=both shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.104 ms    14506.2 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.099 ms    14512.9 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.087 ms    14528.5 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.089 ms    14525.0 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.087 ms    14528.1 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.087 ms    14528.5 GFLOPS | avg   11.093 ms    14520.1 GFLOPS  PASS
+MEASURE memory=DDR round=1 variant=baseline shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   22.471 ms    15387.4 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.451 ms    15400.9 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.467 ms    15390.2 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.457 ms    15396.8 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.441 ms    15408.2 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.441 ms    15408.2 GFLOPS | avg   22.458 ms    15396.7 GFLOPS  PASS
+MEASURE memory=DDR round=1 variant=triplet shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   22.461 ms    15394.0 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.662 ms    15257.7 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.464 ms    15392.6 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.467 ms    15390.4 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.450 ms    15402.0 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.450 ms    15402.0 GFLOPS | avg   22.501 ms    15367.1 GFLOPS  PASS
+MEASURE memory=DDR round=1 variant=prefetch shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   22.422 ms    15421.0 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.414 ms    15426.4 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.430 ms    15415.3 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.552 ms    15332.4 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.558 ms    15328.5 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.414 ms    15426.4 GFLOPS | avg   22.475 ms    15384.6 GFLOPS  PASS
+MEASURE memory=DDR round=1 variant=overlap shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   22.433 ms    15413.3 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.467 ms    15390.2 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.548 ms    15334.9 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.383 ms    15447.7 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.429 ms    15416.2 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.383 ms    15447.7 GFLOPS | avg   22.452 ms    15400.4 GFLOPS  PASS
+MEASURE memory=DDR round=1 variant=both shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   22.583 ms    15311.4 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.377 ms    15452.2 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.380 ms    15450.0 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.379 ms    15450.8 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.377 ms    15452.4 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.377 ms    15452.4 GFLOPS | avg   22.419 ms    15423.2 GFLOPS  PASS
+MEASURE memory=DDR round=2 variant=both shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   22.448 ms    15403.4 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.440 ms    15409.1 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.438 ms    15410.4 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.525 ms    15350.9 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.514 ms    15358.2 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.438 ms    15410.4 GFLOPS | avg   22.473 ms    15386.3 GFLOPS  PASS
+MEASURE memory=DDR round=2 variant=overlap shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   22.442 ms    15407.4 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.405 ms    15433.0 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.416 ms    15425.4 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.577 ms    15315.0 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.417 ms    15424.3 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.405 ms    15433.0 GFLOPS | avg   22.451 ms    15400.9 GFLOPS  PASS
+MEASURE memory=DDR round=2 variant=prefetch shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   22.397 ms    15438.1 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.378 ms    15451.8 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.383 ms    15448.0 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.576 ms    15315.6 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.389 ms    15443.6 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.378 ms    15451.8 GFLOPS | avg   22.425 ms    15419.2 GFLOPS  PASS
+MEASURE memory=DDR round=2 variant=triplet shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   22.459 ms    15395.8 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.466 ms    15391.1 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.465 ms    15391.4 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.462 ms    15393.8 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.561 ms    15325.8 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.459 ms    15395.8 GFLOPS | avg   22.483 ms    15379.5 GFLOPS  PASS
+MEASURE memory=DDR round=2 variant=baseline shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   22.422 ms    15421.0 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.436 ms    15411.6 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.496 ms    15370.6 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.516 ms    15356.4 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.420 ms    15422.1 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.420 ms    15422.1 GFLOPS | avg   22.458 ms    15396.3 GFLOPS  PASS
+MEASURE memory=DDR round=3 variant=baseline shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   22.536 ms    15343.1 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.431 ms    15414.7 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.410 ms    15429.4 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.516 ms    15356.5 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.440 ms    15408.5 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.410 ms    15429.4 GFLOPS | avg   22.467 ms    15390.4 GFLOPS  PASS
+MEASURE memory=DDR round=3 variant=triplet shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   22.443 ms    15406.4 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.436 ms    15411.5 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.444 ms    15406.3 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.433 ms    15413.8 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.443 ms    15406.5 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.433 ms    15413.8 GFLOPS | avg   22.440 ms    15408.9 GFLOPS  PASS
+MEASURE memory=DDR round=3 variant=prefetch shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   22.565 ms    15323.7 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.523 ms    15351.8 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.565 ms    15323.5 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.383 ms    15448.0 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.442 ms    15407.1 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.383 ms    15448.0 GFLOPS | avg   22.496 ms    15370.7 GFLOPS  PASS
+MEASURE memory=DDR round=3 variant=overlap shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   22.396 ms    15438.7 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.553 ms    15331.4 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.593 ms    15304.5 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.437 ms    15411.0 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.410 ms    15429.2 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.396 ms    15438.7 GFLOPS | avg   22.478 ms    15382.8 GFLOPS  PASS
+MEASURE memory=DDR round=3 variant=both shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   22.609 ms    15293.7 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.746 ms    15201.5 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.573 ms    15318.2 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.719 ms    15219.7 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.580 ms    15313.5 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.573 ms    15318.2 GFLOPS | avg   22.645 ms    15269.1 GFLOPS  PASS
+K5_COPY_DONE 2026-09-13T03:28:58+08:00

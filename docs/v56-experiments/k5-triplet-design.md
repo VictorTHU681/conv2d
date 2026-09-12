@@ -1,11 +1,13 @@
 # Next v56 candidate: five residual rows with three-way folding
 
-Status: design derived from the completed mixed-arithmetic profile; no K5
-implementation or performance result yet. The accepted operator now uses source
+Status: an isolated K5 implementation now exists and passes extended correctness
+checks, but has no stable uninstrumented speedup. It is not adopted; see the
+[implementation, profiles and rejected controls](k5-triplet.md).
+The accepted operator still uses source
 `43933469…09d121`, including the validated output write-order correction.
 The indexed-FMLA follow-up 1582779 has now independently confirmed the same
 eight-FMLA arithmetic-only budget. The [output overlap race](output-ownership.md)
-has been corrected; K5 may now proceed while preserving row-chunk dependencies.
+has been corrected; all K5 experiments preserve row-chunk dependencies.
 
 ## Why change the grouping
 

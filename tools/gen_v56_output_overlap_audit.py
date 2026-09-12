@@ -2,8 +2,13 @@
 """Observe overlapping live output regions around actual SME kernel calls."""
 from pathlib import Path
 import hashlib
+import sys
 
 root = Path('build/v56/experiments/output-order')
+variants=['baseline','ordered','pipelined']
+if '--root' in sys.argv:
+    root=Path(sys.argv[sys.argv.index('--root')+1])
+    variants=sys.argv[sys.argv.index('--variants')+1].split(',')
 helper = '''// Diagnostic only: metadata lock does not cover kernel execution.
 static int audit_lock;
 static unsigned long audit_calls, audit_conflicts;
@@ -51,7 +56,7 @@ void conv_output_audit_report(unsigned long* calls, unsigned long* conflicts) {
 }
 
 '''
-for variant in ['baseline','ordered','pipelined']:
+for variant in variants:
     s = (root/(variant+'.c')).read_text()
     needle = 'static void roll_worker('
     assert s.count(needle)==1
@@ -62,6 +67,7 @@ for variant in ['baseline','ordered','pipelined']:
     needle = '        if (g_roll_diag) { int ki = roll_kind_idx(g->kind);'
     assert s.count(needle)==1
     s = s.replace(needle,'        audit_leave(tid);\n'+needle)
-    path = root/(variant+'_audit.c')
+    # A custom experiment can also have a distinct input-interval audit.
+    path = root/(variant+('_overlap.c' if '--root' in sys.argv else '_audit.c'))
     path.write_text(s)
     print(hashlib.sha256(s.encode()).hexdigest(),path)

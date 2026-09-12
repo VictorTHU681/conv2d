@@ -6,7 +6,10 @@ import sys
 
 root = Path('build/v56/experiments/output-order')
 variant = 'pipelined' if '--pipeline' in sys.argv else 'ordered'
-s = (root/(variant+'.c')).read_text()
+custom_source = Path(sys.argv[sys.argv.index('--source')+1]) if '--source' in sys.argv else None
+if custom_source:
+    root=custom_source.parent
+s = (custom_source or root/(variant+'.c')).read_text()
 types = s[s.index('typedef struct { int kind;'):s.index('static rplan_t g_rp;')]
 groups = s[s.index('static int roll_groups_base('):s.index('// KW 在条带步数上限内')]
 link = s[s.index('static void roll_link_output_dependencies('):s.index('static void roll_prepare(')]
@@ -121,6 +124,26 @@ static unsigned long claims,edges,plans,resumes;
     harness = harness.replace('    run(39,39,4058,6106);', '    g_roll_step=8; run(39,39,4058,6106);')
     harness = harness.replace('OUTPUT_ORDER_HOST', 'OUTPUT_PIPELINE_HOST')
 stem = 'host_test' if variant == 'ordered' else 'host_pipeline'
+if custom_source:
+    harness=harness.replace('128,129,255,256,257,273,511,512,513',
+                            '128,129,191,192,193,255,256,257,273,383,384,385,511,512,513')
+    harness=harness.replace('    P.items=calloc(4096,sizeof(*P.items));',r'''
+    // Prove distinct groups partition the output-row residues exactly once.
+    for(long row=0;row<KH;row++) {
+        int owners=0;
+        for(int g=0;g<P.ng;g++) {
+            rgrp_t* x=&P.G[g];
+            owners += row>=x->s_base && row<x->s_base+x->nvA;
+            owners += x->nvB && row>=x->s_base+16 && row<x->s_base+16+x->nvB;
+            int nf=x->kind==35?4:x->kind==34?3:(x->kind==33||x->kind==9)?1:0;
+            owners += nf && row<=x->sf && row>x->sf-nf;
+            owners += x->kind==17 && (row==KH-3 || row==KH-2);
+        }
+        assert(owners==1);
+    }
+    P.items=calloc(4096,sizeof(*P.items));''')
+    import hashlib
+    print('CUSTOM_SOURCE',custom_source,hashlib.sha256(s.encode()).hexdigest(),flush=True)
 (root/(stem+'.c')).write_text(prefix+types+groups+link+claim+harness)
 subprocess.run(['gcc','-O1','-g','-fsanitize=address,undefined','-fno-omit-frame-pointer',
                 str(root/(stem+'.c')),'-o',str(root/stem)],check=True)
