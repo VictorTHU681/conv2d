@@ -1,0 +1,66 @@
+HOST cn20483 2026-09-12T21:00:13+08:00
+pid 2271089's current affinity list: 37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+PLACEMENT cpu_node=1 hbm_node=17
+Cpus_allowed_list:	37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+Mems_allowed_list:	0-31
+1548372
+policy: default
+preferred node: current
+physcpubind: 37 75 113 151 189 227 265 303 341 379 417 455 493 531 569 607 
+cpubind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+nodebind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 
+preferred: 
+EFFECTIVE_PLACEMENT
+policy: preferred
+preferred node: 17
+physcpubind: 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 
+cpubind: 1 
+nodebind: 1 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 
+preferred: 17 
+PEAK nf=0 threads=38 tick_hz=100000000 max_ms=31.267 gflops=14934.2
+PEAK nf=8 threads=38 tick_hz=100000000 max_ms=31.048 gflops=15979.6
+PEAK nf=16 threads=38 tick_hz=100000000 max_ms=31.364 gflops=16748.8
+PEAK nf=32 threads=38 tick_hz=100000000 max_ms=62.186 gflops=9386.0
+PEAK nf=0 threads=38 tick_hz=100000000 max_ms=31.114 gflops=15007.6
+PEAK nf=8 threads=38 tick_hz=100000000 max_ms=31.045 gflops=15980.9
+PEAK nf=16 threads=38 tick_hz=100000000 max_ms=31.012 gflops=16938.9
+PEAK nf=32 threads=38 tick_hz=100000000 max_ms=62.149 gflops=9391.7
+PEAK nf=0 threads=38 tick_hz=100000000 max_ms=31.041 gflops=15042.7
+PEAK nf=8 threads=38 tick_hz=100000000 max_ms=31.020 gflops=15994.0
+PEAK nf=16 threads=38 tick_hz=100000000 max_ms=31.110 gflops=16885.7
+PEAK nf=32 threads=38 tick_hz=100000000 max_ms=62.022 gflops=9410.8
+OPA_MODEL kh=39 kw=39 optimistic_gflops=16158.2 excl_warmup_pack_transfer_output_scheduling
+OPA_MODEL kh=41 kw=41 optimistic_gflops=15343.9 excl_warmup_pack_transfer_output_scheduling
+OPA_MODEL kh=55 kw=55 optimistic_gflops=15844.1 excl_warmup_pack_transfer_output_scheduling
+OPA_MODEL kh=81 kw=81 optimistic_gflops=15230.8 excl_warmup_pack_transfer_output_scheduling
+BASELINE_PLACEMENT numactl -N 1 --preferred=17 shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.260 ms    14329.6 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.276 ms    14287.2 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.258 ms    14335.0 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.261 ms    14327.7 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.247 ms    14365.2 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.247 ms    14365.2 GFLOPS | avg    5.260 ms    14328.9 GFLOPS  PASS
+BASELINE_PLACEMENT numactl -N 1 --preferred=17 shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    5.894 ms    14122.1 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    5.915 ms    14072.3 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    5.881 ms    14152.5 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    5.880 ms    14155.5 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    5.878 ms    14159.9 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.878 ms    14159.9 GFLOPS | avg    5.890 ms    14132.3 GFLOPS  PASS
+BASELINE_PLACEMENT numactl -N 1 --preferred=17 shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.152 ms    14443.7 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.150 ms    14446.7 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.151 ms    14444.6 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.149 ms    14447.8 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.152 ms    14443.4 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.149 ms    14447.8 GFLOPS | avg   11.151 ms    14445.2 GFLOPS  PASS
+BASELINE_PLACEMENT numactl -N 1 --preferred=17 shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   23.987 ms    14414.9 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   23.973 ms    14423.5 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   23.971 ms    14424.8 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   23.980 ms    14419.2 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   23.988 ms    14414.1 GFLOPS PASS
+  6390 x  4256     81 x    81 best   23.971 ms    14424.8 GFLOPS | avg   23.980 ms    14419.3 GFLOPS  PASS
+ROOFLINE_DONE 2026-09-12T21:00:31+08:00

@@ -1,0 +1,57 @@
+HOST cn20485 2026-09-12T22:05:26+08:00
+pid 2375117's current affinity list: 37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+PLACEMENT cpu_node=1 hbm_node=17
+Cpus_allowed_list:	37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+Mems_allowed_list:	0-31
+1549449
+policy: default
+preferred node: current
+physcpubind: 37 75 113 151 189 227 265 303 341 379 417 455 493 531 569 607 
+cpubind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+nodebind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 
+preferred: 
+EFFECTIVE_PLACEMENT
+policy: preferred
+preferred node: 17
+physcpubind: 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 
+cpubind: 1 
+nodebind: 1 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 
+preferred: 17 
+SIGNED_TALL baseline
+  1200 x 640  k  39 x 39 : ok  maxerr 0  bad 0/699524  bitdiff 0
+  1197 x 650  k  41 x 41 : ok  maxerr 0  bad 0/705770  bitdiff 0
+  1255 x 640  k  55 x 55 : ok  maxerr 0  bad 0/703786  bitdiff 0
+  1300 x 651  k  81 x 81 : ok  maxerr 0  bad 0/696620  bitdiff 0
+  1200 x 640  k  16 x 17 : ok  maxerr 0  bad 0/739440  bitdiff 0
+  1200 x 640  k  23 x 25 : ok  maxerr 0  bad 0/725648  bitdiff 0
+  1200 x 640  k  71 x 39 : ok  maxerr 0  bad 0/680260  bitdiff 0
+  1300 x 647  k 129 x  7 : ok  maxerr 0  bad 0/751252  bitdiff 0
+CARRY_ALL_PASS
+GENERALIZE baseline
+     1 x   1  k   1 x  1 : ok  maxerr 0  bad 0/1  bitdiff 0
+     5 x   5  k   5 x  5 : ok  maxerr 0  bad 0/1  bitdiff 0
+     5 x 300  k   1 x  1 : ok  maxerr 0  bad 0/1500  bitdiff 0
+   300 x   5  k   1 x  1 : ok  maxerr 0  bad 0/1500  bitdiff 0
+    64 x  64  k   3 x  3 : ok  maxerr 0  bad 0/3844  bitdiff 0
+    70 x 600  k   7 x  7 : ok  maxerr 0  bad 0/38016  bitdiff 0
+     4 x1100  k   1 x 40 : ok  maxerr 0  bad 0/4244  bitdiff 0
+    45 x  45  k  41 x 41 : ok  maxerr 0  bad 0/25  bitdiff 0
+   100 x1200  k  39 x 39 : ok  maxerr 0  bad 0/72044  bitdiff 0
+   300 x 700  k  39 x 39 : ok  maxerr 0  bad 0/173444  bitdiff 0
+   200 x2100  k  81 x 81 : ok  maxerr 0  bad 0/242400  bitdiff 0
+   130 x 530  k   5 x 81 : ok  maxerr 0  bad 0/56700  bitdiff 0
+   130 x 530  k  81 x  5 : ok  maxerr 0  bad 0/26300  bitdiff 0
+    17 x1030  k   3 x  9 : ok  maxerr 0  bad 0/15330  bitdiff 0
+  1030 x  17  k   9 x  3 : ok  maxerr 0  bad 0/15330  bitdiff 0
+    90 x 320  k   2 x  2 : ok  maxerr 0  bad 0/28391  bitdiff 0
+    40 x 800  k  16 x 17 : ok  maxerr 0  bad 0/19600  bitdiff 0
+    60 x 900  k  17 x  3 : ok  maxerr 0  bad 0/39512  bitdiff 0
+    80 x 700  k  23 x 55 : ok  maxerr 0  bad 0/37468  bitdiff 0
+    96 x 640  k  29 x 29 : ok  maxerr 0  bad 0/41616  bitdiff 0
+    50 x1300  k  19 x121 : ok  maxerr 0  bad 0/37760  bitdiff 0
+   280 x 700  k 129 x  7 : ok  maxerr 0  bad 0/105488  bitdiff 0
+   300 x 900  k 257 x  3 : ok  maxerr 0  bad 0/39512  bitdiff 0
+ALL PASS: 103/103 通过
+SIGNED_TALL k4cpz
