@@ -1,0 +1,4 @@
+DDR k39 ms 5.3872 -> 5.4410 | ms +1.00% | L1-dcache-loads +0.26% | L1-dcache-load-misses -3.64% | cycles:u +0.58% | instructions:u +0.24%
+DDR k81 ms 22.4434 -> 22.7214 | ms +1.24% | L1-dcache-loads +0.03% | L1-dcache-load-misses -2.64% | cycles:u +1.22% | instructions:u +0.02%
+HBM k39 ms 5.2854 -> 5.2682 | ms -0.33% | L1-dcache-loads -0.81% | L1-dcache-load-misses +1.33% | cycles:u -0.93% | instructions:u -0.80%
+HBM k81 ms 22.4628 -> 22.6393 | ms +0.79% | L1-dcache-loads -0.10% | L1-dcache-load-misses -3.42% | cycles:u +0.79% | instructions:u -0.10%
