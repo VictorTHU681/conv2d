@@ -67,3 +67,54 @@ instrumentation perturb layout/scheduling, and negligible cut2 boundary-count
 change limits what can be attributed to the policy itself. These modest timing
 changes are not accepted throughput improvements. Runtime screening 1585009 is
 still live and no root change is made before its complete result.
+
+## Completed screening and original-benchmark follow-up
+
+Job **1585009**, cn20481 07:04:27–07:12:33, succeeded. All 3,580 state/guard,
+156 ownership cases (48 long cases with both chunk sizes), and 640 timed hashes
+validate with zero observed active conflicts. Per-call completion-counter checks
+in diagnostics pass. [Full screen](../../results/v56/experiments/tail-cutoff/summary.md).
+
+cut2/base KH39/41/55/81: DDR +0.21%/+0.17%/+0.17%/+0.03%; HBM
++0.18%/+1.26%/+0.14%/-0.05%. These modest DDR gains warrant original-reference
+confirmation, not immediate adoption. cut4/base DDR is +0.21%/-0.20%/+0.19%/-0.48%,
+so cut4 is not advanced. Older pending-screen descriptions above are historical.
+
+Original-benchmark job **1585125**, cn20481, compares accepted baseline and cut2
+in six alternating AB/BA rounds, five timings/process, four shapes and separate
+DDR/HBM (96 planned complete reference checks). It is pending; root source and
+archives stay unchanged. Candidate packages are staged separately under
+`build/v56/experiments/tail-cutoff/package` and have not yet been runtime accepted.
+
+Archive job **1585149**, cn20483, is submitted for all three staged cut2 packages,
+four original full-reference checks each. Candidate archive hashes are recorded
+in `packages_candidate.sha256`; current root package manifests are not replaced.
+Package and original-benchmark confirmations remain pending. Current-profile job
+1585113 concerns accepted 1d3f5071, not this candidate.
+
+## Original-reference and archive result: not adopted
+
+Job **1585125**, cn20481 07:14:44–07:22:12, succeeded: all 96 original full-reference
+checks pass, maximum error zero. Six AB/BA rounds, five timings/process.
+[Confirmation](../../results/v56/experiments/tail-cutoff/confirm_summary.md).
+cut2/base KH39/41/55/81 is DDR -0.01%/-0.26%/+0.13%/+0.01%, HBM
++0.14%/+1.16%/+0.13%/-0.22%. DDR KH41 has only 3/6 positive paired rounds;
+its median paired change is -0.01%, with observed range -0.92% to +0.27%.
+Other outliers remain in the raw data (DDR KH39 as low as -12.19%). No data is
+discarded and observed ranges are not confidence intervals.
+
+Job **1585149**, cn20483 07:18:27–07:20:40, also succeeds: all three candidate
+archives pass 12 complete reference checks, maximum error zero. Local staged
+hashes match server logs. Manifest paths were expanded from stage-relative
+`submissions/` names to explicit stage paths; archive bytes/hashes did not change.
+The staging tool now emits full stage paths directly. [Archive audit](../../results/v56/experiments/tail-cutoff/archive_audit.txt).
+
+**cut2 is not adopted**: original-reference timing does not retain the small DDR
+screening gain, despite HBM KH41 benefit. cut4 was not advanced due its screening
+regressions. All jobs above are terminal. Root and current archives remain accepted
+1d3f5071 and the current direct-v55 table remains valid. No push.
+
+[Local-check-first control](cutoff-local.md) follows the completed rejection.
+Compiler output confirms the original helper can load shared cutoff state before
+checking that a local piece is too short to grow. The new control changes only
+this conditional order; it is isolated and has no accepted result yet.

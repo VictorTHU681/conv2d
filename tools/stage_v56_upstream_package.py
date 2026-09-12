@@ -6,12 +6,12 @@ import subprocess
 import argparse
 
 parser=argparse.ArgumentParser()
-parser.add_argument('--experiment',choices=['upstream-gate','kf-share','k5-layout','k5-default','piece-carry'],default='upstream-gate')
+parser.add_argument('--experiment',choices=['upstream-gate','kf-share','k5-layout','k5-default','piece-carry','tail-cutoff'],default='upstream-gate')
 args=parser.parse_args()
 root=Path('build/v56/experiments')/args.experiment;stage=root/'package'
 (stage/'tools').mkdir(parents=True,exist_ok=True)
 (stage/'submissions').mkdir(exist_ok=True)
-shutil.copyfile(root/({'k5-layout':'triplet.c','k5-default':'short2.c','piece-carry':'combined.c'}.get(args.experiment,'merged.c')),stage/'conv2d.c')
+shutil.copyfile(root/({'k5-layout':'triplet.c','k5-default':'short2.c','piece-carry':'combined.c','tail-cutoff':'cut2.c'}.get(args.experiment,'merged.c')),stage/'conv2d.c')
 for name in ['bench_conv.c','run.sh','run_diag.sh','tools/mkdiag.py','tools/package_v56.py']:
     shutil.copyfile(name,stage/name)
 readme='''# Local v56 upstream F4 gate integration candidate
@@ -65,5 +65,33 @@ This unpublished candidate is undergoing acceptance, not yet adopted.
 External concurrent callers, allocation failures and other SVL hardware remain
 outside the validated scope. No F3/F4 outlining, layout padding or K4 EXT change.
 '''
+if args.experiment=='tail-cutoff':
+    readme='''# Local v56 global completion cutoff candidate
+
+Retains accepted per-call phase preparation, four-slice ZA transfers, K5/F4/K9
+kernels, bounded input copies, coefficient ownership and output dependencies.
+Only K5 plans with no CONV_ROLL_STEP override may use early 4*KH chunks.
+All workers return to base 2*KH when unfinished pieces fall to 2*threads;
+the local remaining-row threshold also preserves small final chunks.
+The unfinished counter resets every call and decrements after final publication.
+Dependency checking and execution use one monotone chunk helper: a cutoff
+crossing may shrink execution, never enlarge its already-checked output range.
+All coefficients and outputs are recomputed every call; FP32 order is unchanged.
+
+Original build: gcc -O3 bench_conv.c conv2d.c -o conv2d_test -lm -fopenmp
+Original placement: OMP_NUM_THREADS=38 numactl -N 1 ./conv2d_test H W KH KW 5
+run.sh retains optional HBM preferred; CONV_HBM=0 disables it. This additional
+placement is not explicitly authorized by the saved problem statement.
+conv.zip is the normal candidate, conv_nf3.zip is a three-chain control,
+and conv_diag.zip contains call-stage/environment probes for diagnosis only.
+This unpublished candidate is undergoing original-benchmark/archive acceptance.
+No full rules-compliance or all-shape performance guarantee is claimed.
+External concurrent callers, allocation failures and other SVL hardware remain
+outside the validated scope. No input/weight/output content cache is introduced.
+'''
 (stage/'README.md').write_text(readme)
-subprocess.run(['python3',str(stage/'tools/package_v56.py')],check=True)
+report=subprocess.check_output(['python3',str(stage/'tools/package_v56.py')],text=True)
+for line in report.splitlines():
+    digest,relative=line.split(maxsplit=1)
+    assert len(digest)==64 and Path(relative).parent==Path('submissions')
+    print(digest,stage/relative)
