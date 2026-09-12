@@ -1,0 +1,166 @@
+HOST cn20481 2026-09-13T01:54:39+08:00
+pid 1966345's current affinity list: 37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+PLACEMENT cpu_node=1 hbm_node=17
+Cpus_allowed_list:	37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+Mems_allowed_list:	0-31
+1549999
+policy: default
+preferred node: current
+physcpubind: 37 75 113 151 189 227 265 303 341 379 417 455 493 531 569 607 
+cpubind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+nodebind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 
+preferred: 
+EFFECTIVE_PLACEMENT
+policy: preferred
+preferred node: 17
+physcpubind: 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 
+cpubind: 1 
+nodebind: 1 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 
+preferred: 17 
+A3 round=1 variant=base shape=4096 6144 39 39
+  4096 x  6144     39 x    39 best    5.238 ms    14389.1 GFLOPS | avg    5.248 ms    14361.9 GFLOPS  PASS
+A3 round=1 variant=pf4_nocopy shape=4096 6144 39 39
+  4096 x  6144     39 x    39 best    5.242 ms    14379.4 GFLOPS | avg    5.256 ms    14342.1 GFLOPS  FAIL
+A3 round=1 variant=pf1_noev shape=4096 6144 39 39
+  4096 x  6144     39 x    39 best    5.235 ms    14398.3 GFLOPS | avg    5.248 ms    14363.5 GFLOPS  PASS
+A3 round=1 variant=pf3_noev shape=4096 6144 39 39
+  4096 x  6144     39 x    39 best    5.242 ms    14377.9 GFLOPS | avg    5.249 ms    14360.2 GFLOPS  PASS
+A3 round=1 variant=sf2_noev shape=4096 6144 39 39
+  4096 x  6144     39 x    39 best    5.238 ms    14390.4 GFLOPS | avg    5.243 ms    14376.7 GFLOPS  PASS
+A3 round=1 variant=k8_nocopy shape=4096 6144 39 39
+  4096 x  6144     39 x    39 best    5.223 ms    14431.6 GFLOPS | avg    5.233 ms    14402.9 GFLOPS  PASS
+A3 round=1 variant=base shape=6144 4096 41 41
+  6144 x  4096     41 x    41 best    5.857 ms    14210.7 GFLOPS | avg    5.859 ms    14205.7 GFLOPS  PASS
+A3 round=1 variant=pf4_nocopy shape=6144 4096 41 41
+  6144 x  4096     41 x    41 best    5.848 ms    14233.2 GFLOPS | avg    5.853 ms    14221.7 GFLOPS  PASS
+A3 round=1 variant=pf1_noev shape=6144 4096 41 41
+  6144 x  4096     41 x    41 best    5.735 ms    14513.1 GFLOPS | avg    5.740 ms    14500.5 GFLOPS  FAIL
+A3 round=1 variant=pf3_noev shape=6144 4096 41 41
+  6144 x  4096     41 x    41 best    5.854 ms    14218.0 GFLOPS | avg    5.857 ms    14212.1 GFLOPS  PASS
+A3 round=1 variant=sf2_noev shape=6144 4096 41 41
+  6144 x  4096     41 x    41 best    5.849 ms    14230.3 GFLOPS | avg    5.852 ms    14224.6 GFLOPS  PASS
+A3 round=1 variant=k8_nocopy shape=6144 4096 41 41
+  6144 x  4096     41 x    41 best    5.822 ms    14295.9 GFLOPS | avg    5.835 ms    14264.2 GFLOPS  FAIL
+A3 round=1 variant=base shape=4256 6390 55 55
+  4256 x  6390     55 x    55 best   11.070 ms    14550.0 GFLOPS | avg   11.074 ms    14545.7 GFLOPS  PASS
+A3 round=1 variant=pf4_nocopy shape=4256 6390 55 55
+  4256 x  6390     55 x    55 best   11.063 ms    14559.4 GFLOPS | avg   11.326 ms    14222.2 GFLOPS  PASS
+A3 round=1 variant=pf1_noev shape=4256 6390 55 55
+  4256 x  6390     55 x    55 best   11.055 ms    14570.7 GFLOPS | avg   11.059 ms    14565.2 GFLOPS  PASS
+A3 round=1 variant=pf3_noev shape=4256 6390 55 55
+  4256 x  6390     55 x    55 best   10.960 ms    14696.4 GFLOPS | avg   10.966 ms    14689.2 GFLOPS  FAIL
+A3 round=1 variant=sf2_noev shape=4256 6390 55 55
+  4256 x  6390     55 x    55 best   11.054 ms    14571.6 GFLOPS | avg   11.058 ms    14566.0 GFLOPS  PASS
+A3 round=1 variant=k8_nocopy shape=4256 6390 55 55
+  4256 x  6390     55 x    55 best   11.050 ms    14576.7 GFLOPS | avg   11.057 ms    14567.4 GFLOPS  PASS
+A3 round=1 variant=base shape=6390 4256 81 81
+  6390 x  4256     81 x    81 best   22.855 ms    15129.3 GFLOPS | avg   22.864 ms    15122.7 GFLOPS  PASS
+A3 round=1 variant=pf4_nocopy shape=6390 4256 81 81
+  6390 x  4256     81 x    81 best   22.188 ms    15583.5 GFLOPS | avg   22.235 ms    15550.9 GFLOPS  FAIL
+A3 round=1 variant=pf1_noev shape=6390 4256 81 81
+  6390 x  4256     81 x    81 best   22.834 ms    15142.7 GFLOPS | avg   22.860 ms    15125.4 GFLOPS  PASS
+A3 round=1 variant=pf3_noev shape=6390 4256 81 81
+  6390 x  4256     81 x    81 best   22.870 ms    15118.8 GFLOPS | avg   22.885 ms    15109.0 GFLOPS  PASS
+A3 round=1 variant=sf2_noev shape=6390 4256 81 81
+  6390 x  4256     81 x    81 best   22.764 ms    15189.4 GFLOPS | avg   22.814 ms    15156.1 GFLOPS  PASS
+A3 round=1 variant=k8_nocopy shape=6390 4256 81 81
+  6390 x  4256     81 x    81 best   22.844 ms    15136.1 GFLOPS | avg   22.861 ms    15124.9 GFLOPS  PASS
+A3 round=2 variant=base shape=4096 6144 39 39
+  4096 x  6144     39 x    39 best    5.228 ms    14417.1 GFLOPS | avg    5.238 ms    14391.4 GFLOPS  PASS
+A3 round=2 variant=pf4_nocopy shape=4096 6144 39 39
+  4096 x  6144     39 x    39 best    5.210 ms    14466.1 GFLOPS | avg    5.235 ms    14399.5 GFLOPS  FAIL
+A3 round=2 variant=pf1_noev shape=4096 6144 39 39
+  4096 x  6144     39 x    39 best    5.245 ms    14371.5 GFLOPS | avg    5.248 ms    14363.3 GFLOPS  PASS
+A3 round=2 variant=pf3_noev shape=4096 6144 39 39
+  4096 x  6144     39 x    39 best    5.233 ms    14404.0 GFLOPS | avg    5.243 ms    14377.1 GFLOPS  PASS
+A3 round=2 variant=sf2_noev shape=4096 6144 39 39
+  4096 x  6144     39 x    39 best    5.241 ms    14380.7 GFLOPS | avg    5.247 ms    14365.6 GFLOPS  PASS
+A3 round=2 variant=k8_nocopy shape=4096 6144 39 39
+  4096 x  6144     39 x    39 best    5.237 ms    14393.1 GFLOPS | avg    5.241 ms    14381.4 GFLOPS  PASS
+A3 round=2 variant=base shape=6144 4096 41 41
+  6144 x  4096     41 x    41 best    5.854 ms    14219.5 GFLOPS | avg    5.856 ms    14213.6 GFLOPS  PASS
+A3 round=2 variant=pf4_nocopy shape=6144 4096 41 41
+  6144 x  4096     41 x    41 best    5.854 ms    14219.0 GFLOPS | avg    5.858 ms    14207.9 GFLOPS  PASS
+A3 round=2 variant=pf1_noev shape=6144 4096 41 41
+  6144 x  4096     41 x    41 best    5.745 ms    14489.6 GFLOPS | avg    5.753 ms    14467.4 GFLOPS  FAIL
+A3 round=2 variant=pf3_noev shape=6144 4096 41 41
+  6144 x  4096     41 x    41 best    5.855 ms    14217.2 GFLOPS | avg    5.861 ms    14202.2 GFLOPS  PASS
+A3 round=2 variant=sf2_noev shape=6144 4096 41 41
+  6144 x  4096     41 x    41 best    5.850 ms    14229.2 GFLOPS | avg    5.855 ms    14215.1 GFLOPS  PASS
+A3 round=2 variant=k8_nocopy shape=6144 4096 41 41
+  6144 x  4096     41 x    41 best    5.818 ms    14305.7 GFLOPS | avg    5.829 ms    14279.5 GFLOPS  FAIL
+A3 round=2 variant=base shape=4256 6390 55 55
+  4256 x  6390     55 x    55 best   11.050 ms    14576.5 GFLOPS | avg   11.057 ms    14567.7 GFLOPS  PASS
+A3 round=2 variant=pf4_nocopy shape=4256 6390 55 55
+  4256 x  6390     55 x    55 best   11.067 ms    14555.1 GFLOPS | avg   11.069 ms    14552.0 GFLOPS  PASS
+A3 round=2 variant=pf1_noev shape=4256 6390 55 55
+  4256 x  6390     55 x    55 best   11.074 ms    14544.7 GFLOPS | avg   11.077 ms    14541.7 GFLOPS  PASS
+A3 round=2 variant=pf3_noev shape=4256 6390 55 55
+  4256 x  6390     55 x    55 best   10.950 ms    14709.6 GFLOPS | avg   10.956 ms    14702.4 GFLOPS  FAIL
+A3 round=2 variant=sf2_noev shape=4256 6390 55 55
+  4256 x  6390     55 x    55 best   11.070 ms    14551.2 GFLOPS | avg   11.072 ms    14547.6 GFLOPS  PASS
+A3 round=2 variant=k8_nocopy shape=4256 6390 55 55
+  4256 x  6390     55 x    55 best   11.061 ms    14562.8 GFLOPS | avg   11.064 ms    14559.0 GFLOPS  PASS
+A3 round=2 variant=base shape=6390 4256 81 81
+  6390 x  4256     81 x    81 best   22.828 ms    15147.1 GFLOPS | avg   22.844 ms    15136.0 GFLOPS  PASS
+A3 round=2 variant=pf4_nocopy shape=6390 4256 81 81
+  6390 x  4256     81 x    81 best   22.191 ms    15581.4 GFLOPS | avg   22.216 ms    15564.4 GFLOPS  FAIL
+A3 round=2 variant=pf1_noev shape=6390 4256 81 81
+  6390 x  4256     81 x    81 best   22.743 ms    15203.7 GFLOPS | avg   22.754 ms    15196.3 GFLOPS  PASS
+A3 round=2 variant=pf3_noev shape=6390 4256 81 81
+  6390 x  4256     81 x    81 best   22.772 ms    15183.9 GFLOPS | avg   22.789 ms    15172.9 GFLOPS  PASS
+A3 round=2 variant=sf2_noev shape=6390 4256 81 81
+  6390 x  4256     81 x    81 best   22.757 ms    15194.1 GFLOPS | avg   22.769 ms    15186.2 GFLOPS  PASS
+A3 round=2 variant=k8_nocopy shape=6390 4256 81 81
+  6390 x  4256     81 x    81 best   22.840 ms    15138.6 GFLOPS | avg   22.854 ms    15129.4 GFLOPS  PASS
+A3 round=3 variant=base shape=4096 6144 39 39
+  4096 x  6144     39 x    39 best    5.234 ms    14400.9 GFLOPS | avg    5.244 ms    14374.6 GFLOPS  PASS
+A3 round=3 variant=pf4_nocopy shape=4096 6144 39 39
+  4096 x  6144     39 x    39 best    5.211 ms    14464.6 GFLOPS | avg    5.226 ms    14422.6 GFLOPS  FAIL
+A3 round=3 variant=pf1_noev shape=4096 6144 39 39
+  4096 x  6144     39 x    39 best    5.242 ms    14378.4 GFLOPS | avg    5.250 ms    14355.9 GFLOPS  PASS
+A3 round=3 variant=pf3_noev shape=4096 6144 39 39
+  4096 x  6144     39 x    39 best    5.228 ms    14418.6 GFLOPS | avg    5.235 ms    14399.2 GFLOPS  PASS
+A3 round=3 variant=sf2_noev shape=4096 6144 39 39
+  4096 x  6144     39 x    39 best    5.223 ms    14431.0 GFLOPS | avg    5.234 ms    14400.0 GFLOPS  PASS
+A3 round=3 variant=k8_nocopy shape=4096 6144 39 39
+  4096 x  6144     39 x    39 best    5.239 ms    14386.1 GFLOPS | avg    5.244 ms    14373.8 GFLOPS  PASS
+A3 round=3 variant=base shape=6144 4096 41 41
+  6144 x  4096     41 x    41 best    5.844 ms    14243.2 GFLOPS | avg    5.865 ms    14192.6 GFLOPS  PASS
+A3 round=3 variant=pf4_nocopy shape=6144 4096 41 41
+  6144 x  4096     41 x    41 best    5.851 ms    14224.8 GFLOPS | avg    5.890 ms    14131.6 GFLOPS  PASS
+A3 round=3 variant=pf1_noev shape=6144 4096 41 41
+  6144 x  4096     41 x    41 best    5.746 ms    14486.4 GFLOPS | avg    5.750 ms    14475.4 GFLOPS  FAIL
+A3 round=3 variant=pf3_noev shape=6144 4096 41 41
+  6144 x  4096     41 x    41 best    5.851 ms    14225.0 GFLOPS | avg    5.854 ms    14219.2 GFLOPS  PASS
+A3 round=3 variant=sf2_noev shape=6144 4096 41 41
+  6144 x  4096     41 x    41 best    5.852 ms    14224.6 GFLOPS | avg    5.856 ms    14214.0 GFLOPS  PASS
+A3 round=3 variant=k8_nocopy shape=6144 4096 41 41
+  6144 x  4096     41 x    41 best    5.808 ms    14330.4 GFLOPS | avg    5.818 ms    14306.4 GFLOPS  FAIL
+A3 round=3 variant=base shape=4256 6390 55 55
+  4256 x  6390     55 x    55 best   11.053 ms    14572.7 GFLOPS | avg   11.057 ms    14567.4 GFLOPS  PASS
+A3 round=3 variant=pf4_nocopy shape=4256 6390 55 55
+  4256 x  6390     55 x    55 best   11.055 ms    14570.3 GFLOPS | avg   11.059 ms    14564.7 GFLOPS  PASS
+A3 round=3 variant=pf1_noev shape=4256 6390 55 55
+  4256 x  6390     55 x    55 best   11.059 ms    14564.9 GFLOPS | avg   11.063 ms    14559.3 GFLOPS  PASS
+A3 round=3 variant=pf3_noev shape=4256 6390 55 55
+  4256 x  6390     55 x    55 best   10.958 ms    14699.4 GFLOPS | avg   10.964 ms    14690.9 GFLOPS  FAIL
+A3 round=3 variant=sf2_noev shape=4256 6390 55 55
+  4256 x  6390     55 x    55 best   11.057 ms    14567.4 GFLOPS | avg   11.061 ms    14562.7 GFLOPS  PASS
+A3 round=3 variant=k8_nocopy shape=4256 6390 55 55
+  4256 x  6390     55 x    55 best   11.060 ms    14563.4 GFLOPS | avg   11.061 ms    14562.2 GFLOPS  PASS
+A3 round=3 variant=base shape=6390 4256 81 81
+  6390 x  4256     81 x    81 best   22.783 ms    15176.8 GFLOPS | avg   22.813 ms    15156.9 GFLOPS  PASS
+A3 round=3 variant=pf4_nocopy shape=6390 4256 81 81
+  6390 x  4256     81 x    81 best   22.277 ms    15521.6 GFLOPS | avg   22.294 ms    15509.6 GFLOPS  FAIL
+A3 round=3 variant=pf1_noev shape=6390 4256 81 81
+  6390 x  4256     81 x    81 best   22.799 ms    15166.3 GFLOPS | avg   22.853 ms    15130.5 GFLOPS  PASS
+A3 round=3 variant=pf3_noev shape=6390 4256 81 81
+  6390 x  4256     81 x    81 best   22.751 ms    15198.0 GFLOPS | avg   22.761 ms    15191.6 GFLOPS  PASS
+A3 round=3 variant=sf2_noev shape=6390 4256 81 81
+  6390 x  4256     81 x    81 best   22.751 ms    15198.3 GFLOPS | avg   22.765 ms    15189.1 GFLOPS  PASS
+A3 round=3 variant=k8_nocopy shape=6390 4256 81 81
+  6390 x  4256     81 x    81 best   22.962 ms    15058.4 GFLOPS | avg   22.981 ms    15045.8 GFLOPS  PASS
+V57_ATTR3_DONE 2026-09-13T01:55:59+08:00

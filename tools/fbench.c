@@ -106,7 +106,7 @@ int main(int argc, char** argv)
     free(check);
     if (!ok) {
         printf("%6d x%6d %6d x%6d %12s %12s %8s\n", H, W, KH, KW, "/", "/", "FAIL(hash)");
-        return 2;
+        if (!getenv("FBENCH_FORCE")) return 2;   // FBENCH_FORCE=1：归因诊断用，结果错误也继续计时
     }
     // 预热（同官方）
     {

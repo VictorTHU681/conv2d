@@ -1377,6 +1377,96 @@ static void fill_args(ka_t* A, const kp_t* P, long div, long slot_unused, long n
         "subs x15, x15, #1\n\t" \
         "b.ne 2b\n\t"
 
+// pairf4 事件尾（两条路各实例化一次；数字标号按就近解析，各自内部自洽）
+#define PAIRF4_TAIL \
+        WRAP_B(x2) WRAP_B(x3) \
+        "ldr x24, [%[A], #208]\n\t" \
+        "cmp x13, x24\n\t" \
+        "ldr x24, [%[A], #192]\n\t" \
+        "csel x13, x24, x13, eq\n\t" \
+        SEL_OUT \
+        "ldr x24, [%[A], #216]\n\t" \
+        "sub x24, x24, #3\n\t" \
+        "subs w24, w27, w24\n\t" \
+        "b.lo 30f\n\t" \
+        "cmp w24, #3\n\t" \
+        "b.hi 5f\n\t" \
+        "b.eq 8f\n\t" \
+        "cmp w24, #2\n\t" \
+        "b.eq 9f\n\t" \
+        "cmp w24, #1\n\t" \
+        "b.eq 90f\n\t" \
+        "st1w {z16.s}, p0, [x20]\n\t" \
+        "st1w {z17.s}, p0, [x20, #1, mul vl]\n\t" \
+        "fmov z16.s, #0.0\n\t" "fmov z17.s, #0.0\n\t" \
+        "b 5f\n\t" \
+        "90:\n\t" \
+        "st1w {z14.s}, p0, [x20]\n\t" \
+        "st1w {z15.s}, p0, [x20, #1, mul vl]\n\t" \
+        "fmov z14.s, #0.0\n\t" "fmov z15.s, #0.0\n\t" \
+        "b 5f\n\t" \
+        "9:\n\t" \
+        "st1w {z12.s}, p0, [x20]\n\t" \
+        "st1w {z13.s}, p0, [x20, #1, mul vl]\n\t" \
+        "fmov z12.s, #0.0\n\t" "fmov z13.s, #0.0\n\t" \
+        "b 5f\n\t" \
+        "8:\n\t" \
+        "st1w {z10.s}, p0, [x20]\n\t" \
+        "st1w {z11.s}, p0, [x20, #1, mul vl]\n\t" \
+        "fmov z10.s, #0.0\n\t" "fmov z11.s, #0.0\n\t" \
+        "b 5f\n\t" \
+        "30:\n\t" \
+        "cmp x27, #32\n\t" "b.hs 5f\n\t" \
+        "cmp x27, #16\n\t" "b.hs 6f\n\t" \
+        "mov w12, w27\n\t" \
+        "mova z8.s, p0/m, za0v.s[w12, 0]\n\t" \
+        "mova z9.s, p0/m, za1v.s[w12, 0]\n\t" \
+        "st1w {z8.s}, p0, [x20]\n\t" \
+        "st1w {z9.s}, p0, [x20, #1, mul vl]\n\t" \
+        "mova za0v.s[w12, 0], p0/m, z31.s\n\t" \
+        "mova za1v.s[w12, 0], p0/m, z31.s\n\t" \
+        "b 5f\n\t" \
+        "6:\n\t" \
+        "sub w12, w27, #16\n\t" \
+        "mova z8.s, p0/m, za2v.s[w12, 0]\n\t" \
+        "mova z9.s, p0/m, za3v.s[w12, 0]\n\t" \
+        "st1w {z8.s}, p0, [x20]\n\t" \
+        "st1w {z9.s}, p0, [x20, #1, mul vl]\n\t" \
+        "mova za2v.s[w12, 0], p0/m, z31.s\n\t" \
+        "mova za3v.s[w12, 0], p0/m, z31.s\n\t" \
+        "5:\n\t" \
+        ADV_CNT(x27)
+
+// pairf4 长行专用：与 OVL_LOOP 相同，但纯步循环前用"跳过式"128B 对齐垫
+//（p2align 的 nop 用分支跳过、不逐行执行；对齐收益见远端 v55 的 F4 对齐验收 +4.9%）。
+#define OVL_LOOP_A128(STEP) \
+        "ldr x12, [%[A], #296]\n\t" \
+        "mov x15, x7\n\t" \
+        "cbz x12, 52f\n\t" \
+        "sub x15, x15, x12\n\t" \
+        ".p2align 4\n" \
+        "51:\n\t" \
+        STEP \
+        OVL_COPY \
+        "subs x12, x12, #1\n\t" \
+        "b.ne 51b\n\t" \
+        "52:\n\t" \
+        "ldr x12, [%[A], #304]\n\t" \
+        "cbz x12, 54f\n\t" \
+        "53:\n\t" \
+        OVL_COPY \
+        "subs x12, x12, #1\n\t" \
+        "b.ne 53b\n\t" \
+        "54:\n\t" \
+        OVL_TAIL \
+        "b 55f\n\t" \
+        ".p2align 7\n" \
+        "55:\n\t" \
+        "2:\n\t" \
+        STEP \
+        "subs x15, x15, #1\n\t" \
+        "b.ne 2b\n\t"
+
 // ---------------- 16×1 对：A 用 za0/za1（列 0..15 / 16..31），B 用 za2/za3 ----------------
 #define PAIR_STEP \
         "ld1w {z0.s}, p0/z, [x16]\n\t" \
@@ -1585,6 +1675,7 @@ static void k16pairf4(const kp_t* P)
     ka_t A; fill_args(&A, P, 1, 512, 31 + P->steps);
     A.n2 = (int64_t)P->kb0; A.e2 = (int64_t)P->kbase; A.T = (int64_t)P->kend; A.nlines = P->cf0;
     A.kw4 = P->steps * 16;   // kf 每 kernel 行的字节跨度 = steps*4floats*4B
+    if (P->steps < 64) { A.ovn = 0; A.ovr = 0; }   // 短行走串行 4× 展开行首（见 asm 内注释）
     asm volatile(
         LOAD_ARGS
         "ldr x13, [%[A], #184]\n\t"     // kf 线性游标（起始行 a0）
@@ -1604,6 +1695,11 @@ static void k16pairf4(const kp_t* P)
         "ld1w {z16.s}, p0/z, [x12, #6, mul vl]\n\t"
         "ld1w {z17.s}, p0/z, [x12, #7, mul vl]\n\t"
         "47:\n\t"
+        // 按行长分路（每调用一次判定，行内零开销；归因 1582505：k81 pairf4 行拷贝可见 2.8%，k39 仅 0.4%）：
+        // 短行（steps<64，k39/k41/k55）走下方与合并基线逐指令一致的串行 4× 展开路（128B 对齐垫在门控后，自动重对齐）；
+        // 长行（steps≥64，k81）走穿插拷贝路（1580138/1582574 均证 k81 +0.2~0.65%），其纯步循环用跳过式 128B 对齐。
+        "ldr x12, [%[A], #296]\n\t"
+        "cbnz x12, 172f\n\t"
         ".p2align 7\n"
         "nop\n\t"
         "nop\n\t"
@@ -1624,76 +1720,23 @@ static void k16pairf4(const kp_t* P)
         "nop\n\t"
         "nop\n\t"
         "nop\n\t"
-        "nop\n\t"
-        "nop\n\t"
         "1:\n\t"
-        // pairf4 不用穿插：4 fmopa + 8 fmla 已占满 z 管线、循环体 ~3.4 IPC 无前端余量，
-        // 加拷贝指令实测 k39 −1.3%（v55 A/B 1580138）；保留串行 4× 展开行首。
         ROW_HEAD_COPY4
         "mov x15, x7\n\t"
         "2:\n\t"
         PAIRF4_STEP
         "subs x15, x15, #1\n\t"
         "b.ne 2b\n\t"
-        WRAP_B(x2) WRAP_B(x3)
-        "ldr x24, [%[A], #208]\n\t"              // kf 行回绕（到表尾则回表头）
-        "cmp x13, x24\n\t"
-        "ldr x24, [%[A], #192]\n\t"
-        "csel x13, x24, x13, eq\n\t"
-        SEL_OUT
-        // 事件：cA ∈ [CF0-3, CF0] → 4 条 fmla 链（w24 = 0:KH-4 / 1:KH-3 / 2:KH-2 / 3:KH-1）；cA<16 → A；16≤cA<32 → B
-        "ldr x24, [%[A], #216]\n\t"
-        "sub x24, x24, #3\n\t"
-        "subs w24, w27, w24\n\t"
-        "b.lo 30f\n\t"
-        "cmp w24, #3\n\t"
-        "b.hi 5f\n\t"
-        "b.eq 8f\n\t"
-        "cmp w24, #2\n\t"
-        "b.eq 9f\n\t"
-        "cmp w24, #1\n\t"
-        "b.eq 90f\n\t"
-        "st1w {z16.s}, p0, [x20]\n\t"
-        "st1w {z17.s}, p0, [x20, #1, mul vl]\n\t"
-        "fmov z16.s, #0.0\n\t" "fmov z17.s, #0.0\n\t"
-        "b 5f\n\t"
-        "90:\n\t"
-        "st1w {z14.s}, p0, [x20]\n\t"
-        "st1w {z15.s}, p0, [x20, #1, mul vl]\n\t"
-        "fmov z14.s, #0.0\n\t" "fmov z15.s, #0.0\n\t"
-        "b 5f\n\t"
-        "9:\n\t"
-        "st1w {z12.s}, p0, [x20]\n\t"
-        "st1w {z13.s}, p0, [x20, #1, mul vl]\n\t"
-        "fmov z12.s, #0.0\n\t" "fmov z13.s, #0.0\n\t"
-        "b 5f\n\t"
-        "8:\n\t"
-        "st1w {z10.s}, p0, [x20]\n\t"
-        "st1w {z11.s}, p0, [x20, #1, mul vl]\n\t"
-        "fmov z10.s, #0.0\n\t" "fmov z11.s, #0.0\n\t"
-        "b 5f\n\t"
-        "30:\n\t"
-        "cmp x27, #32\n\t" "b.hs 5f\n\t"
-        "cmp x27, #16\n\t" "b.hs 6f\n\t"
-        "mov w12, w27\n\t"
-        "mova z8.s, p0/m, za0v.s[w12, 0]\n\t"
-        "mova z9.s, p0/m, za1v.s[w12, 0]\n\t"
-        "st1w {z8.s}, p0, [x20]\n\t"
-        "st1w {z9.s}, p0, [x20, #1, mul vl]\n\t"
-        "mova za0v.s[w12, 0], p0/m, z31.s\n\t"
-        "mova za1v.s[w12, 0], p0/m, z31.s\n\t"
-        "b 5f\n\t"
-        "6:\n\t"
-        "sub w12, w27, #16\n\t"
-        "mova z8.s, p0/m, za2v.s[w12, 0]\n\t"
-        "mova z9.s, p0/m, za3v.s[w12, 0]\n\t"
-        "st1w {z8.s}, p0, [x20]\n\t"
-        "st1w {z9.s}, p0, [x20, #1, mul vl]\n\t"
-        "mova za2v.s[w12, 0], p0/m, z31.s\n\t"
-        "mova za3v.s[w12, 0], p0/m, z31.s\n\t"
-        "5:\n\t"
-        ADV_CNT(x27)
+        PAIRF4_TAIL
         ROW_TAIL
+        "b 199f\n\t"
+        "172:\n\t"
+        "101:\n\t"
+        ROW_HEAD_OVL
+        OVL_LOOP_A128(PAIRF4_STEP)
+        PAIRF4_TAIL
+        "add x0, x0, x1\n\t" "add x9, x9, x19\n\t" "add x11, x11, #1\n\t" "subs x8, x8, #1\n\t" "b.ne 101b\n\t"
+        "199:\n\t"
         "ldr x12, [%[A], #280]\n\t"
         "cbz x12, 48f\n\t"
         "st1w {z10.s}, p0, [x12, #0, mul vl]\n\t"
