@@ -6,6 +6,10 @@ import subprocess
 from v55_shift import shifted
 from v55_schedule import interleaved
 from v55_k4_io import k4_io
+from v55_orientation import horizontal
+from v55_overlap import overlap
+from v55_cache import non_temporal_copy
+from v55_nine import nine
 from gen_v54 import phase_profile
 
 BASE = 'be7b462'
@@ -74,6 +78,17 @@ def main():
     variants['k4evz']=k4_io(source,output=True)
     variants['k4ioz']=k4_io(source,copy=True,output=True)
     variants['phase']=phase_profile(source)
+    variants['horizall']=horizontal(source)
+    variants['horizk4']=horizontal(source,k4_only=True)
+    names=['k16pair','k16pairf','k16pairf3','k16pairf4','k16single']
+    variants['ovall']=overlap(source,names)
+    variants['ovpair4']=overlap(source,['k16pairf4'])
+    variants['ovsingle']=overlap(source,['k16single'])
+    variants['ntall']=non_temporal_copy(source)
+    variants['ntpair4']=non_temporal_copy(source,pair4_only=True)
+    variants['ntspare']=non_temporal_copy(overlap(source,['k16pair','k16pairf','k16pairf3','k16single']))
+    variants['nine_reload']=nine(source)
+    variants['nine_ext']=nine(source,use_ext=True)
     out=Path('build/v55');out.mkdir(parents=True,exist_ok=True)
     for n,s in variants.items():
         (out/(n+'.c')).write_text(s)
