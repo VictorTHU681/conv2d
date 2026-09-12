@@ -6,7 +6,7 @@ FP32 二维 valid 卷积 `conv2d(in, H, W, k, KH, KW, out)` 的 SME（FMOPA）�
 ## 运行
 
 ```bash
-bash run.sh    # 编译 + 四个用例（38 线程绑单一 NUMA 节点，与题面资源约束一致）
+bash run.sh    # 编译 + 四个用例（题面判题口径：OMP_NUM_THREADS=38 numactl -N 1）
 ```
 
 或手动：
