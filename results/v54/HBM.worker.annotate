@@ -1,0 +1,2148 @@
+ Percent |	Source code & Disassembly of drv for cycles:u (188373 samples, percent: local period)
+-----------------------------------------------------------------------------------------------------
+         :
+         :
+         :
+         :            Disassembly of section .text:
+         :
+         :            0000000000420d10 <roll_worker>:
+         :            roll_worker():
+         :            P->nthr_alloc = nth;
+         :            }
+         :            }
+         :
+         :            static void roll_worker(int tid, int nth, const ctx_t* c)
+         :            {
+    0.01 :   420d10: sub     sp, sp, #0x320
+    0.00 :   420d14: stp     x29, x30, [sp]
+    0.00 :   420d18: mov     x29, sp
+    0.00 :   420d1c: stp     x19, x20, [sp, #16]
+    0.00 :   420d20: mov     x20, x2
+         :            const rplan_t* P = (const rplan_t*)c->rp;
+         :            const long KH = c->KH, KW = c->KW, W = c->W;
+         :            float* ring = P->rings + (size_t)tid * 8192; float* scr = P->scratch + (size_t)tid * 2048;
+         :            rdiag_t* D = &g_rdiag[tid]; uint64_t t_start = 0;
+         :            if (g_roll_diag) { memset(D, 0, sizeof(*D)); t_start = cyc(); }
+    0.00 :   420d24: adrp    x2, 440000 <memcpy@GLIBC_2.17>
+         :            {
+    0.00 :   420d28: stp     x21, x22, [sp, #32]
+         :            if (g_roll_diag) { memset(D, 0, sizeof(*D)); t_start = cyc(); }
+    0.00 :   420d2c: ldr     w3, [x2, #384]
+         :            const rplan_t* P = (const rplan_t*)c->rp;
+    0.03 :   420d30: ldr     x21, [x20, #264]
+         :            {
+    0.00 :   420d34: stp     x27, x28, [sp, #80]
+    0.00 :   420d38: mov     w27, w0
+         :            const long KH = c->KH, KW = c->KW, W = c->W;
+    0.00 :   420d3c: ldp     x0, x18, [x20, #32]
+         :            {
+    0.00 :   420d40: stp     x23, x24, [sp, #48]
+         :            const long KH = c->KH, KW = c->KW, W = c->W;
+    0.00 :   420d44: str     x0, [sp, #208]
+         :            {
+    0.00 :   420d48: str     w1, [sp, #252]
+         :            rdiag_t* D = &g_rdiag[tid]; uint64_t t_start = 0;
+    0.00 :   420d4c: str     xzr, [sp, #280]
+         :            const long KH = c->KH, KW = c->KW, W = c->W;
+    0.00 :   420d50: ldr     x24, [x20, #48]
+         :            float* ring = P->rings + (size_t)tid * 8192; float* scr = P->scratch + (size_t)tid * 2048;
+    0.00 :   420d54: ldr     x1, [x21, #1128]
+    0.00 :   420d58: ldr     x2, [x21, #1136]
+         :            if (g_roll_diag) { memset(D, 0, sizeof(*D)); t_start = cyc(); }
+    0.00 :   420d5c: cbnz    w3, 421a9c <roll_worker+0xd8c>
+         :            if (tid >= nth || tid >= P->pnth) return;
+    0.00 :   420d60: ldr     w0, [sp, #252]
+    0.00 :   420d64: cmp     w27, w0
+    0.00 :   420d68: b.ge    420d78 <roll_worker+0x68>  // b.tcont
+    0.00 :   420d6c: ldr     w0, [x21, #1120]
+    0.00 :   420d70: cmp     w0, w27
+    0.00 :   420d74: b.gt    420d94 <roll_worker+0x84>
+         :            else if (g->kind == 17) k16singlef2(&K); else if (g->kind == 8) k8(&K); else k4(&K);
+         :            if (g_roll_diag) { int ki = roll_kind_idx(g->kind); D->tk[ki] += cyc() - t0; D->ts[ki] += 4L * g->steps * (jb - ja + KH - 1); }
+         :            }
+         :            sme_stop();
+         :            if (g_roll_diag) D->tot = cyc() - t_start;
+         :            }
+    0.00 :   420d78: ldp     x29, x30, [sp]
+    0.00 :   420d7c: ldp     x19, x20, [sp, #16]
+    0.00 :   420d80: ldp     x21, x22, [sp, #32]
+    0.00 :   420d84: ldp     x23, x24, [sp, #48]
+    0.00 :   420d88: ldp     x27, x28, [sp, #80]
+    0.00 :   420d8c: add     sp, sp, #0x320
+    0.00 :   420d90: ret
+         :            roll_pack_all():
+         :            uint32_t i = __atomic_fetch_add(&g_pk_next, 1, __ATOMIC_RELAXED);
+    0.00 :   420d94: adrp    x0, 440000 <memcpy@GLIBC_2.17>
+    0.00 :   420d98: add     x0, x0, #0x180
+    0.00 :   420d9c: add     x19, x0, #0x8
+         :            const int nc = g_pk_nc;
+    0.00 :   420da0: adrp    x0, 440000 <memcpy@GLIBC_2.17>
+    0.00 :   420da4: add     x0, x0, #0x180
+         :            uint32_t i = __atomic_fetch_add(&g_pk_next, 1, __ATOMIC_RELAXED);
+    0.00 :   420da8: mov     x23, x18
+    0.00 :   420dac: mov     w28, #0x1                       // #1
+    0.00 :   420db0: stp     x25, x26, [sp, #64]
+         :            __atomic_store_n(&g_pk_done[i], 1, __ATOMIC_RELEASE);
+    0.00 :   420db4: adrp    x26, 464000 <g_rdiag+0x11700>
+         :            roll_worker():
+         :            roll_pack_all(P, c->k, KH, KW);   // 每次调用全体线程并行重打包 R/kf（幂等 chunk），完成后才进入计算
+    0.00 :   420db8: ldr     x25, [x20, #8]
+         :            roll_pack_all():
+         :            __atomic_store_n(&g_pk_done[i], 1, __ATOMIC_RELEASE);
+    0.00 :   420dbc: add     x26, x26, #0x900
+         :            const int nc = g_pk_nc;
+    0.01 :   420dc0: ldr     w22, [x0, #4]
+    0.02 :   420dc4: stp     d8, d9, [sp, #96]
+    0.00 :   420dc8: stp     d10, d11, [sp, #112]
+    0.00 :   420dcc: stp     d12, d13, [sp, #128]
+    0.00 :   420dd0: stp     d14, d15, [sp, #144]
+         :            uint32_t i = __atomic_fetch_add(&g_pk_next, 1, __ATOMIC_RELAXED);
+    0.00 :   420dd4: stp     x1, x2, [sp, #160]
+    0.00 :   420dd8: str     x20, [sp, #176]
+    0.00 :   420ddc: b       420e04 <roll_worker+0xf4>
+         :            roll_pack_chunk(P, k, KH, KW, (int)i);
+    0.00 :   420de0: mov     w4, w20
+    0.00 :   420de4: mov     x3, x24
+    0.00 :   420de8: mov     x2, x23
+    0.00 :   420dec: mov     x1, x25
+    0.00 :   420df0: mov     x0, x21
+    0.00 :   420df4: bl      420130 <roll_pack_chunk>
+         :            __atomic_store_n(&g_pk_done[i], 1, __ATOMIC_RELEASE);
+    0.00 :   420df8: add     x4, x26, w20, uxtw
+    0.00 :   420dfc: mov     w0, #0x1                        // #1
+    0.00 :   420e00: stlrb   w0, [x4]
+         :            uint32_t i = __atomic_fetch_add(&g_pk_next, 1, __ATOMIC_RELAXED);
+    0.00 :   420e04: ldadd   w28, w20, [x19]
+         :            if (i >= (uint32_t)nc) break;
+    0.03 :   420e08: cmp     w20, w22
+    0.00 :   420e0c: b.cc    420de0 <roll_worker+0xd0>  // b.lo, b.ul, b.last
+    0.00 :   420e10: ldp     x1, x2, [sp, #160]
+    0.00 :   420e14: adrp    x26, 464000 <g_rdiag+0x11700>
+    0.00 :   420e18: ldr     x20, [sp, #176]
+         :            for (int i = 0; i < nc; i++)
+    0.00 :   420e1c: mov     x18, x23
+    0.00 :   420e20: add     x26, x26, #0x900
+    0.00 :   420e24: cmp     w22, #0x0
+    0.00 :   420e28: b.le    420ea8 <roll_worker+0x198>
+    0.00 :   420e2c: mov     x28, x1
+    0.00 :   420e30: stp     x2, x20, [sp, #160]
+    0.00 :   420e34: mov     w20, w22
+    0.00 :   420e38: mov     x22, x26
+         :            int all = 1;
+    0.00 :   420e3c: mov     w1, #0x1                        // #1
+         :            for (int i = 0; i < nc; i++)
+    0.00 :   420e40: mov     w19, #0x0                       // #0
+    0.00 :   420e44: b       420e58 <roll_worker+0x148>
+    0.01 :   420e48: add     w19, w19, #0x1
+    0.00 :   420e4c: add     x22, x22, #0x1
+    0.00 :   420e50: cmp     w20, w19
+    0.00 :   420e54: b.eq    420e98 <roll_worker+0x188>  // b.none
+         :            if (!__atomic_load_n(&g_pk_done[i], __ATOMIC_ACQUIRE)) {
+    0.00 :   420e58: ldarb   w0, [x22]
+    0.00 :   420e5c: tst     w0, #0xff
+    0.00 :   420e60: b.ne    420e48 <roll_worker+0x138>  // b.any
+         :            all = 0; roll_pack_chunk(P, k, KH, KW, i);
+    0.00 :   420e64: mov     w4, w19
+    0.00 :   420e68: mov     x3, x24
+    0.00 :   420e6c: mov     x2, x23
+    0.00 :   420e70: mov     x1, x25
+    0.00 :   420e74: mov     x0, x21
+    0.00 :   420e78: bl      420130 <roll_pack_chunk>
+         :            __atomic_store_n(&g_pk_done[i], 1, __ATOMIC_RELEASE);
+    0.00 :   420e7c: mov     w0, #0x1                        // #1
+    0.00 :   420e80: stlrb   w0, [x22]
+         :            for (int i = 0; i < nc; i++)
+    0.00 :   420e84: add     w19, w19, #0x1
+    0.00 :   420e88: add     x22, x22, #0x1
+         :            all = 0; roll_pack_chunk(P, k, KH, KW, i);
+    0.00 :   420e8c: mov     w1, #0x0                        // #0
+         :            for (int i = 0; i < nc; i++)
+    0.00 :   420e90: cmp     w20, w19
+    0.00 :   420e94: b.ne    420e58 <roll_worker+0x148>  // b.any
+         :            if (all) break;
+    0.00 :   420e98: cbz     w1, 420e38 <roll_worker+0x128>
+    0.00 :   420e9c: ldp     x2, x20, [sp, #160]
+    0.00 :   420ea0: mov     x1, x28
+    0.00 :   420ea4: mov     x18, x23
+         :            roll_worker():
+         :            float* ring = P->rings + (size_t)tid * 8192; float* scr = P->scratch + (size_t)tid * 2048;
+    0.00 :   420ea8: sbfiz   x3, x27, #15, #32
+    0.00 :   420eac: sbfiz   x0, x27, #13, #32
+    0.00 :   420eb0: add     x1, x1, x3
+    0.00 :   420eb4: add     x0, x2, x0
+    0.00 :   420eb8: stp     x1, x0, [sp, #264]
+    0.00 :   420ebc: sxtw    x1, w27
+    0.00 :   420ec0: str     x1, [sp, #288]
+         :            sme_start():
+         :            static inline void sme_start(void) { asm volatile("smstart\n\t" ::: "memory", VCLOB, PCLOB); }
+    0.00 :   420ec4: smstart
+         :            roll_worker():
+         :            kp_t K = { c->in + ja * W + base, W * 4, g->R, g->RSB, KH, g->steps, jb - ja + KH - 1,
+    0.00 :   420ec8: ldr     x2, [sp, #208]
+    0.00 :   420ecc: adrp    x0, 465000 <g_pk_done+0x700>
+    0.00 :   420ed0: add     x0, x0, #0x900
+    0.00 :   420ed4: str     x21, [sp, #160]
+    0.00 :   420ed8: str     w27, [sp, #168]
+    0.00 :   420edc: lsl     x2, x2, #2
+    0.00 :   420ee0: str     x1, [sp, #176]
+         :            if (g_roll_diag) { int ki = roll_kind_idx(g->kind); D->tk[ki] += cyc() - t0; D->ts[ki] += 4L * g->steps * (jb - ja + KH - 1); }
+    0.00 :   420ee4: add     x1, x1, x1, lsl #3
+    0.00 :   420ee8: str     x0, [sp, #192]
+    0.00 :   420eec: adrp    x0, 452000 <g_go_t+0xf700>
+    0.00 :   420ef0: add     x0, x0, #0x900
+    0.00 :   420ef4: stp     x24, x20, [sp, #216]
+    0.00 :   420ef8: str     w27, [sp, #248]
+         :            kp_t K = { c->in + ja * W + base, W * 4, g->R, g->RSB, KH, g->steps, jb - ja + KH - 1,
+    0.00 :   420efc: str     x2, [sp, #256]
+         :            if (g_roll_diag) { int ki = roll_kind_idx(g->kind); D->tk[ki] += cyc() - t0; D->ts[ki] += 4L * g->steps * (jb - ja + KH - 1); }
+    0.00 :   420f00: stp     x0, x1, [sp, #296]
+    0.00 :   420f04: nop
+         :            int pi = -1;
+    0.00 :   420f08: ldr     w2, [sp, #248]
+         :            uint64_t w = __atomic_load_n(&g_rwork[victim].v, __ATOMIC_RELAXED);
+    0.01 :   420f0c: ldr     x0, [sp, #176]
+    0.00 :   420f10: ldr     x1, [sp, #192]
+    0.00 :   420f14: add     x1, x1, x0, lsl #6
+    0.00 :   420f18: ldr     w0, [sp, #168]
+    0.00 :   420f1c: cmp     w0, w2
+    0.00 :   420f20: b.eq    421790 <roll_worker+0xa80>  // b.none
+    0.00 :   420f24: ldr     x2, [x1]
+         :            uint32_t cur = (uint32_t)w, end = (uint32_t)(w >> 32);
+    0.00 :   420f28: lsr     x0, x2, #32
+         :            if (cur >= end) break;
+    0.00 :   420f2c: cmp     w0, w2
+    0.00 :   420f30: b.ls    42187c <roll_worker+0xb6c>  // b.plast
+         :            if (__atomic_compare_exchange_n(&g_rwork[victim].v, &w, nw, 1, __ATOMIC_RELAXED, __ATOMIC_RELAXED)) { pi = (victim == tid) ? (int)cur : (int)end - 1; break; }
+    0.00 :   420f34: mov     x3, x2
+         :            uint64_t nw = (victim == tid) ? w + 1 : w - ((uint64_t)1 << 32);
+    0.00 :   420f38: mov     x4, #0xffffffff00000000         // #-4294967296
+    0.00 :   420f3c: add     x4, x2, x4
+         :            if (__atomic_compare_exchange_n(&g_rwork[victim].v, &w, nw, 1, __ATOMIC_RELAXED, __ATOMIC_RELAXED)) { pi = (victim == tid) ? (int)cur : (int)end - 1; break; }
+    0.00 :   420f40: cas     x3, x4, [x1]
+    0.00 :   420f44: cmp     x3, x2
+    0.00 :   420f48: b.ne    420f24 <roll_worker+0x214>  // b.any
+         :            if (pi < 0) {
+    0.00 :   420f4c: subs    w0, w0, #0x1
+    0.00 :   420f50: b.mi    42187c <roll_worker+0xb6c>  // b.first
+         :            const rpiece_t* pc = &P->pieces[pi];
+    0.00 :   420f54: ldr     x3, [sp, #160]
+         :            uint64_t t0 = g_roll_diag ? cyc() : 0;
+    0.00 :   420f58: adrp    x2, 440000 <memcpy@GLIBC_2.17>
+    0.00 :   420f5c: add     x2, x2, #0x180
+         :            const rpiece_t* pc = &P->pieces[pi];
+    0.00 :   420f60: mov     w1, #0x18                       // #24
+         :            uint64_t t0 = g_roll_diag ? cyc() : 0;
+    0.00 :   420f64: str     xzr, [sp, #200]
+         :            const rpiece_t* pc = &P->pieces[pi];
+    0.00 :   420f68: smull   x0, w0, w1
+         :            uint64_t t0 = g_roll_diag ? cyc() : 0;
+    0.00 :   420f6c: ldr     w5, [x2]
+         :            const rpiece_t* pc = &P->pieces[pi];
+    0.04 :   420f70: ldr     x2, [x3, #1096]
+         :            const rgrp_t* g = &P->G[P->items[pc->item].g];
+    0.00 :   420f74: ldr     x1, [x3, #1064]
+         :            const rpiece_t* pc = &P->pieces[pi];
+    0.00 :   420f78: add     x3, x2, x0
+         :            const rgrp_t* g = &P->G[P->items[pc->item].g];
+    0.00 :   420f7c: ldrsw   x0, [x2, x0]
+         :            const long ja = pc->ja, jb = pc->jb;
+    0.01 :   420f80: ldp     x2, x3, [x3, #8]
+         :            const rgrp_t* g = &P->G[P->items[pc->item].g];
+    0.00 :   420f84: lsl     x0, x0, #4
+    0.00 :   420f88: add     x4, x1, x0
+    0.00 :   420f8c: ldr     w0, [x1, x0]
+         :            const long base = P->items[pc->item].base;
+    0.02 :   420f90: ldr     x4, [x4, #8]
+         :            uint64_t t0 = g_roll_diag ? cyc() : 0;
+    0.00 :   420f94: cbz     w5, 420fa0 <roll_worker+0x290>
+         :            cyc():
+         :            static inline uint64_t cyc(void) { uint64_t v; asm volatile("mrs %0, cntvct_el0" : "=r"(v)); return v; }
+    0.00 :   420f98: mrs     x1, cntvct_el0
+    0.00 :   420f9c: str     x1, [sp, #200]
+         :            roll_worker():
+         :            kp_t K = { c->in + ja * W + base, W * 4, g->R, g->RSB, KH, g->steps, jb - ja + KH - 1,
+    0.00 :   420fa0: mov     w5, #0x58                       // #88
+    0.00 :   420fa4: sub     x3, x3, x2
+    0.00 :   420fa8: ldr     x11, [sp, #160]
+    0.00 :   420fac: smull   x12, w0, w5
+    0.00 :   420fb0: add     x3, x3, x18
+         :            ((ja + 1 - g->s_base) % KH + KH) % KH, ((ja + 1 - g->s_base - 16) % KH + KH) % KH,
+    0.00 :   420fb4: add     x1, x2, #0x1
+         :            kp_t K = { c->in + ja * W + base, W * 4, g->R, g->RSB, KH, g->steps, jb - ja + KH - 1,
+    0.00 :   420fb8: ldr     x6, [sp, #256]
+    0.00 :   420fbc: sub     x5, x3, #0x1
+    0.00 :   420fc0: add     x3, x11, x12
+    0.00 :   420fc4: str     x5, [sp, #232]
+    0.00 :   420fc8: str     x6, [sp, #328]
+    0.00 :   420fcc: str     x5, [sp, #368]
+    0.00 :   420fd0: ldp     x6, x5, [sp, #264]
+    0.00 :   420fd4: str     x5, [sp, #384]
+         :            ((ja + 1 - g->s_base) % KH + KH) % KH, ((ja + 1 - g->s_base - 16) % KH + KH) % KH,
+    0.00 :   420fd8: ldr     x8, [x3, #8]
+         :            kp_t K = { c->in + ja * W + base, W * 4, g->R, g->RSB, KH, g->steps, jb - ja + KH - 1,
+    0.00 :   420fdc: sxtw    x5, w0
+    0.00 :   420fe0: add     x0, x5, w0, sxtw #1
+    0.00 :   420fe4: str     x5, [sp, #240]
+         :            ((ja + 1 - g->s_base) % KH + KH) % KH, ((ja + 1 - g->s_base - 16) % KH + KH) % KH,
+    0.00 :   420fe8: sub     x1, x1, x8
+         :            ((ja - g->s_base) % KH + KH) % KH, ((ja - g->s_base - 16) % KH + KH) % KH, g->nvA, g->nvB, ring, KW, c->outW * 4,
+    0.00 :   420fec: sub     x9, x2, x8
+         :            kp_t K = { c->in + ja * W + base, W * 4, g->R, g->RSB, KH, g->steps, jb - ja + KH - 1,
+    0.00 :   420ff0: lsl     x0, x0, #2
+    0.00 :   420ff4: str     x6, [sp, #440]
+    0.00 :   420ff8: sub     x0, x0, x5
+         :            ((ja + 1 - g->s_base) % KH + KH) % KH, ((ja + 1 - g->s_base - 16) % KH + KH) % KH,
+    0.00 :   420ffc: sub     x5, x1, #0x10
+         :            kp_t K = { c->in + ja * W + base, W * 4, g->R, g->RSB, KH, g->steps, jb - ja + KH - 1,
+    0.00 :   421000: ldr     x3, [sp, #216]
+    0.00 :   421004: str     x3, [sp, #448]
+         :            ((ja + 1 - g->s_base) % KH + KH) % KH, ((ja + 1 - g->s_base - 16) % KH + KH) % KH,
+    0.00 :   421008: sdiv    x7, x5, x18
+         :            ((ja - g->s_base) % KH + KH) % KH, ((ja - g->s_base - 16) % KH + KH) % KH, g->nvA, g->nvB, ring, KW, c->outW * 4,
+    0.00 :   42100c: sub     x3, x9, #0x10
+         :            kp_t K = { c->in + ja * W + base, W * 4, g->R, g->RSB, KH, g->steps, jb - ja + KH - 1,
+    0.00 :   421010: lsl     x0, x0, #3
+    0.00 :   421014: str     x12, [sp, #184]
+         :            c->out + (ja - KH + 1) * c->outW + base, scr,
+    0.00 :   421018: ldr     x13, [sp, #224]
+         :            kp_t K = { c->in + ja * W + base, W * 4, g->R, g->RSB, KH, g->steps, jb - ja + KH - 1,
+    0.00 :   42101c: str     x18, [sp, #352]
+         :            ((ja + 1 - g->s_base) % KH + KH) % KH, ((ja + 1 - g->s_base - 16) % KH + KH) % KH,
+    0.00 :   421020: msub    x7, x7, x18, x5
+         :            kp_t K = { c->in + ja * W + base, W * 4, g->R, g->RSB, KH, g->steps, jb - ja + KH - 1,
+    0.00 :   421024: stp     xzr, xzr, [sp, #464]
+         :            ((ja + 1 - g->s_base) % KH + KH) % KH, ((ja + 1 - g->s_base - 16) % KH + KH) % KH,
+    0.00 :   421028: sdiv    x5, x1, x18
+    0.00 :   42102c: add     x7, x7, x18
+         :            kp_t K = { c->in + ja * W + base, W * 4, g->R, g->RSB, KH, g->steps, jb - ja + KH - 1,
+    0.00 :   421030: stp     xzr, xzr, [sp, #480]
+         :            ((ja - g->s_base) % KH + KH) % KH, ((ja - g->s_base - 16) % KH + KH) % KH, g->nvA, g->nvB, ring, KW, c->outW * 4,
+    0.00 :   421034: sdiv    x6, x3, x18
+         :            kp_t K = { c->in + ja * W + base, W * 4, g->R, g->RSB, KH, g->steps, jb - ja + KH - 1,
+    0.00 :   421038: stp     xzr, xzr, [sp, #496]
+         :            ((ja + 1 - g->s_base) % KH + KH) % KH, ((ja + 1 - g->s_base - 16) % KH + KH) % KH,
+    0.00 :   42103c: msub    x5, x5, x18, x1
+    0.00 :   421040: sdiv    x10, x7, x18
+         :            ((ja - g->s_base) % KH + KH) % KH, ((ja - g->s_base - 16) % KH + KH) % KH, g->nvA, g->nvB, ring, KW, c->outW * 4,
+    0.00 :   421044: add     x1, x0, #0x10
+         :            ((ja + 1 - g->s_base) % KH + KH) % KH, ((ja + 1 - g->s_base - 16) % KH + KH) % KH,
+    0.00 :   421048: add     x5, x5, x18
+         :            kp_t K = { c->in + ja * W + base, W * 4, g->R, g->RSB, KH, g->steps, jb - ja + KH - 1,
+    0.00 :   42104c: add     x0, x11, x0
+         :            ((ja - g->s_base) % KH + KH) % KH, ((ja - g->s_base - 16) % KH + KH) % KH, g->nvA, g->nvB, ring, KW, c->outW * 4,
+    0.00 :   421050: msub    x6, x6, x18, x3
+    0.00 :   421054: sdiv    x3, x9, x18
+    0.00 :   421058: ldr     q0, [x11, x1]
+         :            ((ja + 1 - g->s_base) % KH + KH) % KH, ((ja + 1 - g->s_base - 16) % KH + KH) % KH,
+    0.00 :   42105c: msub    x7, x10, x18, x7
+         :            ((ja - g->s_base) % KH + KH) % KH, ((ja - g->s_base - 16) % KH + KH) % KH, g->nvA, g->nvB, ring, KW, c->outW * 4,
+    0.00 :   421060: add     x6, x6, x18
+         :            kp_t K = { c->in + ja * W + base, W * 4, g->R, g->RSB, KH, g->steps, jb - ja + KH - 1,
+    0.00 :   421064: str     x7, [sp, #400]
+    0.00 :   421068: add     x7, sp, #0x2a0
+         :            ((ja - g->s_base) % KH + KH) % KH, ((ja - g->s_base - 16) % KH + KH) % KH, g->nvA, g->nvB, ring, KW, c->outW * 4,
+    0.00 :   42106c: msub    x3, x3, x18, x9
+         :            c->out + (ja - KH + 1) * c->outW + base, scr,
+    0.00 :   421070: ldr     x9, [x13, #64]
+    0.00 :   421074: sub     x1, x2, x18
+         :            ((ja - g->s_base) % KH + KH) % KH, ((ja - g->s_base - 16) % KH + KH) % KH, g->nvA, g->nvB, ring, KW, c->outW * 4,
+    0.00 :   421078: sdiv    x10, x6, x18
+         :            kp_t K = { c->in + ja * W + base, W * 4, g->R, g->RSB, KH, g->steps, jb - ja + KH - 1,
+    0.00 :   42107c: stur    q0, [x7, #-248]
+         :            ((ja - g->s_base) % KH + KH) % KH, ((ja - g->s_base - 16) % KH + KH) % KH, g->nvA, g->nvB, ring, KW, c->outW * 4,
+    0.00 :   421080: add     x3, x3, x18
+         :            kp_t K = { c->in + ja * W + base, W * 4, g->R, g->RSB, KH, g->steps, jb - ja + KH - 1,
+    0.00 :   421084: ldr     x7, [sp, #208]
+         :            c->out + (ja - KH + 1) * c->outW + base, scr,
+    0.00 :   421088: madd    x1, x1, x9, x9
+         :            ((ja - g->s_base) % KH + KH) % KH, ((ja - g->s_base - 16) % KH + KH) % KH, g->nvA, g->nvB, ring, KW, c->outW * 4,
+    0.00 :   42108c: lsl     x9, x9, #2
+         :            kp_t K = { c->in + ja * W + base, W * 4, g->R, g->RSB, KH, g->steps, jb - ja + KH - 1,
+    0.00 :   421090: str     x9, [sp, #456]
+    0.00 :   421094: ldr     x9, [x13]
+         :            ((ja - g->s_base) % KH + KH) % KH, ((ja - g->s_base - 16) % KH + KH) % KH, g->nvA, g->nvB, ring, KW, c->outW * 4,
+    0.00 :   421098: msub    x6, x10, x18, x6
+         :            c->out + (ja - KH + 1) * c->outW + base, scr,
+    0.00 :   42109c: add     x1, x1, x4
+         :            kp_t K = { c->in + ja * W + base, W * 4, g->R, g->RSB, KH, g->steps, jb - ja + KH - 1,
+    0.00 :   4210a0: madd    x4, x7, x2, x4
+         :            ((ja + 1 - g->s_base) % KH + KH) % KH, ((ja + 1 - g->s_base - 16) % KH + KH) % KH,
+    0.00 :   4210a4: sdiv    x7, x5, x18
+         :            kp_t K = { c->in + ja * W + base, W * 4, g->R, g->RSB, KH, g->steps, jb - ja + KH - 1,
+    0.00 :   4210a8: str     x6, [sp, #416]
+         :            ((ja - g->s_base) % KH + KH) % KH, ((ja - g->s_base - 16) % KH + KH) % KH, g->nvA, g->nvB, ring, KW, c->outW * 4,
+    0.00 :   4210ac: sdiv    x6, x3, x18
+         :            kp_t K = { c->in + ja * W + base, W * 4, g->R, g->RSB, KH, g->steps, jb - ja + KH - 1,
+    0.00 :   4210b0: add     x4, x9, x4, lsl #2
+         :            c->out + (ja - KH + 1) * c->outW + base, scr,
+    0.00 :   4210b4: ldr     x9, [x13, #16]
+         :            ((ja + 1 - g->s_base) % KH + KH) % KH, ((ja + 1 - g->s_base - 16) % KH + KH) % KH,
+    0.00 :   4210b8: msub    x5, x7, x18, x5
+         :            kp_t K = { c->in + ja * W + base, W * 4, g->R, g->RSB, KH, g->steps, jb - ja + KH - 1,
+    0.00 :   4210bc: str     x4, [sp, #320]
+         :            ((ja - g->s_base) % KH + KH) % KH, ((ja - g->s_base - 16) % KH + KH) % KH, g->nvA, g->nvB, ring, KW, c->outW * 4,
+    0.00 :   4210c0: msub    x3, x6, x18, x3
+         :            if (g->kind == 34 || g->kind == 35) {
+    0.00 :   4210c4: ldr     w7, [x11, x12]
+         :            kp_t K = { c->in + ja * W + base, W * 4, g->R, g->RSB, KH, g->steps, jb - ja + KH - 1,
+    0.00 :   4210c8: str     x5, [sp, #392]
+         :            c->out + (ja - KH + 1) * c->outW + base, scr,
+    0.00 :   4210cc: add     x1, x9, x1, lsl #2
+         :            kp_t K = { c->in + ja * W + base, W * 4, g->R, g->RSB, KH, g->steps, jb - ja + KH - 1,
+    0.00 :   4210d0: ldr     x5, [x0, #56]
+    0.00 :   4210d4: str     x5, [sp, #336]
+    0.00 :   4210d8: ldr     x5, [x0, #48]
+    0.00 :   4210dc: str     x3, [sp, #408]
+    0.00 :   4210e0: ldr     x3, [x0, #40]
+         :            if (g->kind == 34 || g->kind == 35) {
+    0.00 :   4210e4: sub     w4, w7, #0x22
+         :            kp_t K = { c->in + ja * W + base, W * 4, g->R, g->RSB, KH, g->steps, jb - ja + KH - 1,
+    0.00 :   4210e8: str     x5, [sp, #344]
+    0.00 :   4210ec: str     x3, [sp, #360]
+    0.00 :   4210f0: str     x1, [sp, #376]
+         :            if (g->kind == 34 || g->kind == 35) {
+    0.00 :   4210f4: cmp     w4, #0x1
+    0.00 :   4210f8: b.ls    421890 <roll_worker+0xb80>  // b.plast
+         :            } else if (g->kind == 33) {
+    0.00 :   4210fc: cmp     w7, #0x21
+    0.00 :   421100: b.eq    421ac8 <roll_worker+0xdb8>  // b.none
+         :            } else if (g->kind == 17) {
+    0.00 :   421104: cmp     w7, #0x11
+    0.00 :   421108: b.ne    4211a4 <roll_worker+0x494>  // b.any
+         :            const long sF1 = KH - 3, sF2 = KH - 2;
+    0.00 :   42110c: sub     x3, x18, #0x3
+    0.00 :   421110: sub     x0, x18, #0x2
+         :            K.kb0 = c->k + (((ja - sF1) % KH + KH) % KH) * KW;
+    0.00 :   421114: sub     x1, x2, x3
+         :            K.kb20 = c->k + (((ja - sF2) % KH + KH) % KH) * KW;
+    0.00 :   421118: sub     x2, x2, x0
+         :            K.cf20 = ((sF2 - g->s_base) % KH + KH) % KH;
+    0.00 :   42111c: sub     x0, x0, x8
+         :            K.cf0 = ((sF1 - g->s_base) % KH + KH) % KH;
+    0.00 :   421120: sub     x3, x3, x8
+         :            K.kb0 = c->k + (((ja - sF1) % KH + KH) % KH) * KW;
+    0.00 :   421124: ldr     x7, [x13, #8]
+         :            K.kb20 = c->k + (((ja - sF2) % KH + KH) % KH) * KW;
+    0.00 :   421128: sdiv    x5, x2, x18
+         :            K.kb0 = c->k + (((ja - sF1) % KH + KH) % KH) * KW;
+    0.00 :   42112c: sdiv    x6, x1, x18
+         :            K.cf0 = ((sF1 - g->s_base) % KH + KH) % KH;
+    0.00 :   421130: sdiv    x4, x3, x18
+         :            K.kb20 = c->k + (((ja - sF2) % KH + KH) % KH) * KW;
+    0.00 :   421134: msub    x5, x5, x18, x2
+         :            K.cf20 = ((sF2 - g->s_base) % KH + KH) % KH;
+    0.00 :   421138: sdiv    x2, x0, x18
+         :            K.kb20 = c->k + (((ja - sF2) % KH + KH) % KH) * KW;
+    0.00 :   42113c: add     x5, x5, x18
+         :            K.kb0 = c->k + (((ja - sF1) % KH + KH) % KH) * KW;
+    0.00 :   421140: msub    x6, x6, x18, x1
+         :            K.cf0 = ((sF1 - g->s_base) % KH + KH) % KH;
+    0.00 :   421144: msub    x3, x4, x18, x3
+         :            K.kb0 = c->k + (((ja - sF1) % KH + KH) % KH) * KW;
+    0.00 :   421148: add     x6, x6, x18
+         :            K.cf20 = ((sF2 - g->s_base) % KH + KH) % KH;
+    0.00 :   42114c: msub    x2, x2, x18, x0
+         :            K.cf0 = ((sF1 - g->s_base) % KH + KH) % KH;
+    0.00 :   421150: add     x3, x3, x18
+         :            K.kb20 = c->k + (((ja - sF2) % KH + KH) % KH) * KW;
+    0.00 :   421154: sdiv    x0, x5, x18
+         :            K.cf20 = ((sF2 - g->s_base) % KH + KH) % KH;
+    0.00 :   421158: add     x2, x2, x18
+         :            K.kb0 = c->k + (((ja - sF1) % KH + KH) % KH) * KW;
+    0.00 :   42115c: sdiv    x1, x6, x18
+         :            K.cf20 = ((sF2 - g->s_base) % KH + KH) % KH;
+    0.00 :   421160: sdiv    x4, x2, x18
+         :            K.kb20 = c->k + (((ja - sF2) % KH + KH) % KH) * KW;
+    0.00 :   421164: msub    x0, x0, x18, x5
+         :            K.kb0 = c->k + (((ja - sF1) % KH + KH) % KH) * KW;
+    0.00 :   421168: ldr     x5, [sp, #216]
+    0.00 :   42116c: msub    x1, x1, x18, x6
+         :            K.cf0 = ((sF1 - g->s_base) % KH + KH) % KH;
+    0.00 :   421170: sdiv    x6, x3, x18
+         :            K.cf20 = ((sF2 - g->s_base) % KH + KH) % KH;
+    0.00 :   421174: msub    x2, x4, x18, x2
+         :            K.kb20 = c->k + (((ja - sF2) % KH + KH) % KH) * KW;
+    0.00 :   421178: mul     x0, x0, x5
+         :            K.cf20 = ((sF2 - g->s_base) % KH + KH) % KH;
+    0.00 :   42117c: str     x2, [sp, #504]
+         :            K.kb0 = c->k + (((ja - sF1) % KH + KH) % KH) * KW;
+    0.00 :   421180: mul     x1, x1, x5
+         :            K.cf0 = ((sF1 - g->s_base) % KH + KH) % KH;
+    0.00 :   421184: msub    x3, x6, x18, x3
+         :            K.kb20 = c->k + (((ja - sF2) % KH + KH) % KH) * KW;
+    0.00 :   421188: add     x0, x7, x0, lsl #2
+    0.00 :   42118c: stp     x3, x0, [sp, #488]
+         :            K.kbase = c->k; K.kend = c->k + KH * KW;
+    0.00 :   421190: mul     x3, x18, x5
+         :            K.kb0 = c->k + (((ja - sF1) % KH + KH) % KH) * KW;
+    0.00 :   421194: add     x1, x7, x1, lsl #2
+         :            K.kbase = c->k; K.kend = c->k + KH * KW;
+    0.00 :   421198: stp     x1, x7, [sp, #464]
+    0.00 :   42119c: add     x1, x7, x3, lsl #2
+    0.00 :   4211a0: str     x1, [sp, #480]
+         :            sme_zero_za():
+         :            static inline void sme_zero_za(void) { asm volatile("zero {za}\n\t" ::: "memory"); }
+    0.00 :   4211a4: zero    {za}
+         :            roll_worker():
+         :            if (g->kind == 32) k16pair(&K); else if (g->kind == 33) k16pairf(&K); else if (g->kind == 34) k16pairf3(&K); else if (g->kind == 35) k16pairf4(&K); else if (g->kind == 16) k16single(&K);
+    0.00 :   4211a8: ldr     x0, [sp, #160]
+    0.00 :   4211ac: ldr     x1, [sp, #184]
+    0.00 :   4211b0: ldr     w0, [x0, x1]
+    0.00 :   4211b4: cmp     w0, #0x20
+    0.00 :   4211b8: b.eq    4218fc <roll_worker+0xbec>  // b.none
+    0.00 :   4211bc: str     x18, [sp, #312]
+         :            k16pair():
+         :            ka_t A; fill_args(&A, P, 1, 512, 31 + P->steps);
+    0.00 :   4211c0: ldr     x19, [sp, #360]
+         :            roll_worker():
+         :            if (g->kind == 32) k16pair(&K); else if (g->kind == 33) k16pairf(&K); else if (g->kind == 34) k16pairf3(&K); else if (g->kind == 35) k16pairf4(&K); else if (g->kind == 16) k16single(&K);
+    0.00 :   4211c4: cmp     w0, #0x21
+    0.00 :   4211c8: b.eq    421b24 <roll_worker+0xe14>  // b.none
+    0.00 :   4211cc: cmp     w0, #0x22
+    0.00 :   4211d0: b.eq    421d30 <roll_worker+0x1020>  // b.none
+    0.00 :   4211d4: cmp     w0, #0x23
+    0.00 :   4211d8: b.eq    421fa0 <roll_worker+0x1290>  // b.none
+    0.00 :   4211dc: cmp     w0, #0x10
+    0.00 :   4211e0: b.eq    422494 <roll_worker+0x1784>  // b.none
+         :            else if (g->kind == 17) k16singlef2(&K); else if (g->kind == 8) k8(&K); else k4(&K);
+    0.00 :   4211e4: cmp     w0, #0x11
+    0.00 :   4211e8: b.eq    422614 <roll_worker+0x1904>  // b.none
+    0.00 :   4211ec: cmp     w0, #0x8
+    0.00 :   4211f0: b.eq    422294 <roll_worker+0x1584>  // b.none
+         :            k4():
+         :            const long sh = ((uintptr_t)P->in_row >> 2) & 15;              // 对齐拷贝源到 64 B；平面起点相应排列
+    0.00 :   4211f4: ldr     x22, [sp, #320]
+         :            const long ncp = steps4 + 252 + sh;                            // a 跨度：192 + 60 + (steps4-1) + 1 + 偏移
+    0.00 :   4211f8: add     x19, x19, #0xfc
+         :            ka_t A; fill_args(&A, P, 1, 0, 0);
+    0.00 :   4211fc: add     x0, sp, #0x200
+    0.00 :   421200: add     x1, sp, #0x140
+    0.00 :   421204: mov     x3, #0x0                        // #0
+    0.00 :   421208: mov     x2, #0x1                        // #1
+    0.00 :   42120c: ubfx    x21, x22, #2, #4
+         :            const long sh = ((uintptr_t)P->in_row >> 2) & 15;              // 对齐拷贝源到 64 B；平面起点相应排列
+    0.00 :   421210: lsr     x23, x22, #2
+         :            const long ncp = steps4 + 252 + sh;                            // a 跨度：192 + 60 + (steps4-1) + 1 + 偏移
+    0.00 :   421214: add     x19, x19, x21
+         :            const long TSB = (((ncp + 3) / 4 + 15) & ~15L) * 4;            // 平面距（字节）
+    0.00 :   421218: adds    x4, x19, #0x3
+    0.00 :   42121c: add     x20, x19, #0x6
+    0.00 :   421220: csel    x20, x20, x4, mi  // mi = first
+         :            A.in_row = (int64_t)(P->in_row - sh);
+    0.00 :   421224: sub     x22, x22, x21, lsl #2
+         :            ka_t A; fill_args(&A, P, 1, 0, 0);
+    0.00 :   421228: bl      420b90 <fill_args.constprop.0>
+         :            const long TSB = (((ncp + 3) / 4 + 15) & ~15L) * 4;            // 平面距（字节）
+    0.00 :   42122c: asr     x20, x20, #2
+         :            A.it = (P->KW + 3) / 4;
+    0.00 :   421230: ldr     x0, [sp, #448]
+         :            const long TSB = (((ncp + 3) / 4 + 15) & ~15L) * 4;            // 平面距（字节）
+    0.00 :   421234: add     x20, x20, #0xf
+    0.00 :   421238: and     x20, x20, #0xfffffffffffffff0
+         :            A.ncp_full = ncp / 64; A.ncp_tail = ((ncp % 64) + 3) / 4;      // ld4w 整块数、尾块每平面元素数
+    0.00 :   42123c: add     x4, x19, #0x3f
+         :            A.it = (P->KW + 3) / 4;
+    0.00 :   421240: add     x5, x0, #0x6
+    0.00 :   421244: adds    x0, x0, #0x3
+    0.00 :   421248: csel    x5, x5, x0, mi  // mi = first
+         :            A.kw4 = (P->KW + 3) % 4;
+    0.00 :   42124c: negs    x2, x0
+    0.00 :   421250: and     x2, x2, #0x3
+    0.00 :   421254: and     x0, x0, #0x3
+    0.00 :   421258: csneg   x2, x0, x2, mi  // mi = first
+         :            A.ncp_full = ncp / 64; A.ncp_tail = ((ncp % 64) + 3) / 4;      // ld4w 整块数、尾块每平面元素数
+    0.00 :   42125c: cmp     x19, #0x0
+         :            const long TSB = (((ncp + 3) / 4 + 15) & ~15L) * 4;            // 平面距（字节）
+    0.00 :   421260: lsl     x3, x20, #2
+         :            A.n2 = TSB * ((sh + 0) & 3) + 4 * ((sh + 0) >> 2);             // 子步 i 的平面起点偏移（相对槽基址）
+    0.00 :   421264: and     x1, x21, #0xc
+         :            A.ncp_full = ncp / 64; A.ncp_tail = ((ncp % 64) + 3) / 4;      // ld4w 整块数、尾块每平面元素数
+    0.00 :   421268: csel    x4, x4, x19, lt  // lt = tstop
+         :            A.n2 = TSB * ((sh + 0) & 3) + 4 * ((sh + 0) >> 2);             // 子步 i 的平面起点偏移（相对槽基址）
+    0.00 :   42126c: and     x11, x23, #0x3
+         :            A.ncp_full = ncp / 64; A.ncp_tail = ((ncp % 64) + 3) / 4;      // ld4w 整块数、尾块每平面元素数
+    0.00 :   421270: negs    x0, x19
+    0.00 :   421274: and     x19, x19, #0x3f
+    0.00 :   421278: and     x0, x0, #0x3f
+         :            A.e2 = TSB * ((sh + 1) & 3) + 4 * ((sh + 1) >> 2);
+    0.00 :   42127c: add     x8, x21, #0x1
+         :            A.ncp_full = ncp / 64; A.ncp_tail = ((ncp % 64) + 3) / 4;      // ld4w 整块数、尾块每平面元素数
+    0.00 :   421280: csneg   x0, x19, x0, mi  // mi = first
+         :            A.n2 = TSB * ((sh + 0) & 3) + 4 * ((sh + 0) >> 2);             // 子步 i 的平面起点偏移（相对槽基址）
+    0.00 :   421284: madd    x11, x11, x3, x1
+         :            A.T  = TSB * ((sh + 2) & 3) + 4 * ((sh + 2) >> 2);
+    0.00 :   421288: add     x7, x21, #0x2
+         :            A.nlines = TSB * ((sh + 3) & 3) + 4 * ((sh + 3) >> 2);
+    0.00 :   42128c: add     x6, x21, #0x3
+         :            A.ncp_full = ncp / 64; A.ncp_tail = ((ncp % 64) + 3) / 4;      // ld4w 整块数、尾块每平面元素数
+    0.00 :   421290: add     x1, x0, #0x6
+         :            A.it = (P->KW + 3) / 4;
+    0.00 :   421294: asr     x5, x5, #2
+         :            A.ncp_full = ncp / 64; A.ncp_tail = ((ncp % 64) + 3) / 4;      // ld4w 整块数、尾块每平面元素数
+    0.00 :   421298: adds    x0, x0, #0x3
+         :            A.e2 = TSB * ((sh + 1) & 3) + 4 * ((sh + 1) >> 2);
+    0.00 :   42129c: and     x10, x8, #0x3
+         :            A.T  = TSB * ((sh + 2) & 3) + 4 * ((sh + 2) >> 2);
+    0.00 :   4212a0: and     x9, x7, #0x3
+         :            A.ncp_full = ncp / 64; A.ncp_tail = ((ncp % 64) + 3) / 4;      // ld4w 整块数、尾块每平面元素数
+    0.00 :   4212a4: csel    x0, x1, x0, mi  // mi = first
+         :            A.T  = TSB * ((sh + 2) & 3) + 4 * ((sh + 2) >> 2);
+    0.00 :   4212a8: and     x7, x7, #0x1c
+         :            A.n2 = TSB * ((sh + 0) & 3) + 4 * ((sh + 0) >> 2);             // 子步 i 的平面起点偏移（相对槽基址）
+    0.00 :   4212ac: add     x1, sp, #0x2a0
+         :            A.e2 = TSB * ((sh + 1) & 3) + 4 * ((sh + 1) >> 2);
+    0.00 :   4212b0: and     x8, x8, #0x1c
+         :            A.it = (P->KW + 3) / 4;
+    0.00 :   4212b4: str     x5, [sp, #648]
+         :            A.nlines = TSB * ((sh + 3) & 3) + 4 * ((sh + 3) >> 2);
+    0.00 :   4212b8: and     x5, x6, #0x3
+    0.00 :   4212bc: and     x6, x6, #0x1c
+         :            A.ncp_full = ncp / 64; A.ncp_tail = ((ncp % 64) + 3) / 4;      // ld4w 整块数、尾块每平面元素数
+    0.00 :   4212c0: asr     x4, x4, #6
+         :            A.in_row = (int64_t)(P->in_row - sh);
+    0.00 :   4212c4: str     x22, [sp, #512]
+         :            A.e2 = TSB * ((sh + 1) & 3) + 4 * ((sh + 1) >> 2);
+    0.00 :   4212c8: madd    x8, x10, x3, x8
+         :            A.slot = 4 * TSB;
+    0.00 :   4212cc: lsl     x20, x20, #4
+         :            A.ncp_full = ncp / 64; A.ncp_tail = ((ncp % 64) + 3) / 4;      // ld4w 整块数、尾块每平面元素数
+    0.00 :   4212d0: asr     x0, x0, #2
+         :            A.n2 = TSB * ((sh + 0) & 3) + 4 * ((sh + 0) >> 2);             // 子步 i 的平面起点偏移（相对槽基址）
+    0.00 :   4212d4: stp     x20, x4, [x1]
+         :            A.T  = TSB * ((sh + 2) & 3) + 4 * ((sh + 2) >> 2);
+    0.00 :   4212d8: madd    x4, x9, x3, x7
+         :            A.n2 = TSB * ((sh + 0) & 3) + 4 * ((sh + 0) >> 2);             // 子步 i 的平面起点偏移（相对槽基址）
+    0.00 :   4212dc: stp     x0, x11, [x1, #16]
+         :            A.nlines = TSB * ((sh + 3) & 3) + 4 * ((sh + 3) >> 2);
+    0.00 :   4212e0: madd    x1, x5, x3, x6
+         :            asm volatile(
+    0.00 :   4212e4: add     x18, sp, #0x200
+         :            A.e2 = TSB * ((sh + 1) & 3) + 4 * ((sh + 1) >> 2);
+    0.00 :   4212e8: str     x8, [sp, #704]
+         :            A.TSB = TSB;
+    0.00 :   4212ec: str     x3, [sp, #712]
+         :            A.T  = TSB * ((sh + 2) & 3) + 4 * ((sh + 2) >> 2);
+    0.00 :   4212f0: str     x4, [sp, #720]
+         :            A.nlines = TSB * ((sh + 3) & 3) + 4 * ((sh + 3) >> 2);
+    0.00 :   4212f4: str     x1, [sp, #728]
+         :            A.kw4 = (P->KW + 3) % 4;
+    0.00 :   4212f8: str     x2, [sp, #776]
+         :            asm volatile(
+    0.00 :   4212fc: ldr     x0, [x18]
+    0.00 :   421300: ldr     x1, [x18, #8]
+    0.00 :   421304: ldr     x4, [x18, #16]
+    0.00 :   421308: ldr     x5, [x18, #24]
+    0.00 :   42130c: ldr     x2, [x18, #32]
+    0.00 :   421310: ldr     x3, [x18, #40]
+    0.00 :   421314: ldr     x6, [x18, #48]
+    0.00 :   421318: ldr     x7, [x18, #56]
+    0.00 :   42131c: ldr     x8, [x18, #64]
+    0.00 :   421320: ldr     x9, [x18, #72]
+    0.00 :   421324: ldr     x10, [x18, #80]
+    0.00 :   421328: ldr     x27, [x18, #88]
+    0.00 :   42132c: ldr     x19, [x18, #224]
+    0.00 :   421330: ldr     x14, [x18, #104]
+    0.00 :   421334: ldr     x24, [x18, #112]
+    0.00 :   421338: ldr     x25, [x18, #120]
+    0.00 :   42133c: ldr     x26, [x18, #128]
+    0.00 :   421340: ldr     x17, [x18, #152]
+    0.00 :   421344: ldr     x22, [x18, #160]
+    0.00 :   421348: add     x28, x17, x17
+    0.00 :   42134c: add     x28, x28, x22
+    0.00 :   421350: ldr     x22, [x18, #176]
+    0.00 :   421354: whilelo p3.s, xzr, x22
+    0.00 :   421358: mov     x11, #0x0                       // #0
+    0.00 :   42135c: ptrue   p0.s
+    0.00 :   421360: ldr     x3, [x18, #200]
+    0.00 :   421364: ldr     x7, [x18, #136]
+    0.00 :   421368: mov     z31.s, #0
+    0.00 :   42136c: mov     x22, x0
+    0.00 :   421370: add     x21, x0, x26
+    0.00 :   421374: mov     x12, x22
+    0.00 :   421378: mov     x13, x17
+    0.00 :   42137c: ldr     x24, [x18, #168]
+    0.00 :   421380: cbz     x24, 4213c8 <roll_worker+0x6b8>
+    0.00 :   421384: prfm    pldl2keep, [x21]
+    0.00 :   421388: prfm    pldl2keep, [x21, #64]
+    0.00 :   42138c: prfm    pldl2keep, [x21, #128]
+    0.00 :   421390: prfm    pldl2keep, [x21, #192]
+    0.00 :   421394: ld4w    {z0.s-z3.s}, p0/z, [x12]
+    0.00 :   421398: st1w    {z0.s}, p0, [x13]
+    0.00 :   42139c: add     x23, x13, x3
+    0.00 :   4213a0: st1w    {z1.s}, p0, [x23]
+    0.00 :   4213a4: add     x23, x23, x3
+    0.00 :   4213a8: st1w    {z2.s}, p0, [x23]
+    0.00 :   4213ac: add     x23, x23, x3
+    0.00 :   4213b0: st1w    {z3.s}, p0, [x23]
+    0.00 :   4213b4: add     x12, x12, #0x100
+    0.00 :   4213b8: add     x13, x13, #0x40
+    0.00 :   4213bc: add     x21, x21, #0x100
+    0.00 :   4213c0: subs    x24, x24, #0x1
+    0.00 :   4213c4: b.ne    421384 <roll_worker+0x674>  // b.any
+    0.00 :   4213c8: prfm    pldl2keep, [x21]
+    0.00 :   4213cc: prfm    pldl2keep, [x21, #64]
+    0.00 :   4213d0: prfm    pldl2keep, [x21, #128]
+    0.00 :   4213d4: prfm    pldl2keep, [x21, #192]
+    0.00 :   4213d8: ldr     x24, [x18, #176]
+    0.00 :   4213dc: whilelo p4.s, xzr, x24
+    0.00 :   4213e0: ld4w    {z0.s-z3.s}, p4/z, [x12]
+    0.00 :   4213e4: st1w    {z0.s}, p4, [x13]
+    0.00 :   4213e8: add     x23, x13, x3
+    0.00 :   4213ec: st1w    {z1.s}, p4, [x23]
+    0.00 :   4213f0: add     x23, x23, x3
+    0.00 :   4213f4: st1w    {z2.s}, p4, [x23]
+    0.00 :   4213f8: add     x23, x23, x3
+    0.00 :   4213fc: st1w    {z3.s}, p4, [x23]
+    0.00 :   421400: ldr     x24, [x18, #112]
+    0.04 :   421404: mov     x16, x17
+    0.00 :   421408: sub     x17, x28, x17
+    0.00 :   42140c: add     x22, x0, x1
+    0.00 :   421410: cmp     x8, #0x1
+    0.00 :   421414: csel    x22, x0, x22, eq  // eq = none
+    0.00 :   421418: add     x21, x0, x26
+    0.00 :   42141c: mov     x12, x22
+    0.00 :   421420: mov     x13, x17
+    0.01 :   421424: ldr     x24, [x18, #168]
+    0.00 :   421428: cbz     x24, 421470 <roll_worker+0x760>
+    0.17 :   42142c: prfm    pldl2keep, [x21]
+    0.06 :   421430: prfm    pldl2keep, [x21, #64]
+    0.09 :   421434: prfm    pldl2keep, [x21, #128]
+    0.05 :   421438: prfm    pldl2keep, [x21, #192]
+    0.03 :   42143c: ld4w    {z0.s-z3.s}, p0/z, [x12]
+    1.10 :   421440: st1w    {z0.s}, p0, [x13]
+    0.01 :   421444: add     x23, x13, x3
+    0.13 :   421448: st1w    {z1.s}, p0, [x23]
+    0.05 :   42144c: add     x23, x23, x3
+    0.01 :   421450: st1w    {z2.s}, p0, [x23]
+    0.01 :   421454: add     x23, x23, x3
+    0.13 :   421458: st1w    {z3.s}, p0, [x23]
+    0.01 :   42145c: add     x12, x12, #0x100
+    0.01 :   421460: add     x13, x13, #0x40
+    0.01 :   421464: add     x21, x21, #0x100
+    0.18 :   421468: subs    x24, x24, #0x1
+    0.00 :   42146c: b.ne    42142c <roll_worker+0x71c>  // b.any
+    0.00 :   421470: prfm    pldl2keep, [x21]
+    0.04 :   421474: prfm    pldl2keep, [x21, #64]
+    0.02 :   421478: prfm    pldl2keep, [x21, #128]
+    0.01 :   42147c: prfm    pldl2keep, [x21, #192]
+    0.03 :   421480: ldr     x24, [x18, #176]
+    0.00 :   421484: whilelo p4.s, xzr, x24
+    0.04 :   421488: ld4w    {z0.s-z3.s}, p4/z, [x12]
+    0.26 :   42148c: st1w    {z0.s}, p4, [x13]
+    0.01 :   421490: add     x23, x13, x3
+    0.04 :   421494: st1w    {z1.s}, p4, [x23]
+    0.04 :   421498: add     x23, x23, x3
+    0.00 :   42149c: st1w    {z2.s}, p4, [x23]
+    0.02 :   4214a0: add     x23, x23, x3
+    0.04 :   4214a4: st1w    {z3.s}, p4, [x23]
+    0.03 :   4214a8: ldr     x24, [x18, #112]
+    0.01 :   4214ac: ldr     x22, [x18, #192]
+    0.00 :   4214b0: add     x22, x22, x16
+    0.01 :   4214b4: ldr     x23, [x18, #208]
+    0.00 :   4214b8: add     x23, x23, x16
+    0.02 :   4214bc: ldr     x25, [x18, #216]
+    0.00 :   4214c0: add     x25, x25, x16
+    0.04 :   4214c4: ldr     x12, [x18, #184]
+    0.00 :   4214c8: add     x16, x16, x12
+    0.00 :   4214cc: mov     x15, x7
+    0.09 :   4214d0: ld1w    {z0.s}, p0/z, [x16]
+    1.17 :   4214d4: ld1w    {z1.s}, p0/z, [x16, #1, mul vl]
+    0.40 :   4214d8: ld1w    {z2.s}, p0/z, [x16, #2, mul vl]
+    0.59 :   4214dc: ld1w    {z3.s}, p0/z, [x16, #3, mul vl]
+    0.47 :   4214e0: ld1w    {z4.s}, p0/z, [x2]
+    0.06 :   4214e4: fmopa   za0.s, p0/m, p0/m, z0.s, z4.s
+    0.08 :   4214e8: fmopa   za1.s, p0/m, p0/m, z1.s, z4.s
+    0.02 :   4214ec: fmopa   za2.s, p0/m, p0/m, z2.s, z4.s
+    0.23 :   4214f0: fmopa   za3.s, p0/m, p0/m, z3.s, z4.s
+    0.05 :   4214f4: ld1w    {z0.s}, p0/z, [x22]
+    0.65 :   4214f8: ld1w    {z1.s}, p0/z, [x22, #1, mul vl]
+    0.39 :   4214fc: ld1w    {z2.s}, p0/z, [x22, #2, mul vl]
+    0.59 :   421500: ld1w    {z3.s}, p0/z, [x22, #3, mul vl]
+    0.45 :   421504: ld1w    {z4.s}, p0/z, [x2, #1, mul vl]
+    0.09 :   421508: fmopa   za0.s, p0/m, p0/m, z0.s, z4.s
+    0.07 :   42150c: fmopa   za1.s, p0/m, p0/m, z1.s, z4.s
+    0.03 :   421510: fmopa   za2.s, p0/m, p0/m, z2.s, z4.s
+    0.14 :   421514: fmopa   za3.s, p0/m, p0/m, z3.s, z4.s
+    0.07 :   421518: ld1w    {z0.s}, p0/z, [x23]
+    0.68 :   42151c: ld1w    {z1.s}, p0/z, [x23, #1, mul vl]
+    0.46 :   421520: ld1w    {z2.s}, p0/z, [x23, #2, mul vl]
+    0.59 :   421524: ld1w    {z3.s}, p0/z, [x23, #3, mul vl]
+    0.42 :   421528: ld1w    {z4.s}, p0/z, [x2, #2, mul vl]
+    0.14 :   42152c: fmopa   za0.s, p0/m, p0/m, z0.s, z4.s
+    0.02 :   421530: fmopa   za1.s, p0/m, p0/m, z1.s, z4.s
+    0.02 :   421534: fmopa   za2.s, p0/m, p0/m, z2.s, z4.s
+    0.14 :   421538: fmopa   za3.s, p0/m, p0/m, z3.s, z4.s
+    0.05 :   42153c: ld1w    {z0.s}, p0/z, [x25]
+    0.74 :   421540: ld1w    {z1.s}, p0/z, [x25, #1, mul vl]
+    0.46 :   421544: ld1w    {z2.s}, p0/z, [x25, #2, mul vl]
+    0.57 :   421548: ld1w    {z3.s}, p0/z, [x25, #3, mul vl]
+    0.44 :   42154c: ld1w    {z4.s}, p0/z, [x2, #3, mul vl]
+    0.17 :   421550: fmopa   za0.s, p0/m, p0/m, z0.s, z4.s
+    0.02 :   421554: fmopa   za1.s, p0/m, p0/m, z1.s, z4.s
+    0.01 :   421558: fmopa   za2.s, p0/m, p0/m, z2.s, z4.s
+    0.19 :   42155c: fmopa   za3.s, p0/m, p0/m, z3.s, z4.s
+    0.01 :   421560: add     x16, x16, #0x4
+    0.02 :   421564: add     x22, x22, #0x4
+    0.01 :   421568: add     x23, x23, #0x4
+    0.02 :   42156c: add     x25, x25, #0x4
+    0.04 :   421570: add     x2, x2, #0x100
+    0.01 :   421574: subs    x15, x15, #0x1
+    0.03 :   421578: b.ne    4214d0 <roll_worker+0x7c0>  // b.any
+    0.01 :   42157c: ldr     x12, [x18, #264]
+    0.02 :   421580: cbz     x12, 421604 <roll_worker+0x8f4>
+    0.05 :   421584: ld1w    {z0.s}, p0/z, [x16]
+    0.10 :   421588: ld1w    {z1.s}, p0/z, [x16, #1, mul vl]
+    0.04 :   42158c: ld1w    {z2.s}, p0/z, [x16, #2, mul vl]
+    0.06 :   421590: ld1w    {z3.s}, p0/z, [x16, #3, mul vl]
+    0.04 :   421594: ld1w    {z4.s}, p0/z, [x2]
+    0.00 :   421598: fmopa   za0.s, p0/m, p0/m, z0.s, z4.s
+    0.00 :   42159c: fmopa   za1.s, p0/m, p0/m, z1.s, z4.s
+    0.00 :   4215a0: fmopa   za2.s, p0/m, p0/m, z2.s, z4.s
+    0.01 :   4215a4: fmopa   za3.s, p0/m, p0/m, z3.s, z4.s
+    0.00 :   4215a8: cmp     x12, #0x1
+    0.00 :   4215ac: b.eq    421600 <roll_worker+0x8f0>  // b.none
+    0.01 :   4215b0: ld1w    {z0.s}, p0/z, [x22]
+    0.05 :   4215b4: ld1w    {z1.s}, p0/z, [x22, #1, mul vl]
+    0.04 :   4215b8: ld1w    {z2.s}, p0/z, [x22, #2, mul vl]
+    0.05 :   4215bc: ld1w    {z3.s}, p0/z, [x22, #3, mul vl]
+    0.04 :   4215c0: ld1w    {z4.s}, p0/z, [x2, #1, mul vl]
+    0.01 :   4215c4: fmopa   za0.s, p0/m, p0/m, z0.s, z4.s
+    0.00 :   4215c8: fmopa   za1.s, p0/m, p0/m, z1.s, z4.s
+    0.00 :   4215cc: fmopa   za2.s, p0/m, p0/m, z2.s, z4.s
+    0.01 :   4215d0: fmopa   za3.s, p0/m, p0/m, z3.s, z4.s
+    0.00 :   4215d4: cmp     x12, #0x2
+    0.00 :   4215d8: b.eq    421600 <roll_worker+0x8f0>  // b.none
+    0.00 :   4215dc: ld1w    {z0.s}, p0/z, [x23]
+    0.00 :   4215e0: ld1w    {z1.s}, p0/z, [x23, #1, mul vl]
+    0.00 :   4215e4: ld1w    {z2.s}, p0/z, [x23, #2, mul vl]
+    0.00 :   4215e8: ld1w    {z3.s}, p0/z, [x23, #3, mul vl]
+    0.00 :   4215ec: ld1w    {z4.s}, p0/z, [x2, #2, mul vl]
+    0.00 :   4215f0: fmopa   za0.s, p0/m, p0/m, z0.s, z4.s
+    0.00 :   4215f4: fmopa   za1.s, p0/m, p0/m, z1.s, z4.s
+    0.00 :   4215f8: fmopa   za2.s, p0/m, p0/m, z2.s, z4.s
+    0.00 :   4215fc: fmopa   za3.s, p0/m, p0/m, z3.s, z4.s
+    0.01 :   421600: add     x2, x2, #0x100
+    0.00 :   421604: cmp     x2, x5
+    0.00 :   421608: csel    x2, x4, x2, eq  // eq = none
+    0.00 :   42160c: cmp     x11, x14
+    0.00 :   421610: csel    x20, x9, x10, cs  // cs = hs, nlast
+    0.00 :   421614: cmp     x27, x24
+    0.00 :   421618: b.cs    4216b0 <roll_worker+0x9a0>  // b.hs, b.nlast
+    0.00 :   42161c: lsl     w12, w27, #2
+    0.00 :   421620: mov     z0.s, p0/m, za0v.s[w12, 0]
+    0.00 :   421624: mov     z1.s, p0/m, za0v.s[w12, 1]
+    0.00 :   421628: mov     z2.s, p0/m, za0v.s[w12, 2]
+    0.00 :   42162c: mov     z3.s, p0/m, za0v.s[w12, 3]
+    0.00 :   421630: st4w    {z0.s-z3.s}, p0, [x20]
+    0.03 :   421634: mov     za0v.s[w12, 0], p0/m, z31.s
+    0.00 :   421638: mov     za0v.s[w12, 1], p0/m, z31.s
+    0.00 :   42163c: mov     za0v.s[w12, 2], p0/m, z31.s
+    0.00 :   421640: mov     za0v.s[w12, 3], p0/m, z31.s
+    0.00 :   421644: mov     z0.s, p0/m, za1v.s[w12, 0]
+    0.00 :   421648: mov     z1.s, p0/m, za1v.s[w12, 1]
+    0.00 :   42164c: mov     z2.s, p0/m, za1v.s[w12, 2]
+    0.00 :   421650: mov     z3.s, p0/m, za1v.s[w12, 3]
+    0.00 :   421654: st4w    {z0.s-z3.s}, p0, [x20, #4, mul vl]
+    0.02 :   421658: mov     za1v.s[w12, 0], p0/m, z31.s
+    0.00 :   42165c: mov     za1v.s[w12, 1], p0/m, z31.s
+    0.00 :   421660: mov     za1v.s[w12, 2], p0/m, z31.s
+    0.00 :   421664: mov     za1v.s[w12, 3], p0/m, z31.s
+    0.00 :   421668: mov     z0.s, p0/m, za2v.s[w12, 0]
+    0.00 :   42166c: mov     z1.s, p0/m, za2v.s[w12, 1]
+    0.00 :   421670: mov     z2.s, p0/m, za2v.s[w12, 2]
+    0.00 :   421674: mov     z3.s, p0/m, za2v.s[w12, 3]
+    0.00 :   421678: st4w    {z0.s-z3.s}, p0, [x20, #8, mul vl]
+    0.05 :   42167c: mov     za2v.s[w12, 0], p0/m, z31.s
+    0.00 :   421680: mov     za2v.s[w12, 1], p0/m, z31.s
+    0.00 :   421684: mov     za2v.s[w12, 2], p0/m, z31.s
+    0.00 :   421688: mov     za2v.s[w12, 3], p0/m, z31.s
+    0.00 :   42168c: mov     z0.s, p0/m, za3v.s[w12, 0]
+    0.00 :   421690: mov     z1.s, p0/m, za3v.s[w12, 1]
+    0.00 :   421694: mov     z2.s, p0/m, za3v.s[w12, 2]
+    0.00 :   421698: mov     z3.s, p0/m, za3v.s[w12, 3]
+    0.00 :   42169c: st4w    {z0.s-z3.s}, p0, [x20, #12, mul vl]
+    0.08 :   4216a0: mov     za3v.s[w12, 0], p0/m, z31.s
+    0.00 :   4216a4: mov     za3v.s[w12, 1], p0/m, z31.s
+    0.00 :   4216a8: mov     za3v.s[w12, 2], p0/m, z31.s
+    0.00 :   4216ac: mov     za3v.s[w12, 3], p0/m, z31.s
+    0.01 :   4216b0: add     x27, x27, #0x1
+    0.00 :   4216b4: cmp     x27, x6
+    0.00 :   4216b8: csel    x27, xzr, x27, eq  // eq = none
+    0.00 :   4216bc: add     x0, x0, x1
+    0.01 :   4216c0: add     x9, x9, x19
+    0.00 :   4216c4: add     x11, x11, #0x1
+    0.00 :   4216c8: subs    x8, x8, #0x1
+    0.00 :   4216cc: b.ne    421404 <roll_worker+0x6f4>  // b.any
+    0.00 :   4216d0: ldr     x18, [sp, #312]
+    0.00 :   4216d4: nop
+         :            roll_worker():
+         :            if (g_roll_diag) { int ki = roll_kind_idx(g->kind); D->tk[ki] += cyc() - t0; D->ts[ki] += 4L * g->steps * (jb - ja + KH - 1); }
+    0.02 :   4216d8: adrp    x0, 440000 <memcpy@GLIBC_2.17>
+    0.00 :   4216dc: add     x0, x0, #0x180
+    0.00 :   4216e0: ldr     w0, [x0]
+    0.00 :   4216e4: cbz     w0, 420f08 <roll_worker+0x1f8>
+    0.00 :   4216e8: ldr     x0, [sp, #160]
+    0.00 :   4216ec: ldr     x1, [sp, #184]
+    0.00 :   4216f0: ldr     w0, [x0, x1]
+         :            roll_kind_idx():
+         :            static inline int roll_kind_idx(int kind) { return (kind == 32 || kind == 33 || kind == 34 || kind == 35) ? 0 : (kind == 16 || kind == 17) ? 1 : kind == 8 ? 2 : 3; }
+    0.00 :   4216f4: mov     w1, #0x0                        // #0
+    0.00 :   4216f8: sub     w2, w0, #0x20
+    0.00 :   4216fc: cmp     w2, #0x3
+    0.00 :   421700: b.ls    421720 <roll_worker+0xa10>  // b.plast
+    0.00 :   421704: sub     w2, w0, #0x10
+    0.00 :   421708: mov     w1, #0x1                        // #1
+    0.00 :   42170c: cmp     w2, w1
+    0.00 :   421710: b.ls    421720 <roll_worker+0xa10>  // b.plast
+    0.00 :   421714: cmp     w0, #0x8
+    0.00 :   421718: cset    w1, ne  // ne = any
+    0.00 :   42171c: add     w1, w1, #0x2
+         :            cyc():
+         :            static inline uint64_t cyc(void) { uint64_t v; asm volatile("mrs %0, cntvct_el0" : "=r"(v)); return v; }
+    0.00 :   421720: mrs     x3, cntvct_el0
+         :            roll_worker():
+         :            if (g_roll_diag) { int ki = roll_kind_idx(g->kind); D->tk[ki] += cyc() - t0; D->ts[ki] += 4L * g->steps * (jb - ja + KH - 1); }
+    0.00 :   421724: ldr     x2, [sp, #240]
+    0.00 :   421728: ldp     x5, x4, [sp, #296]
+    0.00 :   42172c: add     x0, x2, x2, lsl #1
+    0.00 :   421730: ldr     x6, [sp, #160]
+    0.00 :   421734: lsl     x0, x0, #2
+    0.00 :   421738: sub     x0, x0, x2
+    0.00 :   42173c: add     x1, x4, w1, sxtw
+    0.00 :   421740: ldr     x4, [sp, #200]
+    0.00 :   421744: add     x0, x6, x0, lsl #3
+    0.00 :   421748: ldr     x2, [x5, x1, lsl #3]
+    0.00 :   42174c: sub     x3, x3, x4
+    0.00 :   421750: ldr     x0, [x0, #40]
+    0.00 :   421754: add     x2, x2, x3
+    0.00 :   421758: ldr     x3, [sp, #232]
+    0.00 :   42175c: add     x4, x1, #0x4
+    0.00 :   421760: str     x2, [x5, x1, lsl #3]
+    0.00 :   421764: ldr     w2, [sp, #248]
+    0.00 :   421768: ldr     x1, [x5, x4, lsl #3]
+    0.00 :   42176c: mul     x0, x3, x0
+    0.00 :   421770: add     x0, x1, x0, lsl #2
+    0.00 :   421774: str     x0, [x5, x4, lsl #3]
+         :            uint64_t w = __atomic_load_n(&g_rwork[victim].v, __ATOMIC_RELAXED);
+    0.00 :   421778: ldr     x0, [sp, #176]
+    0.00 :   42177c: ldr     x1, [sp, #192]
+    0.00 :   421780: add     x1, x1, x0, lsl #6
+    0.00 :   421784: ldr     w0, [sp, #168]
+    0.00 :   421788: cmp     w0, w2
+    0.00 :   42178c: b.ne    420f24 <roll_worker+0x214>  // b.any
+    0.00 :   421790: ldr     x2, [x1]
+         :            uint32_t cur = (uint32_t)w, end = (uint32_t)(w >> 32);
+    0.00 :   421794: lsr     x0, x2, #32
+         :            if (cur >= end) break;
+    0.00 :   421798: cmp     w2, w0
+    0.00 :   42179c: b.cs    4217bc <roll_worker+0xaac>  // b.hs, b.nlast
+         :            uint64_t nw = (victim == tid) ? w + 1 : w - ((uint64_t)1 << 32);
+    0.02 :   4217a0: add     x3, x2, #0x1
+         :            if (__atomic_compare_exchange_n(&g_rwork[victim].v, &w, nw, 1, __ATOMIC_RELAXED, __ATOMIC_RELAXED)) { pi = (victim == tid) ? (int)cur : (int)end - 1; break; }
+    0.00 :   4217a4: mov     x0, x2
+    0.00 :   4217a8: cas     x0, x3, [x1]
+    0.01 :   4217ac: cmp     x0, x2
+    0.00 :   4217b0: b.ne    421790 <roll_worker+0xa80>  // b.any
+    0.00 :   4217b4: mov     w0, w2
+         :            if (pi < 0) {
+    0.00 :   4217b8: tbz     w2, #31, 420f54 <roll_worker+0x244>
+         :            for (int t = 0; t < nth; t++) {
+    0.00 :   4217bc: ldr     w6, [sp, #252]
+    0.00 :   4217c0: cmp     w6, #0x0
+    0.00 :   4217c4: b.le    42181c <roll_worker+0xb0c>
+    0.00 :   4217c8: ldr     x3, [sp, #192]
+         :            int best = -1; uint32_t most = 0;
+    0.00 :   4217cc: mov     w0, #0xffffffff                 // #-1
+    0.00 :   4217d0: mov     w5, w0
+         :            for (int t = 0; t < nth; t++) {
+    0.00 :   4217d4: mov     w1, #0x0                        // #0
+         :            int best = -1; uint32_t most = 0;
+    0.00 :   4217d8: mov     w2, #0x0                        // #0
+    0.00 :   4217dc: nop
+         :            uint64_t w = __atomic_load_n(&g_rwork[t].v, __ATOMIC_RELAXED);
+    0.00 :   4217e0: ldr     x4, [x3]
+         :            uint32_t rem = (uint32_t)(w >> 32) - (uint32_t)w;
+    0.00 :   4217e4: lsr     x0, x4, #32
+    0.00 :   4217e8: sub     w0, w0, w4
+         :            for (int t = 0; t < nth; t++) {
+    0.00 :   4217ec: add     x3, x3, #0x40
+         :            if ((int32_t)rem > 0 && rem > most) { most = rem; best = t; }
+    0.01 :   4217f0: cmp     w0, #0x0
+    0.00 :   4217f4: ccmp    w2, w0, #0x2, gt
+    0.00 :   4217f8: cset    w4, cc  // cc = lo, ul, last
+    0.00 :   4217fc: cmp     w4, #0x0
+    0.00 :   421800: csel    w5, w1, w5, ne  // ne = any
+         :            for (int t = 0; t < nth; t++) {
+    0.00 :   421804: add     w1, w1, #0x1
+    0.00 :   421808: csel    w2, w0, w2, ne  // ne = any
+    0.00 :   42180c: cmp     w6, w1
+    0.00 :   421810: b.ne    4217e0 <roll_worker+0xad0>  // b.any
+         :            if (best < 0) break;
+    0.00 :   421814: str     w5, [sp, #168]
+    0.00 :   421818: tbz     w5, #31, 421d24 <roll_worker+0x1014>
+         :            sme_stop():
+         :            static inline void sme_stop(void) { asm volatile("smstop\n\t" ::: "memory", VCLOB, PCLOB); }
+    0.00 :   42181c: smstop
+         :            roll_worker():
+         :            if (g_roll_diag) D->tot = cyc() - t_start;
+    0.00 :   421820: adrp    x0, 440000 <memcpy@GLIBC_2.17>
+    0.00 :   421824: ldr     w0, [x0, #384]
+    0.00 :   421828: cbz     w0, 42184c <roll_worker+0xb3c>
+         :            cyc():
+         :            static inline uint64_t cyc(void) { uint64_t v; asm volatile("mrs %0, cntvct_el0" : "=r"(v)); return v; }
+    0.00 :   42182c: mrs     x1, cntvct_el0
+         :            roll_worker():
+         :            if (g_roll_diag) D->tot = cyc() - t_start;
+    0.00 :   421830: ldp     x3, x0, [sp, #280]
+    0.00 :   421834: adrp    x2, 452000 <g_go_t+0xf700>
+    0.00 :   421838: add     x2, x2, #0x900
+    0.00 :   42183c: add     x0, x0, x0, lsl #3
+    0.00 :   421840: sub     x1, x1, x3
+    0.00 :   421844: add     x0, x2, x0, lsl #3
+    0.00 :   421848: str     x1, [x0, #64]
+         :            }
+    0.00 :   42184c: ldp     x29, x30, [sp]
+    0.00 :   421850: ldp     x19, x20, [sp, #16]
+    0.00 :   421854: ldp     x21, x22, [sp, #32]
+    0.00 :   421858: ldp     x23, x24, [sp, #48]
+    0.00 :   42185c: ldp     x25, x26, [sp, #64]
+    0.00 :   421860: ldp     x27, x28, [sp, #80]
+    0.00 :   421864: ldp     d8, d9, [sp, #96]
+    0.00 :   421868: ldp     d10, d11, [sp, #112]
+    0.00 :   42186c: ldp     d12, d13, [sp, #128]
+    0.00 :   421870: ldp     d14, d15, [sp, #144]
+    0.00 :   421874: add     sp, sp, #0x320
+    0.00 :   421878: ret
+         :            roll_kind_idx():
+         :            static inline int roll_kind_idx(int kind) { return (kind == 32 || kind == 33 || kind == 34 || kind == 35) ? 0 : (kind == 16 || kind == 17) ? 1 : kind == 8 ? 2 : 3; }
+    0.00 :   42187c: ldr     w0, [sp, #248]
+    0.00 :   421880: str     w0, [sp, #168]
+    0.00 :   421884: ldr     x0, [sp, #288]
+    0.00 :   421888: str     x0, [sp, #176]
+    0.00 :   42188c: b       420f08 <roll_worker+0x1f8>
+         :            roll_worker():
+         :            const long sF = KH - 1, a0 = ((ja - sF) % KH + KH) % KH;   // kf 链的起始 kernel 行
+    0.00 :   421890: sub     x1, x18, #0x1
+         :            K.kb0 = g->kf + a0 * g->steps * 4; K.kbase = g->kf; K.kend = g->kf + KH * g->steps * 4;
+    0.00 :   421894: mul     x5, x3, x18
+         :            const long sF = KH - 1, a0 = ((ja - sF) % KH + KH) % KH;   // kf 链的起始 kernel 行
+    0.00 :   421898: sub     x6, x2, x1
+         :            K.cf0 = ((sF - g->s_base) % KH + KH) % KH;
+    0.00 :   42189c: sub     x1, x1, x8
+         :            K.kb0 = g->kf + a0 * g->steps * 4; K.kbase = g->kf; K.kend = g->kf + KH * g->steps * 4;
+    0.00 :   4218a0: ldr     x4, [x0, #72]
+         :            const long sF = KH - 1, a0 = ((ja - sF) % KH + KH) % KH;   // kf 链的起始 kernel 行
+    0.00 :   4218a4: sdiv    x2, x6, x18
+         :            K.kb0 = g->kf + a0 * g->steps * 4; K.kbase = g->kf; K.kend = g->kf + KH * g->steps * 4;
+    0.00 :   4218a8: add     x0, x4, x5, lsl #4
+    0.00 :   4218ac: stp     x4, x0, [sp, #472]
+         :            K.cf0 = ((sF - g->s_base) % KH + KH) % KH;
+    0.00 :   4218b0: sdiv    x0, x1, x18
+         :            const long sF = KH - 1, a0 = ((ja - sF) % KH + KH) % KH;   // kf 链的起始 kernel 行
+    0.00 :   4218b4: msub    x2, x2, x18, x6
+    0.00 :   4218b8: add     x2, x2, x18
+         :            K.cf0 = ((sF - g->s_base) % KH + KH) % KH;
+    0.00 :   4218bc: msub    x1, x0, x18, x1
+         :            const long sF = KH - 1, a0 = ((ja - sF) % KH + KH) % KH;   // kf 链的起始 kernel 行
+    0.00 :   4218c0: sdiv    x0, x2, x18
+         :            K.cf0 = ((sF - g->s_base) % KH + KH) % KH;
+    0.00 :   4218c4: add     x1, x1, x18
+    0.00 :   4218c8: sdiv    x5, x1, x18
+         :            const long sF = KH - 1, a0 = ((ja - sF) % KH + KH) % KH;   // kf 链的起始 kernel 行
+    0.00 :   4218cc: msub    x0, x0, x18, x2
+         :            K.kb0 = g->kf + a0 * g->steps * 4; K.kbase = g->kf; K.kend = g->kf + KH * g->steps * 4;
+    0.00 :   4218d0: mul     x0, x0, x3
+         :            K.cf0 = ((sF - g->s_base) % KH + KH) % KH;
+    0.00 :   4218d4: msub    x1, x5, x18, x1
+    0.00 :   4218d8: str     x1, [sp, #488]
+         :            K.kb0 = g->kf + a0 * g->steps * 4; K.kbase = g->kf; K.kend = g->kf + KH * g->steps * 4;
+    0.00 :   4218dc: add     x0, x4, x0, lsl #4
+    0.00 :   4218e0: str     x0, [sp, #464]
+         :            sme_zero_za():
+         :            static inline void sme_zero_za(void) { asm volatile("zero {za}\n\t" ::: "memory"); }
+    0.00 :   4218e4: zero    {za}
+         :            roll_worker():
+         :            if (g->kind == 32) k16pair(&K); else if (g->kind == 33) k16pairf(&K); else if (g->kind == 34) k16pairf3(&K); else if (g->kind == 35) k16pairf4(&K); else if (g->kind == 16) k16single(&K);
+    0.00 :   4218e8: ldr     x0, [sp, #160]
+    0.00 :   4218ec: ldr     x1, [sp, #184]
+    0.00 :   4218f0: ldr     w0, [x0, x1]
+    0.00 :   4218f4: cmp     w0, #0x20
+    0.00 :   4218f8: b.ne    4211bc <roll_worker+0x4ac>  // b.any
+         :            k16pair():
+         :            ka_t A; fill_args(&A, P, 1, 512, 31 + P->steps);
+    0.00 :   4218fc: ldr     x3, [sp, #360]
+    0.00 :   421900: add     x0, sp, #0x200
+    0.00 :   421904: add     x1, sp, #0x140
+    0.00 :   421908: mov     x2, #0x1                        // #1
+    0.00 :   42190c: add     x3, x3, #0x1f
+    0.00 :   421910: str     x18, [sp, #312]
+    0.00 :   421914: bl      420b90 <fill_args.constprop.0>
+         :            asm volatile(
+    0.00 :   421918: mov     x18, x0
+    0.00 :   42191c: ldr     x0, [x18]
+    0.00 :   421920: ldr     x1, [x18, #8]
+    0.00 :   421924: ldr     x4, [x18, #16]
+    0.00 :   421928: ldr     x5, [x18, #24]
+    0.00 :   42192c: ldr     x2, [x18, #32]
+    0.00 :   421930: ldr     x3, [x18, #40]
+    0.00 :   421934: ldr     x6, [x18, #48]
+    0.00 :   421938: ldr     x7, [x18, #56]
+    0.00 :   42193c: ldr     x8, [x18, #64]
+    0.00 :   421940: ldr     x9, [x18, #72]
+    0.00 :   421944: ldr     x10, [x18, #80]
+    0.00 :   421948: ldr     x27, [x18, #88]
+    0.00 :   42194c: ldr     x19, [x18, #224]
+    0.00 :   421950: ldr     x14, [x18, #104]
+    0.00 :   421954: ldr     x24, [x18, #112]
+    0.00 :   421958: ldr     x25, [x18, #120]
+    0.00 :   42195c: ldr     x26, [x18, #128]
+    0.00 :   421960: ldr     x17, [x18, #152]
+    0.00 :   421964: ldr     x22, [x18, #160]
+    0.00 :   421968: add     x28, x17, x17
+    0.00 :   42196c: add     x28, x28, x22
+    0.00 :   421970: ldr     x22, [x18, #176]
+    0.00 :   421974: whilelo p3.s, xzr, x22
+    0.00 :   421978: mov     x11, #0x0                       // #0
+    0.00 :   42197c: ptrue   p0.s
+    0.00 :   421980: mov     z31.s, #0
+    0.00 :   421984: add     x21, x0, x26
+    0.00 :   421988: ldr     x12, [x18, #240]
+    0.00 :   42198c: add     x16, x17, x12
+    0.00 :   421990: sub     x17, x28, x17
+    0.00 :   421994: add     x22, x0, x1
+    0.00 :   421998: cmp     x8, #0x1
+    0.00 :   42199c: csel    x22, x0, x22, eq  // eq = none
+    0.00 :   4219a0: mov     x23, x17
+    0.00 :   4219a4: ldr     x12, [x18, #168]
+    0.00 :   4219a8: cbz     x12, 4219cc <roll_worker+0xcbc>
+    0.00 :   4219ac: prfm    pldl2keep, [x21]
+    0.00 :   4219b0: ld1w    {z24.s}, p0/z, [x22]
+    0.00 :   4219b4: st1w    {z24.s}, p0, [x23]
+    0.00 :   4219b8: add     x21, x21, #0x40
+    0.00 :   4219bc: add     x22, x22, #0x40
+    0.00 :   4219c0: add     x23, x23, #0x40
+    0.00 :   4219c4: subs    x12, x12, #0x1
+    0.00 :   4219c8: b.ne    4219ac <roll_worker+0xc9c>  // b.any
+    0.00 :   4219cc: prfm    pldl2keep, [x21]
+    0.00 :   4219d0: ld1w    {z24.s}, p3/z, [x22]
+    0.00 :   4219d4: st1w    {z24.s}, p3, [x23]
+    0.00 :   4219d8: mov     x15, x7
+    0.00 :   4219dc: ld1w    {z0.s}, p0/z, [x16]
+    0.00 :   4219e0: ld1w    {z1.s}, p0/z, [x16, #1, mul vl]
+    0.00 :   4219e4: ld1w    {z2.s}, p0/z, [x2]
+    0.00 :   4219e8: ld1w    {z3.s}, p0/z, [x3]
+    0.00 :   4219ec: fmopa   za0.s, p0/m, p0/m, z0.s, z2.s
+    0.00 :   4219f0: fmopa   za1.s, p0/m, p0/m, z1.s, z2.s
+    0.00 :   4219f4: fmopa   za2.s, p0/m, p0/m, z0.s, z3.s
+    0.00 :   4219f8: fmopa   za3.s, p0/m, p0/m, z1.s, z3.s
+    0.00 :   4219fc: add     x16, x16, #0x4
+    0.00 :   421a00: add     x2, x2, #0x40
+    0.00 :   421a04: add     x3, x3, #0x40
+    0.00 :   421a08: subs    x15, x15, #0x1
+    0.00 :   421a0c: b.ne    4219dc <roll_worker+0xccc>  // b.any
+    0.00 :   421a10: cmp     x2, x5
+    0.00 :   421a14: csel    x2, x4, x2, eq  // eq = none
+    0.00 :   421a18: cmp     x3, x5
+    0.00 :   421a1c: csel    x3, x4, x3, eq  // eq = none
+    0.00 :   421a20: cmp     x11, x14
+    0.00 :   421a24: csel    x20, x9, x10, cs  // cs = hs, nlast
+    0.00 :   421a28: cmp     x27, #0x20
+    0.00 :   421a2c: b.cs    421a74 <roll_worker+0xd64>  // b.hs, b.nlast
+    0.00 :   421a30: cmp     x27, #0x10
+    0.00 :   421a34: b.cs    421a58 <roll_worker+0xd48>  // b.hs, b.nlast
+    0.00 :   421a38: mov     w12, w27
+    0.00 :   421a3c: mov     z8.s, p0/m, za0v.s[w12, 0]
+    0.00 :   421a40: mov     z9.s, p0/m, za1v.s[w12, 0]
+    0.00 :   421a44: st1w    {z8.s}, p0, [x20]
+    0.00 :   421a48: st1w    {z9.s}, p0, [x20, #1, mul vl]
+    0.00 :   421a4c: mov     za0v.s[w12, 0], p0/m, z31.s
+    0.00 :   421a50: mov     za1v.s[w12, 0], p0/m, z31.s
+    0.00 :   421a54: b       421a74 <roll_worker+0xd64>
+    0.00 :   421a58: sub     w12, w27, #0x10
+    0.00 :   421a5c: mov     z8.s, p0/m, za2v.s[w12, 0]
+    0.00 :   421a60: mov     z9.s, p0/m, za3v.s[w12, 0]
+    0.00 :   421a64: st1w    {z8.s}, p0, [x20]
+    0.00 :   421a68: st1w    {z9.s}, p0, [x20, #1, mul vl]
+    0.00 :   421a6c: mov     za2v.s[w12, 0], p0/m, z31.s
+    0.00 :   421a70: mov     za3v.s[w12, 0], p0/m, z31.s
+    0.00 :   421a74: add     x27, x27, #0x1
+    0.00 :   421a78: cmp     x27, x6
+    0.00 :   421a7c: csel    x27, xzr, x27, eq  // eq = none
+    0.00 :   421a80: add     x0, x0, x1
+    0.00 :   421a84: add     x9, x9, x19
+    0.00 :   421a88: add     x11, x11, #0x1
+    0.00 :   421a8c: subs    x8, x8, #0x1
+    0.00 :   421a90: b.ne    421984 <roll_worker+0xc74>  // b.any
+         :            }
+    0.00 :   421a94: ldr     x18, [sp, #312]
+    0.00 :   421a98: b       4216d8 <roll_worker+0x9c8>
+         :            roll_worker():
+         :            rdiag_t* D = &g_rdiag[tid]; uint64_t t_start = 0;
+    0.00 :   421a9c: adrp    x3, 452000 <g_go_t+0xf700>
+    0.00 :   421aa0: add     x3, x3, #0x900
+         :            if (g_roll_diag) { memset(D, 0, sizeof(*D)); t_start = cyc(); }
+    0.00 :   421aa4: movi    v0.4s, #0x0
+         :            rdiag_t* D = &g_rdiag[tid]; uint64_t t_start = 0;
+    0.00 :   421aa8: mov     w0, #0x48                       // #72
+    0.00 :   421aac: smaddl  x0, w27, w0, x3
+         :            if (g_roll_diag) { memset(D, 0, sizeof(*D)); t_start = cyc(); }
+    0.00 :   421ab0: stp     q0, q0, [x0]
+    0.00 :   421ab4: stp     q0, q0, [x0, #32]
+    0.00 :   421ab8: str     xzr, [x0, #64]
+         :            cyc():
+         :            static inline uint64_t cyc(void) { uint64_t v; asm volatile("mrs %0, cntvct_el0" : "=r"(v)); return v; }
+    0.00 :   421abc: mrs     x0, cntvct_el0
+    0.00 :   421ac0: str     x0, [sp, #280]
+    0.00 :   421ac4: b       420d60 <roll_worker+0x50>
+         :            roll_worker():
+         :            const long sF = KH - 1, kj0 = ((ja - sF) % KH + KH) % KH;
+    0.00 :   421ac8: sub     x1, x18, #0x1
+    0.00 :   421acc: sub     x2, x2, x1
+         :            K.cf0 = ((sF - g->s_base) % KH + KH) % KH;
+    0.00 :   421ad0: sub     x1, x1, x8
+         :            K.kb0 = c->k + kj0 * KW; K.kbase = c->k; K.kend = c->k + KH * KW;
+    0.00 :   421ad4: ldr     x5, [sp, #216]
+         :            const long sF = KH - 1, kj0 = ((ja - sF) % KH + KH) % KH;
+    0.00 :   421ad8: sdiv    x3, x2, x18
+         :            K.kb0 = c->k + kj0 * KW; K.kbase = c->k; K.kend = c->k + KH * KW;
+    0.00 :   421adc: ldr     x4, [x13, #8]
+    0.00 :   421ae0: mul     x0, x18, x5
+         :            const long sF = KH - 1, kj0 = ((ja - sF) % KH + KH) % KH;
+    0.00 :   421ae4: msub    x3, x3, x18, x2
+         :            K.cf0 = ((sF - g->s_base) % KH + KH) % KH;
+    0.00 :   421ae8: sdiv    x2, x1, x18
+         :            K.kb0 = c->k + kj0 * KW; K.kbase = c->k; K.kend = c->k + KH * KW;
+    0.00 :   421aec: add     x0, x4, x0, lsl #2
+         :            const long sF = KH - 1, kj0 = ((ja - sF) % KH + KH) % KH;
+    0.00 :   421af0: add     x3, x3, x18
+         :            K.kb0 = c->k + kj0 * KW; K.kbase = c->k; K.kend = c->k + KH * KW;
+    0.00 :   421af4: stp     x4, x0, [sp, #472]
+         :            const long sF = KH - 1, kj0 = ((ja - sF) % KH + KH) % KH;
+    0.00 :   421af8: sdiv    x0, x3, x18
+         :            K.cf0 = ((sF - g->s_base) % KH + KH) % KH;
+    0.00 :   421afc: msub    x1, x2, x18, x1
+    0.00 :   421b00: add     x1, x1, x18
+         :            const long sF = KH - 1, kj0 = ((ja - sF) % KH + KH) % KH;
+    0.00 :   421b04: msub    x0, x0, x18, x3
+         :            K.cf0 = ((sF - g->s_base) % KH + KH) % KH;
+    0.00 :   421b08: sdiv    x2, x1, x18
+         :            K.kb0 = c->k + kj0 * KW; K.kbase = c->k; K.kend = c->k + KH * KW;
+    0.00 :   421b0c: mul     x0, x0, x5
+         :            K.cf0 = ((sF - g->s_base) % KH + KH) % KH;
+    0.00 :   421b10: msub    x1, x2, x18, x1
+    0.00 :   421b14: str     x1, [sp, #488]
+         :            K.kb0 = c->k + kj0 * KW; K.kbase = c->k; K.kend = c->k + KH * KW;
+    0.00 :   421b18: add     x0, x4, x0, lsl #2
+    0.00 :   421b1c: str     x0, [sp, #464]
+         :            K.cf0 = ((sF - g->s_base) % KH + KH) % KH;
+    0.00 :   421b20: b       4211a4 <roll_worker+0x494>
+         :            k16pairf():
+         :            ka_t A; fill_args(&A, P, 1, 512, 31 + P->steps);
+    0.00 :   421b24: add     x0, sp, #0x200
+    0.00 :   421b28: add     x1, sp, #0x140
+    0.00 :   421b2c: add     x3, x19, #0x1f
+    0.00 :   421b30: mov     x2, #0x1                        // #1
+    0.00 :   421b34: bl      420b90 <fill_args.constprop.0>
+         :            A.n2 = (int64_t)P->kb0; A.e2 = (int64_t)P->kbase; A.T = (int64_t)P->kend; A.nlines = P->cf0;
+    0.00 :   421b38: ldr     q0, [sp, #464]
+    0.00 :   421b3c: add     x1, sp, #0x2a0
+    0.00 :   421b40: ldr     x0, [sp, #480]
+    0.00 :   421b44: str     x0, [sp, #720]
+    0.00 :   421b48: ldr     x0, [sp, #488]
+    0.00 :   421b4c: stur    q0, [x1, #24]
+         :            asm volatile(
+    0.00 :   421b50: add     x18, sp, #0x200
+         :            A.n2 = (int64_t)P->kb0; A.e2 = (int64_t)P->kbase; A.T = (int64_t)P->kend; A.nlines = P->cf0;
+    0.00 :   421b54: str     x0, [sp, #728]
+         :            asm volatile(
+    0.00 :   421b58: ldr     x0, [x18]
+    0.00 :   421b5c: ldr     x1, [x18, #8]
+    0.00 :   421b60: ldr     x4, [x18, #16]
+    0.00 :   421b64: ldr     x5, [x18, #24]
+    0.00 :   421b68: ldr     x2, [x18, #32]
+    0.00 :   421b6c: ldr     x3, [x18, #40]
+    0.00 :   421b70: ldr     x6, [x18, #48]
+    0.00 :   421b74: ldr     x7, [x18, #56]
+    0.00 :   421b78: ldr     x8, [x18, #64]
+    0.00 :   421b7c: ldr     x9, [x18, #72]
+    0.00 :   421b80: ldr     x10, [x18, #80]
+    0.00 :   421b84: ldr     x27, [x18, #88]
+    0.00 :   421b88: ldr     x19, [x18, #224]
+    0.00 :   421b8c: ldr     x14, [x18, #104]
+    0.00 :   421b90: ldr     x24, [x18, #112]
+    0.00 :   421b94: ldr     x25, [x18, #120]
+    0.00 :   421b98: ldr     x26, [x18, #128]
+    0.00 :   421b9c: ldr     x17, [x18, #152]
+    0.00 :   421ba0: ldr     x22, [x18, #160]
+    0.00 :   421ba4: add     x28, x17, x17
+    0.00 :   421ba8: add     x28, x28, x22
+    0.00 :   421bac: ldr     x22, [x18, #176]
+    0.00 :   421bb0: whilelo p3.s, xzr, x22
+    0.00 :   421bb4: mov     x11, #0x0                       // #0
+    0.00 :   421bb8: ptrue   p0.s
+    0.00 :   421bbc: ldr     x13, [x18, #184]
+    0.00 :   421bc0: mov     z31.s, #0
+    0.00 :   421bc4: mov     z10.s, #0
+    0.00 :   421bc8: mov     z11.s, #0
+    0.00 :   421bcc: add     x21, x0, x26
+    0.00 :   421bd0: ldr     x12, [x18, #240]
+    0.00 :   421bd4: add     x16, x17, x12
+    0.00 :   421bd8: sub     x17, x28, x17
+    0.00 :   421bdc: add     x22, x0, x1
+    0.00 :   421be0: cmp     x8, #0x1
+    0.00 :   421be4: csel    x22, x0, x22, eq  // eq = none
+    0.00 :   421be8: mov     x23, x17
+    0.00 :   421bec: ldr     x12, [x18, #168]
+    0.00 :   421bf0: cbz     x12, 421c14 <roll_worker+0xf04>
+    0.00 :   421bf4: prfm    pldl2keep, [x21]
+    0.00 :   421bf8: ld1w    {z24.s}, p0/z, [x22]
+    0.00 :   421bfc: st1w    {z24.s}, p0, [x23]
+    0.00 :   421c00: add     x21, x21, #0x40
+    0.00 :   421c04: add     x22, x22, #0x40
+    0.00 :   421c08: add     x23, x23, #0x40
+    0.00 :   421c0c: subs    x12, x12, #0x1
+    0.00 :   421c10: b.ne    421bf4 <roll_worker+0xee4>  // b.any
+    0.00 :   421c14: prfm    pldl2keep, [x21]
+    0.00 :   421c18: ld1w    {z24.s}, p3/z, [x22]
+    0.00 :   421c1c: st1w    {z24.s}, p3, [x23]
+    0.00 :   421c20: mov     x15, x7
+    0.00 :   421c24: ld1w    {z0.s}, p0/z, [x16]
+    0.00 :   421c28: ld1w    {z1.s}, p0/z, [x16, #1, mul vl]
+    0.00 :   421c2c: ld1w    {z2.s}, p0/z, [x2]
+    0.00 :   421c30: ld1w    {z3.s}, p0/z, [x3]
+    0.00 :   421c34: fmopa   za0.s, p0/m, p0/m, z0.s, z2.s
+    0.00 :   421c38: fmopa   za1.s, p0/m, p0/m, z1.s, z2.s
+    0.00 :   421c3c: fmopa   za2.s, p0/m, p0/m, z0.s, z3.s
+    0.00 :   421c40: fmopa   za3.s, p0/m, p0/m, z1.s, z3.s
+    0.00 :   421c44: ld1rw   {z4.s}, p0/z, [x13]
+    0.00 :   421c48: fmla    z10.s, p0/m, z0.s, z4.s
+    0.00 :   421c4c: fmla    z11.s, p0/m, z1.s, z4.s
+    0.00 :   421c50: add     x13, x13, #0x4
+    0.00 :   421c54: add     x16, x16, #0x4
+    0.00 :   421c58: add     x2, x2, #0x40
+    0.00 :   421c5c: add     x3, x3, #0x40
+    0.00 :   421c60: subs    x15, x15, #0x1
+    0.00 :   421c64: b.ne    421c24 <roll_worker+0xf14>  // b.any
+    0.00 :   421c68: cmp     x2, x5
+    0.00 :   421c6c: csel    x2, x4, x2, eq  // eq = none
+    0.00 :   421c70: cmp     x3, x5
+    0.00 :   421c74: csel    x3, x4, x3, eq  // eq = none
+    0.00 :   421c78: ldr     x24, [x18, #208]
+    0.00 :   421c7c: cmp     x13, x24
+    0.00 :   421c80: ldr     x24, [x18, #192]
+    0.00 :   421c84: csel    x13, x24, x13, eq  // eq = none
+    0.00 :   421c88: cmp     x11, x14
+    0.00 :   421c8c: csel    x20, x9, x10, cs  // cs = hs, nlast
+    0.00 :   421c90: ldr     x24, [x18, #216]
+    0.00 :   421c94: cmp     x27, x24
+    0.00 :   421c98: b.eq    421cec <roll_worker+0xfdc>  // b.none
+    0.00 :   421c9c: cmp     x27, #0x20
+    0.00 :   421ca0: b.cs    421cfc <roll_worker+0xfec>  // b.hs, b.nlast
+    0.00 :   421ca4: cmp     x27, #0x10
+    0.00 :   421ca8: b.cs    421ccc <roll_worker+0xfbc>  // b.hs, b.nlast
+    0.00 :   421cac: mov     w12, w27
+    0.00 :   421cb0: mov     z8.s, p0/m, za0v.s[w12, 0]
+    0.00 :   421cb4: mov     z9.s, p0/m, za1v.s[w12, 0]
+    0.00 :   421cb8: st1w    {z8.s}, p0, [x20]
+    0.00 :   421cbc: st1w    {z9.s}, p0, [x20, #1, mul vl]
+    0.00 :   421cc0: mov     za0v.s[w12, 0], p0/m, z31.s
+    0.00 :   421cc4: mov     za1v.s[w12, 0], p0/m, z31.s
+    0.00 :   421cc8: b       421cfc <roll_worker+0xfec>
+    0.00 :   421ccc: sub     w12, w27, #0x10
+    0.00 :   421cd0: mov     z8.s, p0/m, za2v.s[w12, 0]
+    0.00 :   421cd4: mov     z9.s, p0/m, za3v.s[w12, 0]
+    0.00 :   421cd8: st1w    {z8.s}, p0, [x20]
+    0.00 :   421cdc: st1w    {z9.s}, p0, [x20, #1, mul vl]
+    0.00 :   421ce0: mov     za2v.s[w12, 0], p0/m, z31.s
+    0.00 :   421ce4: mov     za3v.s[w12, 0], p0/m, z31.s
+    0.00 :   421ce8: b       421cfc <roll_worker+0xfec>
+    0.00 :   421cec: st1w    {z10.s}, p0, [x20]
+    0.00 :   421cf0: st1w    {z11.s}, p0, [x20, #1, mul vl]
+    0.00 :   421cf4: mov     z10.s, #0
+    0.00 :   421cf8: mov     z11.s, #0
+    0.00 :   421cfc: add     x27, x27, #0x1
+    0.00 :   421d00: cmp     x27, x6
+    0.00 :   421d04: csel    x27, xzr, x27, eq  // eq = none
+    0.00 :   421d08: add     x0, x0, x1
+    0.00 :   421d0c: add     x9, x9, x19
+    0.00 :   421d10: add     x11, x11, #0x1
+    0.00 :   421d14: subs    x8, x8, #0x1
+    0.00 :   421d18: b.ne    421bcc <roll_worker+0xebc>  // b.any
+         :            }
+    0.00 :   421d1c: ldr     x18, [sp, #312]
+    0.00 :   421d20: b       4216d8 <roll_worker+0x9c8>
+    0.00 :   421d24: sxtw    x0, w5
+    0.00 :   421d28: str     x0, [sp, #176]
+    0.00 :   421d2c: b       420f08 <roll_worker+0x1f8>
+         :            k16pairf3():
+         :            ka_t A; fill_args(&A, P, 1, 512, 31 + P->steps);
+    0.00 :   421d30: add     x3, x19, #0x1f
+    0.00 :   421d34: add     x0, sp, #0x200
+    0.00 :   421d38: add     x1, sp, #0x140
+    0.00 :   421d3c: mov     x2, #0x1                        // #1
+    0.00 :   421d40: bl      420b90 <fill_args.constprop.0>
+         :            A.kw4 = P->steps * 16;   // kf 每 kernel 行的字节跨度 = steps*4floats*4B
+    0.00 :   421d44: lsl     x19, x19, #4
+         :            A.n2 = (int64_t)P->kb0; A.e2 = (int64_t)P->kbase; A.T = (int64_t)P->kend; A.nlines = P->cf0;
+    0.00 :   421d48: ldr     q0, [sp, #464]
+    0.00 :   421d4c: add     x1, sp, #0x2a0
+    0.00 :   421d50: ldr     x0, [sp, #480]
+    0.00 :   421d54: str     x0, [sp, #720]
+    0.00 :   421d58: ldr     x0, [sp, #488]
+    0.00 :   421d5c: stur    q0, [x1, #24]
+         :            asm volatile(
+    0.00 :   421d60: add     x18, sp, #0x200
+         :            A.n2 = (int64_t)P->kb0; A.e2 = (int64_t)P->kbase; A.T = (int64_t)P->kend; A.nlines = P->cf0;
+    0.00 :   421d64: str     x0, [sp, #728]
+         :            A.kw4 = P->steps * 16;   // kf 每 kernel 行的字节跨度 = steps*4floats*4B
+    0.00 :   421d68: str     x19, [sp, #776]
+         :            asm volatile(
+    0.00 :   421d6c: ldr     x0, [x18]
+    0.00 :   421d70: ldr     x1, [x18, #8]
+    0.00 :   421d74: ldr     x4, [x18, #16]
+    0.00 :   421d78: ldr     x5, [x18, #24]
+    0.00 :   421d7c: ldr     x2, [x18, #32]
+    0.00 :   421d80: ldr     x3, [x18, #40]
+    0.00 :   421d84: ldr     x6, [x18, #48]
+    0.00 :   421d88: ldr     x7, [x18, #56]
+    0.00 :   421d8c: ldr     x8, [x18, #64]
+    0.00 :   421d90: ldr     x9, [x18, #72]
+    0.00 :   421d94: ldr     x10, [x18, #80]
+    0.00 :   421d98: ldr     x27, [x18, #88]
+    0.00 :   421d9c: ldr     x19, [x18, #224]
+    0.00 :   421da0: ldr     x14, [x18, #104]
+    0.00 :   421da4: ldr     x24, [x18, #112]
+    0.00 :   421da8: ldr     x25, [x18, #120]
+    0.00 :   421dac: ldr     x26, [x18, #128]
+    0.00 :   421db0: ldr     x17, [x18, #152]
+    0.00 :   421db4: ldr     x22, [x18, #160]
+    0.00 :   421db8: add     x28, x17, x17
+    0.00 :   421dbc: add     x28, x28, x22
+    0.00 :   421dc0: ldr     x22, [x18, #176]
+    0.00 :   421dc4: whilelo p3.s, xzr, x22
+    0.00 :   421dc8: mov     x11, #0x0                       // #0
+    0.00 :   421dcc: ptrue   p0.s
+    0.00 :   421dd0: ldr     x13, [x18, #184]
+    0.00 :   421dd4: mov     z31.s, #0
+    0.00 :   421dd8: mov     z10.s, #0
+    0.00 :   421ddc: mov     z11.s, #0
+    0.00 :   421de0: mov     z12.s, #0
+    0.00 :   421de4: mov     z13.s, #0
+    0.00 :   421de8: mov     z14.s, #0
+    0.00 :   421dec: mov     z15.s, #0
+    0.00 :   421df0: add     x21, x0, x26
+    0.00 :   421df4: ldr     x12, [x18, #240]
+    0.00 :   421df8: add     x16, x17, x12
+    0.00 :   421dfc: sub     x17, x28, x17
+    0.00 :   421e00: add     x22, x0, x1
+    0.00 :   421e04: cmp     x8, #0x1
+    0.00 :   421e08: csel    x22, x0, x22, eq  // eq = none
+    0.00 :   421e0c: mov     x23, x17
+    0.00 :   421e10: ldr     x12, [x18, #168]
+    0.00 :   421e14: cbz     x12, 421e38 <roll_worker+0x1128>
+    0.00 :   421e18: prfm    pldl2keep, [x21]
+    0.00 :   421e1c: ld1w    {z24.s}, p0/z, [x22]
+    0.00 :   421e20: st1w    {z24.s}, p0, [x23]
+    0.00 :   421e24: add     x21, x21, #0x40
+    0.00 :   421e28: add     x22, x22, #0x40
+    0.00 :   421e2c: add     x23, x23, #0x40
+    0.00 :   421e30: subs    x12, x12, #0x1
+    0.00 :   421e34: b.ne    421e18 <roll_worker+0x1108>  // b.any
+    0.00 :   421e38: prfm    pldl2keep, [x21]
+    0.00 :   421e3c: ld1w    {z24.s}, p3/z, [x22]
+    0.00 :   421e40: st1w    {z24.s}, p3, [x23]
+    0.00 :   421e44: mov     x15, x7
+    0.00 :   421e48: nop
+    0.00 :   421e4c: nop
+    0.00 :   421e50: ld1w    {z0.s}, p0/z, [x16]
+    0.00 :   421e54: ld1w    {z1.s}, p0/z, [x16, #1, mul vl]
+    0.00 :   421e58: ld1w    {z2.s}, p0/z, [x2]
+    0.00 :   421e5c: ld1w    {z3.s}, p0/z, [x3]
+    0.00 :   421e60: ld1rqw  {z4.s}, p0/z, [x13]
+    0.00 :   421e64: fmopa   za0.s, p0/m, p0/m, z0.s, z2.s
+    0.00 :   421e68: fmopa   za1.s, p0/m, p0/m, z1.s, z2.s
+    0.00 :   421e6c: fmopa   za2.s, p0/m, p0/m, z0.s, z3.s
+    0.00 :   421e70: fmopa   za3.s, p0/m, p0/m, z1.s, z3.s
+    0.00 :   421e74: fmla    z10.s, z0.s, z4.s[0]
+    0.00 :   421e78: fmla    z11.s, z1.s, z4.s[0]
+    0.00 :   421e7c: fmla    z12.s, z0.s, z4.s[1]
+    0.00 :   421e80: fmla    z13.s, z1.s, z4.s[1]
+    0.00 :   421e84: fmla    z14.s, z0.s, z4.s[2]
+    0.00 :   421e88: fmla    z15.s, z1.s, z4.s[2]
+    0.00 :   421e8c: add     x13, x13, #0x10
+    0.00 :   421e90: add     x16, x16, #0x4
+    0.00 :   421e94: add     x2, x2, #0x40
+    0.00 :   421e98: add     x3, x3, #0x40
+    0.00 :   421e9c: subs    x15, x15, #0x1
+    0.00 :   421ea0: b.ne    421e50 <roll_worker+0x1140>  // b.any
+    0.00 :   421ea4: cmp     x2, x5
+    0.00 :   421ea8: csel    x2, x4, x2, eq  // eq = none
+    0.00 :   421eac: cmp     x3, x5
+    0.00 :   421eb0: csel    x3, x4, x3, eq  // eq = none
+    0.00 :   421eb4: ldr     x24, [x18, #208]
+    0.00 :   421eb8: cmp     x13, x24
+    0.00 :   421ebc: ldr     x24, [x18, #192]
+    0.00 :   421ec0: csel    x13, x24, x13, eq  // eq = none
+    0.00 :   421ec4: cmp     x11, x14
+    0.00 :   421ec8: csel    x20, x9, x10, cs  // cs = hs, nlast
+    0.00 :   421ecc: ldr     x24, [x18, #216]
+    0.00 :   421ed0: sub     x24, x24, #0x2
+    0.00 :   421ed4: subs    w24, w27, w24
+    0.00 :   421ed8: b.cc    421f2c <roll_worker+0x121c>  // b.lo, b.ul, b.last
+    0.00 :   421edc: cmp     w24, #0x2
+    0.00 :   421ee0: b.hi    421f78 <roll_worker+0x1268>  // b.pmore
+    0.00 :   421ee4: b.eq    421f18 <roll_worker+0x1208>  // b.none
+    0.00 :   421ee8: cmp     w24, #0x1
+    0.00 :   421eec: b.eq    421f04 <roll_worker+0x11f4>  // b.none
+    0.00 :   421ef0: st1w    {z14.s}, p0, [x20]
+    0.00 :   421ef4: st1w    {z15.s}, p0, [x20, #1, mul vl]
+    0.00 :   421ef8: mov     z14.s, #0
+    0.00 :   421efc: mov     z15.s, #0
+    0.00 :   421f00: b       421f78 <roll_worker+0x1268>
+    0.00 :   421f04: st1w    {z12.s}, p0, [x20]
+    0.00 :   421f08: st1w    {z13.s}, p0, [x20, #1, mul vl]
+    0.00 :   421f0c: mov     z12.s, #0
+    0.00 :   421f10: mov     z13.s, #0
+    0.00 :   421f14: b       421f78 <roll_worker+0x1268>
+    0.00 :   421f18: st1w    {z10.s}, p0, [x20]
+    0.00 :   421f1c: st1w    {z11.s}, p0, [x20, #1, mul vl]
+    0.00 :   421f20: mov     z10.s, #0
+    0.00 :   421f24: mov     z11.s, #0
+    0.00 :   421f28: b       421f78 <roll_worker+0x1268>
+    0.00 :   421f2c: cmp     x27, #0x20
+    0.00 :   421f30: b.cs    421f78 <roll_worker+0x1268>  // b.hs, b.nlast
+    0.00 :   421f34: cmp     x27, #0x10
+    0.00 :   421f38: b.cs    421f5c <roll_worker+0x124c>  // b.hs, b.nlast
+    0.00 :   421f3c: mov     w12, w27
+    0.00 :   421f40: mov     z8.s, p0/m, za0v.s[w12, 0]
+    0.00 :   421f44: mov     z9.s, p0/m, za1v.s[w12, 0]
+    0.00 :   421f48: st1w    {z8.s}, p0, [x20]
+    0.00 :   421f4c: st1w    {z9.s}, p0, [x20, #1, mul vl]
+    0.00 :   421f50: mov     za0v.s[w12, 0], p0/m, z31.s
+    0.00 :   421f54: mov     za1v.s[w12, 0], p0/m, z31.s
+    0.00 :   421f58: b       421f78 <roll_worker+0x1268>
+    0.00 :   421f5c: sub     w12, w27, #0x10
+    0.00 :   421f60: mov     z8.s, p0/m, za2v.s[w12, 0]
+    0.00 :   421f64: mov     z9.s, p0/m, za3v.s[w12, 0]
+    0.00 :   421f68: st1w    {z8.s}, p0, [x20]
+    0.00 :   421f6c: st1w    {z9.s}, p0, [x20, #1, mul vl]
+    0.00 :   421f70: mov     za2v.s[w12, 0], p0/m, z31.s
+    0.00 :   421f74: mov     za3v.s[w12, 0], p0/m, z31.s
+    0.00 :   421f78: add     x27, x27, #0x1
+    0.00 :   421f7c: cmp     x27, x6
+    0.00 :   421f80: csel    x27, xzr, x27, eq  // eq = none
+    0.00 :   421f84: add     x0, x0, x1
+    0.00 :   421f88: add     x9, x9, x19
+    0.00 :   421f8c: add     x11, x11, #0x1
+    0.00 :   421f90: subs    x8, x8, #0x1
+    0.00 :   421f94: b.ne    421df0 <roll_worker+0x10e0>  // b.any
+         :            }
+    0.00 :   421f98: ldr     x18, [sp, #312]
+    0.00 :   421f9c: b       4216d8 <roll_worker+0x9c8>
+         :            k16pairf4():
+         :            ka_t A; fill_args(&A, P, 1, 512, 31 + P->steps);
+    0.00 :   421fa0: add     x3, x19, #0x1f
+    0.00 :   421fa4: add     x0, sp, #0x200
+    0.00 :   421fa8: add     x1, sp, #0x140
+    0.00 :   421fac: mov     x2, #0x1                        // #1
+    0.00 :   421fb0: bl      420b90 <fill_args.constprop.0>
+         :            A.kw4 = P->steps * 16;   // kf 每 kernel 行的字节跨度 = steps*4floats*4B
+    0.00 :   421fb4: lsl     x19, x19, #4
+         :            A.n2 = (int64_t)P->kb0; A.e2 = (int64_t)P->kbase; A.T = (int64_t)P->kend; A.nlines = P->cf0;
+    0.00 :   421fb8: ldr     q0, [sp, #464]
+    0.00 :   421fbc: add     x1, sp, #0x2a0
+    0.00 :   421fc0: ldr     x0, [sp, #480]
+    0.00 :   421fc4: str     x0, [sp, #720]
+    0.00 :   421fc8: ldr     x0, [sp, #488]
+    0.00 :   421fcc: stur    q0, [x1, #24]
+         :            asm volatile(
+    0.00 :   421fd0: add     x18, sp, #0x200
+         :            A.n2 = (int64_t)P->kb0; A.e2 = (int64_t)P->kbase; A.T = (int64_t)P->kend; A.nlines = P->cf0;
+    0.00 :   421fd4: str     x0, [sp, #728]
+         :            A.kw4 = P->steps * 16;   // kf 每 kernel 行的字节跨度 = steps*4floats*4B
+    0.00 :   421fd8: str     x19, [sp, #776]
+         :            asm volatile(
+    0.00 :   421fdc: ldr     x0, [x18]
+    0.00 :   421fe0: ldr     x1, [x18, #8]
+    0.00 :   421fe4: ldr     x4, [x18, #16]
+    0.00 :   421fe8: ldr     x5, [x18, #24]
+    0.00 :   421fec: ldr     x2, [x18, #32]
+    0.00 :   421ff0: ldr     x3, [x18, #40]
+    0.00 :   421ff4: ldr     x6, [x18, #48]
+    0.00 :   421ff8: ldr     x7, [x18, #56]
+    0.00 :   421ffc: ldr     x8, [x18, #64]
+    0.00 :   422000: ldr     x9, [x18, #72]
+    0.00 :   422004: ldr     x10, [x18, #80]
+    0.00 :   422008: ldr     x27, [x18, #88]
+    0.00 :   42200c: ldr     x19, [x18, #224]
+    0.00 :   422010: ldr     x14, [x18, #104]
+    0.00 :   422014: ldr     x24, [x18, #112]
+    0.00 :   422018: ldr     x25, [x18, #120]
+    0.00 :   42201c: ldr     x26, [x18, #128]
+    0.00 :   422020: ldr     x17, [x18, #152]
+    0.00 :   422024: ldr     x22, [x18, #160]
+    0.00 :   422028: add     x28, x17, x17
+    0.00 :   42202c: add     x28, x28, x22
+    0.00 :   422030: ldr     x22, [x18, #176]
+    0.00 :   422034: whilelo p3.s, xzr, x22
+    0.00 :   422038: mov     x11, #0x0                       // #0
+    0.00 :   42203c: ptrue   p0.s
+    0.00 :   422040: ldr     x13, [x18, #184]
+    0.00 :   422044: mov     z31.s, #0
+    0.00 :   422048: mov     z10.s, #0
+    0.00 :   42204c: mov     z11.s, #0
+    0.00 :   422050: mov     z12.s, #0
+    0.00 :   422054: mov     z13.s, #0
+    0.00 :   422058: mov     z14.s, #0
+    0.00 :   42205c: mov     z15.s, #0
+    0.00 :   422060: mov     z16.s, #0
+    0.00 :   422064: mov     z17.s, #0
+    0.38 :   422068: add     x21, x0, x26
+    0.04 :   42206c: ldr     x12, [x18, #240]
+    0.00 :   422070: add     x16, x17, x12
+    0.00 :   422074: sub     x17, x28, x17
+    0.00 :   422078: add     x22, x0, x1
+    0.46 :   42207c: cmp     x8, #0x1
+    0.00 :   422080: csel    x22, x0, x22, eq  // eq = none
+    0.00 :   422084: mov     x23, x17
+    0.00 :   422088: ldr     x12, [x18, #168]
+    0.00 :   42208c: cbz     x12, 422104 <roll_worker+0x13f4>
+    0.73 :   422090: cmp     x12, #0x4
+    0.00 :   422094: b.cc    4220e0 <roll_worker+0x13d0>  // b.lo, b.ul, b.last
+    0.01 :   422098: prfm    pldl2keep, [x21]
+    0.08 :   42209c: ld1w    {z24.s}, p0/z, [x22]
+    1.53 :   4220a0: st1w    {z24.s}, p0, [x23]
+    0.05 :   4220a4: prfm    pldl2keep, [x21, #64]
+    0.08 :   4220a8: ld1w    {z24.s}, p0/z, [x22, #1, mul vl]
+    1.01 :   4220ac: st1w    {z24.s}, p0, [x23, #1, mul vl]
+    0.06 :   4220b0: prfm    pldl2keep, [x21, #128]
+    0.03 :   4220b4: ld1w    {z24.s}, p0/z, [x22, #2, mul vl]
+    0.41 :   4220b8: st1w    {z24.s}, p0, [x23, #2, mul vl]
+    0.11 :   4220bc: prfm    pldl2keep, [x21, #192]
+    0.05 :   4220c0: ld1w    {z24.s}, p0/z, [x22, #3, mul vl]
+    0.27 :   4220c4: st1w    {z24.s}, p0, [x23, #3, mul vl]
+    0.00 :   4220c8: add     x21, x21, #0x100
+    0.00 :   4220cc: add     x22, x22, #0x100
+    0.00 :   4220d0: add     x23, x23, #0x100
+    0.07 :   4220d4: sub     x12, x12, #0x4
+    0.00 :   4220d8: cmp     x12, #0x4
+    0.00 :   4220dc: b.cs    422098 <roll_worker+0x1388>  // b.hs, b.nlast
+    0.08 :   4220e0: cbz     x12, 422104 <roll_worker+0x13f4>
+    0.00 :   4220e4: prfm    pldl2keep, [x21]
+    0.00 :   4220e8: ld1w    {z24.s}, p0/z, [x22]
+    0.00 :   4220ec: st1w    {z24.s}, p0, [x23]
+    0.00 :   4220f0: add     x21, x21, #0x40
+    0.00 :   4220f4: add     x22, x22, #0x40
+    0.00 :   4220f8: add     x23, x23, #0x40
+    0.00 :   4220fc: subs    x12, x12, #0x1
+    0.00 :   422100: b.ne    4220e4 <roll_worker+0x13d4>  // b.any
+    0.02 :   422104: prfm    pldl2keep, [x21]
+    0.08 :   422108: ld1w    {z24.s}, p3/z, [x22]
+    0.27 :   42210c: st1w    {z24.s}, p3, [x23]
+    0.00 :   422110: mov     x15, x7
+    0.00 :   422114: nop
+    0.06 :   422118: nop
+    0.01 :   42211c: nop
+    4.67 :   422120: ld1w    {z0.s}, p0/z, [x16]
+   45.59 :   422124: ld1w    {z1.s}, p0/z, [x16, #1, mul vl]
+   11.44 :   422128: ld1w    {z2.s}, p0/z, [x2]
+    2.81 :   42212c: ld1w    {z3.s}, p0/z, [x3]
+    1.55 :   422130: ld1rqw  {z4.s}, p0/z, [x13]
+    0.00 :   422134: fmopa   za0.s, p0/m, p0/m, z0.s, z2.s
+    0.00 :   422138: fmopa   za1.s, p0/m, p0/m, z1.s, z2.s
+    0.00 :   42213c: fmopa   za2.s, p0/m, p0/m, z0.s, z3.s
+    5.34 :   422140: fmopa   za3.s, p0/m, p0/m, z1.s, z3.s
+    0.00 :   422144: fmla    z10.s, z0.s, z4.s[0]
+    0.00 :   422148: fmla    z11.s, z1.s, z4.s[0]
+    0.00 :   42214c: fmla    z12.s, z0.s, z4.s[1]
+    3.61 :   422150: fmla    z13.s, z1.s, z4.s[1]
+    0.00 :   422154: fmla    z14.s, z0.s, z4.s[2]
+    0.00 :   422158: fmla    z15.s, z1.s, z4.s[2]
+    0.00 :   42215c: fmla    z16.s, z0.s, z4.s[3]
+    1.18 :   422160: fmla    z17.s, z1.s, z4.s[3]
+    0.00 :   422164: add     x13, x13, #0x10
+    0.00 :   422168: add     x16, x16, #0x4
+    0.00 :   42216c: add     x2, x2, #0x40
+    0.76 :   422170: add     x3, x3, #0x40
+    0.00 :   422174: subs    x15, x15, #0x1
+    0.03 :   422178: b.ne    422120 <roll_worker+0x1410>  // b.any
+    0.08 :   42217c: cmp     x2, x5
+    0.01 :   422180: csel    x2, x4, x2, eq  // eq = none
+    0.00 :   422184: cmp     x3, x5
+    0.15 :   422188: csel    x3, x4, x3, eq  // eq = none
+    0.01 :   42218c: ldr     x24, [x18, #208]
+    0.00 :   422190: cmp     x13, x24
+    0.36 :   422194: ldr     x24, [x18, #192]
+    0.00 :   422198: csel    x13, x24, x13, eq  // eq = none
+    0.00 :   42219c: cmp     x11, x14
+    0.00 :   4221a0: csel    x20, x9, x10, cs  // cs = hs, nlast
+    0.09 :   4221a4: ldr     x24, [x18, #216]
+    0.00 :   4221a8: sub     x24, x24, #0x3
+    0.00 :   4221ac: subs    w24, w27, w24
+    0.00 :   4221b0: b.cc    422220 <roll_worker+0x1510>  // b.lo, b.ul, b.last
+    0.06 :   4221b4: cmp     w24, #0x3
+    0.00 :   4221b8: b.hi    42226c <roll_worker+0x155c>  // b.pmore
+    0.13 :   4221bc: b.eq    42220c <roll_worker+0x14fc>  // b.none
+    0.01 :   4221c0: cmp     w24, #0x2
+    0.00 :   4221c4: b.eq    4221f8 <roll_worker+0x14e8>  // b.none
+    0.00 :   4221c8: cmp     w24, #0x1
+    0.00 :   4221cc: b.eq    4221e4 <roll_worker+0x14d4>  // b.none
+    0.01 :   4221d0: st1w    {z16.s}, p0, [x20]
+    0.02 :   4221d4: st1w    {z17.s}, p0, [x20, #1, mul vl]
+    0.00 :   4221d8: mov     z16.s, #0
+    0.00 :   4221dc: mov     z17.s, #0
+    0.00 :   4221e0: b       42226c <roll_worker+0x155c>
+    0.00 :   4221e4: st1w    {z14.s}, p0, [x20]
+    0.00 :   4221e8: st1w    {z15.s}, p0, [x20, #1, mul vl]
+    0.00 :   4221ec: mov     z14.s, #0
+    0.00 :   4221f0: mov     z15.s, #0
+    0.00 :   4221f4: b       42226c <roll_worker+0x155c>
+    0.00 :   4221f8: st1w    {z12.s}, p0, [x20]
+    0.01 :   4221fc: st1w    {z13.s}, p0, [x20, #1, mul vl]
+    0.00 :   422200: mov     z12.s, #0
+    0.00 :   422204: mov     z13.s, #0
+    0.00 :   422208: b       42226c <roll_worker+0x155c>
+    0.00 :   42220c: st1w    {z10.s}, p0, [x20]
+    0.01 :   422210: st1w    {z11.s}, p0, [x20, #1, mul vl]
+    0.00 :   422214: mov     z10.s, #0
+    0.00 :   422218: mov     z11.s, #0
+    0.00 :   42221c: b       42226c <roll_worker+0x155c>
+    0.52 :   422220: cmp     x27, #0x20
+    0.00 :   422224: b.cs    42226c <roll_worker+0x155c>  // b.hs, b.nlast
+    0.00 :   422228: cmp     x27, #0x10
+    0.00 :   42222c: b.cs    422250 <roll_worker+0x1540>  // b.hs, b.nlast
+    0.02 :   422230: mov     w12, w27
+    0.00 :   422234: mov     z8.s, p0/m, za0v.s[w12, 0]
+    0.00 :   422238: mov     z9.s, p0/m, za1v.s[w12, 0]
+    0.02 :   42223c: st1w    {z8.s}, p0, [x20]
+    0.19 :   422240: st1w    {z9.s}, p0, [x20, #1, mul vl]
+    0.00 :   422244: mov     za0v.s[w12, 0], p0/m, z31.s
+    0.00 :   422248: mov     za1v.s[w12, 0], p0/m, z31.s
+    0.00 :   42224c: b       42226c <roll_worker+0x155c>
+    0.02 :   422250: sub     w12, w27, #0x10
+    0.00 :   422254: mov     z8.s, p0/m, za2v.s[w12, 0]
+    0.00 :   422258: mov     z9.s, p0/m, za3v.s[w12, 0]
+    0.02 :   42225c: st1w    {z8.s}, p0, [x20]
+    0.28 :   422260: st1w    {z9.s}, p0, [x20, #1, mul vl]
+    0.00 :   422264: mov     za2v.s[w12, 0], p0/m, z31.s
+    0.01 :   422268: mov     za3v.s[w12, 0], p0/m, z31.s
+    0.13 :   42226c: add     x27, x27, #0x1
+    0.11 :   422270: cmp     x27, x6
+    0.00 :   422274: csel    x27, xzr, x27, eq  // eq = none
+    0.00 :   422278: add     x0, x0, x1
+    0.04 :   42227c: add     x9, x9, x19
+    0.01 :   422280: add     x11, x11, #0x1
+    0.00 :   422284: subs    x8, x8, #0x1
+    0.00 :   422288: b.ne    422068 <roll_worker+0x1358>  // b.any
+         :            }
+    0.00 :   42228c: ldr     x18, [sp, #312]
+    0.00 :   422290: b       4216d8 <roll_worker+0x9c8>
+         :            k8():
+         :            ka_t A; fill_args(&A, P, 2, 896, 126 + P->steps);
+    0.00 :   422294: add     x0, sp, #0x200
+    0.00 :   422298: add     x3, x19, #0x7e
+    0.00 :   42229c: add     x1, sp, #0x140
+    0.00 :   4222a0: mov     x2, #0x2                        // #2
+    0.00 :   4222a4: bl      420b90 <fill_args.constprop.0>
+         :            asm volatile(
+    0.00 :   4222a8: mov     x18, x0
+    0.00 :   4222ac: ldr     x0, [x18]
+    0.00 :   4222b0: ldr     x1, [x18, #8]
+    0.00 :   4222b4: ldr     x4, [x18, #16]
+    0.00 :   4222b8: ldr     x5, [x18, #24]
+    0.00 :   4222bc: ldr     x2, [x18, #32]
+    0.00 :   4222c0: ldr     x3, [x18, #40]
+    0.00 :   4222c4: ldr     x6, [x18, #48]
+    0.00 :   4222c8: ldr     x7, [x18, #56]
+    0.00 :   4222cc: ldr     x8, [x18, #64]
+    0.00 :   4222d0: ldr     x9, [x18, #72]
+    0.00 :   4222d4: ldr     x10, [x18, #80]
+    0.00 :   4222d8: ldr     x27, [x18, #88]
+    0.00 :   4222dc: ldr     x19, [x18, #224]
+    0.00 :   4222e0: ldr     x14, [x18, #104]
+    0.00 :   4222e4: ldr     x24, [x18, #112]
+    0.00 :   4222e8: ldr     x25, [x18, #120]
+    0.00 :   4222ec: ldr     x26, [x18, #128]
+    0.00 :   4222f0: ldr     x17, [x18, #152]
+    0.00 :   4222f4: ldr     x22, [x18, #160]
+    0.00 :   4222f8: add     x28, x17, x17
+    0.00 :   4222fc: add     x28, x28, x22
+    0.00 :   422300: ldr     x22, [x18, #176]
+    0.00 :   422304: whilelo p3.s, xzr, x22
+    0.00 :   422308: mov     x11, #0x0                       // #0
+    0.00 :   42230c: ptrue   p0.s
+    0.00 :   422310: ldr     x7, [x18, #136]
+    0.00 :   422314: mov     z31.s, #0
+    0.00 :   422318: add     x21, x0, x26
+    0.00 :   42231c: ldr     x12, [x18, #240]
+    0.00 :   422320: add     x16, x17, x12
+    0.00 :   422324: sub     x17, x28, x17
+    0.00 :   422328: add     x22, x0, x1
+    0.00 :   42232c: cmp     x8, #0x1
+    0.00 :   422330: csel    x22, x0, x22, eq  // eq = none
+    0.00 :   422334: mov     x23, x17
+    0.00 :   422338: ldr     x12, [x18, #168]
+    0.00 :   42233c: cbz     x12, 422360 <roll_worker+0x1650>
+    0.00 :   422340: prfm    pldl2keep, [x21]
+    0.00 :   422344: ld1w    {z24.s}, p0/z, [x22]
+    0.00 :   422348: st1w    {z24.s}, p0, [x23]
+    0.00 :   42234c: add     x21, x21, #0x40
+    0.00 :   422350: add     x22, x22, #0x40
+    0.00 :   422354: add     x23, x23, #0x40
+    0.00 :   422358: subs    x12, x12, #0x1
+    0.00 :   42235c: b.ne    422340 <roll_worker+0x1630>  // b.any
+    0.00 :   422360: prfm    pldl2keep, [x21]
+    0.00 :   422364: ld1w    {z24.s}, p3/z, [x22]
+    0.00 :   422368: st1w    {z24.s}, p3, [x23]
+    0.00 :   42236c: ldr     x23, [x18, #144]
+    0.00 :   422370: add     x22, x27, x23
+    0.00 :   422374: cmp     x22, x6
+    0.00 :   422378: sub     x21, x22, x6
+    0.00 :   42237c: csel    x22, x21, x22, cs  // cs = hs, nlast
+    0.00 :   422380: cmp     x22, x24
+    0.00 :   422384: b.cs    4223b0 <roll_worker+0x16a0>  // b.hs, b.nlast
+    0.00 :   422388: ldr     x21, [x18, #232]
+    0.00 :   42238c: add     x21, x9, x21
+    0.00 :   422390: prfm    pstl2keep, [x21]
+    0.00 :   422394: prfm    pstl2keep, [x21, #64]
+    0.00 :   422398: prfm    pstl2keep, [x21, #128]
+    0.00 :   42239c: prfm    pstl2keep, [x21, #192]
+    0.00 :   4223a0: prfm    pstl2keep, [x21, #256]
+    0.00 :   4223a4: prfm    pstl2keep, [x21, #320]
+    0.00 :   4223a8: prfm    pstl2keep, [x21, #384]
+    0.00 :   4223ac: prfm    pstl2keep, [x21, #448]
+    0.00 :   4223b0: mov     x15, x7
+    0.00 :   4223b4: ld2w    {z0.s, z1.s}, p0/z, [x16]
+    0.00 :   4223b8: ld2w    {z2.s, z3.s}, p0/z, [x16, #2, mul vl]
+    0.00 :   4223bc: ld2w    {z4.s, z5.s}, p0/z, [x16, #4, mul vl]
+    0.00 :   4223c0: ld2w    {z6.s, z7.s}, p0/z, [x16, #6, mul vl]
+    0.00 :   4223c4: ld1w    {z8.s}, p0/z, [x2]
+    0.00 :   4223c8: ld1w    {z9.s}, p0/z, [x2, #1, mul vl]
+    0.00 :   4223cc: fmopa   za0.s, p0/m, p0/m, z0.s, z8.s
+    0.00 :   4223d0: fmopa   za1.s, p0/m, p0/m, z2.s, z8.s
+    0.00 :   4223d4: fmopa   za2.s, p0/m, p0/m, z4.s, z8.s
+    0.00 :   4223d8: fmopa   za3.s, p0/m, p0/m, z6.s, z8.s
+    0.00 :   4223dc: fmopa   za0.s, p0/m, p0/m, z1.s, z9.s
+    0.00 :   4223e0: fmopa   za1.s, p0/m, p0/m, z3.s, z9.s
+    0.00 :   4223e4: fmopa   za2.s, p0/m, p0/m, z5.s, z9.s
+    0.00 :   4223e8: fmopa   za3.s, p0/m, p0/m, z7.s, z9.s
+    0.00 :   4223ec: add     x16, x16, #0x8
+    0.00 :   4223f0: add     x2, x2, #0x80
+    0.00 :   4223f4: subs    x15, x15, #0x1
+    0.00 :   4223f8: b.ne    4223b4 <roll_worker+0x16a4>  // b.any
+    0.00 :   4223fc: cmp     x2, x5
+    0.00 :   422400: csel    x2, x4, x2, eq  // eq = none
+    0.00 :   422404: cmp     x11, x14
+    0.00 :   422408: csel    x20, x9, x10, cs  // cs = hs, nlast
+    0.00 :   42240c: cmp     x27, x24
+    0.00 :   422410: b.cs    42246c <roll_worker+0x175c>  // b.hs, b.nlast
+    0.00 :   422414: and     w12, w27, #0x7
+    0.00 :   422418: lsl     w12, w12, #1
+    0.00 :   42241c: mov     z8.s, p0/m, za0v.s[w12, 0]
+    0.00 :   422420: mov     z9.s, p0/m, za0v.s[w12, 1]
+    0.00 :   422424: mov     z10.s, p0/m, za1v.s[w12, 0]
+    0.00 :   422428: mov     z11.s, p0/m, za1v.s[w12, 1]
+    0.00 :   42242c: mov     z12.s, p0/m, za2v.s[w12, 0]
+    0.00 :   422430: mov     z13.s, p0/m, za2v.s[w12, 1]
+    0.00 :   422434: mov     z14.s, p0/m, za3v.s[w12, 0]
+    0.00 :   422438: mov     z15.s, p0/m, za3v.s[w12, 1]
+    0.00 :   42243c: st2w    {z8.s, z9.s}, p0, [x20]
+    0.00 :   422440: st2w    {z10.s, z11.s}, p0, [x20, #2, mul vl]
+    0.00 :   422444: st2w    {z12.s, z13.s}, p0, [x20, #4, mul vl]
+    0.00 :   422448: st2w    {z14.s, z15.s}, p0, [x20, #6, mul vl]
+    0.00 :   42244c: mov     za0v.s[w12, 0], p0/m, z31.s
+    0.00 :   422450: mov     za0v.s[w12, 1], p0/m, z31.s
+    0.00 :   422454: mov     za1v.s[w12, 0], p0/m, z31.s
+    0.00 :   422458: mov     za1v.s[w12, 1], p0/m, z31.s
+    0.00 :   42245c: mov     za2v.s[w12, 0], p0/m, z31.s
+    0.00 :   422460: mov     za2v.s[w12, 1], p0/m, z31.s
+    0.00 :   422464: mov     za3v.s[w12, 0], p0/m, z31.s
+    0.00 :   422468: mov     za3v.s[w12, 1], p0/m, z31.s
+    0.00 :   42246c: add     x27, x27, #0x1
+    0.00 :   422470: cmp     x27, x6
+    0.00 :   422474: csel    x27, xzr, x27, eq  // eq = none
+    0.00 :   422478: add     x0, x0, x1
+    0.00 :   42247c: add     x9, x9, x19
+    0.00 :   422480: add     x11, x11, #0x1
+    0.00 :   422484: subs    x8, x8, #0x1
+    0.00 :   422488: b.ne    422318 <roll_worker+0x1608>  // b.any
+         :            }
+    0.00 :   42248c: ldr     x18, [sp, #312]
+    0.00 :   422490: b       4216d8 <roll_worker+0x9c8>
+         :            k16single():
+         :            ka_t A; fill_args(&A, P, 1, 640, 63 + P->steps);
+    0.00 :   422494: add     x0, sp, #0x200
+    0.00 :   422498: add     x3, x19, #0x3f
+    0.00 :   42249c: add     x1, sp, #0x140
+    0.00 :   4224a0: mov     x2, #0x1                        // #1
+    0.00 :   4224a4: bl      420b90 <fill_args.constprop.0>
+         :            asm volatile(
+    0.00 :   4224a8: mov     x18, x0
+    0.00 :   4224ac: ldr     x0, [x18]
+    0.00 :   4224b0: ldr     x1, [x18, #8]
+    0.00 :   4224b4: ldr     x4, [x18, #16]
+    0.00 :   4224b8: ldr     x5, [x18, #24]
+    0.00 :   4224bc: ldr     x2, [x18, #32]
+    0.00 :   4224c0: ldr     x3, [x18, #40]
+    0.00 :   4224c4: ldr     x6, [x18, #48]
+    0.00 :   4224c8: ldr     x7, [x18, #56]
+    0.00 :   4224cc: ldr     x8, [x18, #64]
+    0.00 :   4224d0: ldr     x9, [x18, #72]
+    0.00 :   4224d4: ldr     x10, [x18, #80]
+    0.00 :   4224d8: ldr     x27, [x18, #88]
+    0.00 :   4224dc: ldr     x19, [x18, #224]
+    0.00 :   4224e0: ldr     x14, [x18, #104]
+    0.00 :   4224e4: ldr     x24, [x18, #112]
+    0.00 :   4224e8: ldr     x25, [x18, #120]
+    0.00 :   4224ec: ldr     x26, [x18, #128]
+    0.00 :   4224f0: ldr     x17, [x18, #152]
+    0.00 :   4224f4: ldr     x22, [x18, #160]
+    0.00 :   4224f8: add     x28, x17, x17
+    0.00 :   4224fc: add     x28, x28, x22
+    0.00 :   422500: ldr     x22, [x18, #176]
+    0.00 :   422504: whilelo p3.s, xzr, x22
+    0.00 :   422508: mov     x11, #0x0                       // #0
+    0.00 :   42250c: ptrue   p0.s
+    0.00 :   422510: mov     z31.s, #0
+    0.00 :   422514: add     x21, x0, x26
+    0.00 :   422518: ldr     x12, [x18, #240]
+    0.00 :   42251c: add     x16, x17, x12
+    0.00 :   422520: sub     x17, x28, x17
+    0.00 :   422524: add     x22, x0, x1
+    0.00 :   422528: cmp     x8, #0x1
+    0.00 :   42252c: csel    x22, x0, x22, eq  // eq = none
+    0.00 :   422530: mov     x23, x17
+    0.00 :   422534: ldr     x12, [x18, #168]
+    0.00 :   422538: cbz     x12, 42255c <roll_worker+0x184c>
+    0.00 :   42253c: prfm    pldl2keep, [x21]
+    0.00 :   422540: ld1w    {z24.s}, p0/z, [x22]
+    0.00 :   422544: st1w    {z24.s}, p0, [x23]
+    0.00 :   422548: add     x21, x21, #0x40
+    0.00 :   42254c: add     x22, x22, #0x40
+    0.00 :   422550: add     x23, x23, #0x40
+    0.00 :   422554: subs    x12, x12, #0x1
+    0.00 :   422558: b.ne    42253c <roll_worker+0x182c>  // b.any
+    0.00 :   42255c: prfm    pldl2keep, [x21]
+    0.00 :   422560: ld1w    {z24.s}, p3/z, [x22]
+    0.00 :   422564: st1w    {z24.s}, p3, [x23]
+    0.00 :   422568: mov     x15, x7
+    0.00 :   42256c: ld1w    {z0.s}, p0/z, [x16]
+    0.00 :   422570: ld1w    {z1.s}, p0/z, [x16, #1, mul vl]
+    0.00 :   422574: ld1w    {z2.s}, p0/z, [x16, #2, mul vl]
+    0.00 :   422578: ld1w    {z3.s}, p0/z, [x16, #3, mul vl]
+    0.00 :   42257c: ld1w    {z4.s}, p0/z, [x2]
+    0.00 :   422580: fmopa   za0.s, p0/m, p0/m, z0.s, z4.s
+    0.00 :   422584: fmopa   za1.s, p0/m, p0/m, z1.s, z4.s
+    0.00 :   422588: fmopa   za2.s, p0/m, p0/m, z2.s, z4.s
+    0.00 :   42258c: fmopa   za3.s, p0/m, p0/m, z3.s, z4.s
+    0.00 :   422590: add     x16, x16, #0x4
+    0.00 :   422594: add     x2, x2, #0x40
+    0.00 :   422598: subs    x15, x15, #0x1
+    0.00 :   42259c: b.ne    42256c <roll_worker+0x185c>  // b.any
+    0.00 :   4225a0: cmp     x2, x5
+    0.00 :   4225a4: csel    x2, x4, x2, eq  // eq = none
+    0.00 :   4225a8: cmp     x11, x14
+    0.00 :   4225ac: csel    x20, x9, x10, cs  // cs = hs, nlast
+    0.00 :   4225b0: cmp     x27, x24
+    0.00 :   4225b4: b.cs    4225ec <roll_worker+0x18dc>  // b.hs, b.nlast
+    0.00 :   4225b8: and     w12, w27, #0xf
+    0.00 :   4225bc: mov     z5.s, p0/m, za0v.s[w12, 0]
+    0.00 :   4225c0: mov     z6.s, p0/m, za1v.s[w12, 0]
+    0.00 :   4225c4: mov     z7.s, p0/m, za2v.s[w12, 0]
+    0.00 :   4225c8: mov     z8.s, p0/m, za3v.s[w12, 0]
+    0.00 :   4225cc: st1w    {z5.s}, p0, [x20]
+    0.00 :   4225d0: st1w    {z6.s}, p0, [x20, #1, mul vl]
+    0.00 :   4225d4: st1w    {z7.s}, p0, [x20, #2, mul vl]
+    0.00 :   4225d8: st1w    {z8.s}, p0, [x20, #3, mul vl]
+    0.00 :   4225dc: mov     za0v.s[w12, 0], p0/m, z31.s
+    0.00 :   4225e0: mov     za1v.s[w12, 0], p0/m, z31.s
+    0.00 :   4225e4: mov     za2v.s[w12, 0], p0/m, z31.s
+    0.00 :   4225e8: mov     za3v.s[w12, 0], p0/m, z31.s
+    0.00 :   4225ec: add     x27, x27, #0x1
+    0.00 :   4225f0: cmp     x27, x6
+    0.00 :   4225f4: csel    x27, xzr, x27, eq  // eq = none
+    0.00 :   4225f8: add     x0, x0, x1
+    0.00 :   4225fc: add     x9, x9, x19
+    0.00 :   422600: add     x11, x11, #0x1
+    0.00 :   422604: subs    x8, x8, #0x1
+    0.00 :   422608: b.ne    422514 <roll_worker+0x1804>  // b.any
+         :            }
+    0.00 :   42260c: ldr     x18, [sp, #312]
+    0.00 :   422610: b       4216d8 <roll_worker+0x9c8>
+         :            k16singlef2():
+         :            ka_t A; fill_args(&A, P, 1, 640, 63 + P->steps);
+    0.00 :   422614: add     x0, sp, #0x200
+    0.00 :   422618: add     x1, sp, #0x140
+    0.00 :   42261c: add     x3, x19, #0x3f
+    0.00 :   422620: mov     x2, #0x1                        // #1
+    0.00 :   422624: bl      420b90 <fill_args.constprop.0>
+         :            A.n2 = (int64_t)P->kb0; A.e2 = (int64_t)P->kbase; A.T = (int64_t)P->kend; A.nlines = P->cf0;
+    0.00 :   422628: ldr     q0, [sp, #464]
+    0.00 :   42262c: add     x1, sp, #0x2a0
+    0.00 :   422630: ldr     x0, [sp, #480]
+    0.00 :   422634: str     x0, [sp, #720]
+    0.00 :   422638: ldr     x0, [sp, #488]
+    0.00 :   42263c: stur    q0, [x1, #24]
+         :            asm volatile(
+    0.00 :   422640: add     x18, sp, #0x200
+         :            A.kb2 = (int64_t)P->kb20; A.cf2 = P->cf20;
+    0.00 :   422644: ldr     x1, [sp, #496]
+         :            A.n2 = (int64_t)P->kb0; A.e2 = (int64_t)P->kbase; A.T = (int64_t)P->kend; A.nlines = P->cf0;
+    0.00 :   422648: str     x0, [sp, #728]
+         :            A.kb2 = (int64_t)P->kb20; A.cf2 = P->cf20;
+    0.00 :   42264c: ldr     x0, [sp, #504]
+    0.00 :   422650: str     x1, [sp, #760]
+    0.00 :   422654: str     x0, [sp, #768]
+         :            asm volatile(
+    0.00 :   422658: ldr     x0, [x18]
+    0.00 :   42265c: ldr     x1, [x18, #8]
+    0.00 :   422660: ldr     x4, [x18, #16]
+    0.00 :   422664: ldr     x5, [x18, #24]
+    0.00 :   422668: ldr     x2, [x18, #32]
+    0.00 :   42266c: ldr     x3, [x18, #40]
+    0.00 :   422670: ldr     x6, [x18, #48]
+    0.00 :   422674: ldr     x7, [x18, #56]
+    0.00 :   422678: ldr     x8, [x18, #64]
+    0.00 :   42267c: ldr     x9, [x18, #72]
+    0.00 :   422680: ldr     x10, [x18, #80]
+    0.00 :   422684: ldr     x27, [x18, #88]
+    0.00 :   422688: ldr     x19, [x18, #224]
+    0.00 :   42268c: ldr     x14, [x18, #104]
+    0.00 :   422690: ldr     x24, [x18, #112]
+    0.00 :   422694: ldr     x25, [x18, #120]
+    0.00 :   422698: ldr     x26, [x18, #128]
+    0.00 :   42269c: ldr     x17, [x18, #152]
+    0.00 :   4226a0: ldr     x22, [x18, #160]
+    0.00 :   4226a4: add     x28, x17, x17
+    0.00 :   4226a8: add     x28, x28, x22
+    0.00 :   4226ac: ldr     x22, [x18, #176]
+    0.00 :   4226b0: whilelo p3.s, xzr, x22
+    0.00 :   4226b4: mov     x11, #0x0                       // #0
+    0.00 :   4226b8: ptrue   p0.s
+    0.00 :   4226bc: ldr     x13, [x18, #184]
+    0.00 :   4226c0: ldr     x3, [x18, #248]
+    0.00 :   4226c4: mov     z31.s, #0
+    0.00 :   4226c8: mov     z16.s, #0
+    0.00 :   4226cc: mov     z17.s, #0
+    0.00 :   4226d0: mov     z18.s, #0
+    0.00 :   4226d4: mov     z19.s, #0
+    0.00 :   4226d8: mov     z20.s, #0
+    0.00 :   4226dc: mov     z21.s, #0
+    0.00 :   4226e0: mov     z22.s, #0
+    0.00 :   4226e4: mov     z23.s, #0
+    0.00 :   4226e8: add     x21, x0, x26
+    0.00 :   4226ec: ldr     x12, [x18, #240]
+    0.00 :   4226f0: add     x16, x17, x12
+    0.00 :   4226f4: sub     x17, x28, x17
+    0.00 :   4226f8: add     x22, x0, x1
+    0.00 :   4226fc: cmp     x8, #0x1
+    0.00 :   422700: csel    x22, x0, x22, eq  // eq = none
+    0.00 :   422704: mov     x23, x17
+    0.00 :   422708: ldr     x12, [x18, #168]
+    0.00 :   42270c: cbz     x12, 422730 <roll_worker+0x1a20>
+    0.00 :   422710: prfm    pldl2keep, [x21]
+    0.00 :   422714: ld1w    {z24.s}, p0/z, [x22]
+    0.00 :   422718: st1w    {z24.s}, p0, [x23]
+    0.00 :   42271c: add     x21, x21, #0x40
+    0.00 :   422720: add     x22, x22, #0x40
+    0.00 :   422724: add     x23, x23, #0x40
+    0.00 :   422728: subs    x12, x12, #0x1
+    0.00 :   42272c: b.ne    422710 <roll_worker+0x1a00>  // b.any
+    0.00 :   422730: prfm    pldl2keep, [x21]
+    0.00 :   422734: ld1w    {z24.s}, p3/z, [x22]
+    0.00 :   422738: st1w    {z24.s}, p3, [x23]
+    0.00 :   42273c: ldr     x21, [x18, #232]
+    0.00 :   422740: add     x21, x9, x21
+    0.00 :   422744: prfm    pstl2keep, [x21]
+    0.00 :   422748: prfm    pstl2keep, [x21, #64]
+    0.00 :   42274c: prfm    pstl2keep, [x21, #128]
+    0.00 :   422750: prfm    pstl2keep, [x21, #192]
+    0.00 :   422754: mov     x15, x7
+    0.00 :   422758: nop
+    0.00 :   42275c: nop
+    0.00 :   422760: ld1w    {z0.s}, p0/z, [x16]
+    0.00 :   422764: ld1w    {z1.s}, p0/z, [x16, #1, mul vl]
+    0.00 :   422768: ld1w    {z2.s}, p0/z, [x16, #2, mul vl]
+    0.00 :   42276c: ld1w    {z3.s}, p0/z, [x16, #3, mul vl]
+    0.00 :   422770: ld1w    {z4.s}, p0/z, [x2]
+    0.00 :   422774: fmopa   za0.s, p0/m, p0/m, z0.s, z4.s
+    0.00 :   422778: fmopa   za1.s, p0/m, p0/m, z1.s, z4.s
+    0.00 :   42277c: fmopa   za2.s, p0/m, p0/m, z2.s, z4.s
+    0.00 :   422780: fmopa   za3.s, p0/m, p0/m, z3.s, z4.s
+    0.00 :   422784: ld1rw   {z5.s}, p0/z, [x13]
+    0.00 :   422788: ld1rw   {z6.s}, p0/z, [x3]
+    0.00 :   42278c: fmla    z16.s, p0/m, z0.s, z5.s
+    0.00 :   422790: fmla    z17.s, p0/m, z1.s, z5.s
+    0.00 :   422794: fmla    z18.s, p0/m, z2.s, z5.s
+    0.00 :   422798: fmla    z19.s, p0/m, z3.s, z5.s
+    0.00 :   42279c: fmla    z20.s, p0/m, z0.s, z6.s
+    0.00 :   4227a0: fmla    z21.s, p0/m, z1.s, z6.s
+    0.00 :   4227a4: fmla    z22.s, p0/m, z2.s, z6.s
+    0.00 :   4227a8: fmla    z23.s, p0/m, z3.s, z6.s
+    0.00 :   4227ac: add     x13, x13, #0x4
+    0.00 :   4227b0: add     x3, x3, #0x4
+    0.00 :   4227b4: add     x16, x16, #0x4
+    0.00 :   4227b8: add     x2, x2, #0x40
+    0.00 :   4227bc: subs    x15, x15, #0x1
+    0.00 :   4227c0: b.ne    422760 <roll_worker+0x1a50>  // b.any
+    0.00 :   4227c4: cmp     x2, x5
+    0.00 :   4227c8: csel    x2, x4, x2, eq  // eq = none
+    0.00 :   4227cc: ldr     x24, [x18, #208]
+    0.00 :   4227d0: cmp     x13, x24
+    0.00 :   4227d4: ldr     x22, [x18, #192]
+    0.00 :   4227d8: csel    x13, x22, x13, eq  // eq = none
+    0.00 :   4227dc: cmp     x3, x24
+    0.00 :   4227e0: csel    x3, x22, x3, eq  // eq = none
+    0.00 :   4227e4: cmp     x11, x14
+    0.00 :   4227e8: csel    x20, x9, x10, cs  // cs = hs, nlast
+    0.00 :   4227ec: ldr     x24, [x18, #216]
+    0.00 :   4227f0: cmp     x27, x24
+    0.00 :   4227f4: b.eq    422848 <roll_worker+0x1b38>  // b.none
+    0.00 :   4227f8: ldr     x24, [x18, #256]
+    0.00 :   4227fc: cmp     x27, x24
+    0.00 :   422800: b.eq    42286c <roll_worker+0x1b5c>  // b.none
+    0.00 :   422804: ldr     x24, [x18, #112]
+    0.00 :   422808: cmp     x27, x24
+    0.00 :   42280c: b.cs    42288c <roll_worker+0x1b7c>  // b.hs, b.nlast
+    0.00 :   422810: and     w12, w27, #0xf
+    0.00 :   422814: mov     z5.s, p0/m, za0v.s[w12, 0]
+    0.00 :   422818: mov     z6.s, p0/m, za1v.s[w12, 0]
+    0.00 :   42281c: mov     z7.s, p0/m, za2v.s[w12, 0]
+    0.00 :   422820: mov     z8.s, p0/m, za3v.s[w12, 0]
+    0.00 :   422824: st1w    {z5.s}, p0, [x20]
+    0.00 :   422828: st1w    {z6.s}, p0, [x20, #1, mul vl]
+    0.00 :   42282c: st1w    {z7.s}, p0, [x20, #2, mul vl]
+    0.00 :   422830: st1w    {z8.s}, p0, [x20, #3, mul vl]
+    0.00 :   422834: mov     za0v.s[w12, 0], p0/m, z31.s
+    0.00 :   422838: mov     za1v.s[w12, 0], p0/m, z31.s
+    0.00 :   42283c: mov     za2v.s[w12, 0], p0/m, z31.s
+    0.00 :   422840: mov     za3v.s[w12, 0], p0/m, z31.s
+    0.00 :   422844: b       42288c <roll_worker+0x1b7c>
+    0.00 :   422848: st1w    {z16.s}, p0, [x20]
+    0.00 :   42284c: st1w    {z17.s}, p0, [x20, #1, mul vl]
+    0.00 :   422850: st1w    {z18.s}, p0, [x20, #2, mul vl]
+    0.00 :   422854: st1w    {z19.s}, p0, [x20, #3, mul vl]
+    0.00 :   422858: mov     z16.s, #0
+    0.00 :   42285c: mov     z17.s, #0
+    0.00 :   422860: mov     z18.s, #0
+    0.00 :   422864: mov     z19.s, #0
+    0.00 :   422868: b       42288c <roll_worker+0x1b7c>
+    0.00 :   42286c: st1w    {z20.s}, p0, [x20]
+    0.00 :   422870: st1w    {z21.s}, p0, [x20, #1, mul vl]
+    0.00 :   422874: st1w    {z22.s}, p0, [x20, #2, mul vl]
+    0.00 :   422878: st1w    {z23.s}, p0, [x20, #3, mul vl]
+    0.00 :   42287c: mov     z20.s, #0
+    0.00 :   422880: mov     z21.s, #0
+    0.00 :   422884: mov     z22.s, #0
+    0.00 :   422888: mov     z23.s, #0
+    0.00 :   42288c: add     x27, x27, #0x1
+    0.00 :   422890: cmp     x27, x6
+    0.00 :   422894: csel    x27, xzr, x27, eq  // eq = none
+    0.00 :   422898: add     x0, x0, x1
+    0.00 :   42289c: add     x9, x9, x19
+    0.00 :   4228a0: add     x11, x11, #0x1
+    0.00 :   4228a4: subs    x8, x8, #0x1
+    0.00 :   4228a8: b.ne    4226e8 <roll_worker+0x19d8>  // b.any
+         :            }
+    0.00 :   4228ac: ldr     x18, [sp, #312]
+    0.00 :   4228b0: b       4216d8 <roll_worker+0x9c8>

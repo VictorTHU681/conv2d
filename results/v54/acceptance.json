@@ -1,0 +1,92 @@
+{
+  "baseline_commit": "376da01",
+  "integrated_main": "944c6b1",
+  "source_sha256": "68c449b03c33f776fb7d91d9d86982c2d207eeee4c9c892b26c1736919cf1ac9",
+  "archives_sha256": {
+    "conv.zip": "e79c5eadc42a910bfeb8744a6784d592927c7462f6b516d8f31de77b4ca20027",
+    "conv_nf3.zip": "425c00b03f200136786dc752d94a7dc7d2fa2ba32adafd404f9c5b96d497a5ec",
+    "conv_diag.zip": "710722ea85e5d824989ba8d98761abcd6400b524795dc14197ccd45ca146eeac"
+  },
+  "official_job": 1579815,
+  "state_job": 1579816,
+  "archive_job": 1579819,
+  "official_processes": 48,
+  "official_max_error": 0,
+  "state_cases": 261,
+  "reuse_calls": 32,
+  "path_cases": 318,
+  "performance": [
+    {
+      "kernel": 39,
+      "memory": "DDR",
+      "baseline": 9814.0001,
+      "v54": 14050.0458,
+      "gain_percent": 43.163293833673386,
+      "processes_per_variant": 3,
+      "timed_calls_per_process": 5
+    },
+    {
+      "kernel": 39,
+      "memory": "HBM",
+      "baseline": 14017.1248,
+      "v54": 14322.434,
+      "gain_percent": 2.1781157288404795,
+      "processes_per_variant": 3,
+      "timed_calls_per_process": 5
+    },
+    {
+      "kernel": 41,
+      "memory": "DDR",
+      "baseline": 9010.4351,
+      "v54": 13588.8038,
+      "gain_percent": 50.81184925242954,
+      "processes_per_variant": 3,
+      "timed_calls_per_process": 5
+    },
+    {
+      "kernel": 41,
+      "memory": "HBM",
+      "baseline": 13984.7902,
+      "v54": 14147.089,
+      "gain_percent": 1.1605379678845784,
+      "processes_per_variant": 3,
+      "timed_calls_per_process": 5
+    },
+    {
+      "kernel": 55,
+      "memory": "DDR",
+      "baseline": 11113.4739,
+      "v54": 14359.747,
+      "gain_percent": 29.210246311911515,
+      "processes_per_variant": 3,
+      "timed_calls_per_process": 5
+    },
+    {
+      "kernel": 55,
+      "memory": "HBM",
+      "baseline": 14343.6138,
+      "v54": 14439.1685,
+      "gain_percent": 0.6661828834237049,
+      "processes_per_variant": 3,
+      "timed_calls_per_process": 5
+    },
+    {
+      "kernel": 81,
+      "memory": "DDR",
+      "baseline": 14331.3249,
+      "v54": 14464.36,
+      "gain_percent": 0.9282819343520821,
+      "processes_per_variant": 3,
+      "timed_calls_per_process": 5
+    },
+    {
+      "kernel": 81,
+      "memory": "HBM",
+      "baseline": 14268.812,
+      "v54": 14426.8592,
+      "gain_percent": 1.1076409164266776,
+      "processes_per_variant": 3,
+      "timed_calls_per_process": 5
+    }
+  ]
+}

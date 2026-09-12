@@ -1,0 +1,18 @@
+# To display the perf.data header info, please use --header/--header-only options.
+#
+#
+# Total Lost Samples: 0
+#
+# Samples: 871K of event 'cycles:u'
+# Event count (approx.): 87180615340
+#
+# Overhead  Command  Shared Object          Symbol                      
+# ........  .......  .....................  ............................
+#
+    73.81%  drv      drv                    [.] pool_worker
+    24.05%  drv      drv                    [.] roll_worker
+
+
+#
+# (Tip: Generate a script for your data: perf script -g <lang>)
+#
