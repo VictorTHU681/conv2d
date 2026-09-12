@@ -19,6 +19,18 @@ def clean_resume(source):
     return source
 
 
+def release_resume(source):
+    source = clean_resume(source)
+    # The new scheduler uses per-piece progress, not the former per-thread queue.
+    source = '\n'.join(line for line in source.split('\n')
+                       if not line.startswith('static padded_u64 g_rwork[')
+                       and 'g_rwork[t].v = ' not in line)
+    source = source.replace('    long step = 8 * KH;',
+        '    // Eight complete kernel-row periods preserve locality and amortize state transfers.\n'
+        '    long step = 8 * KH;')
+    return source
+
+
 def resumable(source, block_rows):
     source = carry_blocks(source, block_rows)
     source = source.replace('float* carry; int nthr_alloc;',

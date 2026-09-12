@@ -5,7 +5,7 @@ import hashlib
 import subprocess
 import re
 from v54_carry import carry_blocks
-from v54_resume import resumable, clean_resume
+from v54_resume import resumable, clean_resume, release_resume
 from v54_folds import multi_fold
 from v54_share import share_tables
 
@@ -169,6 +169,7 @@ def main():
     variants['period16'] = resumable(variants['sharegather'], '16 * KH')
     variants['candidate'] = clean_resume(variants['shared512'])
     variants['candidatephase'] = phase_profile(variants['candidate'])
+    variants['release'] = release_resume(variants['period8'])
     out = Path('build/v54')
     out.mkdir(parents=True, exist_ok=True)
     for name, text in variants.items():

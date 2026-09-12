@@ -1,0 +1,262 @@
+HOST cn20490 2026-09-12T20:00:06+08:00
+pid 2989710's current affinity list: 37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+PLACEMENT cpu_node=1 hbm_node=17
+Cpus_allowed_list:	37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+Mems_allowed_list:	0-31
+1549055
+policy: default
+preferred node: current
+physcpubind: 37 75 113 151 189 227 265 303 341 379 417 455 493 531 569 607 
+cpubind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+nodebind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 
+preferred: 
+EFFECTIVE_PLACEMENT
+policy: preferred
+preferred node: 17
+physcpubind: 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 
+cpubind: 1 
+nodebind: 1 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 
+preferred: 17 
+PHASE memory=DDR variant=phase shape=4096 6144 39 39
+[v54-phase] prepare_us=468.45 host_pack_us=310.00 workers_us=28852.50 pack_worker_mean_us=0.84 pack_worker_max_us=4.07 total_us=29630.95
+[roll] thr ms min/avg/max 0.004/6.258/11.516 | 周期/tile步: pair 2.34 single 0.00 8x2 0.00 4x4 4.73 | 份额 %: 77.7 0.0 0.0 22.3
+[v54-phase] prepare_us=6.01 host_pack_us=79.36 workers_us=7555.02 pack_worker_mean_us=4.54 pack_worker_max_us=13.79 total_us=7640.39
+[roll] thr ms min/avg/max 6.261/6.875/7.545 | 周期/tile步: pair 2.60 single 0.00 8x2 0.00 4x4 4.97 | 份额 %: 78.7 0.0 0.0 21.3
+[v54-phase] prepare_us=5.86 host_pack_us=79.66 workers_us=7555.21 pack_worker_mean_us=3.40 pack_worker_max_us=10.02 total_us=7640.73
+[roll] thr ms min/avg/max 6.196/6.838/7.552 | 周期/tile步: pair 2.58 single 0.00 8x2 0.00 4x4 5.02 | 份额 %: 78.4 0.0 0.0 21.6
+[v54-phase] prepare_us=5.87 host_pack_us=79.70 workers_us=7546.14 pack_worker_mean_us=4.40 pack_worker_max_us=16.41 total_us=7631.71
+[roll] thr ms min/avg/max 6.263/6.855/7.544 | 周期/tile步: pair 2.60 single 0.00 8x2 0.00 4x4 4.97 | 份额 %: 78.6 0.0 0.0 21.4
+[v54-phase] prepare_us=5.41 host_pack_us=79.39 workers_us=7479.81 pack_worker_mean_us=3.83 pack_worker_max_us=14.03 total_us=7564.61
+[roll] thr ms min/avg/max 6.140/6.871/7.475 | 周期/tile步: pair 2.58 single 0.00 8x2 0.00 4x4 5.11 | 份额 %: 78.1 0.0 0.0 21.9
+  4096 x  6144     39 x    39 run0    7.818 ms     9641.6 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    7.832 ms     9623.7 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    7.736 ms     9743.0 GFLOPS PASS
+  4096 x  6144     39 x    39 best    7.736 ms     9743.0 GFLOPS | avg    7.795 ms     9669.2 GFLOPS  PASS
+PHASE memory=DDR variant=candidatephase shape=4096 6144 39 39
+[v54-phase] prepare_us=716.82 host_pack_us=268.16 workers_us=29553.20 pack_worker_mean_us=0.53 pack_worker_max_us=0.87 total_us=30538.18
+[roll] thr ms min/avg/max 0.005/5.333/10.521 | 周期/tile步: pair 2.15 single 0.00 8x2 0.00 4x4 2.85 | 份额 %: 84.2 0.0 0.0 15.8
+[v54-phase] prepare_us=9.16 host_pack_us=32.31 workers_us=5510.17 pack_worker_mean_us=2.81 pack_worker_max_us=11.04 total_us=5551.64
+[roll] thr ms min/avg/max 5.276/5.335/5.500 | 周期/tile步: pair 2.16 single 0.00 8x2 0.00 4x4 2.80 | 份额 %: 84.4 0.0 0.0 15.6
+[v54-phase] prepare_us=8.61 host_pack_us=36.88 workers_us=5429.48 pack_worker_mean_us=1.58 pack_worker_max_us=4.91 total_us=5474.97
+[roll] thr ms min/avg/max 5.268/5.329/5.426 | 周期/tile步: pair 2.16 single 0.00 8x2 0.00 4x4 2.80 | 份额 %: 84.5 0.0 0.0 15.5
+[v54-phase] prepare_us=7.71 host_pack_us=30.31 workers_us=5429.36 pack_worker_mean_us=2.72 pack_worker_max_us=7.77 total_us=5467.38
+[roll] thr ms min/avg/max 5.269/5.325/5.427 | 周期/tile步: pair 2.16 single 0.00 8x2 0.00 4x4 2.77 | 份额 %: 84.6 0.0 0.0 15.4
+[v54-phase] prepare_us=7.84 host_pack_us=29.64 workers_us=5426.23 pack_worker_mean_us=3.65 pack_worker_max_us=10.88 total_us=5463.71
+[roll] thr ms min/avg/max 5.265/5.321/5.421 | 周期/tile步: pair 2.16 single 0.00 8x2 0.00 4x4 2.77 | 份额 %: 84.6 0.0 0.0 15.4
+  4096 x  6144     39 x    39 run0    5.632 ms    13383.4 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.644 ms    13354.6 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.618 ms    13416.2 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.618 ms    13416.2 GFLOPS | avg    5.631 ms    13384.7 GFLOPS  PASS
+PHASE memory=DDR variant=phase shape=6144 4096 41 41
+[v54-phase] prepare_us=385.20 host_pack_us=252.05 workers_us=29299.11 pack_worker_mean_us=0.67 pack_worker_max_us=1.69 total_us=29936.36
+[roll] thr ms min/avg/max 0.007/7.695/12.713 | 周期/tile步: pair 2.74 single 0.00 8x2 3.09 4x4 0.00 | 份额 %: 77.5 0.0 22.5 0.0
+[v54-phase] prepare_us=4.92 host_pack_us=83.31 workers_us=9337.71 pack_worker_mean_us=2.50 pack_worker_max_us=10.00 total_us=9425.94
+[roll] thr ms min/avg/max 8.486/8.695/9.318 | 周期/tile步: pair 3.11 single 0.00 8x2 3.41 4x4 0.00 | 份额 %: 77.9 0.0 22.1 0.0
+[v54-phase] prepare_us=4.95 host_pack_us=74.32 workers_us=9392.16 pack_worker_mean_us=2.07 pack_worker_max_us=10.57 total_us=9471.43
+[roll] thr ms min/avg/max 8.517/8.697/9.381 | 周期/tile步: pair 3.11 single 0.00 8x2 3.42 4x4 0.00 | 份额 %: 77.9 0.0 22.1 0.0
+[v54-phase] prepare_us=4.71 host_pack_us=78.86 workers_us=9356.22 pack_worker_mean_us=2.33 pack_worker_max_us=9.73 total_us=9439.79
+[roll] thr ms min/avg/max 8.454/8.673/9.344 | 周期/tile步: pair 3.10 single 0.00 8x2 3.42 4x4 0.00 | 份额 %: 77.9 0.0 22.1 0.0
+[v54-phase] prepare_us=5.10 host_pack_us=78.80 workers_us=9345.29 pack_worker_mean_us=3.05 pack_worker_max_us=10.30 total_us=9429.19
+[roll] thr ms min/avg/max 8.487/8.707/9.330 | 周期/tile步: pair 3.12 single 0.00 8x2 3.42 4x4 0.00 | 份额 %: 77.9 0.0 22.1 0.0
+  6144 x  4096     41 x    41 run0    9.637 ms     8637.2 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    9.619 ms     8653.6 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    9.586 ms     8683.3 GFLOPS PASS
+  6144 x  4096     41 x    41 best    9.586 ms     8683.3 GFLOPS | avg    9.614 ms     8658.0 GFLOPS  PASS
+PHASE memory=DDR variant=candidatephase shape=6144 4096 41 41
+[v54-phase] prepare_us=639.51 host_pack_us=181.29 workers_us=19445.52 pack_worker_mean_us=0.53 pack_worker_max_us=0.73 total_us=20266.32
+[roll] thr ms min/avg/max 0.006/6.008/13.415 | 周期/tile步: pair 2.15 single 0.00 8x2 2.28 4x4 0.00 | 份额 %: 78.5 0.0 21.5 0.0
+[v54-phase] prepare_us=7.95 host_pack_us=28.68 workers_us=6259.48 pack_worker_mean_us=2.23 pack_worker_max_us=8.69 total_us=6296.11
+[roll] thr ms min/avg/max 6.131/6.185/6.255 | 周期/tile步: pair 2.22 single 0.00 8x2 2.35 4x4 0.00 | 份额 %: 78.5 0.0 21.5 0.0
+[v54-phase] prepare_us=7.81 host_pack_us=30.31 workers_us=6257.11 pack_worker_mean_us=1.82 pack_worker_max_us=9.08 total_us=6295.23
+[roll] thr ms min/avg/max 6.128/6.181/6.254 | 周期/tile步: pair 2.22 single 0.00 8x2 2.35 4x4 0.00 | 份额 %: 78.5 0.0 21.5 0.0
+[v54-phase] prepare_us=7.13 host_pack_us=25.83 workers_us=6243.43 pack_worker_mean_us=2.32 pack_worker_max_us=6.87 total_us=6276.39
+[roll] thr ms min/avg/max 6.107/6.163/6.241 | 周期/tile步: pair 2.21 single 0.00 8x2 2.33 4x4 0.00 | 份额 %: 78.6 0.0 21.4 0.0
+[v54-phase] prepare_us=6.89 host_pack_us=24.89 workers_us=6241.97 pack_worker_mean_us=3.32 pack_worker_max_us=8.43 total_us=6273.75
+[roll] thr ms min/avg/max 6.108/6.164/6.240 | 周期/tile步: pair 2.21 single 0.00 8x2 2.33 4x4 0.00 | 份额 %: 78.6 0.0 21.4 0.0
+  6144 x  4096     41 x    41 run0    6.459 ms    12887.4 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    6.457 ms    12890.3 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    6.452 ms    12901.5 GFLOPS PASS
+  6144 x  4096     41 x    41 best    6.452 ms    12901.5 GFLOPS | avg    6.456 ms    12893.1 GFLOPS  PASS
+PHASE memory=DDR variant=phase shape=4256 6390 55 55
+[v54-phase] prepare_us=552.96 host_pack_us=11.40 workers_us=21076.77 pack_worker_mean_us=14.01 pack_worker_max_us=503.14 total_us=21641.13
+[roll] thr ms min/avg/max 1.655/12.422/18.088 | 周期/tile步: pair 2.31 single 2.38 8x2 0.00 4x4 3.14 | 份额 %: 58.7 30.3 0.0 11.0
+[v54-phase] prepare_us=7.70 host_pack_us=1.35 workers_us=14384.19 pack_worker_mean_us=88.39 pack_worker_max_us=140.18 total_us=14393.24
+[roll] thr ms min/avg/max 12.790/13.158/14.377 | 周期/tile步: pair 2.42 single 2.51 8x2 0.00 4x4 3.41 | 份额 %: 58.4 30.2 0.0 11.3
+[v54-phase] prepare_us=7.94 host_pack_us=1.07 workers_us=14626.45 pack_worker_mean_us=284.37 pack_worker_max_us=309.97 total_us=14635.46
+[roll] thr ms min/avg/max 13.013/13.362/14.623 | 周期/tile步: pair 2.43 single 2.51 8x2 0.00 4x4 3.41 | 份额 %: 58.5 30.2 0.0 11.3
+[v54-phase] prepare_us=7.59 host_pack_us=1.13 workers_us=14452.04 pack_worker_mean_us=110.22 pack_worker_max_us=158.36 total_us=14460.76
+[roll] thr ms min/avg/max 12.858/13.212/14.449 | 周期/tile步: pair 2.43 single 2.51 8x2 0.00 4x4 3.43 | 份额 %: 58.5 30.2 0.0 11.4
+[v54-phase] prepare_us=7.63 host_pack_us=1.43 workers_us=14540.41 pack_worker_mean_us=137.63 pack_worker_max_us=178.18 total_us=14549.47
+[roll] thr ms min/avg/max 12.916/13.278/14.538 | 周期/tile步: pair 2.43 single 2.52 8x2 0.00 4x4 3.44 | 份额 %: 58.4 30.2 0.0 11.4
+  4256 x  6390     55 x    55 run0   14.795 ms    10887.2 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   14.635 ms    11005.9 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   14.706 ms    10952.6 GFLOPS PASS
+  4256 x  6390     55 x    55 best   14.635 ms    11005.9 GFLOPS | avg   14.712 ms    10948.4 GFLOPS  PASS
+PHASE memory=DDR variant=candidatephase shape=4256 6390 55 55
+[v54-phase] prepare_us=863.15 host_pack_us=289.67 workers_us=19978.90 pack_worker_mean_us=0.78 pack_worker_max_us=1.31 total_us=21131.72
+[roll] thr ms min/avg/max 0.008/11.137/17.962 | 周期/tile步: pair 2.11 single 2.11 8x2 0.00 4x4 2.49 | 份额 %: 60.2 30.1 0.0 9.7
+[v54-phase] prepare_us=10.61 host_pack_us=52.56 workers_us=11151.70 pack_worker_mean_us=3.79 pack_worker_max_us=17.06 total_us=11214.87
+[roll] thr ms min/avg/max 11.094/11.121/11.147 | 周期/tile步: pair 2.11 single 2.12 8x2 0.00 4x4 2.49 | 份额 %: 60.1 30.2 0.0 9.8
+[v54-phase] prepare_us=12.93 host_pack_us=64.89 workers_us=11144.27 pack_worker_mean_us=2.63 pack_worker_max_us=10.88 total_us=11222.09
+[roll] thr ms min/avg/max 11.091/11.114/11.143 | 周期/tile步: pair 2.11 single 2.12 8x2 0.00 4x4 2.49 | 份额 %: 60.1 30.2 0.0 9.8
+[v54-phase] prepare_us=9.99 host_pack_us=54.74 workers_us=11144.15 pack_worker_mean_us=3.21 pack_worker_max_us=12.77 total_us=11208.88
+[roll] thr ms min/avg/max 11.089/11.116/11.142 | 周期/tile步: pair 2.11 single 2.12 8x2 0.00 4x4 2.49 | 份额 %: 60.0 30.2 0.0 9.8
+[v54-phase] prepare_us=10.77 host_pack_us=53.72 workers_us=11146.38 pack_worker_mean_us=3.50 pack_worker_max_us=14.76 total_us=11210.87
+[roll] thr ms min/avg/max 11.085/11.116/11.140 | 周期/tile步: pair 2.11 single 2.12 8x2 0.00 4x4 2.49 | 份额 %: 60.1 30.2 0.0 9.8
+  4256 x  6390     55 x    55 run0   11.393 ms    14138.1 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.388 ms    14144.8 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.380 ms    14154.5 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.380 ms    14154.5 GFLOPS | avg   11.387 ms    14145.8 GFLOPS  PASS
+PHASE memory=DDR variant=phase shape=6390 4256 81 81
+[v54-phase] prepare_us=493.20 host_pack_us=10.52 workers_us=32244.90 pack_worker_mean_us=17.86 pack_worker_max_us=643.49 total_us=32748.62
+[roll] thr ms min/avg/max 16.323/23.625/29.742 | 周期/tile步: pair 2.04 single 2.08 8x2 0.00 4x4 0.00 | 份额 %: 79.6 20.4 0.0 0.0
+[v54-phase] prepare_us=8.33 host_pack_us=0.86 workers_us=23875.46 pack_worker_mean_us=93.97 pack_worker_max_us=136.27 total_us=23884.65
+[roll] thr ms min/avg/max 23.521/23.645/23.868 | 周期/tile步: pair 2.03 single 2.08 8x2 0.00 4x4 0.00 | 份额 %: 79.5 20.5 0.0 0.0
+[v54-phase] prepare_us=7.82 host_pack_us=0.79 workers_us=24456.21 pack_worker_mean_us=236.64 pack_worker_max_us=316.55 total_us=24464.82
+[roll] thr ms min/avg/max 23.650/23.799/24.443 | 周期/tile步: pair 2.03 single 2.08 8x2 0.00 4x4 0.00 | 份额 %: 79.5 20.5 0.0 0.0
+[v54-phase] prepare_us=7.63 host_pack_us=1.06 workers_us=23981.96 pack_worker_mean_us=168.91 pack_worker_max_us=230.04 total_us=23990.65
+[roll] thr ms min/avg/max 23.582/23.717/23.975 | 周期/tile步: pair 2.03 single 2.08 8x2 0.00 4x4 0.00 | 份额 %: 79.5 20.5 0.0 0.0
+[v54-phase] prepare_us=7.74 host_pack_us=1.18 workers_us=23835.69 pack_worker_mean_us=138.29 pack_worker_max_us=215.83 total_us=23844.61
+[roll] thr ms min/avg/max 23.518/23.685/23.833 | 周期/tile步: pair 2.03 single 2.08 8x2 0.00 4x4 0.00 | 份额 %: 79.5 20.5 0.0 0.0
+  6390 x  4256     81 x    81 run0   24.649 ms    14028.0 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   24.226 ms    14272.7 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   24.021 ms    14394.6 GFLOPS PASS
+  6390 x  4256     81 x    81 best   24.021 ms    14394.6 GFLOPS | avg   24.299 ms    14230.1 GFLOPS  PASS
+PHASE memory=DDR variant=candidatephase shape=6390 4256 81 81
+[v54-phase] prepare_us=727.44 host_pack_us=124.04 workers_us=32986.15 pack_worker_mean_us=1.06 pack_worker_max_us=1.43 total_us=33837.63
+[roll] thr ms min/avg/max 4.069/23.793/29.381 | 周期/tile步: pair 2.05 single 2.08 8x2 0.00 4x4 0.00 | 份额 %: 79.6 20.4 0.0 0.0
+[v54-phase] prepare_us=10.33 host_pack_us=42.50 workers_us=23793.31 pack_worker_mean_us=5.42 pack_worker_max_us=17.38 total_us=23846.14
+[roll] thr ms min/avg/max 23.679/23.733/23.784 | 周期/tile步: pair 2.04 single 2.08 8x2 0.00 4x4 0.00 | 份额 %: 79.6 20.4 0.0 0.0
+[v54-phase] prepare_us=13.67 host_pack_us=60.27 workers_us=23796.50 pack_worker_mean_us=2.98 pack_worker_max_us=13.12 total_us=23870.44
+[roll] thr ms min/avg/max 23.694/23.737/23.790 | 周期/tile步: pair 2.04 single 2.08 8x2 0.00 4x4 0.00 | 份额 %: 79.6 20.4 0.0 0.0
+[v54-phase] prepare_us=10.77 host_pack_us=42.09 workers_us=23785.48 pack_worker_mean_us=4.86 pack_worker_max_us=20.69 total_us=23838.34
+[roll] thr ms min/avg/max 23.674/23.735/23.781 | 周期/tile步: pair 2.04 single 2.08 8x2 0.00 4x4 0.00 | 份额 %: 79.6 20.4 0.0 0.0
+[v54-phase] prepare_us=9.33 host_pack_us=42.07 workers_us=23784.77 pack_worker_mean_us=4.36 pack_worker_max_us=18.04 total_us=23836.17
+[roll] thr ms min/avg/max 23.675/23.736/23.781 | 周期/tile步: pair 2.04 single 2.08 8x2 0.00 4x4 0.00 | 份额 %: 79.6 20.4 0.0 0.0
+  6390 x  4256     81 x    81 run0   24.049 ms    14377.8 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   24.042 ms    14382.1 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   24.017 ms    14397.1 GFLOPS PASS
+  6390 x  4256     81 x    81 best   24.017 ms    14397.1 GFLOPS | avg   24.036 ms    14385.7 GFLOPS  PASS
+PHASE memory=HBM variant=phase shape=4096 6144 39 39
+[v54-phase] prepare_us=495.96 host_pack_us=321.91 workers_us=20992.12 pack_worker_mean_us=0.57 pack_worker_max_us=0.88 total_us=21809.99
+[roll] thr ms min/avg/max 0.006/5.227/9.414 | 周期/tile步: pair 2.15 single 0.00 8x2 0.00 4x4 2.60 | 份额 %: 85.4 0.0 0.0 14.6
+[v54-phase] prepare_us=5.63 host_pack_us=87.04 workers_us=5291.80 pack_worker_mean_us=2.66 pack_worker_max_us=13.04 total_us=5384.47
+[roll] thr ms min/avg/max 5.155/5.228/5.283 | 周期/tile步: pair 2.15 single 0.00 8x2 0.00 4x4 2.61 | 份额 %: 85.3 0.0 0.0 14.7
+[v54-phase] prepare_us=6.02 host_pack_us=82.68 workers_us=5282.71 pack_worker_mean_us=2.33 pack_worker_max_us=7.78 total_us=5371.41
+[roll] thr ms min/avg/max 5.176/5.232/5.271 | 周期/tile步: pair 2.15 single 0.00 8x2 0.00 4x4 2.62 | 份额 %: 85.3 0.0 0.0 14.7
+[v54-phase] prepare_us=5.81 host_pack_us=77.26 workers_us=5277.06 pack_worker_mean_us=4.14 pack_worker_max_us=15.92 total_us=5360.13
+[roll] thr ms min/avg/max 5.169/5.234/5.275 | 周期/tile步: pair 2.15 single 0.00 8x2 0.00 4x4 2.61 | 份额 %: 85.3 0.0 0.0 14.7
+[v54-phase] prepare_us=5.95 host_pack_us=82.25 workers_us=5350.55 pack_worker_mean_us=4.43 pack_worker_max_us=13.92 total_us=5438.75
+[roll] thr ms min/avg/max 5.166/5.241/5.340 | 周期/tile步: pair 2.15 single 0.00 8x2 0.00 4x4 2.61 | 份额 %: 85.3 0.0 0.0 14.7
+  4096 x  6144     39 x    39 run0    5.533 ms    13623.7 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.546 ms    13591.9 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.601 ms    13457.5 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.533 ms    13623.7 GFLOPS | avg    5.560 ms    13557.3 GFLOPS  PASS
+PHASE memory=HBM variant=candidatephase shape=4096 6144 39 39
+[v54-phase] prepare_us=728.79 host_pack_us=249.76 workers_us=19303.87 pack_worker_mean_us=0.50 pack_worker_max_us=0.74 total_us=20282.42
+[roll] thr ms min/avg/max 0.007/5.225/11.882 | 周期/tile步: pair 2.14 single 0.00 8x2 0.00 4x4 2.58 | 份额 %: 85.4 0.0 0.0 14.6
+[v54-phase] prepare_us=8.20 host_pack_us=31.95 workers_us=5207.18 pack_worker_mean_us=3.03 pack_worker_max_us=10.92 total_us=5247.33
+[roll] thr ms min/avg/max 5.107/5.168/5.204 | 周期/tile步: pair 2.12 single 0.00 8x2 0.00 4x4 2.53 | 份额 %: 85.5 0.0 0.0 14.5
+[v54-phase] prepare_us=9.16 host_pack_us=34.17 workers_us=5204.05 pack_worker_mean_us=2.00 pack_worker_max_us=7.91 total_us=5247.38
+[roll] thr ms min/avg/max 5.092/5.165/5.199 | 周期/tile步: pair 2.12 single 0.00 8x2 0.00 4x4 2.53 | 份额 %: 85.5 0.0 0.0 14.5
+[v54-phase] prepare_us=7.99 host_pack_us=28.81 workers_us=5207.95 pack_worker_mean_us=2.34 pack_worker_max_us=8.14 total_us=5244.75
+[roll] thr ms min/avg/max 5.086/5.166/5.205 | 周期/tile步: pair 2.12 single 0.00 8x2 0.00 4x4 2.53 | 份额 %: 85.5 0.0 0.0 14.5
+[v54-phase] prepare_us=7.66 host_pack_us=30.18 workers_us=5208.14 pack_worker_mean_us=2.27 pack_worker_max_us=8.96 total_us=5245.98
+[roll] thr ms min/avg/max 5.100/5.164/5.204 | 周期/tile步: pair 2.12 single 0.00 8x2 0.00 4x4 2.53 | 份额 %: 85.5 0.0 0.0 14.5
+  4096 x  6144     39 x    39 run0    5.420 ms    13905.9 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.435 ms    13867.4 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.416 ms    13917.8 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.416 ms    13917.8 GFLOPS | avg    5.424 ms    13897.0 GFLOPS  PASS
+PHASE memory=HBM variant=phase shape=6144 4096 41 41
+[v54-phase] prepare_us=381.80 host_pack_us=241.86 workers_us=19737.28 pack_worker_mean_us=0.53 pack_worker_max_us=0.67 total_us=20360.94
+[roll] thr ms min/avg/max 0.007/5.798/11.923 | 周期/tile步: pair 2.10 single 0.00 8x2 2.17 4x4 0.00 | 份额 %: 79.0 0.0 21.0 0.0
+[v54-phase] prepare_us=5.00 host_pack_us=98.07 workers_us=5847.60 pack_worker_mean_us=4.05 pack_worker_max_us=16.12 total_us=5950.67
+[roll] thr ms min/avg/max 5.770/5.800/5.838 | 周期/tile步: pair 2.10 single 0.00 8x2 2.18 4x4 0.00 | 份额 %: 78.9 0.0 21.1 0.0
+[v54-phase] prepare_us=4.86 host_pack_us=88.35 workers_us=5843.90 pack_worker_mean_us=2.42 pack_worker_max_us=18.39 total_us=5937.11
+[roll] thr ms min/avg/max 5.760/5.790/5.830 | 周期/tile步: pair 2.10 single 0.00 8x2 2.18 4x4 0.00 | 份额 %: 78.8 0.0 21.2 0.0
+[v54-phase] prepare_us=4.77 host_pack_us=79.88 workers_us=5854.57 pack_worker_mean_us=2.64 pack_worker_max_us=8.29 total_us=5939.22
+[roll] thr ms min/avg/max 5.762/5.787/5.845 | 周期/tile步: pair 2.10 single 0.00 8x2 2.18 4x4 0.00 | 份额 %: 78.8 0.0 21.2 0.0
+[v54-phase] prepare_us=4.84 host_pack_us=76.52 workers_us=5848.96 pack_worker_mean_us=3.35 pack_worker_max_us=12.90 total_us=5930.32
+[roll] thr ms min/avg/max 5.757/5.780/5.839 | 周期/tile步: pair 2.09 single 0.00 8x2 2.18 4x4 0.00 | 份额 %: 78.8 0.0 21.2 0.0
+  6144 x  4096     41 x    41 run0    6.101 ms    13644.0 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    6.130 ms    13577.8 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    6.093 ms    13660.3 GFLOPS PASS
+  6144 x  4096     41 x    41 best    6.093 ms    13660.3 GFLOPS | avg    6.108 ms    13627.3 GFLOPS  PASS
+PHASE memory=HBM variant=candidatephase shape=6144 4096 41 41
+[v54-phase] prepare_us=615.17 host_pack_us=169.82 workers_us=14060.20 pack_worker_mean_us=0.51 pack_worker_max_us=0.74 total_us=14845.19
+[roll] thr ms min/avg/max 0.005/5.831/10.621 | 周期/tile步: pair 2.10 single 0.00 8x2 2.18 4x4 0.00 | 份额 %: 78.9 0.0 21.1 0.0
+[v54-phase] prepare_us=7.32 host_pack_us=28.11 workers_us=5869.24 pack_worker_mean_us=2.82 pack_worker_max_us=9.52 total_us=5904.67
+[roll] thr ms min/avg/max 5.755/5.797/5.862 | 周期/tile步: pair 2.09 single 0.00 8x2 2.17 4x4 0.00 | 份额 %: 78.9 0.0 21.1 0.0
+[v54-phase] prepare_us=8.59 host_pack_us=30.42 workers_us=5851.53 pack_worker_mean_us=1.60 pack_worker_max_us=3.95 total_us=5890.54
+[roll] thr ms min/avg/max 5.747/5.803/5.843 | 周期/tile步: pair 2.10 single 0.00 8x2 2.17 4x4 0.00 | 份额 %: 78.9 0.0 21.1 0.0
+[v54-phase] prepare_us=7.03 host_pack_us=24.86 workers_us=5855.22 pack_worker_mean_us=2.99 pack_worker_max_us=11.88 total_us=5887.11
+[roll] thr ms min/avg/max 5.757/5.799/5.844 | 周期/tile步: pair 2.09 single 0.00 8x2 2.17 4x4 0.00 | 份额 %: 78.9 0.0 21.1 0.0
+[v54-phase] prepare_us=7.35 host_pack_us=24.19 workers_us=5842.65 pack_worker_mean_us=2.74 pack_worker_max_us=8.88 total_us=5874.19
+[roll] thr ms min/avg/max 5.747/5.800/5.837 | 周期/tile步: pair 2.09 single 0.00 8x2 2.17 4x4 0.00 | 份额 %: 78.9 0.0 21.1 0.0
+  6144 x  4096     41 x    41 run0    6.109 ms    13624.6 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    6.069 ms    13714.2 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    6.032 ms    13799.7 GFLOPS PASS
+  6144 x  4096     41 x    41 best    6.032 ms    13799.7 GFLOPS | avg    6.070 ms    13712.4 GFLOPS  PASS
+PHASE memory=HBM variant=phase shape=4256 6390 55 55
+[v54-phase] prepare_us=545.43 host_pack_us=11.23 workers_us=20113.59 pack_worker_mean_us=13.42 pack_worker_max_us=480.80 total_us=20670.25
+[roll] thr ms min/avg/max 0.005/10.983/17.341 | 周期/tile步: pair 2.09 single 2.10 8x2 0.00 4x4 2.43 | 份额 %: 60.2 30.1 0.0 9.6
+[v54-phase] prepare_us=7.96 host_pack_us=1.10 workers_us=11185.97 pack_worker_mean_us=90.31 pack_worker_max_us=143.50 total_us=11195.03
+[roll] thr ms min/avg/max 10.828/11.034/11.183 | 周期/tile步: pair 2.08 single 2.10 8x2 0.00 4x4 2.44 | 份额 %: 60.0 30.3 0.0 9.7
+[v54-phase] prepare_us=8.00 host_pack_us=1.02 workers_us=11190.76 pack_worker_mean_us=74.89 pack_worker_max_us=112.29 total_us=11199.78
+[roll] thr ms min/avg/max 10.771/11.008/11.184 | 周期/tile步: pair 2.08 single 2.10 8x2 0.00 4x4 2.43 | 份额 %: 60.1 30.2 0.0 9.7
+[v54-phase] prepare_us=7.55 host_pack_us=0.75 workers_us=11296.45 pack_worker_mean_us=186.05 pack_worker_max_us=226.39 total_us=11304.75
+[roll] thr ms min/avg/max 10.910/11.126/11.293 | 周期/tile步: pair 2.08 single 2.10 8x2 0.00 4x4 2.43 | 份额 %: 60.0 30.3 0.0 9.7
+[v54-phase] prepare_us=7.68 host_pack_us=0.86 workers_us=11243.35 pack_worker_mean_us=130.54 pack_worker_max_us=178.46 total_us=11251.89
+[roll] thr ms min/avg/max 10.852/11.068/11.242 | 周期/tile步: pair 2.08 single 2.10 8x2 0.00 4x4 2.44 | 份额 %: 60.1 30.2 0.0 9.7
+  4256 x  6390     55 x    55 run0   11.356 ms    14184.5 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.490 ms    14019.0 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.419 ms    14105.5 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.356 ms    14184.5 GFLOPS | avg   11.422 ms    14102.7 GFLOPS  PASS
+PHASE memory=HBM variant=candidatephase shape=4256 6390 55 55
+[v54-phase] prepare_us=851.95 host_pack_us=272.02 workers_us=20628.44 pack_worker_mean_us=0.83 pack_worker_max_us=1.22 total_us=21752.41
+[roll] thr ms min/avg/max 0.009/11.097/16.452 | 周期/tile步: pair 2.11 single 2.11 8x2 0.00 4x4 2.47 | 份额 %: 60.3 30.1 0.0 9.7
+[v54-phase] prepare_us=11.26 host_pack_us=53.85 workers_us=11083.54 pack_worker_mean_us=3.84 pack_worker_max_us=18.37 total_us=11148.65
+[roll] thr ms min/avg/max 11.029/11.053/11.081 | 周期/tile步: pair 2.10 single 2.11 8x2 0.00 4x4 2.45 | 份额 %: 60.1 30.2 0.0 9.7
+[v54-phase] prepare_us=11.16 host_pack_us=56.74 workers_us=11078.01 pack_worker_mean_us=2.37 pack_worker_max_us=8.03 total_us=11145.91
+[roll] thr ms min/avg/max 11.023/11.044/11.074 | 周期/tile步: pair 2.10 single 2.11 8x2 0.00 4x4 2.45 | 份额 %: 60.1 30.2 0.0 9.7
+[v54-phase] prepare_us=10.97 host_pack_us=52.70 workers_us=11082.37 pack_worker_mean_us=3.84 pack_worker_max_us=15.55 total_us=11146.04
+[roll] thr ms min/avg/max 11.020/11.051/11.080 | 周期/tile步: pair 2.10 single 2.11 8x2 0.00 4x4 2.46 | 份额 %: 60.1 30.2 0.0 9.7
+[v54-phase] prepare_us=10.19 host_pack_us=53.33 workers_us=11083.46 pack_worker_mean_us=3.50 pack_worker_max_us=12.69 total_us=11146.98
+[roll] thr ms min/avg/max 11.028/11.047/11.075 | 周期/tile步: pair 2.10 single 2.11 8x2 0.00 4x4 2.45 | 份额 %: 60.1 30.2 0.0 9.7
+  4256 x  6390     55 x    55 run0   11.306 ms    14246.9 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.322 ms    14226.4 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.345 ms    14197.9 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.306 ms    14246.9 GFLOPS | avg   11.324 ms    14223.7 GFLOPS  PASS
+PHASE memory=HBM variant=phase shape=6390 4256 81 81
+[v54-phase] prepare_us=502.22 host_pack_us=19.94 workers_us=32847.69 pack_worker_mean_us=16.90 pack_worker_max_us=609.90 total_us=33369.85
+[roll] thr ms min/avg/max 11.492/23.690/29.133 | 周期/tile步: pair 2.04 single 2.08 8x2 0.00 4x4 0.00 | 份额 %: 79.6 20.4 0.0 0.0
+[v54-phase] prepare_us=7.50 host_pack_us=1.15 workers_us=24042.64 pack_worker_mean_us=126.88 pack_worker_max_us=175.65 total_us=24051.29
+[roll] thr ms min/avg/max 23.666/23.742/24.035 | 周期/tile步: pair 2.04 single 2.08 8x2 0.00 4x4 0.00 | 份额 %: 79.5 20.5 0.0 0.0
+[v54-phase] prepare_us=7.90 host_pack_us=0.94 workers_us=24051.98 pack_worker_mean_us=267.41 pack_worker_max_us=325.06 total_us=24060.82
+[roll] thr ms min/avg/max 23.767/23.881/24.030 | 周期/tile步: pair 2.04 single 2.08 8x2 0.00 4x4 0.00 | 份额 %: 79.5 20.5 0.0 0.0
+[v54-phase] prepare_us=7.45 host_pack_us=0.95 workers_us=23969.95 pack_worker_mean_us=224.43 pack_worker_max_us=278.66 total_us=23978.35
+[roll] thr ms min/avg/max 23.685/23.843/23.965 | 周期/tile步: pair 2.04 single 2.08 8x2 0.00 4x4 0.00 | 份额 %: 79.5 20.5 0.0 0.0
+[v54-phase] prepare_us=6.96 host_pack_us=1.19 workers_us=23864.54 pack_worker_mean_us=112.24 pack_worker_max_us=187.10 total_us=23872.69
+[roll] thr ms min/avg/max 23.622/23.729/23.859 | 周期/tile步: pair 2.04 single 2.08 8x2 0.00 4x4 0.00 | 份额 %: 79.5 20.5 0.0 0.0
+  6390 x  4256     81 x    81 run0   24.223 ms    14274.4 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   24.154 ms    14315.4 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   24.033 ms    14387.6 GFLOPS PASS
+  6390 x  4256     81 x    81 best   24.033 ms    14387.6 GFLOPS | avg   24.137 ms    14325.6 GFLOPS  PASS
+PHASE memory=HBM variant=candidatephase shape=6390 4256 81 81
+[v54-phase] prepare_us=669.41 host_pack_us=117.38 workers_us=31115.63 pack_worker_mean_us=0.85 pack_worker_max_us=1.32 total_us=31902.42
+[roll] thr ms min/avg/max 16.692/23.815/29.432 | 周期/tile步: pair 2.05 single 2.09 8x2 0.00 4x4 0.00 | 份额 %: 79.6 20.4 0.0 0.0
+[v54-phase] prepare_us=9.70 host_pack_us=42.19 workers_us=23851.68 pack_worker_mean_us=6.01 pack_worker_max_us=23.61 total_us=23903.57
+[roll] thr ms min/avg/max 23.725/23.785/23.846 | 周期/tile步: pair 2.05 single 2.08 8x2 0.00 4x4 0.00 | 份额 %: 79.6 20.4 0.0 0.0
+[v54-phase] prepare_us=11.36 host_pack_us=60.02 workers_us=23843.83 pack_worker_mean_us=4.05 pack_worker_max_us=17.78 total_us=23915.21
+[roll] thr ms min/avg/max 23.733/23.781/23.839 | 周期/tile步: pair 2.05 single 2.09 8x2 0.00 4x4 0.00 | 份额 %: 79.6 20.4 0.0 0.0
+[v54-phase] prepare_us=9.02 host_pack_us=42.34 workers_us=23854.11 pack_worker_mean_us=5.33 pack_worker_max_us=21.31 total_us=23905.47
+[roll] thr ms min/avg/max 23.740/23.785/23.838 | 周期/tile步: pair 2.05 single 2.09 8x2 0.00 4x4 0.00 | 份额 %: 79.6 20.4 0.0 0.0
+[v54-phase] prepare_us=9.25 host_pack_us=42.22 workers_us=23850.22 pack_worker_mean_us=4.83 pack_worker_max_us=19.61 total_us=23901.69
+[roll] thr ms min/avg/max 23.732/23.778/23.843 | 周期/tile步: pair 2.05 single 2.08 8x2 0.00 4x4 0.00 | 份额 %: 79.6 20.4 0.0 0.0
+  6390 x  4256     81 x    81 run0   24.083 ms    14357.5 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   24.083 ms    14357.3 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   24.064 ms    14369.0 GFLOPS PASS
+  6390 x  4256     81 x    81 best   24.064 ms    14369.0 GFLOPS | avg   24.077 ms    14361.3 GFLOPS  PASS
+CANDIDATE_DIAG_DONE 2026-09-12T20:00:26+08:00
