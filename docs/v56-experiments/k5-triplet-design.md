@@ -2,6 +2,9 @@
 
 Status: design derived from the completed mixed-arithmetic profile; no K5
 implementation or performance result yet. The accepted operator is unchanged.
+The indexed-FMLA follow-up 1582779 has now independently confirmed the same
+eight-FMLA arithmetic-only budget. Implementation is deferred while addressing
+the newly found [output overlap race](output-ownership.md).
 
 ## Why change the grouping
 

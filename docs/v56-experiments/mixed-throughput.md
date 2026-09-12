@@ -44,8 +44,12 @@ The existing four-chain pair uses indexed scalar FMLA, not K33's predicated
 vector form. The generic result must not silently stand in for that opcode.
 The `--indexed` generator creates a separate source/directory, using alternating
 input vectors and coefficient lanes 0..3 just like the four-chain pair. Additional
-coefficient registers cover the N>8 diagnostic cases. Job **1582779** requests
-cn20483 for this check; its result is recorded separately under
+coefficient registers cover the N>8 diagnostic cases. Job **1582779** succeeded
+on cn20483 at 2026-09-13 02:38:27–02:38:35, with all 84 records. At 38 threads,
+four FMOPA plus 0/2/4/6/8 indexed FMLA again takes about 5.162 ns (8 normalized
+cycles); N=10/12/16/18 takes about 10/12/16/18 normalized cycles. This independently
+confirms the same arithmetic-only budget for the four-chain pair's opcode.
+The result is recorded separately under
 `results/v56/experiments/mixed-throughput-indexed/`.
 
 The proposed [five-row, three-way folded group](k5-triplet-design.md) is still
