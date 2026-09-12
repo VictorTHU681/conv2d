@@ -1,0 +1,57 @@
+=== HOST
+cn20483
+Sat Sep 12 18:58:50 CST 2026
+2ffcd6b390e632e00865425b84af4038  conv2d.c
+5a26b6ea573bcf64170a1ecbbfadb43e  build/conv2d_v51.c
+--- A/B DDR（v53 / v51 交替 ×3）
+DDR  r1 v53 4096 6144 39 39    4096 x  6144     39 x    39 best    7.729 ms     9752.4 GFLOPS | avg    7.766 ms     9706.4 GFLOPS  PASS
+DDR  r1 v51 4096 6144 39 39    4096 x  6144     39 x    39 best    9.700 ms     7770.8 GFLOPS | avg    9.715 ms     7758.8 GFLOPS  PASS
+DDR  r1 v53 6144 4096 41 41    6144 x  4096     41 x    41 best    9.549 ms     8716.9 GFLOPS | avg    9.587 ms     8681.8 GFLOPS  PASS
+DDR  r1 v51 6144 4096 41 41    6144 x  4096     41 x    41 best    9.392 ms     8862.1 GFLOPS | avg    9.448 ms     8809.9 GFLOPS  PASS
+DDR  r1 v53 4256 6390 55 55    4256 x  6390     55 x    55 best   14.470 ms    11131.3 GFLOPS | avg   14.512 ms    11099.4 GFLOPS  PASS
+DDR  r1 v51 4256 6390 55 55    4256 x  6390     55 x    55 best   15.187 ms    10606.1 GFLOPS | avg   15.278 ms    10543.1 GFLOPS  PASS
+DDR  r1 v53 6390 4256 81 81    6390 x  4256     81 x    81 best   24.221 ms    14275.5 GFLOPS | avg   24.345 ms    14203.2 GFLOPS  PASS
+DDR  r1 v51 6390 4256 81 81    6390 x  4256     81 x    81 best   24.196 ms    14290.4 GFLOPS | avg   24.350 ms    14200.2 GFLOPS  PASS
+DDR  r2 v53 4096 6144 39 39    4096 x  6144     39 x    39 best    7.713 ms     9772.7 GFLOPS | avg    7.772 ms     9698.6 GFLOPS  PASS
+DDR  r2 v51 4096 6144 39 39    4096 x  6144     39 x    39 best    9.698 ms     7771.8 GFLOPS | avg    9.713 ms     7760.2 GFLOPS  PASS
+DDR  r2 v53 6144 4096 41 41    6144 x  4096     41 x    41 best    9.268 ms     8980.5 GFLOPS | avg    9.303 ms     8947.1 GFLOPS  PASS
+DDR  r2 v51 6144 4096 41 41    6144 x  4096     41 x    41 best    9.355 ms     8897.4 GFLOPS | avg    9.429 ms     8827.2 GFLOPS  PASS
+DDR  r2 v53 4256 6390 55 55    4256 x  6390     55 x    55 best   14.380 ms    11201.2 GFLOPS | avg   14.459 ms    11140.1 GFLOPS  PASS
+DDR  r2 v51 4256 6390 55 55    4256 x  6390     55 x    55 best   15.068 ms    10689.7 GFLOPS | avg   15.103 ms    10665.0 GFLOPS  PASS
+DDR  r2 v53 6390 4256 81 81    6390 x  4256     81 x    81 best   23.836 ms    14506.1 GFLOPS | avg   24.007 ms    14403.0 GFLOPS  PASS
+DDR  r2 v51 6390 4256 81 81    6390 x  4256     81 x    81 best   24.247 ms    14260.4 GFLOPS | avg   24.432 ms    14152.5 GFLOPS  PASS
+DDR  r3 v53 4096 6144 39 39    4096 x  6144     39 x    39 best    7.645 ms     9859.1 GFLOPS | avg    7.679 ms     9815.2 GFLOPS  PASS
+DDR  r3 v51 4096 6144 39 39    4096 x  6144     39 x    39 best    9.727 ms     7749.2 GFLOPS | avg    9.732 ms     7745.4 GFLOPS  PASS
+DDR  r3 v53 6144 4096 41 41    6144 x  4096     41 x    41 best    9.307 ms     8943.7 GFLOPS | avg    9.402 ms     8853.4 GFLOPS  PASS
+DDR  r3 v51 6144 4096 41 41    6144 x  4096     41 x    41 best    9.575 ms     8693.0 GFLOPS | avg    9.599 ms     8671.2 GFLOPS  PASS
+DDR  r3 v53 4256 6390 55 55    4256 x  6390     55 x    55 best   14.386 ms    11196.6 GFLOPS | avg   14.413 ms    11175.7 GFLOPS  PASS
+DDR  r3 v51 4256 6390 55 55    4256 x  6390     55 x    55 best   15.084 ms    10678.7 GFLOPS | avg   15.339 ms    10500.7 GFLOPS  PASS
+DDR  r3 v53 6390 4256 81 81    6390 x  4256     81 x    81 best   23.906 ms    14463.6 GFLOPS | avg   23.959 ms    14431.9 GFLOPS  PASS
+DDR  r3 v51 6390 4256 81 81    6390 x  4256     81 x    81 best   24.353 ms    14198.1 GFLOPS | avg   24.443 ms    14145.9 GFLOPS  PASS
+--- A/B HBM（v53 / v51 交替 ×3）
+HBM  r1 v53 4096 6144 39 39    4096 x  6144     39 x    39 best    5.380 ms    14009.9 GFLOPS | avg    5.413 ms    13923.7 GFLOPS  PASS
+HBM  r1 v51 4096 6144 39 39    4096 x  6144     39 x    39 best    5.525 ms    13642.8 GFLOPS | avg    5.537 ms    13612.4 GFLOPS  PASS
+HBM  r1 v53 6144 4096 41 41    6144 x  4096     41 x    41 best    5.948 ms    13994.0 GFLOPS | avg    5.956 ms    13975.2 GFLOPS  PASS
+HBM  r1 v51 6144 4096 41 41    6144 x  4096     41 x    41 best    5.943 ms    14006.1 GFLOPS | avg    6.009 ms    13850.7 GFLOPS  PASS
+HBM  r1 v53 4256 6390 55 55    4256 x  6390     55 x    55 best   11.172 ms    14418.3 GFLOPS | avg   11.245 ms    14324.7 GFLOPS  PASS
+HBM  r1 v51 4256 6390 55 55    4256 x  6390     55 x    55 best   11.235 ms    14337.3 GFLOPS | avg   11.262 ms    14302.0 GFLOPS  PASS
+HBM  r1 v53 6390 4256 81 81    6390 x  4256     81 x    81 best   23.899 ms    14468.0 GFLOPS | avg   23.987 ms    14415.0 GFLOPS  PASS
+HBM  r1 v51 6390 4256 81 81    6390 x  4256     81 x    81 best   24.863 ms    13907.2 GFLOPS | avg   25.017 ms    13821.3 GFLOPS  PASS
+HBM  r2 v53 4096 6144 39 39    4096 x  6144     39 x    39 best    5.381 ms    14008.0 GFLOPS | avg    5.404 ms    13948.6 GFLOPS  PASS
+HBM  r2 v51 4096 6144 39 39    4096 x  6144     39 x    39 best    5.554 ms    13572.2 GFLOPS | avg    5.646 ms    13349.6 GFLOPS  PASS
+HBM  r2 v53 6144 4096 41 41    6144 x  4096     41 x    41 best    6.027 ms    13811.3 GFLOPS | avg    6.065 ms    13724.3 GFLOPS  PASS
+HBM  r2 v51 6144 4096 41 41    6144 x  4096     41 x    41 best    5.966 ms    13952.8 GFLOPS | avg    6.050 ms    13758.8 GFLOPS  PASS
+HBM  r2 v53 4256 6390 55 55    4256 x  6390     55 x    55 best   11.224 ms    14351.3 GFLOPS | avg   11.235 ms    14337.0 GFLOPS  PASS
+HBM  r2 v51 4256 6390 55 55    4256 x  6390     55 x    55 best   11.201 ms    14380.1 GFLOPS | avg   11.290 ms    14267.0 GFLOPS  PASS
+HBM  r2 v53 6390 4256 81 81    6390 x  4256     81 x    81 best   23.849 ms    14498.4 GFLOPS | avg   23.928 ms    14450.4 GFLOPS  PASS
+HBM  r2 v51 6390 4256 81 81    6390 x  4256     81 x    81 best   24.299 ms    14229.9 GFLOPS | avg   24.328 ms    14213.2 GFLOPS  PASS
+HBM  r3 v53 4096 6144 39 39    4096 x  6144     39 x    39 best    5.375 ms    14023.6 GFLOPS | avg    5.395 ms    13971.1 GFLOPS  PASS
+HBM  r3 v51 4096 6144 39 39    4096 x  6144     39 x    39 best    5.541 ms    13602.8 GFLOPS | avg    5.756 ms    13094.7 GFLOPS  PASS
+HBM  r3 v53 6144 4096 41 41    6144 x  4096     41 x    41 best    5.990 ms    13894.7 GFLOPS | avg    5.996 ms    13881.5 GFLOPS  PASS
+HBM  r3 v51 6144 4096 41 41    6144 x  4096     41 x    41 best    5.966 ms    13952.4 GFLOPS | avg    5.972 ms    13938.6 GFLOPS  PASS
+HBM  r3 v53 4256 6390 55 55    4256 x  6390     55 x    55 best   11.264 ms    14299.7 GFLOPS | avg   11.280 ms    14279.1 GFLOPS  PASS
+HBM  r3 v51 4256 6390 55 55    4256 x  6390     55 x    55 best   11.200 ms    14382.1 GFLOPS | avg   11.392 ms    14139.7 GFLOPS  PASS
+HBM  r3 v53 6390 4256 81 81    6390 x  4256     81 x    81 best   24.144 ms    14321.3 GFLOPS | avg   24.237 ms    14266.1 GFLOPS  PASS
+HBM  r3 v51 6390 4256 81 81    6390 x  4256     81 x    81 best   24.228 ms    14271.6 GFLOPS | avg   24.381 ms    14181.8 GFLOPS  PASS
+=== DONE
+Sat Sep 12 18:59:22 CST 2026

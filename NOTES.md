@@ -7,7 +7,10 @@
 只执行 KW+3 真实步；memoization/高度划分修复不移植（被"每次调用全量重建"取代）。
 验证（cn20483）：位精确 9 套全过（103+63×5+36+43）、官方两种编译 PASS 误差 0；
 三方 A/B：对 v50 在 DDR 高压日 k39 +27%、k55 +4.5%；对远端 v52 k39 −1.5~−2.3%、k55 −1.1%
-= 每次调用诚实打包的合规代价（v52 memoization 跳过计时轮打包）。打包验收（cn20482）：
+= 每次调用诚实打包的合规代价（v52 memoization 跳过计时轮打包）。
+对合规 v51（旧无缓存最好版，c2a418e）直接 A/B（cn20483 ×3）：DDR k39 **+25.9%**、k55 +4.8%、
+k81 +1.2%、k41 ±1%；HBM k39 +3.0%、k81 +1.5%、k41/k55 持平——受压 DDR 大幅占优、安静内存不劣。
+打包验收（cn20482）：
 `conv.zip`(nf4) md5 673c455b、`conv_nf3.zip` 98af47b0、`conv_diag.zip` aa644cd8，三包端到端
 `bash run.sh` 全 PASS；本地留档 `conv_submit_{nf4,nf3}_8ea57ec.zip`、`conv_submit_diag_aa644cd8.zip`。
 详见 [v53 移植、A/B 及验收](docs/v53.md)，原始日志在 `results/v53/`。
