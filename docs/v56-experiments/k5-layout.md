@@ -50,11 +50,21 @@ limited equivalence rather than claim a new full-operator host execution.
 
 **1583387**, cn20483, runs the three-way original benchmark comparison over
 all six permutations, four shapes and allowed memory placements. It is pending.
-**1583390**, cn20481, profiles baseline/plain K5/outlined K5 on KH 39 and 41,
-also in all six permutations; it is pending.
-**1583398**, cn20481, adds a new guard/alignment audit at KW 63/64/65 for every
-K5-family height. These gate-transition cases were absent from the historical
-K5 extended driver. It is pending; 756 cases per candidate are planned.
+**1583390**, cn20481, 04:19:18–04:20:12, succeeded: 72 profiled processes,
+504 call records and 360 timed hashes. Baseline/plain K5/outlined K5 use all
+six permutations on KH 39 and 41. Full phase results are in profile_summary.md.
+For KH 41 DDR, K5 reduces the tail mean from 1,252 to 1,080 us but raises the
+main mean from 4,645 to 4,706 us. Worker-duration maximum minus mean grows from
+74.5 to 182.0 us (HBM 31.5 to 85.0 us). These are per-thread durations, not
+absolute finish timestamps, but they point to additional work-distribution
+imbalance as a concrete cost worth testing. Profiling does not establish that
+scheduler weighting is the cause or replace the official comparison.
+**1583398**, cn20481, 04:20:14–04:20:52, succeeded at KW 63/64/65 across every
+K5-family height: each candidate passes 756 alignment/guard cases and 4,029,774
+calculated copy intervals with zero outside. These gate-transition cases were
+absent from the historical K5 extended driver; no old acceptance was assumed.
+The [executed-step cost control](k5-cost.md) now tests the specific discrepancy
+between padded packing steps and actual kernel work.
 
 None of these candidates is adopted. Existing K5 guards from the historical
 source are useful background, not acceptance of this rebased/outlined source.

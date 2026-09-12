@@ -10,6 +10,7 @@ assert 'K5_LAYOUT_PROFILE_DONE' in s and 'FAIL' not in s
 placement=re.search(r'^PLACEMENT cpu_node=\d+ hbm_node=(-?\d+)$',s,re.M);assert placement
 memories=['DDR'] if int(placement[1])<0 else ['DDR','HBM']
 variants=['baseline','triplet','triplet_out'];phase={};cost={};steps={};counts=defaultdict(int);order=defaultdict(list);key=None
+durations=defaultdict(list)
 for line in s.splitlines():
     m=re.match(r'PROFILE memory=(\w+) round=(\d+) variant=(\w+) shape=(\d+) (\d+) (\d+) (\d+)$',line)
     if m:
@@ -25,10 +26,14 @@ for line in s.splitlines():
         cost[k]=float(m[4]),float(m[5]);steps[k]=int(m[3]);assert steps[k]>0
     if re.search(r' run\d+\s+.* GFLOPS PASS$',line):
         assert key is not None;counts[key]+=1
+    m=re.search(r'thr ms min/avg/max ([\d.]+)/([\d.]+)/([\d.]+)',line)
+    if m:
+        assert key is not None;durations[key].append(tuple(float(m[i])*1000 for i in [1,2,3]))
 blocks={(m,r,v,k) for m in memories for r in range(6) for v in variants for k in [39,41]}
 assert set(phase)=={x+(c,) for x in blocks for c in range(1,8)}
 assert set(cost)=={x+(c,b) for x in blocks for c in range(1,8) for b in [0,2 if x[2]=='baseline' and x[3]==41 else 3]}
 assert set(counts)==blocks and set(counts.values())=={5}
+assert set(durations)==blocks and set(map(len,durations.values()))=={7}
 for m in memories:
     for kh in [39,41]: assert {tuple(order[m,r,kh]) for r in range(6)}==set(permutations(variants))
 print(f'{len(blocks)} profiled processes, {len(phase)} call records and {sum(counts.values())} timed hashes PASS.')
@@ -45,3 +50,11 @@ for mem in memories:
             totals={sum(steps[mem,r,v,kh,c,b] for b in [0,tail]) for r in range(6) for c in range(1,8)};assert len(totals)==1
             vals=[ph(0),ph(3),ph(2),co(0,1),co(tail,1),co(0,0),co(tail,0)]
             print(f'| {mem} | {kh} | {v} | '+' | '.join(f'{x:.4f}' for x in vals)+f' | {totals.pop()} |')
+print('\nWorker-duration statistics (us), including packing and scheduling. These are per-thread durations, not absolute finish timestamps.')
+print('\n| Memory | KH | Variant | Minimum | Mean | Maximum | Max minus mean |')
+print('| --- | ---: | --- | ---: | ---: | ---: | ---: |')
+for mem in memories:
+    for kh in [39,41]:
+        for v in variants:
+            vals=[median(median(durations[mem,r,v,kh][c][i] for c in range(2,7)) for r in range(6)) for i in range(3)]
+            print(f'| {mem} | {kh} | {v} | '+' | '.join(f'{x:.1f}' for x in vals)+f' | {vals[2]-vals[1]:.1f} |')

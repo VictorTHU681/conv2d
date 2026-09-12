@@ -2,11 +2,15 @@
 """Identify F4 bodies and actual inlining in all matched screening binaries."""
 from pathlib import Path
 from collections import Counter
-import hashlib,re
-root=Path('build/v56/experiments/k5-layout/disassembly')
-out=Path('results/v56/experiments/k5-layout')
+import hashlib,re,argparse
+parser=argparse.ArgumentParser()
+parser.add_argument('--experiment',choices=['k5-layout','k5-cost'],default='k5-layout')
+args=parser.parse_args()
+root=Path('build/v56/experiments')/args.experiment/'disassembly'
+out=Path('results/v56/experiments')/args.experiment
 report=[];reference=None
-for v in ['baseline','triplet','baseline_out','triplet_out']:
+variants=['baseline','triplet','k5cost','tailcost'] if args.experiment=='k5-cost' else ['baseline','triplet','baseline_out','triplet_out']
+for v in variants:
     rows=[];symbol=None
     for line in (root/(v+'.txt')).read_text().splitlines():
         m=re.match(r'^\s*[0-9a-f]+ <(.+)>:$',line)

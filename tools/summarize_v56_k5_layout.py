@@ -5,14 +5,17 @@ from statistics import median
 from collections import defaultdict,Counter
 import re,sys
 s=Path(sys.argv[1]).read_text()
-assert 'K5_LAYOUT_DONE' in s and 'FAIL' not in s
+cost='K5_COST_DONE' in s
+assert ('K5_COST_DONE' if cost else 'K5_LAYOUT_DONE') in s and 'FAIL' not in s
 assert s.count('STATE_SWEEP PASS cases=261')==4
-variants=['baseline','triplet','baseline_out','triplet_out']
+if cost:
+    assert len(re.findall(r'OUTPUT_OVERLAP PASS cases=54 calls=\d+ active_conflicts=0 positive_control=0',s))==2
+variants=['baseline','triplet','k5cost','tailcost'] if cost else ['baseline','triplet','baseline_out','triplet_out']
 placement=re.search(r'^PLACEMENT cpu_node=\d+ hbm_node=(-?\d+)$',s,re.M);assert placement
 memories=['DDR'] if int(placement[1])<0 else ['DDR','HBM']
 data={};counts=defaultdict(int);order=defaultdict(list);key=None
 for line in s.splitlines():
-    m=re.match(r'LAYOUT memory=(\w+) round=(\d+) variant=(\w+) shape=(\d+) (\d+) (\d+) (\d+)$',line)
+    m=re.match(r'(?:COST|LAYOUT) memory=(\w+) round=(\d+) variant=(\w+) shape=(\d+) (\d+) (\d+) (\d+)$',line)
     if m:
         assert key is None
         kh=int(m[6]);assert (int(m[4]),int(m[5]),int(m[7]))=={39:(4096,6144,39),41:(6144,4096,41),55:(4256,6390,55),81:(6390,4256,81)}[kh]
@@ -34,9 +37,14 @@ for m in memories:
         assert pairs==Counter({(a,b):1 for a in variants for b in variants if a!=b})
 print(f'1,044 state cases and {len(data)*5} timed output hashes PASS. Four Williams-design rounds balance positions and immediate predecessors.')
 print('Screen only; median process-average GFLOPS, five timings per process. K5 is rebased on accepted F4 gate 4817eff.')
-print('\n| Memory | KH | Baseline | K5 | Baseline outlined | K5 outlined | K5/base | K5 out/base out | Base out/base | K5 out/base |')
+if cost:
+    print('Additional 108 runtime output-ownership cases PASS, zero observed active conflicts.')
+    print('\n| Memory | KH | Baseline | K5 | K5 cost | Both tail costs | K5/base | K5 cost/K5 | Both costs/K5 | Both costs/base |')
+else:
+    print('\n| Memory | KH | Baseline | K5 | Baseline outlined | K5 outlined | K5/base | K5 out/base out | Base out/base | K5 out/base |')
 print('| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |')
 for m in memories:
     for k in [39,41,55,81]:
         a,b,c,d=[median(data[m,r,v,k] for r in range(4)) for v in variants]
-        print(f'| {m} | {k} | {a:.1f} | {b:.1f} | {c:.1f} | {d:.1f} | {100*(b/a-1):+.2f}% | {100*(d/c-1):+.2f}% | {100*(c/a-1):+.2f}% | {100*(d/a-1):+.2f}% |')
+        comparisons=[b/a,c/b,d/b,d/a] if cost else [b/a,d/c,c/a,d/a]
+        print(f'| {m} | {k} | {a:.1f} | {b:.1f} | {c:.1f} | {d:.1f} | '+' | '.join(f'{100*(x-1):+.2f}%' for x in comparisons)+' |')
