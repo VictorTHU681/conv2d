@@ -1,0 +1,302 @@
+HOST cn20484 2026-09-12T23:00:24+08:00
+pid 1245046's current affinity list: 37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+PLACEMENT cpu_node=1 hbm_node=17
+Cpus_allowed_list:	37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+Mems_allowed_list:	0-31
+1292958
+policy: default
+preferred node: current
+physcpubind: 37 75 113 151 189 227 265 303 341 379 417 455 493 531 569 607 
+cpubind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+nodebind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 
+preferred: 
+EFFECTIVE_PLACEMENT
+policy: preferred
+preferred node: 17
+physcpubind: 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 
+cpubind: 1 
+nodebind: 1 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 
+preferred: 17 
+STATE_BEGIN variant=candidate plain_compile=yes
+   572 x 567  k  39 x  7 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   614 x 569  k  81 x  9 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   588 x 571  k  55 x 11 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   574 x 573  k  41 x 13 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   646 x 575  k 113 x 15 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   678 x 577  k 145 x 17 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   710 x 579  k 177 x 19 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   742 x 581  k 209 x 21 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   774 x 583  k 241 x 23 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   572 x 585  k  39 x 25 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   573 x 567  k  39 x  7 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   615 x 569  k  81 x  9 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   589 x 571  k  55 x 11 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   575 x 573  k  41 x 13 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   647 x 575  k 113 x 15 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   679 x 577  k 145 x 17 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   711 x 579  k 177 x 19 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   743 x 581  k 209 x 21 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   775 x 583  k 241 x 23 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   573 x 585  k  39 x 25 : ok  maxerr 0  bad 0/300135  bitdiff 0
+STATE_SWEEP PASS cases=261
+round=0 k=81 bitwise=PASS aligned_calls=9 live=18874368
+round=0 k=39 bitwise=PASS aligned_calls=9 live=18874368
+round=0 k=39 bitwise=PASS aligned_calls=9 live=18874368
+round=0 k=55 bitwise=PASS aligned_calls=9 live=18874368
+round=1 k=81 bitwise=PASS aligned_calls=9 live=18874368
+round=1 k=39 bitwise=PASS aligned_calls=9 live=18874368
+round=1 k=39 bitwise=PASS aligned_calls=9 live=18874368
+round=1 k=55 bitwise=PASS aligned_calls=9 live=18874368
+round=2 k=81 bitwise=PASS aligned_calls=9 live=18874368
+round=2 k=39 bitwise=PASS aligned_calls=9 live=18874368
+round=2 k=39 bitwise=PASS aligned_calls=9 live=18874368
+round=2 k=55 bitwise=PASS aligned_calls=9 live=18874368
+round=3 k=81 bitwise=PASS aligned_calls=9 live=18874368
+round=3 k=39 bitwise=PASS aligned_calls=9 live=18874368
+round=3 k=39 bitwise=PASS aligned_calls=9 live=18874368
+round=3 k=55 bitwise=PASS aligned_calls=9 live=18874368
+round=4 k=81 bitwise=PASS aligned_calls=9 live=18874368
+round=4 k=39 bitwise=PASS aligned_calls=9 live=18874368
+round=4 k=39 bitwise=PASS aligned_calls=9 live=18874368
+round=4 k=55 bitwise=PASS aligned_calls=9 live=18874368
+round=5 k=81 bitwise=PASS aligned_calls=9 live=18874368
+round=5 k=39 bitwise=PASS aligned_calls=9 live=18874368
+round=5 k=39 bitwise=PASS aligned_calls=9 live=18874368
+round=5 k=55 bitwise=PASS aligned_calls=9 live=18874368
+round=6 k=81 bitwise=PASS aligned_calls=9 live=18874368
+round=6 k=39 bitwise=PASS aligned_calls=9 live=18874368
+round=6 k=39 bitwise=PASS aligned_calls=9 live=18874368
+round=6 k=55 bitwise=PASS aligned_calls=9 live=18874368
+round=7 k=81 bitwise=PASS aligned_calls=9 live=18874368
+round=7 k=39 bitwise=PASS aligned_calls=9 live=18874368
+round=7 k=39 bitwise=PASS aligned_calls=9 live=18874368
+round=7 k=55 bitwise=PASS aligned_calls=9 live=18874368
+PACK_REUSE bitwise=PASS extra_allocations=0 peak_bytes=18874368 PASS
+RELEASE_PATH default
+     1 x   1  k   1 x  1 : ok  maxerr 0  bad 0/1  bitdiff 0
+     5 x   5  k   5 x  5 : ok  maxerr 0  bad 0/1  bitdiff 0
+     5 x 300  k   1 x  1 : ok  maxerr 0  bad 0/1500  bitdiff 0
+   300 x   5  k   1 x  1 : ok  maxerr 0  bad 0/1500  bitdiff 0
+    64 x  64  k   3 x  3 : ok  maxerr 0  bad 0/3844  bitdiff 0
+    70 x 600  k   7 x  7 : ok  maxerr 0  bad 0/38016  bitdiff 0
+     4 x1100  k   1 x 40 : ok  maxerr 0  bad 0/4244  bitdiff 0
+    45 x  45  k  41 x 41 : ok  maxerr 0  bad 0/25  bitdiff 0
+   100 x1200  k  39 x 39 : ok  maxerr 0  bad 0/72044  bitdiff 0
+   300 x 700  k  39 x 39 : ok  maxerr 0  bad 0/173444  bitdiff 0
+   200 x2100  k  81 x 81 : ok  maxerr 0  bad 0/242400  bitdiff 0
+   130 x 530  k   5 x 81 : ok  maxerr 0  bad 0/56700  bitdiff 0
+   130 x 530  k  81 x  5 : ok  maxerr 0  bad 0/26300  bitdiff 0
+    17 x1030  k   3 x  9 : ok  maxerr 0  bad 0/15330  bitdiff 0
+  1030 x  17  k   9 x  3 : ok  maxerr 0  bad 0/15330  bitdiff 0
+    90 x 320  k   2 x  2 : ok  maxerr 0  bad 0/28391  bitdiff 0
+    40 x 800  k  16 x 17 : ok  maxerr 0  bad 0/19600  bitdiff 0
+    60 x 900  k  17 x  3 : ok  maxerr 0  bad 0/39512  bitdiff 0
+    80 x 700  k  23 x 55 : ok  maxerr 0  bad 0/37468  bitdiff 0
+    96 x 640  k  29 x 29 : ok  maxerr 0  bad 0/41616  bitdiff 0
+    50 x1300  k  19 x121 : ok  maxerr 0  bad 0/37760  bitdiff 0
+   280 x 700  k 129 x  7 : ok  maxerr 0  bad 0/105488  bitdiff 0
+   300 x 900  k 257 x  3 : ok  maxerr 0  bad 0/39512  bitdiff 0
+   100 x1200  k  81 x 81 : ok  maxerr 0  bad 0/22400  bitdiff 0
+   104 x1200  k  81 x 81 : ok  maxerr 0  bad 0/26880  bitdiff 0
+   108 x1200  k  81 x 81 : ok  maxerr 0  bad 0/31360  bitdiff 0
+ALL PASS: 106/106 通过
+RELEASE_PATH classic
+     1 x   1  k   1 x  1 : ok  maxerr 0  bad 0/1  bitdiff 0
+     5 x   5  k   5 x  5 : ok  maxerr 0  bad 0/1  bitdiff 0
+     5 x 300  k   1 x  1 : ok  maxerr 0  bad 0/1500  bitdiff 0
+   300 x   5  k   1 x  1 : ok  maxerr 0  bad 0/1500  bitdiff 0
+    64 x  64  k   3 x  3 : ok  maxerr 0  bad 0/3844  bitdiff 0
+    70 x 600  k   7 x  7 : ok  maxerr 0  bad 0/38016  bitdiff 0
+     4 x1100  k   1 x 40 : ok  maxerr 0  bad 0/4244  bitdiff 0
+    45 x  45  k  41 x 41 : ok  maxerr 0  bad 0/25  bitdiff 0
+   100 x1200  k  39 x 39 : ok  maxerr 0  bad 0/72044  bitdiff 0
+   300 x 700  k  39 x 39 : ok  maxerr 0  bad 0/173444  bitdiff 0
+   200 x2100  k  81 x 81 : ok  maxerr 0  bad 0/242400  bitdiff 0
+   130 x 530  k   5 x 81 : ok  maxerr 0  bad 0/56700  bitdiff 0
+   130 x 530  k  81 x  5 : ok  maxerr 0  bad 0/26300  bitdiff 0
+    17 x1030  k   3 x  9 : ok  maxerr 0  bad 0/15330  bitdiff 0
+  1030 x  17  k   9 x  3 : ok  maxerr 0  bad 0/15330  bitdiff 0
+    90 x 320  k   2 x  2 : ok  maxerr 0  bad 0/28391  bitdiff 0
+    40 x 800  k  16 x 17 : ok  maxerr 0  bad 0/19600  bitdiff 0
+    60 x 900  k  17 x  3 : ok  maxerr 0  bad 0/39512  bitdiff 0
+    80 x 700  k  23 x 55 : ok  maxerr 0  bad 0/37468  bitdiff 0
+    96 x 640  k  29 x 29 : ok  maxerr 0  bad 0/41616  bitdiff 0
+    50 x1300  k  19 x121 : ok  maxerr 0  bad 0/37760  bitdiff 0
+   280 x 700  k 129 x  7 : ok  maxerr 0  bad 0/105488  bitdiff 0
+   300 x 900  k 257 x  3 : ok  maxerr 0  bad 0/39512  bitdiff 0
+   100 x1200  k  81 x 81 : ok  maxerr 0  bad 0/22400  bitdiff 0
+   104 x1200  k  81 x 81 : ok  maxerr 0  bad 0/26880  bitdiff 0
+   108 x1200  k  81 x 81 : ok  maxerr 0  bad 0/31360  bitdiff 0
+ALL PASS: 106/106 通过
+RELEASE_PATH fallback
+     1 x   1  k   1 x  1 : ok  maxerr 0  bad 0/1  bitdiff 0
+     5 x   5  k   5 x  5 : ok  maxerr 0  bad 0/1  bitdiff 0
+     5 x 300  k   1 x  1 : ok  maxerr 0  bad 0/1500  bitdiff 0
+   300 x   5  k   1 x  1 : ok  maxerr 0  bad 0/1500  bitdiff 0
+    64 x  64  k   3 x  3 : ok  maxerr 0  bad 0/3844  bitdiff 0
+    70 x 600  k   7 x  7 : ok  maxerr 0  bad 0/38016  bitdiff 0
+     4 x1100  k   1 x 40 : ok  maxerr 0  bad 0/4244  bitdiff 0
+    45 x  45  k  41 x 41 : ok  maxerr 0  bad 0/25  bitdiff 0
+   100 x1200  k  39 x 39 : ok  maxerr 0  bad 0/72044  bitdiff 0
+   300 x 700  k  39 x 39 : ok  maxerr 0  bad 0/173444  bitdiff 0
+   200 x2100  k  81 x 81 : ok  maxerr 0  bad 0/242400  bitdiff 0
+   130 x 530  k   5 x 81 : ok  maxerr 0  bad 0/56700  bitdiff 0
+   130 x 530  k  81 x  5 : ok  maxerr 0  bad 0/26300  bitdiff 0
+    17 x1030  k   3 x  9 : ok  maxerr 0  bad 0/15330  bitdiff 0
+  1030 x  17  k   9 x  3 : ok  maxerr 0  bad 0/15330  bitdiff 0
+    90 x 320  k   2 x  2 : ok  maxerr 0  bad 0/28391  bitdiff 0
+    40 x 800  k  16 x 17 : ok  maxerr 0  bad 0/19600  bitdiff 0
+    60 x 900  k  17 x  3 : ok  maxerr 0  bad 0/39512  bitdiff 0
+    80 x 700  k  23 x 55 : ok  maxerr 0  bad 0/37468  bitdiff 0
+    96 x 640  k  29 x 29 : ok  maxerr 0  bad 0/41616  bitdiff 0
+    50 x1300  k  19 x121 : ok  maxerr 0  bad 0/37760  bitdiff 0
+   280 x 700  k 129 x  7 : ok  maxerr 0  bad 0/105488  bitdiff 0
+   300 x 900  k 257 x  3 : ok  maxerr 0  bad 0/39512  bitdiff 0
+   100 x1200  k  81 x 81 : ok  maxerr 0  bad 0/22400  bitdiff 0
+   104 x1200  k  81 x 81 : ok  maxerr 0  bad 0/26880  bitdiff 0
+   108 x1200  k  81 x 81 : ok  maxerr 0  bad 0/31360  bitdiff 0
+ALL PASS: 106/106 通过
+   169 x 130  k  81 x  3 : ok  maxerr 0  bad 0/11392  bitdiff 0
+   169 x 132  k  81 x  4 : ok  maxerr 0  bad 0/11481  bitdiff 0
+   169 x 134  k  81 x  5 : ok  maxerr 0  bad 0/11570  bitdiff 0
+   169 x 146  k  81 x 16 : ok  maxerr 0  bad 0/11659  bitdiff 0
+   169 x 148  k  81 x 17 : ok  maxerr 0  bad 0/11748  bitdiff 0
+   169 x 172  k  81 x 40 : ok  maxerr 0  bad 0/11837  bitdiff 0
+   169 x 174  k  81 x 41 : ok  maxerr 0  bad 0/11926  bitdiff 0
+   169 x 207  k  81 x 80 : ok  maxerr 0  bad 0/11392  bitdiff 0
+   169 x 209  k  81 x 81 : ok  maxerr 0  bad 0/11481  bitdiff 0
+   169 x 256  k  81 x127 : ok  maxerr 0  bad 0/11570  bitdiff 0
+   169 x 258  k  81 x128 : ok  maxerr 0  bad 0/11659  bitdiff 0
+   169 x 530  k  81 x399 : ok  maxerr 0  bad 0/11748  bitdiff 0
+   169 x 532  k  81 x400 : ok  maxerr 0  bad 0/11837  bitdiff 0
+  1384 x 262  k  81 x  3 : ok  maxerr 0  bad 0/339040  bitdiff 0
+   169 x  66  k  81 x  3 : ok  maxerr 0  bad 0/5696  bitdiff 0
+   169 x  67  k  81 x  3 : ok  maxerr 0  bad 0/5785  bitdiff 0
+   169 x 129  k  81 x  3 : ok  maxerr 0  bad 0/11303  bitdiff 0
+  1384 x 263  k  81 x  4 : ok  maxerr 0  bad 0/339040  bitdiff 0
+   169 x  67  k  81 x  4 : ok  maxerr 0  bad 0/5696  bitdiff 0
+   169 x  68  k  81 x  4 : ok  maxerr 0  bad 0/5785  bitdiff 0
+   169 x 130  k  81 x  4 : ok  maxerr 0  bad 0/11303  bitdiff 0
+   233 x 131  k 113 x  3 : ok  maxerr 0  bad 0/15609  bitdiff 0
+   233 x 133  k 113 x  4 : ok  maxerr 0  bad 0/15730  bitdiff 0
+   233 x 135  k 113 x  5 : ok  maxerr 0  bad 0/15851  bitdiff 0
+   233 x 147  k 113 x 16 : ok  maxerr 0  bad 0/15972  bitdiff 0
+   233 x 149  k 113 x 17 : ok  maxerr 0  bad 0/16093  bitdiff 0
+   233 x 173  k 113 x 40 : ok  maxerr 0  bad 0/16214  bitdiff 0
+   233 x 168  k 113 x 41 : ok  maxerr 0  bad 0/15488  bitdiff 0
+   233 x 208  k 113 x 80 : ok  maxerr 0  bad 0/15609  bitdiff 0
+   233 x 210  k 113 x 81 : ok  maxerr 0  bad 0/15730  bitdiff 0
+   233 x 257  k 113 x127 : ok  maxerr 0  bad 0/15851  bitdiff 0
+   233 x 259  k 113 x128 : ok  maxerr 0  bad 0/15972  bitdiff 0
+   233 x 531  k 113 x399 : ok  maxerr 0  bad 0/16093  bitdiff 0
+   233 x 533  k 113 x400 : ok  maxerr 0  bad 0/16214  bitdiff 0
+  1928 x 262  k 113 x  3 : ok  maxerr 0  bad 0/472160  bitdiff 0
+   233 x  66  k 113 x  3 : ok  maxerr 0  bad 0/7744  bitdiff 0
+   233 x  67  k 113 x  3 : ok  maxerr 0  bad 0/7865  bitdiff 0
+   233 x 129  k 113 x  3 : ok  maxerr 0  bad 0/15367  bitdiff 0
+  1928 x 263  k 113 x  4 : ok  maxerr 0  bad 0/472160  bitdiff 0
+   233 x  67  k 113 x  4 : ok  maxerr 0  bad 0/7744  bitdiff 0
+   233 x  68  k 113 x  4 : ok  maxerr 0  bad 0/7865  bitdiff 0
+   233 x 130  k 113 x  4 : ok  maxerr 0  bad 0/15367  bitdiff 0
+   297 x 132  k 145 x  3 : ok  maxerr 0  bad 0/19890  bitdiff 0
+   297 x 134  k 145 x  4 : ok  maxerr 0  bad 0/20043  bitdiff 0
+   297 x 136  k 145 x  5 : ok  maxerr 0  bad 0/20196  bitdiff 0
+   297 x 148  k 145 x 16 : ok  maxerr 0  bad 0/20349  bitdiff 0
+   297 x 150  k 145 x 17 : ok  maxerr 0  bad 0/20502  bitdiff 0
+   297 x 167  k 145 x 40 : ok  maxerr 0  bad 0/19584  bitdiff 0
+   297 x 169  k 145 x 41 : ok  maxerr 0  bad 0/19737  bitdiff 0
+   297 x 209  k 145 x 80 : ok  maxerr 0  bad 0/19890  bitdiff 0
+   297 x 211  k 145 x 81 : ok  maxerr 0  bad 0/20043  bitdiff 0
+   297 x 258  k 145 x127 : ok  maxerr 0  bad 0/20196  bitdiff 0
+   297 x 260  k 145 x128 : ok  maxerr 0  bad 0/20349  bitdiff 0
+   297 x 532  k 145 x399 : ok  maxerr 0  bad 0/20502  bitdiff 0
+   297 x 527  k 145 x400 : ok  maxerr 0  bad 0/19584  bitdiff 0
+  2472 x 262  k 145 x  3 : ok  maxerr 0  bad 0/605280  bitdiff 0
+   297 x  66  k 145 x  3 : ok  maxerr 0  bad 0/9792  bitdiff 0
+   297 x  67  k 145 x  3 : ok  maxerr 0  bad 0/9945  bitdiff 0
+   297 x 129  k 145 x  3 : ok  maxerr 0  bad 0/19431  bitdiff 0
+  2472 x 263  k 145 x  4 : ok  maxerr 0  bad 0/605280  bitdiff 0
+   297 x  67  k 145 x  4 : ok  maxerr 0  bad 0/9792  bitdiff 0
+   297 x  68  k 145 x  4 : ok  maxerr 0  bad 0/9945  bitdiff 0
+   297 x 130  k 145 x  4 : ok  maxerr 0  bad 0/19431  bitdiff 0
+   361 x 133  k 177 x  3 : ok  maxerr 0  bad 0/24235  bitdiff 0
+   361 x 135  k 177 x  4 : ok  maxerr 0  bad 0/24420  bitdiff 0
+   361 x 137  k 177 x  5 : ok  maxerr 0  bad 0/24605  bitdiff 0
+   361 x 149  k 177 x 16 : ok  maxerr 0  bad 0/24790  bitdiff 0
+   361 x 144  k 177 x 17 : ok  maxerr 0  bad 0/23680  bitdiff 0
+   361 x 168  k 177 x 40 : ok  maxerr 0  bad 0/23865  bitdiff 0
+   361 x 170  k 177 x 41 : ok  maxerr 0  bad 0/24050  bitdiff 0
+   361 x 210  k 177 x 80 : ok  maxerr 0  bad 0/24235  bitdiff 0
+   361 x 212  k 177 x 81 : ok  maxerr 0  bad 0/24420  bitdiff 0
+   361 x 259  k 177 x127 : ok  maxerr 0  bad 0/24605  bitdiff 0
+   361 x 261  k 177 x128 : ok  maxerr 0  bad 0/24790  bitdiff 0
+   361 x 526  k 177 x399 : ok  maxerr 0  bad 0/23680  bitdiff 0
+   361 x 528  k 177 x400 : ok  maxerr 0  bad 0/23865  bitdiff 0
+  3016 x 262  k 177 x  3 : ok  maxerr 0  bad 0/738400  bitdiff 0
+   361 x  66  k 177 x  3 : ok  maxerr 0  bad 0/11840  bitdiff 0
+   361 x  67  k 177 x  3 : ok  maxerr 0  bad 0/12025  bitdiff 0
+   361 x 129  k 177 x  3 : ok  maxerr 0  bad 0/23495  bitdiff 0
+  3016 x 263  k 177 x  4 : ok  maxerr 0  bad 0/738400  bitdiff 0
+   361 x  67  k 177 x  4 : ok  maxerr 0  bad 0/11840  bitdiff 0
+   361 x  68  k 177 x  4 : ok  maxerr 0  bad 0/12025  bitdiff 0
+   361 x 130  k 177 x  4 : ok  maxerr 0  bad 0/23495  bitdiff 0
+   425 x 134  k 209 x  3 : ok  maxerr 0  bad 0/28644  bitdiff 0
+   425 x 136  k 209 x  4 : ok  maxerr 0  bad 0/28861  bitdiff 0
+   425 x 138  k 209 x  5 : ok  maxerr 0  bad 0/29078  bitdiff 0
+   425 x 143  k 209 x 16 : ok  maxerr 0  bad 0/27776  bitdiff 0
+   425 x 145  k 209 x 17 : ok  maxerr 0  bad 0/27993  bitdiff 0
+   425 x 169  k 209 x 40 : ok  maxerr 0  bad 0/28210  bitdiff 0
+   425 x 171  k 209 x 41 : ok  maxerr 0  bad 0/28427  bitdiff 0
+   425 x 211  k 209 x 80 : ok  maxerr 0  bad 0/28644  bitdiff 0
+   425 x 213  k 209 x 81 : ok  maxerr 0  bad 0/28861  bitdiff 0
+   425 x 260  k 209 x127 : ok  maxerr 0  bad 0/29078  bitdiff 0
+   425 x 255  k 209 x128 : ok  maxerr 0  bad 0/27776  bitdiff 0
+   425 x 527  k 209 x399 : ok  maxerr 0  bad 0/27993  bitdiff 0
+   425 x 529  k 209 x400 : ok  maxerr 0  bad 0/28210  bitdiff 0
+  3560 x 262  k 209 x  3 : ok  maxerr 0  bad 0/871520  bitdiff 0
+   425 x  66  k 209 x  3 : ok  maxerr 0  bad 0/13888  bitdiff 0
+   425 x  67  k 209 x  3 : ok  maxerr 0  bad 0/14105  bitdiff 0
+   425 x 129  k 209 x  3 : ok  maxerr 0  bad 0/27559  bitdiff 0
+  3560 x 263  k 209 x  4 : ok  maxerr 0  bad 0/871520  bitdiff 0
+   425 x  67  k 209 x  4 : ok  maxerr 0  bad 0/13888  bitdiff 0
+   425 x  68  k 209 x  4 : ok  maxerr 0  bad 0/14105  bitdiff 0
+   425 x 130  k 209 x  4 : ok  maxerr 0  bad 0/27559  bitdiff 0
+   489 x 135  k 241 x  3 : ok  maxerr 0  bad 0/33117  bitdiff 0
+   489 x 137  k 241 x  4 : ok  maxerr 0  bad 0/33366  bitdiff 0
+   489 x 132  k 241 x  5 : ok  maxerr 0  bad 0/31872  bitdiff 0
+   489 x 144  k 241 x 16 : ok  maxerr 0  bad 0/32121  bitdiff 0
+   489 x 146  k 241 x 17 : ok  maxerr 0  bad 0/32370  bitdiff 0
+   489 x 170  k 241 x 40 : ok  maxerr 0  bad 0/32619  bitdiff 0
+   489 x 172  k 241 x 41 : ok  maxerr 0  bad 0/32868  bitdiff 0
+   489 x 212  k 241 x 80 : ok  maxerr 0  bad 0/33117  bitdiff 0
+   489 x 214  k 241 x 81 : ok  maxerr 0  bad 0/33366  bitdiff 0
+   489 x 254  k 241 x127 : ok  maxerr 0  bad 0/31872  bitdiff 0
+   489 x 256  k 241 x128 : ok  maxerr 0  bad 0/32121  bitdiff 0
+   489 x 528  k 241 x399 : ok  maxerr 0  bad 0/32370  bitdiff 0
+   489 x 530  k 241 x400 : ok  maxerr 0  bad 0/32619  bitdiff 0
+  4104 x 262  k 241 x  3 : ok  maxerr 0  bad 0/1004640  bitdiff 0
+   489 x  66  k 241 x  3 : ok  maxerr 0  bad 0/15936  bitdiff 0
+   489 x  67  k 241 x  3 : ok  maxerr 0  bad 0/16185  bitdiff 0
+   489 x 129  k 241 x  3 : ok  maxerr 0  bad 0/31623  bitdiff 0
+  4104 x 263  k 241 x  4 : ok  maxerr 0  bad 0/1004640  bitdiff 0
+   489 x  67  k 241 x  4 : ok  maxerr 0  bad 0/15936  bitdiff 0
+   489 x  68  k 241 x  4 : ok  maxerr 0  bad 0/16185  bitdiff 0
+   489 x 130  k 241 x  4 : ok  maxerr 0  bad 0/31623  bitdiff 0
+GUARD kh=81 kw=3 outW=128 PASS
+GUARD kh=81 kw=3 outW=129 PASS
+GUARD kh=81 kw=4 outW=128 PASS
+GUARD kh=81 kw=4 outW=129 PASS
+GUARD kh=81 kw=17 outW=128 PASS
+GUARD kh=81 kw=17 outW=129 PASS
+GUARD kh=81 kw=80 outW=128 PASS
+GUARD kh=81 kw=80 outW=129 PASS
+GUARD kh=81 kw=81 outW=128 PASS
+GUARD kh=81 kw=81 outW=129 PASS
+GUARD kh=81 kw=399 outW=128 PASS
+GUARD kh=81 kw=399 outW=129 PASS
+GUARD kh=81 kw=400 outW=128 PASS
+GUARD kh=81 kw=400 outW=129 PASS
+NINE_EXTENDED_PASS cases=140
+RELEASE_STATE_DONE 2026-09-12T23:02:35+08:00

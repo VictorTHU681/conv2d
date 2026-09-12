@@ -3,6 +3,8 @@
 from pathlib import Path
 import hashlib
 import subprocess
+import ast
+import re
 from v55_shift import shifted
 from v55_schedule import interleaved
 from v55_k4_io import k4_io
@@ -98,6 +100,33 @@ def main():
     variants['nine_w130']=selected_nine(variants['nine_plane_reload'])
     variants['nine_w140']=selected_nine(variants['nine_plane_reload'],weight=140)
     variants['nine_outline']=selected_nine(variants['nine_plane_reload'],outline=True)
+    variants['nine_out140']=selected_nine(variants['nine_plane_reload'],weight=140,outline=True)
+    for alignment in (6,7):
+        s=variants['nine_out140']
+        a=s.index('static void k16pairf4(');b=s.index('\n}\n',a)+3
+        f=s[a:b]
+        old='        ".p2align 4\\n"\n'
+        assert f.count(old)==1
+        new=f'        "b 2f\\n\\t"\n        ".p2align {alignment}\\n"\n'
+        variants['nine_align'+str(1<<alignment)]=s[:a]+f.replace(old,new)+s[b:]
+    # Align the inner loop without executing a new alignment branch per row.
+    # ROW_HEAD_COPY4 has a fixed instruction footprint; all padding is before
+    # label 1, so subsequent rows branch past it.
+    s=variants['nine_out140']
+    a=s.index('#define ROW_HEAD_COPY4');b=s.index('static void k16pair(',a)
+    literals=re.findall(r'"(?:[^"\\]|\\.)*"',s[a:b])
+    instructions=[x.strip() for x in ''.join(map(ast.literal_eval,literals)).splitlines() if x.strip()]
+    instructions=[x for x in instructions if not x.endswith(':')]
+    assert all(not x.startswith('.') for x in instructions)
+    row_bytes=4*(len(instructions)+1)  # Plus MOV x15,x7 before label 2.
+    pad=(-row_bytes)%128
+    a=s.index('static void k16pairf4(');b=s.index('\n}\n',a)+3
+    f=s[a:b]
+    f=f.replace('        ".p2align 4\\n"\n','')
+    first='        "1:\\n\\t"\n'
+    assert f.count(first)==1
+    prefix='        ".p2align 7\\n"\n'+'        "nop\\n\\t"\n'*(pad//4)
+    variants['nine_hoist128']=s[:a]+f.replace(first,prefix+first)+s[b:]
     out=Path('build/v55');out.mkdir(parents=True,exist_ok=True)
     for n,s in variants.items():
         (out/(n+'.c')).write_text(s)

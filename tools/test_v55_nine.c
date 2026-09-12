@@ -52,6 +52,9 @@ int main(void)
         for (int KW=3;KW<=4;KW++) {
             int KH=khs[k];
             ok &= run_case(17*KH+7,260+KW-1,KH,KW,58301+n++,1);
+            int widths[]={64,65,127};
+            for (int w=0;w<3;w++)
+                ok &= run_case(2*KH+7,widths[w]+KW-1,KH,KW,58301+n++,1);
         }
     }
     for (int q=0;q<7;q++) for (int OW=128;OW<=129;OW++) {
