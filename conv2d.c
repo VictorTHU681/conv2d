@@ -1273,18 +1273,60 @@ static void fill_args(ka_t* A, const kp_t* P, long div, long slot_unused, long n
         "st1w {z24.s}, p3, [x23]\n\t"
 
 
+#define ROW_HEAD_COPY4 \
+        "add x21, x0, x26\n\t" \
+        "ldr x12, [%[A], #240]\n\t" \
+        "add x16, x17, x12\n\t" \
+        "sub x17, x28, x17\n\t" \
+        "add x22, x0, x1\n\t" "cmp x8, #1\n\t" "csel x22, x0, x22, eq\n\t" "mov x23, x17\n\t" \
+        "ldr x12, [%[A], #168]\n\t" \
+        "cbz x12, 7f\n\t" \
+        "cmp x12, #4\n\t" \
+        "b.lo 43f\n\t" \
+        "3:\n\t" \
+        "prfm pldl2keep, [x21, #0]\n\t" \
+        "ld1w {z24.s}, p0/z, [x22]\n\t" \
+        "st1w {z24.s}, p0, [x23]\n\t" \
+        "prfm pldl2keep, [x21, #64]\n\t" \
+        "ld1w {z24.s}, p0/z, [x22, #1, mul vl]\n\t" \
+        "st1w {z24.s}, p0, [x23, #1, mul vl]\n\t" \
+        "prfm pldl2keep, [x21, #128]\n\t" \
+        "ld1w {z24.s}, p0/z, [x22, #2, mul vl]\n\t" \
+        "st1w {z24.s}, p0, [x23, #2, mul vl]\n\t" \
+        "prfm pldl2keep, [x21, #192]\n\t" \
+        "ld1w {z24.s}, p0/z, [x22, #3, mul vl]\n\t" \
+        "st1w {z24.s}, p0, [x23, #3, mul vl]\n\t" \
+        "add x21, x21, #256\n\t" \
+        "add x22, x22, #256\n\t" \
+        "add x23, x23, #256\n\t" \
+        "sub x12, x12, #4\n\t" \
+        "cmp x12, #4\n\t" \
+        "b.hs 3b\n\t" \
+        "43:\n\t" \
+        "cbz x12, 7f\n\t" \
+        "44:\n\t" \
+        "prfm pldl2keep, [x21]\n\t" \
+        "ld1w {z24.s}, p0/z, [x22]\n\t" \
+        "st1w {z24.s}, p0, [x23]\n\t" \
+        "add x21, x21, #64\n\t" \
+        "add x22, x22, #64\n\t" \
+        "add x23, x23, #64\n\t" \
+        "subs x12, x12, #1\n\t" \
+        "b.ne 44b\n\t" \
+        "7:\n\t" \
+        "prfm pldl2keep, [x21]\n\t" \
+        "ld1w {z24.s}, p3/z, [x22]\n\t" \
+        "st1w {z24.s}, p3, [x23]\n\t"
+
 // ---------------- 16×1 对：A 用 za0/za1（列 0..15 / 16..31），B 用 za2/za3 ----------------
 static void k16pair(const kp_t* P)
 {
     ka_t A; fill_args(&A, P, 1, 512, 31 + P->steps);
     asm volatile(
         LOAD_ARGS
-        "ldr x25, [%[A], #232]\n\t"
         "fmov z31.s, #0.0\n\t"
         "1:\n\t"
         ROW_HEAD_COMMON
-        "add x21, x9, x25\n\t"
-        "prfm pstl2keep, [x21]\n\t" "prfm pstl2keep, [x21, #64]\n\t"
         "mov x15, x7\n\t"
         "2:\n\t"
         "ld1w {z0.s}, p0/z, [x16]\n\t"
@@ -1334,15 +1376,12 @@ static void k16pairf(const kp_t* P)
     A.n2 = (int64_t)P->kb0; A.e2 = (int64_t)P->kbase; A.T = (int64_t)P->kend; A.nlines = P->cf0;
     asm volatile(
         LOAD_ARGS
-        "ldr x25, [%[A], #232]\n\t"
         "ldr x13, [%[A], #184]\n\t"
         "fmov z31.s, #0.0\n\t"
         "fmov z10.s, #0.0\n\t"
         "fmov z11.s, #0.0\n\t"
         "1:\n\t"
         ROW_HEAD_COMMON
-        "add x21, x9, x25\n\t"
-        "prfm pstl2keep, [x21]\n\t" "prfm pstl2keep, [x21, #64]\n\t"
         "mov x15, x7\n\t"
         "2:\n\t"
         "ld1w {z0.s}, p0/z, [x16]\n\t"
@@ -1413,8 +1452,6 @@ static void k16single(const kp_t* P)
         "fmov z31.s, #0.0\n\t"
         "1:\n\t"
         ROW_HEAD_COMMON
-        "ldr x21, [%[A], #232]\n\t" "add x21, x9, x21\n\t"
-        "prfm pstl2keep, [x21]\n\t" "prfm pstl2keep, [x21, #64]\n\t" "prfm pstl2keep, [x21, #128]\n\t" "prfm pstl2keep, [x21, #192]\n\t"
         "mov x15, x7\n\t"
         "2:\n\t"
         "ld1w {z0.s}, p0/z, [x16]\n\t"
@@ -1464,16 +1501,13 @@ static void k16pairf4(const kp_t* P)
     A.kw4 = P->steps * 16;   // kf 每 kernel 行的字节跨度 = steps*4floats*4B
     asm volatile(
         LOAD_ARGS
-        "ldr x25, [%[A], #232]\n\t"
         "ldr x13, [%[A], #184]\n\t"     // kf 线性游标（起始行 a0）
         "fmov z31.s, #0.0\n\t"
         "fmov z10.s, #0.0\n\t" "fmov z11.s, #0.0\n\t" "fmov z12.s, #0.0\n\t"
         "fmov z13.s, #0.0\n\t" "fmov z14.s, #0.0\n\t" "fmov z15.s, #0.0\n\t"
         "fmov z16.s, #0.0\n\t" "fmov z17.s, #0.0\n\t"
         "1:\n\t"
-        ROW_HEAD_COMMON
-        "add x21, x9, x25\n\t"
-        "prfm pstl2keep, [x21]\n\t" "prfm pstl2keep, [x21, #64]\n\t"
+        ROW_HEAD_COPY4
         "mov x15, x7\n\t"
         ".p2align 4\n"
         "2:\n\t"
@@ -1572,15 +1606,12 @@ static void k16pairf3(const kp_t* P)
     A.kw4 = P->steps * 16;   // kf 每 kernel 行的字节跨度 = steps*4floats*4B
     asm volatile(
         LOAD_ARGS
-        "ldr x25, [%[A], #232]\n\t"
         "ldr x13, [%[A], #184]\n\t"     // kf 线性游标（起始行 a0）
         "fmov z31.s, #0.0\n\t"
         "fmov z10.s, #0.0\n\t" "fmov z11.s, #0.0\n\t" "fmov z12.s, #0.0\n\t"
         "fmov z13.s, #0.0\n\t" "fmov z14.s, #0.0\n\t" "fmov z15.s, #0.0\n\t"
         "1:\n\t"
         ROW_HEAD_COMMON
-        "add x21, x9, x25\n\t"
-        "prfm pstl2keep, [x21]\n\t" "prfm pstl2keep, [x21, #64]\n\t"
         "mov x15, x7\n\t"
         ".p2align 4\n"
         "2:\n\t"
@@ -1877,7 +1908,8 @@ static void k4(const kp_t* P)
     ka_t A; fill_args(&A, P, 1, 0, 0);
     A.in_row = (int64_t)(P->in_row - sh);
     A.slot = 4 * TSB;
-    A.it = steps4 / 4;
+    A.it = (P->KW + 3) / 4;
+    A.kw4 = (P->KW + 3) % 4;
     A.ncp_full = ncp / 64; A.ncp_tail = ((ncp % 64) + 3) / 4;      // ld4w 整块数、尾块每平面元素数
     A.TSB = TSB;
     A.n2 = TSB * ((sh + 0) & 3) + 4 * ((sh + 0) >> 2);             // 子步 i 的平面起点偏移（相对槽基址）
@@ -1918,6 +1950,15 @@ static void k4(const kp_t* P)
         "add x2, x2, #256\n\t"
         "subs x15, x15, #1\n\t"
         "b.ne 2b\n\t"
+        "ldr x12, [%[A], #264]\n\t"
+        "cbz x12, 42f\n\t"
+        K4_STEP(x16, 0)
+        "cmp x12, #1\n\t" "b.eq 41f\n\t"
+        K4_STEP(x22, 1)
+        "cmp x12, #2\n\t" "b.eq 41f\n\t"
+        K4_STEP(x23, 2)
+        "41:\n\t" "add x2, x2, #256\n\t"
+        "42:\n\t"
         WRAP_B(x2) SEL_OUT
         "cmp x27, x24\n\t" "b.hs 4f\n\t"
         "lsl w12, w27, #2\n\t"

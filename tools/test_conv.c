@@ -1,5 +1,7 @@
 // 泛化正确性测试：随机尺寸/核大小，与参考四重循环（同编译选项 → fmla）逐位比较
 // gcc -O3 -march=armv9-a+sme+sve2 -fopenmp test_conv.c conv2d.c -o test_conv -lm
+// TEST_BITWISE=1: require exact float bits; TEST_SIGNED=1: cancellation inputs;
+// TEST_REUSE_HEIGHT=1: keep the kernel fixed across increasing input heights.
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -44,15 +46,24 @@ static int run_case(int H, int W, int KH, int KW, int seed, int verbose)
     CONVFLOAT* o2 = malloc((size_t)outH * outW * sizeof(CONVFLOAT));
     int s = seed;
     for (long i = 0; i < (long)H * W; i++) in[i] = rand_lcg(&s);
+    if (getenv("TEST_REUSE_HEIGHT")) s = seed + 7919;
     for (long i = 0; i < (long)KH * KW; i++) k[i] = rand_lcg(&s);
+    if (getenv("TEST_SIGNED")) {
+        for (long i = 0; i < (long)H * W; i++) in[i] = 2.0f * in[i] - 1.0f;
+        for (long i = 0; i < (long)KH * KW; i++) k[i] = 2.0f * k[i] - 1.0f;
+    }
     for (long i = 0; i < outH * outW; i++) { o1[i] = 7.0f; o2[i] = 7.0f; }   // 初值无关（参考先清零）
     reference(in, H, W, k, KH, KW, o1);
     conv2d(in, H, W, k, KH, KW, o2);
     long nbad = 0;
+    long bitdiff = 0;
+    const int bitwise = getenv("TEST_BITWISE") != NULL;
     double maxerr = 0;
     for (long i = 0; i < outH * outW; i++) {
         double e = fabs((double)o1[i] - (double)o2[i]);
-        if (!(e <= 1e-5)) {
+        int different = memcmp(o1 + i, o2 + i, sizeof(float)) != 0;
+        bitdiff += different;
+        if (!(e <= 1e-5) || (bitwise && different)) {
             static long nshow = -1; if (nshow < 0) { const char* e2 = getenv("TEST_SHOW"); nshow = e2 ? atol(e2) : 3; }
             if (nbad < nshow && verbose) printf("    mismatch @%ld (%ld,%ld): ref %.8g got %.8g\n", i, i / outW, i % outW, o1[i], o2[i]);
             nbad++;
@@ -60,7 +71,7 @@ static int run_case(int H, int W, int KH, int KW, int seed, int verbose)
         if (e > maxerr) maxerr = e;
     }
     if (nbad || verbose)
-        printf("  %4d x%4d  k %3d x%3d : %s  maxerr %.3g  bad %ld/%ld\n", H, W, KH, KW, nbad ? "FAIL" : "ok", maxerr, nbad, outH * outW);
+        printf("  %4d x%4d  k %3d x%3d : %s  maxerr %.3g  bad %ld/%ld  bitdiff %ld\n", H, W, KH, KW, nbad ? "FAIL" : "ok", maxerr, nbad, outH * outW, bitdiff);
     free(in); free(k); free(o1); free(o2);
     return nbad == 0;
 }
@@ -88,6 +99,14 @@ int main(int argc, char** argv)
         int H = KH + (int)(rand_lcg(&s) * 120), W = KW + (int)(rand_lcg(&s) * 1200);
         total++;
         pass += run_case(H, W, KH, KW, s, 0);
+    }
+    if (getenv("TEST_REUSE_HEIGHT")) {
+        // Same kernel dimensions/output width, but increasing height. A cached
+        // work partition must be rebuilt even though the packed kernel can fit.
+        for (int h = 100; h <= 108; h += 4) {
+            total++;
+            pass += run_case(h, 1200, 81, 81, 51301, 1);
+        }
     }
     printf("%s: %d/%d 通过\n", pass == total ? "ALL PASS" : "SOME FAIL", pass, total);
     return pass == total ? 0 : 1;
