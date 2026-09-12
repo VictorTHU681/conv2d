@@ -47,3 +47,23 @@ save/publish timing bracket. The previous generator excluded no such update
 because prior sources had none; it now handles this new publication suffix.
 This job is pending and profiling will not substitute for uninstrumented timing.
 Root operator and archives remain unchanged.
+
+## Completed phase profile
+
+Job **1585010**, cn20483 07:04:53–07:07:03, succeeded: 32 processes, 8,512 phase
+records and 160 timed hashes validate. Saves equal resumes, with 916,936 row work
+units and 186 pieces per call. [Profile summary](../../results/v56/experiments/tail-cutoff/profile_summary.md).
+
+DDR baseline/guided/cut2/cut4 chunks per worker are 295.34/155.37/155.46/205.43.
+The cut2 threshold barely changes boundary counts relative to prior guidance;
+cut4 changes them materially. Last completion is 5870.1/5882.5/5860.4/5864.1 us,
+while median per-call last-minus-mean spread is 55.1/87.1/83.4/80.0 us. Thus both
+cutoffs remain worse than baseline in DDR end spread, despite slightly better
+instrumented last completion in this run. HBM last completion is
+5834.1/5767.5/5758.0/5768.1 us, with spreads 38.4/48.9/36.9/36.2 us.
+
+Counter updates are included in publish measurements. Different binaries and
+instrumentation perturb layout/scheduling, and negligible cut2 boundary-count
+change limits what can be attributed to the policy itself. These modest timing
+changes are not accepted throughput improvements. Runtime screening 1585009 is
+still live and no root change is made before its complete result.
