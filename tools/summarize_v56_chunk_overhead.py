@@ -13,7 +13,7 @@ m=re.search(r'^PLACEMENT cpu_node=\d+ hbm_node=(-?\d+)$',s,re.M);assert m
 memories=['DDR'] if int(m[1])<0 else ['DDR','HBM']
 variants=['baseline','phase','carry4','both'] if setup else ['s8','s2','s4']
 rounds=range(4 if setup else 6)
-data={};threads={};counts=defaultdict(int);orders=defaultdict(list);key=None
+data={};threads={};costs={};counts=defaultdict(int);orders=defaultdict(list);key=None
 for line in s.splitlines():
     shape='4256 6390 55 55' if setup55 else '6144 4096 41 41'
     m=re.match(r'PROFILE memory=(\w+) round=(\d+) variant=(\w+) shape='+shape+'$',line)
@@ -23,6 +23,11 @@ for line in s.splitlines():
             assert key is not None
             f=dict(re.findall(r'(\w+)=([\d.]+)',line));c=int(f.pop('call'));t=int(f.pop('tid'));k=key+(c,t)
             assert k not in dest;dest[k]={n:float(v) for n,v in f.items()}
+    cm=re.match(r'K5_COST call=(\d+) bucket=(\d+) tile_steps=(\d+) kernel_mean_us=([\d.]+)',line)
+    if cm:
+        assert key is not None
+        ck=key+(int(cm[1]),int(cm[2]));assert ck not in costs
+        costs[ck]=(int(cm[3]),float(cm[4]))
     if re.search(r' run\d+\s+.* GFLOPS PASS$',line):assert key is not None;counts[key]+=1
 blocks={(m,r,v) for m in memories for r in rounds for v in variants}
 assert set(counts)==blocks and set(counts.values())=={5}
@@ -67,12 +72,17 @@ for m in memories:
         print(f'| {m} | {v} | '+' | '.join(f'{median(proc[n]):.3f}' for n in metrics+['last'])+' |')
 
 if setup55:
-    print('\nKH55 kernel-region detail uses the existing diagnostic buckets (setup + restore + kernel, not arithmetic-only).')
-    print('\n| Memory | Variant | Main F3 region us/thread | Tail single-16 region us/thread |')
-    print('| --- | --- | ---: | ---: |')
+    assert set(costs)=={k+(c,b) for k in blocks for c in range(1,8) for b in [0,1,3]}
+    for k in blocks:
+        for c in range(1,8):
+            assert abs(costs[k+(c,0)][1]-mean(threads[k+(c,t)]['main_us'] for t in range(38)))<0.002
+            assert abs(costs[k+(c,1)][1]+costs[k+(c,3)][1]-mean(threads[k+(c,t)]['tail_us'] for t in range(38)))<0.003
+    print('\nKH55 kernel-region detail uses existing diagnostic buckets (setup + restore + kernel, not arithmetic-only). The thread tail field combines single-16 and K4; aggregate bucket counts separate them here.')
+    print('\n| Memory | Variant | F3 region us/thread | Single-16 region us/thread | K4 region us/thread |')
+    print('| --- | --- | ---: | ---: | ---: |')
     for m in memories:
         for v in variants:
-            vals={n:[] for n in ['main_us','tail_us']}
+            vals={b:[] for b in [0,1,3]}
             for r in rounds:
-                for n in vals:vals[n].append(median(mean(threads[m,r,v,c,t][n] for t in range(38)) for c in range(3,8)))
-            print(f'| {m} | {v} | {median(vals["main_us"]):.3f} | {median(vals["tail_us"]):.3f} |')
+                for b in vals:vals[b].append(median(costs[m,r,v,c,b][1] for c in range(3,8)))
+            print(f'| {m} | {v} | '+ ' | '.join(f'{median(vals[b]):.3f}' for b in [0,1,3])+' |')

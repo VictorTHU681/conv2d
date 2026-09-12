@@ -13,15 +13,15 @@ Restore includes first-chunk ZA zeroing. Publish includes existing diagnostic ac
 | HBM | carry4 | 85.632 | 2.079 | 57.391 | 19.057 | 15.255 | 10865.034 | 24.475 | 11037.360 |
 | HBM | both | 85.632 | 1.908 | 62.926 | 17.130 | 22.946 | 10859.584 | 25.931 | 11045.125 |
 
-KH55 kernel-region detail uses the existing diagnostic buckets (setup + restore + kernel, not arithmetic-only).
+KH55 kernel-region detail uses existing diagnostic buckets (setup + restore + kernel, not arithmetic-only). The thread tail field combines single-16 and K4; aggregate bucket counts separate them here.
 
-| Memory | Variant | Main F3 region us/thread | Tail single-16 region us/thread |
-| --- | --- | ---: | ---: |
-| DDR | baseline | 6587.709 | 4325.984 |
-| DDR | phase | 6589.856 | 4327.563 |
-| DDR | carry4 | 6591.987 | 4315.286 |
-| DDR | both | 6578.727 | 4318.857 |
-| HBM | baseline | 6580.738 | 4327.439 |
-| HBM | phase | 6577.142 | 4332.005 |
-| HBM | carry4 | 6579.137 | 4314.868 |
-| HBM | both | 6572.012 | 4321.915 |
+| Memory | Variant | F3 region us/thread | Single-16 region us/thread | K4 region us/thread |
+| --- | --- | ---: | ---: | ---: |
+| DDR | baseline | 6587.709 | 3317.200 | 1010.101 |
+| DDR | phase | 6589.856 | 3318.836 | 1009.632 |
+| DDR | carry4 | 6591.987 | 3314.610 | 999.601 |
+| DDR | both | 6578.727 | 3311.845 | 1007.573 |
+| HBM | baseline | 6580.737 | 3306.854 | 1019.786 |
+| HBM | phase | 6577.141 | 3308.347 | 1023.651 |
+| HBM | carry4 | 6579.137 | 3307.294 | 1008.300 |
+| HBM | both | 6572.012 | 3303.869 | 1018.160 |

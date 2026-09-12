@@ -41,8 +41,13 @@ Against 8b6b295, phase improves KH41 DDR 0.66%, but regresses KH55 0.44% DDR /
 0.55% HBM. Carry4 gains 0.11–0.36% in all DDR shapes, but loses 0.22% at HBM
 KH41 and 0.38% at HBM KH81. Both is inferior to phase at KH41 and retains
 KH55 regression. **No variant adopted.** Original-benchmark three-way job
-**1583757**, cn20483, started 05:17:05 and is running (baseline/phase/carry4).
-No official result is yet claimed.
+**1583757**, cn20483, succeeded 05:17:05–05:28:16 (baseline/phase/carry4).
+All 144 full-reference checks pass with zero maximum error. [Official results](../../results/v56/experiments/chunk-setup/official_summary.md)
+confirm phase's KH55 regression: -0.40% DDR / -0.46% HBM, despite KH41
++0.50% DDR / +0.60% HBM. Other phase shapes range -0.17% to +0.19%.
+Carry4 DDR ranges -0.26% to +0.16%; HBM ranges +0.09% to +0.22%, whereas its
+screen had HBM regressions. Neither establishes a consistent improvement
+sufficient for adoption. Root operator and packages remain 8b6b295.
 
 Job **1583738**, cn20483 05:14:03–05:15:02, profiles all four variants in four
 balanced orders. 8,512 phase records and 160 timed hashes pass; every call
@@ -82,8 +87,25 @@ four instrumentation binaries. It succeeded 05:23:14–05:23:30: 8,512 phase rec
 and 160 timed hashes pass, with 1,372,376 row work units / 358 pieces per call,
 and saves equal resumes. [KH55 profile](../../results/v56/experiments/chunk-setup/profile55_summary.md)
 shows only 0.7–0.8 us/thread setup savings for phase, versus 27–29 us at KH41.
-Carry4 reduces ZA restore/zero by 15.6 us DDR / 17.2 us HBM. F3 and single-16
+Carry4 reduces ZA restore/zero by 15.6 us DDR / 17.2 us HBM. F3, single-16 and K4
 region timings change little; this instrumented binary **does not reproduce**
 the uninstrumented phase regression at KH55. It cannot identify that regression's
 cause or justify disregarding it. Compiler layout and timing-boundary effects
-remain unresolved; wait for the original benchmark comparison before adoption.
+remain unresolved; the completed original benchmark confirms the phase regression and both controls remain unadopted.
+
+
+## Bucket-label correction and next control
+
+The earlier KH55 summary mislabeled the combined tail field as single-16 alone.
+KH55 actually has F3 (32+3), single-16, and K4 (4) groups. The corrected summary
+uses existing aggregate buckets 0/1/3 and verifies their sums against all thread
+records. Baseline DDR region means are 6,588 / 3,317 / 1,010 us respectively;
+HBM 6,581 / 3,307 / 1,020 us. No raw log or timing changed. This correction does
+not alter the observed lack of regression in the instrumented binary.
+
+[Matched F3 outlining](f3-outline.md), job 1583843, tests whether removing F3
+from the worker stabilizes the kernel's machine code against phase setup changes.
+It compares accepted and phase sources with and without outlining. The completed
+screen finds that fixed outlined F3 code shrinks the KH55 phase/base difference
+to -0.05% DDR / +0.06% HBM, but outlined candidates regress other cases and remain
+unadopted. The separate inline anchor experiment 1583890 follows up.
