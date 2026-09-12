@@ -1414,6 +1414,51 @@ static void fill_args(ka_t* A, const kp_t* P, long div, long slot_unused, long n
         "st1w {z24.s}, p3, [x23]\n\t"
 
 
+#define ROW_HEAD_COPY4 \
+        "add x21, x0, x26\n\t" \
+        "ldr x12, [%[A], #240]\n\t" \
+        "add x16, x17, x12\n\t" \
+        "sub x17, x28, x17\n\t" \
+        "add x22, x0, x1\n\t" "cmp x8, #1\n\t" "csel x22, x0, x22, eq\n\t" "mov x23, x17\n\t" \
+        "ldr x12, [%[A], #168]\n\t" \
+        "cbz x12, 7f\n\t" \
+        "cmp x12, #4\n\t" \
+        "b.lo 43f\n\t" \
+        "3:\n\t" \
+        "prfm pldl2keep, [x21, #0]\n\t" \
+        "ld1w {z24.s}, p0/z, [x22]\n\t" \
+        "st1w {z24.s}, p0, [x23]\n\t" \
+        "prfm pldl2keep, [x21, #64]\n\t" \
+        "ld1w {z24.s}, p0/z, [x22, #1, mul vl]\n\t" \
+        "st1w {z24.s}, p0, [x23, #1, mul vl]\n\t" \
+        "prfm pldl2keep, [x21, #128]\n\t" \
+        "ld1w {z24.s}, p0/z, [x22, #2, mul vl]\n\t" \
+        "st1w {z24.s}, p0, [x23, #2, mul vl]\n\t" \
+        "prfm pldl2keep, [x21, #192]\n\t" \
+        "ld1w {z24.s}, p0/z, [x22, #3, mul vl]\n\t" \
+        "st1w {z24.s}, p0, [x23, #3, mul vl]\n\t" \
+        "add x21, x21, #256\n\t" \
+        "add x22, x22, #256\n\t" \
+        "add x23, x23, #256\n\t" \
+        "sub x12, x12, #4\n\t" \
+        "cmp x12, #4\n\t" \
+        "b.hs 3b\n\t" \
+        "43:\n\t" \
+        "cbz x12, 7f\n\t" \
+        "44:\n\t" \
+        "prfm pldl2keep, [x21]\n\t" \
+        "ld1w {z24.s}, p0/z, [x22]\n\t" \
+        "st1w {z24.s}, p0, [x23]\n\t" \
+        "add x21, x21, #64\n\t" \
+        "add x22, x22, #64\n\t" \
+        "add x23, x23, #64\n\t" \
+        "subs x12, x12, #1\n\t" \
+        "b.ne 44b\n\t" \
+        "7:\n\t" \
+        "prfm pldl2keep, [x21]\n\t" \
+        "ld1w {z24.s}, p3/z, [x22]\n\t" \
+        "st1w {z24.s}, p3, [x23]\n\t"
+
 // ---------------- 16×1 对：A 用 za0/za1（列 0..15 / 16..31），B 用 za2/za3 ----------------
 static void k16pair(const kp_t* P)
 {
@@ -1603,7 +1648,7 @@ static void k16pairf4(const kp_t* P)
         "fmov z13.s, #0.0\n\t" "fmov z14.s, #0.0\n\t" "fmov z15.s, #0.0\n\t"
         "fmov z16.s, #0.0\n\t" "fmov z17.s, #0.0\n\t"
         "1:\n\t"
-        ROW_HEAD_COMMON
+        ROW_HEAD_COPY4
         "mov x15, x7\n\t"
         ".p2align 4\n"
         "2:\n\t"
@@ -2138,9 +2183,15 @@ static void roll_prepare(const float* k, long H, long W, long KH, long KW, int n
     rplan_t* P = &g_rp;
     const long outW = W - KW + 1, outH = H - KH + 1;
     const size_t kn = (size_t)KH * KW;
-    int same = P->kcopy && P->kcopy_n == kn && P->KH == KH && P->KW == KW && P->outW == outW && memcmp(P->kcopy, k, kn * 4) == 0;
+    int same = P->kcopy && P->kcopy_n >= kn && P->KH == KH && P->KW == KW && P->outW == outW && memcmp(P->kcopy, k, kn * 4) == 0;
     if (!same) {
-        P->ng = roll_groups(KH, KW, P->G);
+        rgrp_t groups[12];
+        P->ng = roll_groups(KH, KW, groups);
+        for (int g = 0; g < P->ng; g++) {
+            groups[g].R = P->G[g].R; groups[g].Rcap = P->G[g].Rcap;
+            groups[g].kf = P->G[g].kf; groups[g].kfcap = P->G[g].kfcap;
+            P->G[g] = groups[g];
+        }
         for (int g = 0; g < P->ng; g++) {
             rgrp_t* G = &P->G[g];
             size_t need = (size_t)KH * G->RSB;
