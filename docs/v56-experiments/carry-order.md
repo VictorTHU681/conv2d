@@ -20,10 +20,19 @@ the target toolchain. No ZA-writing operation is introduced in scalar parameter
 setup. Runtime correctness and actual timing are still required; source ordering
 alone does not establish the emitted schedule or a speedup.
 
-Job **1584675**, requested on cn20481, is submitted for both candidates' five
-signed state packing modes with step1, guards and runtime output ownership,
-then six permutations of baseline/early/load_early, five timings/process, all
-four shapes and separate DDR/HBM. Planned 3,058 state/guard cases, 108 ownership
-cases and 720 timed hashes. Log: `results/v56/experiments/carry-order/screen.log`.
-No correctness/performance acceptance yet claimed. Root source and packages remain
-1d3f5071; latest archives only refresh the verified direct-v55 measurement README.
+Job **1584675**, cn20481 06:38:29–06:43:56, succeeded. Both candidates pass
+five signed state modes with step1, guards and output ownership: 3,058 state/guard
+and 108 ownership cases, zero observed active conflicts. All 720 timed hashes
+pass in six permutations, five timings/process, four shapes and separate DDR/HBM.
+[Screen](../../results/v56/experiments/carry-order/summary.md).
+
+Early restore+zero/base KH39/41/55/81: DDR -0.27%/-0.16%/-0.19%/+0.17%;
+HBM +0.15%/-0.08%/-0.09%/-0.03%. Early restore-only/base: DDR
+-0.12%/+0.04%/+0.01%/-0.14%; HBM -0.01%/-0.01%/+0.08%/+0.02%.
+**Both are rejected**: neither provides consistent benefit or resolves the target
+KH41 overhead. No original full-reference performance or package acceptance is
+claimed for these controls. Source ordering and a timing boundary do not prove
+a hardware stall mechanism; no such cause is concluded from this result.
+
+Accepted root remains 1d3f5071. The next [guided-chunk control](guided-chunks.md)
+tests reducing transfer frequency in early work while retaining short final chunks.

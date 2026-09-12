@@ -18,6 +18,7 @@ prefix = '''#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <stddef.h>
 #include <string.h>
 typedef struct { uint64_t v; } padded_u64;
 static padded_u64 g_pk_gdone[12];
@@ -52,7 +53,7 @@ static void run(long KH,long KW,long OH,long OW) {
             while(row<OH) {
                 long end=row+1+rnd()%(OH/3+1); if(end>OH) end=OH;
                 assert(P.npieces<16384);
-                P.pieces[P.npieces++]=(rpiece_t){P.nit,row,end,0,0}; row=end;
+                P.pieces[P.npieces++]=(rpiece_t){.item=P.nit,.ja=row,.jb=end}; row=end;
             }
             P.nit++;
         }
@@ -123,6 +124,23 @@ static unsigned long claims,edges,plans,resumes;
                               '    for(g_roll_step=1;g_roll_step<=64;g_roll_step*=2)\n    for(long kh=16;')
     harness = harness.replace('    run(39,39,4058,6106);', '    g_roll_step=8; run(39,39,4058,6106);')
     harness = harness.replace('OUTPUT_ORDER_HOST', 'OUTPUT_PIPELINE_HOST')
+if '--guided' in sys.argv:
+    assert variant == 'pipelined' and custom_source
+    sig = 'static inline long roll_chunk_rows('
+    start = s.index(sig)
+    helper = s[start:s.index('\n}\n', start)+3]
+    prefix += 'static int g_roll_guided=1;\n' + helper
+    harness = harness.replace('x->ja+ao+g_roll_step*KH-KH+1',
+        'x->ja+ao+roll_chunk_rows(x->jb-x->ja+KH-1,ao,g_roll_step*KH)-KH+1')
+    harness = harness.replace('y->ja+bo+g_roll_step*KH-KH+1',
+        'y->ja+bo+roll_chunk_rows(y->jb-y->ja+KH-1,bo,g_roll_step*KH)-KH+1')
+    harness = harness.replace('progress[t]+g_roll_step*KH',
+        'progress[t]+roll_chunk_rows(total,progress[t],g_roll_step*KH)')
+    harness = harness.replace('        __atomic_store_n(&P.ready[pi].v,',
+        '        assert(progress[t]%KH==0 && next>progress[t]);\n'
+        '        assert(next==total || next%KH==0);\n'
+        '        __atomic_store_n(&P.ready[pi].v,')
+    harness = harness.replace('OUTPUT_PIPELINE_HOST', 'OUTPUT_GUIDED_HOST')
 stem = 'host_test' if variant == 'ordered' else 'host_pipeline'
 if custom_source:
     harness=harness.replace('128,129,255,256,257,273,511,512,513',

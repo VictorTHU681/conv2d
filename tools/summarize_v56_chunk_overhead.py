@@ -7,13 +7,15 @@ from itertools import permutations
 import re,sys
 s=Path(sys.argv[1]).read_text()
 combo='PIECE_CARRY_PROFILE_DONE' in s
-piece='PIECE_PHASE_PROFILE_DONE' in s
+guided='GUIDED_PROFILE_DONE' in s
+same='GUIDED_SAME_BINARY_DONE' in s
+piece=same or guided or 'PIECE_PHASE_PROFILE_DONE' in s
 setup55='CHUNK_SETUP55_PROFILE_DONE' in s
 setup=combo or piece or setup55 or 'CHUNK_SETUP_PROFILE_DONE' in s
-assert ('PIECE_CARRY_PROFILE_DONE' if combo else 'PIECE_PHASE_PROFILE_DONE' if piece else 'CHUNK_SETUP55_PROFILE_DONE' if setup55 else 'CHUNK_SETUP_PROFILE_DONE' if setup else 'CHUNK_OVERHEAD_DONE') in s and 'FAIL' not in s
+assert ('GUIDED_SAME_BINARY_DONE' if same else 'GUIDED_PROFILE_DONE' if guided else 'PIECE_CARRY_PROFILE_DONE' if combo else 'PIECE_PHASE_PROFILE_DONE' if piece else 'CHUNK_SETUP55_PROFILE_DONE' if setup55 else 'CHUNK_SETUP_PROFILE_DONE' if setup else 'CHUNK_OVERHEAD_DONE') in s and 'FAIL' not in s
 m=re.search(r'^PLACEMENT cpu_node=\d+ hbm_node=(-?\d+)$',s,re.M);assert m
 memories=['DDR'] if int(m[1])<0 else ['DDR','HBM']
-variants=['baseline','cached','carry4','combined'] if combo else ['baseline','phase','cached'] if piece else ['baseline','phase','carry4','both'] if setup else ['s8','s2','s4']
+variants=['fixed','guided'] if same else ['baseline','grow2','grow4'] if guided else ['baseline','cached','carry4','combined'] if combo else ['baseline','phase','cached'] if piece else ['baseline','phase','carry4','both'] if setup else ['s8','s2','s4']
 rounds=range(4 if setup and not piece else 6)
 data={};threads={};costs={};hosts={};counts=defaultdict(int);orders=defaultdict(list);key=None
 for line in s.splitlines():
@@ -41,7 +43,9 @@ expected={k+(c,t) for k in blocks for c in range(1,8) for t in range(38)}
 assert set(data)==expected==set(threads)
 for m in memories:
     rows=[orders[m,r] for r in rounds]
-    if setup and not piece:
+    if same:
+        assert Counter(tuple(row) for row in rows)==Counter({('fixed','guided'):3,('guided','fixed'):3})
+    elif setup and not piece:
         assert all(set(row)==set(variants) for row in rows)
         assert all({row[p] for row in rows}==set(variants) for p in range(4))
         assert Counter((row[p],row[p+1]) for row in rows for p in range(3))==Counter({(a,b):1 for a in variants for b in variants if a!=b})
@@ -105,3 +109,18 @@ if piece or combo:
             for r in rounds:
                 for n in names:vals[n].append(median(hosts[m,r,v,c][n] for c in range(3,8)))
             print(f'| {m} | {v} | '+ ' | '.join(f'{median(vals[n]):.3f}' for n in names)+' |')
+
+if guided or same:
+    print('\nWorker completion spread; instrumented results, not an accepted score.')
+    print('\n| Memory | Variant | Mean end us | Last end us | Last minus mean us |')
+    print('| --- | --- | ---: | ---: | ---: |')
+    for m in memories:
+        for v in variants:
+            proc={n:[] for n in ['mean','last','gap']}
+            for r in rounds:
+                calls={n:[] for n in proc}
+                for c in range(3,8):
+                    ends=[threads[m,r,v,c,t]['end_us'] for t in range(38)]
+                    calls['mean'].append(mean(ends));calls['last'].append(max(ends));calls['gap'].append(max(ends)-mean(ends))
+                for n in proc:proc[n].append(median(calls[n]))
+            print(f'| {m} | {v} | '+' | '.join(f'{median(proc[n]):.3f}' for n in proc)+' |')
