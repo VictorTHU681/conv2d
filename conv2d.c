@@ -2987,7 +2987,7 @@ static inline void carry_load_za(const float* p)
 }
 // Each strip publishes progress after saving ZA and the live FMLA vectors.
 // Acquire/release transfers those accumulators when another worker resumes it.
-static int resume_claim(const rplan_t* P, int first, int last, int* cursor, long KH, long* off, int ready_only)
+static int resume_claim(const rplan_t* P, int first, int last, int* cursor, long KH, long* off, int ready_only, int* dep_pending)
 {
     for (int n = first; n < last; n++) {
         int i = *cursor;
@@ -3021,7 +3021,7 @@ static int resume_claim(const rplan_t* P, int first, int last, int* cursor, long
                 done &= ~((uint64_t)1 << 63);
                 if (done < need) { pending = 1; break; }
             }
-            if (pending) continue;
+            if (pending) { if (dep_pending) *dep_pending = 1; continue; }   // 依赖暂未就绪 ≠ 无工作：调用方应重试而非退出
         }
         uint64_t nw = w | ((uint64_t)1 << 63);
         if (__atomic_compare_exchange_n(&P->ready[i].v, &w, nw, 0, __ATOMIC_ACQUIRE, __ATOMIC_RELAXED)) {
@@ -3075,12 +3075,16 @@ static void roll_worker(int tid, int nth, const ctx_t* c)
     int packing = c->pk_mode == 1 || c->pk_mode == 3;
     for (;;) {
         long off = 0;
+        int pend = 0;
         if (packing && __atomic_load_n(&g_pk_all_done.v, __ATOMIC_ACQUIRE)) packing = 0;
-        int pi = resume_claim(P, first, last, &cursor, KH, &off, packing);
+        int pi = resume_claim(P, first, last, &cursor, KH, &off, packing, &pend);
         // 打包阶段只推进本线程的静态片段，避免把首个就绪组全局偷散；全表完成后恢复远端 v54 的原始偷取路径。
-        if (pi < 0 && !packing) pi = resume_claim(P, 0, P->npieces, &other, KH, &off, 0);
+        if (pi < 0 && !packing) pi = resume_claim(P, 0, P->npieces, &other, KH, &off, 0, &pend);
         if (pi < 0) {
-            if (packing) { asm volatile("yield" ::: "memory"); continue; }
+            // 依赖挂起的片段是"暂不可领"而非"无工作"：直接退出会引发早退级联，
+            // 剩余重叠条带全落到单线程串行（实测偶发 +8~21ms 长尾，1587190）；让出重试，
+            // 依赖只指向前驱（无环），前驱必然推进，无死锁。
+            if (packing || pend) { asm volatile("yield" ::: "memory"); continue; }
             break;
         }
         const rpiece_t* pc = &P->pieces[pi];
