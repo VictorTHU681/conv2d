@@ -1,0 +1,3 @@
+620224d5a889d5c86963f01b91086662f5e3907d0789a3639a2952a3933474d5  build/post61/k5-copy-layout/candidate.c
+e5e52c8d666584cc49ca6f11162be4868b240e2cc99a3c3ef0a2f8ac292c65ad  build/post61/k5-copy-layout/fbench.c
+Only read-once experiment knob and K5 prefix selection differ; entire inline assembly and remaining source reverse to v61 exactly.

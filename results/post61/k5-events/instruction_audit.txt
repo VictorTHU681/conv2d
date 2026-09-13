@@ -1,0 +1,42 @@
+baseline disassembly SHA256 5876d4fe2cae59fcd93836f1203fe44386634bb96b58fa977938738465050cf6
+clearfirst disassembly SHA256 59eaf93003601baec21cc28c9f925c8857c23624ad8336b91af58dad4976806f
+clearfirst 422258: st3w {z0.s-z2.s}, p0, [x20] -> mov za0v.s[w12, 0], p0/m, z31.s
+clearfirst 42225c: mov za0v.s[w12, 0], p0/m, z31.s -> mov za0v.s[w12, 1], p0/m, z31.s
+clearfirst 422260: mov za0v.s[w12, 1], p0/m, z31.s -> mov za0v.s[w12, 2], p0/m, z31.s
+clearfirst 422264: mov za0v.s[w12, 2], p0/m, z31.s -> st3w {z0.s-z2.s}, p0, [x20]
+clearfirst 422274: st3w {z0.s-z2.s}, p0, [x20, #3, mul vl] -> mov za1v.s[w12, 0], p0/m, z31.s
+clearfirst 422278: mov za1v.s[w12, 0], p0/m, z31.s -> mov za1v.s[w12, 1], p0/m, z31.s
+clearfirst 42227c: mov za1v.s[w12, 1], p0/m, z31.s -> mov za1v.s[w12, 2], p0/m, z31.s
+clearfirst 422280: mov za1v.s[w12, 2], p0/m, z31.s -> st3w {z0.s-z2.s}, p0, [x20, #3, mul vl]
+clearfirst 422290: st3w {z0.s-z2.s}, p0, [x20, #6, mul vl] -> mov za2v.s[w12, 0], p0/m, z31.s
+clearfirst 422294: mov za2v.s[w12, 0], p0/m, z31.s -> mov za2v.s[w12, 1], p0/m, z31.s
+clearfirst 422298: mov za2v.s[w12, 1], p0/m, z31.s -> mov za2v.s[w12, 2], p0/m, z31.s
+clearfirst 42229c: mov za2v.s[w12, 2], p0/m, z31.s -> st3w {z0.s-z2.s}, p0, [x20, #6, mul vl]
+clearfirst 4222ac: st3w {z0.s-z2.s}, p0, [x20, #9, mul vl] -> mov za3v.s[w12, 0], p0/m, z31.s
+clearfirst 4222b0: mov za3v.s[w12, 0], p0/m, z31.s -> mov za3v.s[w12, 1], p0/m, z31.s
+clearfirst 4222b4: mov za3v.s[w12, 1], p0/m, z31.s -> mov za3v.s[w12, 2], p0/m, z31.s
+clearfirst 4222b8: mov za3v.s[w12, 2], p0/m, z31.s -> st3w {z0.s-z2.s}, p0, [x20, #9, mul vl]
+clearfirst: all 43631 linked instruction addresses match; only 16 K5 event positions differ, as a pure permutation. All remaining opcode words/operands match.
+deferclear disassembly SHA256 915e405db45259168063a6682970b97f2c6fecbe5b8f62c8ae0f6ae5629ca5eb
+deferclear 42225c: mov za0v.s[w12, 0], p0/m, z31.s -> mov z0.s, p0/m, za1v.s[w12, 0]
+deferclear 422260: mov za0v.s[w12, 1], p0/m, z31.s -> mov z1.s, p0/m, za1v.s[w12, 1]
+deferclear 422264: mov za0v.s[w12, 2], p0/m, z31.s -> mov z2.s, p0/m, za1v.s[w12, 2]
+deferclear 422268: mov z0.s, p0/m, za1v.s[w12, 0] -> st3w {z0.s-z2.s}, p0, [x20, #3, mul vl]
+deferclear 42226c: mov z1.s, p0/m, za1v.s[w12, 1] -> mov z0.s, p0/m, za2v.s[w12, 0]
+deferclear 422270: mov z2.s, p0/m, za1v.s[w12, 2] -> mov z1.s, p0/m, za2v.s[w12, 1]
+deferclear 422274: st3w {z0.s-z2.s}, p0, [x20, #3, mul vl] -> mov z2.s, p0/m, za2v.s[w12, 2]
+deferclear 422278: mov za1v.s[w12, 0], p0/m, z31.s -> st3w {z0.s-z2.s}, p0, [x20, #6, mul vl]
+deferclear 42227c: mov za1v.s[w12, 1], p0/m, z31.s -> mov z0.s, p0/m, za3v.s[w12, 0]
+deferclear 422280: mov za1v.s[w12, 2], p0/m, z31.s -> mov z1.s, p0/m, za3v.s[w12, 1]
+deferclear 422284: mov z0.s, p0/m, za2v.s[w12, 0] -> mov z2.s, p0/m, za3v.s[w12, 2]
+deferclear 422288: mov z1.s, p0/m, za2v.s[w12, 1] -> st3w {z0.s-z2.s}, p0, [x20, #9, mul vl]
+deferclear 42228c: mov z2.s, p0/m, za2v.s[w12, 2] -> mov za0v.s[w12, 0], p0/m, z31.s
+deferclear 422290: st3w {z0.s-z2.s}, p0, [x20, #6, mul vl] -> mov za0v.s[w12, 1], p0/m, z31.s
+deferclear 422294: mov za2v.s[w12, 0], p0/m, z31.s -> mov za0v.s[w12, 2], p0/m, z31.s
+deferclear 422298: mov za2v.s[w12, 1], p0/m, z31.s -> mov za1v.s[w12, 0], p0/m, z31.s
+deferclear 42229c: mov za2v.s[w12, 2], p0/m, z31.s -> mov za1v.s[w12, 1], p0/m, z31.s
+deferclear 4222a0: mov z0.s, p0/m, za3v.s[w12, 0] -> mov za1v.s[w12, 2], p0/m, z31.s
+deferclear 4222a4: mov z1.s, p0/m, za3v.s[w12, 1] -> mov za2v.s[w12, 0], p0/m, z31.s
+deferclear 4222a8: mov z2.s, p0/m, za3v.s[w12, 2] -> mov za2v.s[w12, 1], p0/m, z31.s
+deferclear 4222ac: st3w {z0.s-z2.s}, p0, [x20, #9, mul vl] -> mov za2v.s[w12, 2], p0/m, z31.s
+deferclear: all 43631 linked instruction addresses match; only 21 K5 event positions differ, as a pure permutation. All remaining opcode words/operands match.

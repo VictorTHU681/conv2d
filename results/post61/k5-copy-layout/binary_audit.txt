@@ -1,0 +1,3 @@
+d9db4ef5e1d05c5d4f66f4338e030788a4f50409a5f59ed1cfa892aaabc1fc2d  build/post61/k5-copy-layout/bench
+4a00369fa13a36c976d0d592faaddf8d53555f0000b4315c6f7b203f6766a42b  build/post61/k5-copy-layout/profile
+Both post-run binaries match their pre-run hashes; each is shared by all three layout settings.
