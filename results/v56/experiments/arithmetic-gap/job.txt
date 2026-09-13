@@ -1,0 +1,94 @@
+Basic Details:
+    jobId                               	1586070                                           	
+    name                                	v56_arith_gap                                     	
+    state                               	SUCCEEDED                                         	
+    user                                	niujiayin                                         	
+    queue                               	q_pacopt                                          	
+    account                             	common                                            	
+    cmd                                 	bash jobs/v56_arithmetic_gap_job.sh               	
+    submitNode                          	login07                                           	
+    createTime                          	2026/09/13 08:45:41                               	
+    startTime                           	2026/09/13 08:45:44                               	
+    lastModifiedTime                    	-                                                 	
+    endTime                             	2026/09/13 08:47:50                               	
+    currentOperation                    	EMPTY                                             	
+    jobRequeueMaxCnt                    	0                                                 	
+    jobRequeueCurrentCnt                	0                                                 	
+    mpiType                             	DEFAULT                                           	
+    interactionMode                     	DEFAULT                                           	
+    assistJob                           	DEFAULT                                           	
+    x11ForwardEnabled                   	false                                             	
+    description                         	-                                                 	
+    transferType                        	LOCAL                                             	
+    forwardTime                         	-                                                 	
+    recallTime                          	-                                                 	
+    autoResize                          	false                                             	
+Scheduling Details:
+    exclusive                           	true                                              	
+    priority                            	1                                                 	
+    adminPriority                       	-1                                                	
+    expectSchedTime                     	-                                                 	
+    startTimeEstimated                  	-                                                 	
+    reserveRes                          	-                                                 	
+    backfillRes                         	-                                                 	
+    backfilledRes                       	-                                                 	
+Resource Details:
+    reqJobLicense                       	-
+    allocJobLicense                     	-
+    resGroup[0]:
+        minReplica                      	1                                                 	
+        replica                         	1                                                 	
+        labels                          	queue_q_pacopt aarch64                            	
+        preferNodes                     	cn20481                                           	
+        reqNodeSelectPolicy             	-                                                 	
+        effNodeSelectPolicy             	SEQUENCE                                          	
+        reqCPU                          	38                                                	
+        reqMem                          	4096                                              	
+        reqGPU                          	gpu:0
+        reqNPU                          	0
+        allocCPU                        	38                                                	
+        allocMem                        	4096                                              	
+        allocGPU                        	gpu:0
+        allocNPU                        	0
+        reqTaskLicense                  	-
+        allocTaskLicense                	-
+    allocAffinity                       	
+        execNode             resGroup resIndex hwThreads        gpuIds           npuIds          
+        cn20481              0        0/1      -                -                -               
+Runtime Details:
+    execNodes                           	cn20481                                           	
+    execNodeCnt                         	1                                                 	
+    execPath                            	/home/share/niujiayin/conv2d-v55-20260912         	
+    resizeCmd                           	-                                                 	
+    timeout                             	1800                                              	
+    stderrRedirectPath                  	-                                                 	
+    stderrRedirectType                  	append                                            	
+    stdoutRedirectPath                  	/home/share/niujiayin/conv2d-v55-20260912/results/v56/experiments/arithmetic-gap/production.log	
+    stdoutRedirectType                  	override                                          	
+    totalUtime                          	832                                               	
+    totalStime                          	26                                                	
+    totalMaxMemSwp                      	0                                                 	
+    totalMaxMem                         	0                                                 	
+    hostPreHookRunTime                  	0                                                 	
+    preHookRunTime                      	0                                                 	
+    jobWallclockDuration                	56                                                	
+    postHookRunTime                     	0                                                 	
+    hostPostHookRunTime                 	0                                                 	
+    jobSstoppedTime                     	0                                                 	
+    coreHours                           	34048                                             	
+    jobExitCode                         	0                                                 	
+    systemExitCode                      	0                                                 	
+    exitMessage                         	Job execution succeeded                           	
+    stderrRedirectOutputPath            	-                                                 	
+    stdoutRedirectOutputPath            	/home/share/niujiayin/conv2d-v55-20260912/results/v56/experiments/arithmetic-gap/production.log	
+    nodeUsages                          	
+        execNode             resGroup resIndex utime    stime    wallclockDuration    sstoppedTime     cpuUtil          gpuUtil          npuUtil          memResource                     
+        cn20481              0        0/1      832      26       56                   0                1534/1534        -                -                0/2/0/0/347/347/2/0             
+    nodePids                            	
+        execNode             pids    
+        cn20481              -       
+    traceMessages                       	2026/09/13 08:45:41    :    [JOB_ADD] Job 1586070 is submitted by niujiayin, job state is PENDING.	
+                                        	2026/09/13 08:45:43    :    [JOB_START] Job 1586070 start message has been sent.	
+                                        	2026/09/13 08:45:43    :    [JOB_START_ACK] Job 1586070 start message has been received by agent cn20481.	
+                                        	2026/09/13 08:45:44    :    [JOB_EXECUTION] Job 1586070 state is from PENDING to RUNNING, execution path: /home/share/niujiayin/conv2d-v55-20260912.	
+                                        	2026/09/13 08:47:50    :    [JOB_FINISH] Job 1586070 state is from RUNNING to SUCCEEDED.	
