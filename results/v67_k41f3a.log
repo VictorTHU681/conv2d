@@ -1,0 +1,35 @@
+HOST cn20481 2026-09-14T05:24:27+08:00
+pid 3339637's current affinity list: 37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+PLACEMENT cpu_node=1 hbm_node=17
+Cpus_allowed_list:	37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+Mems_allowed_list:	0-31
+1549645
+policy: default
+preferred node: current
+physcpubind: 37 75 113 151 189 227 265 303 341 379 417 455 493 531 569 607 
+cpubind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+nodebind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 
+preferred: 
+EFFECTIVE_PLACEMENT
+policy: preferred
+preferred node: 17
+physcpubind: 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 
+cpubind: 1 
+nodebind: 1 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 
+preferred: 17 
+91df46eae0f66b956d24f7f2a1fffdb3b32f8f099ef0f609fe794e493eba7cf0  build/v54_stack/k8ext.c
+K41F memory=HBM round=1 variant=def shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.677 ms    14662.1 GFLOPS | avg    5.685 ms    14642.3 GFLOPS  PASS
+K41F memory=HBM round=1 variant=f3  shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.909 ms    14085.7 GFLOPS | avg    5.915 ms    14072.2 GFLOPS  PASS
+K41F memory=HBM round=2 variant=f3  shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.874 ms    14169.3 GFLOPS | avg    5.882 ms    14151.0 GFLOPS  PASS
+K41F memory=HBM round=2 variant=def shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.679 ms    14655.7 GFLOPS | avg    5.688 ms    14632.8 GFLOPS  PASS
+K41F memory=HBM round=3 variant=def shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.678 ms    14659.6 GFLOPS | avg    5.688 ms    14633.3 GFLOPS  PASS
+K41F memory=HBM round=3 variant=f3  shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.873 ms    14172.9 GFLOPS | avg    5.881 ms    14154.3 GFLOPS  PASS
+K41F memory=DDR round=1 variant=def shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.755 ms    14464.4 GFLOPS | avg    5.865 ms    14191.1 GFLOPS  PASS
+K41F memory=DDR round=1 variant=f3  shape=6144 4096 41 41   6144 x  4096     41 x    41 best    6.005 ms    13862.1 GFLOPS | avg    6.024 ms    13816.4 GFLOPS  PASS
+K41F memory=DDR round=2 variant=f3  shape=6144 4096 41 41   6144 x  4096     41 x    41 best    6.009 ms    13852.8 GFLOPS | avg    6.015 ms    13837.5 GFLOPS  PASS
+K41F memory=DDR round=2 variant=def shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.749 ms    14477.4 GFLOPS | avg    5.778 ms    14406.1 GFLOPS  PASS
+K41F memory=DDR round=3 variant=def shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.740 ms    14502.0 GFLOPS | avg    5.748 ms    14480.3 GFLOPS  PASS
+K41F memory=DDR round=3 variant=f3  shape=6144 4096 41 41   6144 x  4096     41 x    41 best    6.045 ms    13769.0 GFLOPS | avg    6.070 ms    13711.7 GFLOPS  PASS
+V67_K41F3_DONE 2026-09-14T05:24:41+08:00

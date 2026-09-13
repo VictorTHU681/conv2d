@@ -2906,11 +2906,14 @@ static int roll_groups_base(long KH, long KW, rgrp_t* G)
     // rem == 9 或 1 且有 pair 组：最后一个 pair 升级为 pair+fmla（kind 33，第 33 个残差 = KH-1，
     // 用 fmopa 旁的免费 fmla 累加），余数变 8/0 → 8×2 满槽 / 无 K4（k41: 32+8+1 → 33+8；k81: 64+16+1 → 65+16）
     int fmla = (npair >= 1 && (rem == 9 || rem == 1)) ? 1 : 0;   // pair+1fmla：k41(32+8+1→33+8)、k81(64+16+1→65+16)
+    int nf9 = 0;                                                  // 实验（CONV_K41F3=1）：rem9 → pairf3+k8(6)，替代 33+8×2/35+K5
+    { int e = env_int("CONV_K41F3", 0); if (e && npair >= 1 && rem == 9) { nf9 = 3; fmla = 0; } }
 #ifndef CONV_NF_REM7
 #define CONV_NF_REM7 0   // rem==7 的折叠链数默认：0 = 自动（n16 偶→4，奇→3）；编译期定为 3 可关掉零余量的 pairf4（线上对照用）
 #endif
     int nf = (npair >= 1 && rem == 7) ? (CONV_NF_REM7 ? CONV_NF_REM7 : 3) : 0;   // rem7 恒用 3 链：v65 pairf3 展开后 nf3 全节点档 ≥ nf4（慢节点 +7.2~7.8%、快节点 +0.84%，1597876/1598103/1594156）；零余量 pairf4 在慢档翻车，旧"n16 偶→4"作废
     { int e = env_int("CONV_NF", -1); if (e >= 0 && npair >= 1 && rem == 7 && e <= 4 && e != 1 && e != 2) nf = e; }   // 运行期覆盖：余数 7 时的折叠链数（0/3/4）
+    if (nf9) nf = nf9;                                            // rem9 实验路径：pairf3 + k8(6)
     int pk = nf == 4 ? 35 : 34;
     for (int i = 0; i < npair; i++) { G[ng++] = (rgrp_t){(i == npair - 1 && nf) ? pk : (i == npair - 1 && fmla) ? 33 : 32, s, 16, 16, 32, KW, 0, NULL, 0}; s += 32; }
     if (n16 & 1) { G[ng++] = (rgrp_t){16, s, 16, 0, 64, KW, 0, NULL, 0}; s += 16; }
