@@ -1,0 +1,76 @@
+HOST cn20482 2026-09-13T20:20:10+08:00
+pid 2590313's current affinity list: 37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+PLACEMENT cpu_node=1 hbm_node=17
+Cpus_allowed_list:	37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+Mems_allowed_list:	0-31
+1199481
+policy: default
+preferred node: current
+physcpubind: 37 75 113 151 189 227 265 303 341 379 417 455 493 531 569 607 
+cpubind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+nodebind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 
+preferred: 
+EFFECTIVE_PLACEMENT
+policy: preferred
+preferred node: 17
+physcpubind: 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 
+cpubind: 1 
+nodebind: 1 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 
+preferred: 17 
+2c4065478f8d40c194c996ede4fcdbd65f80c0a1c5e9b057b32889035d788ada  build/v54_stack/newcand.c
+f88b3f90295fd5ad5a749016343b266535857b53d2588801f65e18e6c7f2d499  build/v54_stack/k8ext.c
+=== STATE
+STATE_SWEEP PASS cases=261
+=== STATE packser3 step4
+STATE_SWEEP PASS cases=261
+E memory=HBM round=1 variant=base  shape=4096 6144 39 39   4096 x  6144     39 x    39 best    6.726 ms    11207.1 GFLOPS | avg    6.734 ms    11192.6 GFLOPS  PASS
+E memory=HBM round=1 variant=cand  shape=4096 6144 39 39   4096 x  6144     39 x    39 best    6.753 ms    11161.2 GFLOPS | avg    6.767 ms    11138.1 GFLOPS  PASS
+E memory=HBM round=1 variant=base  shape=6144 4096 41 41   6144 x  4096     41 x    41 best    7.434 ms    11196.0 GFLOPS | avg    7.451 ms    11171.5 GFLOPS  PASS
+E memory=HBM round=1 variant=cand  shape=6144 4096 41 41   6144 x  4096     41 x    41 best    7.344 ms    11334.0 GFLOPS | avg    7.356 ms    11315.1 GFLOPS  PASS
+E memory=HBM round=1 variant=base  shape=4256 6390 55 55   4256 x  6390     55 x    55 best   14.169 ms    11367.9 GFLOPS | avg   14.174 ms    11363.9 GFLOPS  PASS
+E memory=HBM round=1 variant=cand  shape=4256 6390 55 55   4256 x  6390     55 x    55 best   14.153 ms    11381.0 GFLOPS | avg   14.157 ms    11377.6 GFLOPS  PASS
+E memory=HBM round=1 variant=base  shape=6390 4256 81 81   6390 x  4256     81 x    81 best   28.569 ms    12103.0 GFLOPS | avg   28.597 ms    12091.2 GFLOPS  PASS
+E memory=HBM round=1 variant=cand  shape=6390 4256 81 81   6390 x  4256     81 x    81 best   28.569 ms    12102.9 GFLOPS | avg   28.598 ms    12090.9 GFLOPS  PASS
+E memory=HBM round=2 variant=cand  shape=4096 6144 39 39   4096 x  6144     39 x    39 best    6.762 ms    11146.6 GFLOPS | avg    6.774 ms    11126.5 GFLOPS  PASS
+E memory=HBM round=2 variant=base  shape=4096 6144 39 39   4096 x  6144     39 x    39 best    6.724 ms    11210.1 GFLOPS | avg    6.748 ms    11169.7 GFLOPS  PASS
+E memory=HBM round=2 variant=cand  shape=6144 4096 41 41   6144 x  4096     41 x    41 best    7.340 ms    11339.9 GFLOPS | avg    7.355 ms    11316.6 GFLOPS  PASS
+E memory=HBM round=2 variant=base  shape=6144 4096 41 41   6144 x  4096     41 x    41 best    7.432 ms    11200.3 GFLOPS | avg    7.440 ms    11187.6 GFLOPS  PASS
+E memory=HBM round=2 variant=cand  shape=4256 6390 55 55   4256 x  6390     55 x    55 best   14.142 ms    11389.5 GFLOPS | avg   14.151 ms    11382.9 GFLOPS  PASS
+E memory=HBM round=2 variant=base  shape=4256 6390 55 55   4256 x  6390     55 x    55 best   14.175 ms    11363.2 GFLOPS | avg   14.179 ms    11360.2 GFLOPS  PASS
+E memory=HBM round=2 variant=cand  shape=6390 4256 81 81   6390 x  4256     81 x    81 best   28.622 ms    12080.7 GFLOPS | avg   28.650 ms    12069.0 GFLOPS  PASS
+E memory=HBM round=2 variant=base  shape=6390 4256 81 81   6390 x  4256     81 x    81 best   28.644 ms    12071.4 GFLOPS | avg   28.671 ms    12060.2 GFLOPS  PASS
+E memory=HBM round=3 variant=base  shape=4096 6144 39 39   4096 x  6144     39 x    39 best    6.750 ms    11167.0 GFLOPS | avg    6.767 ms    11138.4 GFLOPS  PASS
+E memory=HBM round=3 variant=cand  shape=4096 6144 39 39   4096 x  6144     39 x    39 best    6.738 ms    11186.5 GFLOPS | avg    6.754 ms    11159.7 GFLOPS  PASS
+E memory=HBM round=3 variant=base  shape=6144 4096 41 41   6144 x  4096     41 x    41 best    7.425 ms    11210.4 GFLOPS | avg    7.435 ms    11195.1 GFLOPS  PASS
+E memory=HBM round=3 variant=cand  shape=6144 4096 41 41   6144 x  4096     41 x    41 best    7.352 ms    11321.6 GFLOPS | avg    7.369 ms    11294.7 GFLOPS  PASS
+E memory=HBM round=3 variant=base  shape=4256 6390 55 55   4256 x  6390     55 x    55 best   14.182 ms    11358.0 GFLOPS | avg   14.191 ms    11350.3 GFLOPS  PASS
+E memory=HBM round=3 variant=cand  shape=4256 6390 55 55   4256 x  6390     55 x    55 best   14.137 ms    11393.8 GFLOPS | avg   14.146 ms    11386.9 GFLOPS  PASS
+E memory=HBM round=3 variant=base  shape=6390 4256 81 81   6390 x  4256     81 x    81 best   28.547 ms    12112.4 GFLOPS | avg   28.570 ms    12102.6 GFLOPS  PASS
+E memory=HBM round=3 variant=cand  shape=6390 4256 81 81   6390 x  4256     81 x    81 best   28.667 ms    12061.7 GFLOPS | avg   28.701 ms    12047.3 GFLOPS  PASS
+E memory=DDR round=1 variant=base  shape=4096 6144 39 39   4096 x  6144     39 x    39 best    6.741 ms    11181.4 GFLOPS | avg    6.754 ms    11160.8 GFLOPS  PASS
+E memory=DDR round=1 variant=cand  shape=4096 6144 39 39   4096 x  6144     39 x    39 best    6.741 ms    11181.0 GFLOPS | avg    6.749 ms    11169.0 GFLOPS  PASS
+E memory=DDR round=1 variant=base  shape=6144 4096 41 41   6144 x  4096     41 x    41 best    7.478 ms    11130.5 GFLOPS | avg    7.485 ms    11120.4 GFLOPS  PASS
+E memory=DDR round=1 variant=cand  shape=6144 4096 41 41   6144 x  4096     41 x    41 best    7.336 ms    11345.5 GFLOPS | avg    7.359 ms    11310.1 GFLOPS  PASS
+E memory=DDR round=1 variant=base  shape=4256 6390 55 55   4256 x  6390     55 x    55 best   14.167 ms    11369.4 GFLOPS | avg   14.173 ms    11364.8 GFLOPS  PASS
+E memory=DDR round=1 variant=cand  shape=4256 6390 55 55   4256 x  6390     55 x    55 best   14.128 ms    11400.7 GFLOPS | avg   14.137 ms    11393.4 GFLOPS  PASS
+E memory=DDR round=1 variant=base  shape=6390 4256 81 81   6390 x  4256     81 x    81 best   28.555 ms    12108.8 GFLOPS | avg   28.576 ms    12100.2 GFLOPS  PASS
+E memory=DDR round=1 variant=cand  shape=6390 4256 81 81   6390 x  4256     81 x    81 best   28.623 ms    12080.3 GFLOPS | avg   28.672 ms    12059.5 GFLOPS  PASS
+E memory=DDR round=2 variant=cand  shape=4096 6144 39 39   4096 x  6144     39 x    39 best    6.762 ms    11147.0 GFLOPS | avg    6.774 ms    11127.8 GFLOPS  PASS
+E memory=DDR round=2 variant=base  shape=4096 6144 39 39   4096 x  6144     39 x    39 best    6.736 ms    11189.9 GFLOPS | avg    6.757 ms    11155.9 GFLOPS  PASS
+E memory=DDR round=2 variant=cand  shape=6144 4096 41 41   6144 x  4096     41 x    41 best    7.336 ms    11346.7 GFLOPS | avg    7.355 ms    11317.3 GFLOPS  PASS
+E memory=DDR round=2 variant=base  shape=6144 4096 41 41   6144 x  4096     41 x    41 best    7.440 ms    11188.1 GFLOPS | avg    7.446 ms    11178.5 GFLOPS  PASS
+E memory=DDR round=2 variant=cand  shape=4256 6390 55 55   4256 x  6390     55 x    55 best   14.131 ms    11399.0 GFLOPS | avg   14.142 ms    11389.7 GFLOPS  PASS
+E memory=DDR round=2 variant=base  shape=4256 6390 55 55   4256 x  6390     55 x    55 best   14.170 ms    11367.0 GFLOPS | avg   14.190 ms    11351.2 GFLOPS  PASS
+E memory=DDR round=2 variant=cand  shape=6390 4256 81 81   6390 x  4256     81 x    81 best   28.618 ms    12082.2 GFLOPS | avg   28.649 ms    12069.1 GFLOPS  PASS
+E memory=DDR round=2 variant=base  shape=6390 4256 81 81   6390 x  4256     81 x    81 best   28.621 ms    12081.2 GFLOPS | avg   28.657 ms    12065.8 GFLOPS  PASS
+E memory=DDR round=3 variant=base  shape=4096 6144 39 39   4096 x  6144     39 x    39 best    6.745 ms    11174.3 GFLOPS | avg    6.763 ms    11146.0 GFLOPS  PASS
+E memory=DDR round=3 variant=cand  shape=4096 6144 39 39   4096 x  6144     39 x    39 best    6.763 ms    11144.5 GFLOPS | avg    6.768 ms    11137.6 GFLOPS  PASS
+E memory=DDR round=3 variant=base  shape=6144 4096 41 41   6144 x  4096     41 x    41 best    7.450 ms    11173.3 GFLOPS | avg    7.465 ms    11149.8 GFLOPS  PASS
+E memory=DDR round=3 variant=cand  shape=6144 4096 41 41   6144 x  4096     41 x    41 best    7.339 ms    11341.0 GFLOPS | avg    7.354 ms    11317.9 GFLOPS  PASS
+E memory=DDR round=3 variant=base  shape=4256 6390 55 55   4256 x  6390     55 x    55 best   14.169 ms    11367.8 GFLOPS | avg   14.172 ms    11365.4 GFLOPS  PASS
+E memory=DDR round=3 variant=cand  shape=4256 6390 55 55   4256 x  6390     55 x    55 best   14.137 ms    11393.5 GFLOPS | avg   14.145 ms    11387.6 GFLOPS  PASS
+E memory=DDR round=3 variant=base  shape=6390 4256 81 81   6390 x  4256     81 x    81 best   28.584 ms    12096.7 GFLOPS | avg   28.601 ms    12089.5 GFLOPS  PASS
+E memory=DDR round=3 variant=cand  shape=6390 4256 81 81   6390 x  4256     81 x    81 best   28.565 ms    12104.8 GFLOPS | avg   28.603 ms    12088.7 GFLOPS  PASS
+V59_K8EXT_DONE 2026-09-13T20:21:15+08:00
