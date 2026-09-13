@@ -1,0 +1,2 @@
+Job 1589388, cn20485: all three staged v61-based exact-prefix archives PASS all four original shapes; 12 full checks, maximum errors zero.
+All staged archive hashes match locally and in server log. This validates the v61-based candidate, not the newer v62 combination.
