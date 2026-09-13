@@ -1,0 +1,35 @@
+HOST cn20481 2026-09-14T01:24:52+08:00
+pid 1988501's current affinity list: 37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+PLACEMENT cpu_node=1 hbm_node=-1
+Cpus_allowed_list:	37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+Mems_allowed_list:	0-15
+1548538
+policy: default
+preferred node: current
+physcpubind: 37 75 113 151 189 227 265 303 341 379 417 455 493 531 569 607 
+cpubind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+nodebind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+preferred: 
+EFFECTIVE_PLACEMENT
+policy: default
+preferred node: current
+physcpubind: 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 
+cpubind: 1 
+nodebind: 1 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+preferred: 
+f88b3f90295fd5ad5a749016343b266535857b53d2588801f65e18e6c7f2d499  build/v54_stack/k8ext.c
+NF memory=DDR round=1 variant=auto shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.795 ms    13006.9 GFLOPS | avg    5.806 ms    12981.5 GFLOPS  PASS
+NF memory=DDR round=1 variant=nf3  shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.332 ms    14137.6 GFLOPS | avg    5.357 ms    14070.4 GFLOPS  PASS
+NF55 memory=DDR round=1 variant=auto shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.712 ms    13752.9 GFLOPS | avg   11.744 ms    13715.9 GFLOPS  PASS
+NF55 memory=DDR round=1 variant=nf3  shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.828 ms    13618.5 GFLOPS | avg   11.874 ms    13565.8 GFLOPS  PASS
+NF memory=DDR round=2 variant=nf3  shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.380 ms    14010.3 GFLOPS | avg    5.396 ms    13969.8 GFLOPS  PASS
+NF memory=DDR round=2 variant=auto shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.770 ms    13063.0 GFLOPS | avg    5.803 ms    12988.7 GFLOPS  PASS
+NF55 memory=DDR round=2 variant=nf3  shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.869 ms    13571.3 GFLOPS | avg   11.888 ms    13549.7 GFLOPS  PASS
+NF55 memory=DDR round=2 variant=auto shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.702 ms    13764.3 GFLOPS | avg   11.713 ms    13751.7 GFLOPS  PASS
+NF memory=DDR round=3 variant=auto shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.769 ms    13065.1 GFLOPS | avg    5.811 ms    12970.7 GFLOPS  PASS
+NF memory=DDR round=3 variant=nf3  shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.368 ms    14041.4 GFLOPS | avg    5.388 ms    13990.0 GFLOPS  PASS
+NF55 memory=DDR round=3 variant=auto shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.714 ms    13750.7 GFLOPS | avg   11.720 ms    13743.7 GFLOPS  PASS
+NF55 memory=DDR round=3 variant=nf3  shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.819 ms    13628.8 GFLOPS | avg   11.853 ms    13588.9 GFLOPS  PASS
+V66_NF_DONE 2026-09-14T01:25:07+08:00

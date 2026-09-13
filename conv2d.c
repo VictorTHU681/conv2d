@@ -2907,7 +2907,7 @@ static int roll_groups_base(long KH, long KW, rgrp_t* G)
 #ifndef CONV_NF_REM7
 #define CONV_NF_REM7 0   // rem==7 的折叠链数默认：0 = 自动（n16 偶→4，奇→3）；编译期定为 3 可关掉零余量的 pairf4（线上对照用）
 #endif
-    int nf = (npair >= 1 && rem == 7) ? (CONV_NF_REM7 ? CONV_NF_REM7 : ((n16 & 1) ? 3 : 4)) : 0;   // pair+3/4fmla 消掉 8×2（n16 偶且自动时用 4 链，探针实测本机更快，但零余量 fmla 在高延迟下可能翻车）
+    int nf = (npair >= 1 && rem == 7) ? (CONV_NF_REM7 ? CONV_NF_REM7 : 3) : 0;   // rem7 恒用 3 链：v65 pairf3 展开后 nf3 全节点档 ≥ nf4（慢节点 +7.2~7.8%、快节点 +0.84%，1597876/1598103/1594156）；零余量 pairf4 在慢档翻车，旧"n16 偶→4"作废
     { int e = env_int("CONV_NF", -1); if (e >= 0 && npair >= 1 && rem == 7 && e <= 4 && e != 1 && e != 2) nf = e; }   // 运行期覆盖：余数 7 时的折叠链数（0/3/4）
     int pk = nf == 4 ? 35 : 34;
     for (int i = 0; i < npair; i++) { G[ng++] = (rgrp_t){(i == npair - 1 && nf) ? pk : (i == npair - 1 && fmla) ? 33 : 32, s, 16, 16, 32, KW, 0, NULL, 0}; s += 32; }
@@ -3401,11 +3401,12 @@ static void conv2d_roll(const CONVFLOAT* in, CONVINT H, CONVINT W, const CONVFLO
     g_roll_pd = g_knobs.roll_pd;
     g_roll_diag = env_int("CONV_ROLL_DIAG", 0);
     roll_prepare(k, H, W, KH, KW, nth);
-    // 续算块长维持 8（K5 计划 2）。st16 已证伪：慢节点 env 扫描 +0.3~0.5%（1590241），
-    // 快节点同机 A/B 反而 k39 −0.3~−2.3%（1590410）——块长收益与节点速度档强相关，
-    // 判题机更接近快档；跨节点扫描只作方向提示，定案以同节点交替 A/B 为准。
+    // 续算块长维持 8；K5 计划 4（v62/v64 的拷贝穿插+尾展开改变每领取经济性后重扫：
+    // step4 对 step2 k41 +0.79% HBM / +0.86% DDR，step8 +0.47/+0.14，1597877；
+    // 旧默认 2 基于 v56 时代 1583562）。st16 对非 K5 计划已证伪（1590241 vs 1590410，
+    // 块长收益与节点速度档强相关，跨节点扫描只作方向提示，定案以同节点交替 A/B 为准）。
     int step_default=8;
-    for(int g=0;g<g_rp.ng;g++) if(g_rp.G[g].kind==5) { step_default=2; break; }
+    for(int g=0;g<g_rp.ng;g++) if(g_rp.G[g].kind==5) { step_default=4; break; }
     g_roll_step = env_int("CONV_ROLL_STEP", step_default);
     g_pk_nc = g_rp.ng * (int)KH; g_pk_next = 0;            // 重置打包 chunk 游标/完成标志（ng ≤ 12、KH ≤ 256 → nc ≤ 3072）
     memset(g_pk_done, 0, (size_t)g_pk_nc);
