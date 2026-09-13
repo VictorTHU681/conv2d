@@ -81,7 +81,7 @@ static int env_int(const char* name, int def)
 }
 
 // 可调参数只在首次调用时读环境（getenv 每次要扫整个环境表，~2 µs/次，一次调用 9 次就是 ~0.3%）
-typedef struct { int inited, slice, sp, prof, pf_in, pf_out, postart, uzp, poolwfe, pool, store_asm, pf_fresh, pf_l2, br, sw_dense, pf_st, zva, roll, roll_pd, roll_w8, roll_w4, roll_w16, pack_ser; } knobs_t;
+typedef struct { int inited, slice, sp, prof, pf_in, pf_out, postart, uzp, poolwfe, pool, store_asm, pf_fresh, pf_l2, br, sw_dense, pf_st, zva, roll, roll_pd, roll_w8, roll_w4, roll_w16, roll_w9, pack_ser; } knobs_t;
 static knobs_t g_knobs;
 #ifdef CONV_ROWPROF
 static uint64_t* g_rowts = NULL;      // 线程 0 的逐行时间戳：行首 cntvct；pass 末追加 (cyc | 1<<63) 作结束标记
@@ -103,6 +103,7 @@ static void read_knobs(void)
     g_knobs.roll_w8 = env_int("CONV_ROLL_W8", 104);   // 静态划分的相对慢速权重（%）：8×2 / 4×4 / single16
     g_knobs.roll_w4 = env_int("CONV_ROLL_W4", 123);
     g_knobs.roll_w16 = env_int("CONV_ROLL_W16", 102);
+    g_knobs.roll_w9 = env_int("CONV_ROLL_W9", 140);   // K9；实测 K9/pair 周期比 ~1.10（v61 诊断），140 疑高，见扫描
     g_knobs.pack_ser = env_int("CONV_PACKSER", -1);   // R/kf：-1/1 按组重叠，2 完整串行基线，0 全体并行
     // -DCONV_ZVA_CURSOR 实验用：输出线 dc zva 预清零（不从 DRAM 读 RFO，每次调用少读 ~100 MB），需 zva 块 64 B 且允许
     { uint64_t dczid; asm volatile("mrs %0, dczid_el0" : "=r"(dczid));
@@ -2788,6 +2789,9 @@ static void roll_pack_all(const rplan_t* P, const float* k, long KH, long KW)
 
 }
 static int g_roll_diag = 0;
+// 诊断（CONV_ROLL_DIAG>=2）：claim 时间线，观察尾部是否为依赖链串行
+static struct { uint32_t pi; uint16_t tid, kind; uint64_t t0, t1; int32_t off, rows; } g_tl[8192];
+static uint32_t g_tl_n;
 static int g_roll_step = 8;              // 条带块长 = g_roll_step*KH 行（CONV_ROLL_STEP 覆盖，默认 8 与远端 v54 一致）
 typedef struct { uint64_t tk[4]; long ts[4]; uint64_t tot; } rdiag_t;   // 每线程：各类内核的 cntvct 计时与 tile-步数
 static rdiag_t g_rdiag[1024];
@@ -2943,7 +2947,7 @@ static void roll_prepare(const float* k, long H, long W, long KH, long KW, int n
             for (long st = 0; st < nstrip; st++) {
                 long base = st * G->width; if (base + G->width > outW) base = outW - G->width;
                 P->items[P->nit] = (ritem_t){g, base};
-                double w = G->kind == 9 ? 140/100.0 : G->kind == 8 ? g_knobs.roll_w8 / 100.0 : (G->kind == 4 || G->kind == 5) ? g_knobs.roll_w4 / 100.0 : (G->kind == 16 || G->kind == 17) ? g_knobs.roll_w16 / 100.0 : 1.0;
+                double w = G->kind == 9 ? g_knobs.roll_w9 / 100.0 : G->kind == 8 ? g_knobs.roll_w8 / 100.0 : (G->kind == 4 || G->kind == 5) ? g_knobs.roll_w4 / 100.0 : (G->kind == 16 || G->kind == 17) ? g_knobs.roll_w16 / 100.0 : 1.0;
                 P->cost[P->nit] = (double)G->steps * outH * w;   // ∝ tile-步数（各类都是 4 tile）× 相对慢速权重
                 P->C += P->cost[P->nit]; P->nit++;
             }
@@ -3073,6 +3077,10 @@ static int resume_claim(const rplan_t* P, int first, int last, int* cursor, long
     return -1;
 }
 
+// （LRF 偷取两版已证伪回退：全程版 k39/41/55 −0.3~−0.7%（1589346）、末段门控版仍 −0.2%
+//   且丢掉 k81 收益（1589540）。尾差根因是静态划分权重失准（K9 硬编码 1.40 vs 实测 ~1.10），
+//   从权重侧修，见 roll_w9。）
+
 static void roll_worker(int tid, int nth, const ctx_t* c)
 {
     const rplan_t* P = (const rplan_t*)c->rp;
@@ -3165,7 +3173,9 @@ static void roll_worker(int tid, int nth, const ctx_t* c)
         if (off) carry_load_za(state); else sme_zero_za();
         if (g->kind == 32) k16pair(&K); else if (g->kind == 33) k16pairf(&K); else if (g->kind == 34) k16pairf3(&K); else if (g->kind == 35) k16pairf4(&K); else if (g->kind == 16) k16single(&K);
         else if (g->kind == 17) k16singlef2(&K); else if (g->kind == 9) k8f(&K); else if (g->kind == 8) k8(&K); else if (g->kind == 5) k5(&K); else k4(&K);
-        if (g_roll_diag) { int ki = roll_kind_idx(g->kind); D->tk[ki] += cyc() - t0; D->ts[ki] += 4L * g->steps * (rows); }
+        if (g_roll_diag) { int ki = roll_kind_idx(g->kind); uint64_t t1 = cyc(); D->tk[ki] += t1 - t0; D->ts[ki] += 4L * g->steps * (rows);
+            if (g_roll_diag >= 2) { uint32_t n = __atomic_fetch_add(&g_tl_n, 1, __ATOMIC_RELAXED);
+                if (n < sizeof(g_tl)/sizeof(g_tl[0])) { g_tl[n].pi = (uint32_t)pi; g_tl[n].tid = (uint16_t)tid; g_tl[n].kind = (uint16_t)g->kind; g_tl[n].t0 = t0; g_tl[n].t1 = t1; g_tl[n].off = (int32_t)off; g_tl[n].rows = (int32_t)rows; } } }
         if (off + rows < total) carry_store_za(state);
 
         __atomic_store_n(&P->ready[pi].v, (uint64_t)(off + rows), __ATOMIC_RELEASE);
@@ -3193,6 +3203,19 @@ static void roll_diag_print(int nth)
         }
         fprintf(stderr, "\n");
     }
+    if (g_roll_diag >= 2 && g_tl_n) {
+        uint32_t n = g_tl_n < sizeof(g_tl)/sizeof(g_tl[0]) ? g_tl_n : (uint32_t)(sizeof(g_tl)/sizeof(g_tl[0]));
+        // 简易按 t1 升序选出最后 30 条（n 小，冒泡即可）
+        for (uint32_t i = 0; i < n; i++) for (uint32_t j = i + 1; j < n; j++)
+            if (g_tl[j].t1 < g_tl[i].t1) { __typeof__(g_tl[0]) tmp = g_tl[i]; g_tl[i] = g_tl[j]; g_tl[j] = tmp; }
+        uint64_t tend = g_tl[n-1].t1;
+        fprintf(stderr, "[tl] 最后30条 claim（µs 相对结束；piece/kind/tid off+rows 起→止 时长）\n");
+        for (uint32_t i = n > 30 ? n - 30 : 0; i < n; i++)
+            fprintf(stderr, "  p%-4u k%-2u t%-2u %5d+%-4d %8.1f→%7.1f %6.1f\n", g_tl[i].pi, g_tl[i].kind, g_tl[i].tid,
+                    g_tl[i].off, g_tl[i].rows, (double)(int64_t)(g_tl[i].t0 - tend) / 100.0, (double)(int64_t)(g_tl[i].t1 - tend) / 100.0,
+                    (double)(g_tl[i].t1 - g_tl[i].t0) / 100.0);
+    }
+    g_tl_n = 0;
 }
 
 static void worker_entry(int tid, int nt_, const ctx_t* c)

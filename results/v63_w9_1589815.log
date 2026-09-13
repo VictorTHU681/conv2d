@@ -1,0 +1,59 @@
+HOST cn20487 2026-09-13T14:27:44+08:00
+pid 3790078's current affinity list: 37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+PLACEMENT cpu_node=1 hbm_node=17
+Cpus_allowed_list:	37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+Mems_allowed_list:	0-31
+1548689
+policy: default
+preferred node: current
+physcpubind: 37 75 113 151 189 227 265 303 341 379 417 455 493 531 569 607 
+cpubind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+nodebind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 
+preferred: 
+EFFECTIVE_PLACEMENT
+policy: preferred
+preferred node: 17
+physcpubind: 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 
+cpubind: 1 
+nodebind: 1 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 
+preferred: 17 
+36fdee4e66b2455011b3426c0ba572769f93b9441aa97b470236c82599deb9ec  build/v54_stack/k8ext.c
+W9 memory=HBM round=1 w9=140 shape=6390 4256 81 81   6390 x  4256     81 x    81 best   22.308 ms    15499.7 GFLOPS | avg   22.325 ms    15488.4 GFLOPS  PASS
+W9 memory=HBM round=1 w9=125 shape=6390 4256 81 81   6390 x  4256     81 x    81 best   22.311 ms    15497.6 GFLOPS | avg   22.357 ms    15465.7 GFLOPS  PASS
+W9 memory=HBM round=1 w9=115 shape=6390 4256 81 81   6390 x  4256     81 x    81 best   22.288 ms    15513.6 GFLOPS | avg   22.550 ms    15333.5 GFLOPS  PASS
+W9 memory=HBM round=1 w9=108 shape=6390 4256 81 81   6390 x  4256     81 x    81 best   22.511 ms    15360.3 GFLOPS | avg   22.569 ms    15320.9 GFLOPS  PASS
+W4 memory=HBM round=1 w4=123 shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.751 ms    14473.7 GFLOPS | avg    5.762 ms    14445.0 GFLOPS  PASS
+W4 memory=HBM round=1 w4=112 shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.741 ms    14497.4 GFLOPS | avg    5.778 ms    14406.4 GFLOPS  PASS
+W9 memory=HBM round=2 w9=108 shape=6390 4256 81 81   6390 x  4256     81 x    81 best   22.372 ms    15455.7 GFLOPS | avg   22.501 ms    15367.0 GFLOPS  PASS
+W9 memory=HBM round=2 w9=115 shape=6390 4256 81 81   6390 x  4256     81 x    81 best   22.361 ms    15463.3 GFLOPS | avg   22.493 ms    15372.5 GFLOPS  PASS
+W9 memory=HBM round=2 w9=125 shape=6390 4256 81 81   6390 x  4256     81 x    81 best   22.185 ms    15585.8 GFLOPS | avg   22.308 ms    15500.2 GFLOPS  PASS
+W9 memory=HBM round=2 w9=140 shape=6390 4256 81 81   6390 x  4256     81 x    81 best   22.311 ms    15497.8 GFLOPS | avg   22.327 ms    15486.5 GFLOPS  PASS
+W4 memory=HBM round=2 w4=112 shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.739 ms    14503.8 GFLOPS | avg    5.745 ms    14487.6 GFLOPS  PASS
+W4 memory=HBM round=2 w4=123 shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.751 ms    14473.4 GFLOPS | avg    5.761 ms    14447.0 GFLOPS  PASS
+W9 memory=HBM round=3 w9=115 shape=6390 4256 81 81   6390 x  4256     81 x    81 best   22.236 ms    15549.9 GFLOPS | avg   22.433 ms    15413.6 GFLOPS  PASS
+W9 memory=HBM round=3 w9=140 shape=6390 4256 81 81   6390 x  4256     81 x    81 best   22.196 ms    15578.1 GFLOPS | avg   22.202 ms    15574.2 GFLOPS  PASS
+W9 memory=HBM round=3 w9=108 shape=6390 4256 81 81   6390 x  4256     81 x    81 best   22.406 ms    15432.1 GFLOPS | avg   22.465 ms    15391.6 GFLOPS  PASS
+W9 memory=HBM round=3 w9=125 shape=6390 4256 81 81   6390 x  4256     81 x    81 best   22.368 ms    15458.4 GFLOPS | avg   22.383 ms    15448.2 GFLOPS  PASS
+W4 memory=HBM round=3 w4=123 shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.752 ms    14471.0 GFLOPS | avg    5.760 ms    14450.6 GFLOPS  PASS
+W4 memory=HBM round=3 w4=112 shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.762 ms    14446.0 GFLOPS | avg    5.782 ms    14394.6 GFLOPS  PASS
+W9 memory=DDR round=1 w9=140 shape=6390 4256 81 81   6390 x  4256     81 x    81 best   22.240 ms    15547.3 GFLOPS | avg   22.263 ms    15531.0 GFLOPS  PASS
+W9 memory=DDR round=1 w9=125 shape=6390 4256 81 81   6390 x  4256     81 x    81 best   22.428 ms    15416.7 GFLOPS | avg   22.462 ms    15393.6 GFLOPS  PASS
+W9 memory=DDR round=1 w9=115 shape=6390 4256 81 81   6390 x  4256     81 x    81 best   22.213 ms    15566.3 GFLOPS | avg   22.300 ms    15505.4 GFLOPS  PASS
+W9 memory=DDR round=1 w9=108 shape=6390 4256 81 81   6390 x  4256     81 x    81 best   22.625 ms    15282.7 GFLOPS | avg   22.696 ms    15234.6 GFLOPS  PASS
+W4 memory=DDR round=1 w4=123 shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.771 ms    14423.4 GFLOPS | avg    5.831 ms    14274.6 GFLOPS  PASS
+W4 memory=DDR round=1 w4=112 shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.817 ms    14309.9 GFLOPS | avg    5.845 ms    14241.4 GFLOPS  PASS
+W9 memory=DDR round=2 w9=108 shape=6390 4256 81 81   6390 x  4256     81 x    81 best   22.522 ms    15352.4 GFLOPS | avg   22.605 ms    15296.4 GFLOPS  PASS
+W9 memory=DDR round=2 w9=115 shape=6390 4256 81 81   6390 x  4256     81 x    81 best   22.409 ms    15430.3 GFLOPS | avg   22.422 ms    15421.2 GFLOPS  PASS
+W9 memory=DDR round=2 w9=125 shape=6390 4256 81 81   6390 x  4256     81 x    81 best   22.352 ms    15469.6 GFLOPS | avg   22.366 ms    15459.6 GFLOPS  PASS
+W9 memory=DDR round=2 w9=140 shape=6390 4256 81 81   6390 x  4256     81 x    81 best   22.204 ms    15572.2 GFLOPS | avg   22.226 ms    15556.8 GFLOPS  PASS
+W4 memory=DDR round=2 w4=112 shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.838 ms    14258.6 GFLOPS | avg    5.851 ms    14226.6 GFLOPS  PASS
+W4 memory=DDR round=2 w4=123 shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.766 ms    14434.7 GFLOPS | avg    5.779 ms    14403.7 GFLOPS  PASS
+W9 memory=DDR round=3 w9=115 shape=6390 4256 81 81   6390 x  4256     81 x    81 best   22.282 ms    15517.7 GFLOPS | avg   22.446 ms    15404.7 GFLOPS  PASS
+W9 memory=DDR round=3 w9=140 shape=6390 4256 81 81   6390 x  4256     81 x    81 best   22.330 ms    15484.9 GFLOPS | avg   22.357 ms    15466.2 GFLOPS  PASS
+W9 memory=DDR round=3 w9=108 shape=6390 4256 81 81   6390 x  4256     81 x    81 best   22.436 ms    15411.5 GFLOPS | avg   22.507 ms    15363.1 GFLOPS  PASS
+W9 memory=DDR round=3 w9=125 shape=6390 4256 81 81   6390 x  4256     81 x    81 best   22.333 ms    15482.3 GFLOPS | avg   22.355 ms    15467.2 GFLOPS  PASS
+W4 memory=DDR round=3 w4=123 shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.772 ms    14420.8 GFLOPS | avg    5.780 ms    14400.7 GFLOPS  PASS
+W4 memory=DDR round=3 w4=112 shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.815 ms    14314.3 GFLOPS | avg    5.831 ms    14274.8 GFLOPS  PASS
+V63_W9_DONE 2026-09-13T14:28:10+08:00
