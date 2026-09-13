@@ -3355,19 +3355,18 @@ static void conv2d_sme(const CONVFLOAT* in, CONVINT H, CONVINT W, const CONVFLOA
     }
     if (!g_R || !g_P || !g_tab) { conv2d_generic(in, H, W, k, KH, KW, out); return; }
 
-    // 每块 tile 数（64 列一个 tile）；按 (outW, BW) 缓存
-    static int* TBc = NULL; static long TBc_w = -1, TBc_bw = -1, TBc_sum = 0;
-    if (TBc_w != outW || TBc_bw != BW) {
-        free(TBc); TBc = malloc(sizeof(int) * NB); TBc_sum = 0;
-        for (long b = 0; b < NB; b++) {
-            long w = outW - b * BW; if (w > BW) w = BW;
-            TBc[b] = (int)((w + 63) / 64);
-            TBc_sum += TBc[b];
-        }
-        TBc_w = outW; TBc_bw = BW;
+    // 每块 tile 数（64 列一个 tile）；每次调用无条件重建（缓冲区仅按容量复用，无跨调用键控缓存）
+    static int* TBc = NULL; static long TBc_cap = 0;
+    if (TBc_cap < NB) { free(TBc); TBc = malloc(sizeof(int) * NB); TBc_cap = TBc ? NB : 0; }
+    if (!TBc) { conv2d_generic(in, H, W, k, KH, KW, out); return; }
+    long TB_sum = 0;
+    for (long b = 0; b < NB; b++) {
+        long w = outW - b * BW; if (w > BW) w = BW;
+        TBc[b] = (int)((w + 63) / 64);
+        TB_sum += TBc[b];
     }
     int* TB = TBc;
-    const long Wtot = G * TBc_sum;
+    const long Wtot = G * TB_sum;
 
 #ifdef CONV_DEBUG_BR
     { static int once = 0; if (!once) { once = 1; br_selftest(); } }
