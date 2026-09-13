@@ -1,0 +1,14 @@
+baseline.dis SHA256 7b983e6f6630d0d6055fc097c160785faf02495bf9a9694697b8cf79c6901793
+cf4.dis SHA256 261acbffb3e89e6ca9efdd3e845ffaf72d8b0535df5245a556cd6a52bcf6d55d
+cf4 423f90: ldr x25, [x30, #120] -> ldr x25, [x30, #216]
+cf4 4241fc: ldr x24, [x30, #216] -> mov x24, x25
+cf4 424484: ldr x24, [x30, #216] -> mov x24, x25
+cf4: all 43640 linked instruction addresses match; only 3 checked parameter substitutions differ. All other opcode words and operands match.
+cf34.dis SHA256 4cbf2e6611f70eb3c233276ac6a0e818781bf973090f880786d9906d12d228f2
+cf34 423c4c: ldr x25, [x18, #120] -> ldr x25, [x18, #216]
+cf34 423e0c: ldr x24, [x18, #216] -> mov x24, x25
+cf34 423f90: ldr x25, [x30, #120] -> ldr x25, [x30, #216]
+cf34 4241fc: ldr x24, [x30, #216] -> mov x24, x25
+cf34 424484: ldr x24, [x30, #216] -> mov x24, x25
+cf34: all 43640 linked instruction addresses match; only 5 checked parameter substitutions differ. All other opcode words and operands match.
+No arithmetic, memory addresses of tensor data, branch layout or code size change in inspected binaries; this is not a performance claim.

@@ -79,11 +79,22 @@ KH55; it is not advanced. Unchanged F3 computation in the F4-only source still
 shows a small KH55 change, reinforcing the need for an independent confirmation
 rather than attributing every small number to the edited kernel.
 
-## Original-reference confirmation pending
+## Original-reference confirmation: not adopted
 
-Only F4 weave advances to job **1585635**, cn20481: accepted ebf36923 versus
+Only F4 weave advances to job **1585635**, cn20481, **08:02:15–08:09:46**: accepted ebf36923 versus
 8433e2d4, six AB/BA rounds, four shapes, DDR/HBM, five timings/process. Expected
-**96** full reference checks use unchanged `bench_conv.c`, SHA256 2548861a…e927,
-with the exact problem compile command. No source or release archive has been
-replaced. This screen's small gains and HBM81 regression are insufficient for
-adoption until that independent result is evaluated. No push.
+**96** full reference checks all pass, maximum errors zero, using unchanged
+`bench_conv.c`, SHA256 2548861a…e927, with the exact problem compile command.
+[Full independent summary](../../results/v56/experiments/fold-schedule/confirm_summary.md).
+
+KH39/41/55/81 independent changes: DDR **+0.06%/+0.18%/+0.03%/-0.03%**;
+HBM **-0.16%/+0.31%/+0.02%/-0.16%**. DDR41 is positive in four of six paired
+rounds; HBM39 is negative in five, HBM81 in four. The original screen's broader
+DDR gains are not consistently retained, and the HBM81 regression recurs.
+All raw outliers remain; observed ranges are not confidence intervals.
+
+**Not adopted.** The small KH41 benefit is insufficient to promote this whole-F4
+change given the regressions elsewhere and mixed paired signs. F3+F4 was not
+advanced. No source or release archive is replaced, and no package acceptance
+or fresh v55 claim is needed for these unadopted candidates. This evidence does
+not support arithmetic grouping as a large remaining bottleneck. No push.
