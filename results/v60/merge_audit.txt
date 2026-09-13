@@ -1,0 +1,6 @@
+Upstream 364b46d based on integrated 87fa5d7.
+All upstream job scripts and result logs retained byte-for-byte.
+NOTES retained with a v60 preface.
+Operator remains accepted ebf36923; previously screened K4 EXT, K9 alignment and kf sharing not adopted.
+Archives retain tested program members and refresh README only.
+Official bench and run scripts unchanged.

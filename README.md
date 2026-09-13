@@ -3,6 +3,11 @@
 FP32 二维 valid 卷积 `conv2d(in, H, W, k, KH, KW, out)` 的 SME（FMOPA）实现。结果与参考实现逐位一致
 （校验 1e-5 绝对误差，低于输出量级的 1 ulp，因此必须保持与参考实现完全相同的 fma 累加链），按 GFLOPS 计分。
 
+本次汇总发布为 **v60**，接续上游 v59（`364b46d`）。此前本地统一使用 v56 作为实验代号，
+`docs/v56*`、`results/v56` 及下方历史记录保留原名；其中“未 push”“当前”等措辞只指当时检查点。
+最终发布范围、直接对比 v59 的验收结果及已知限制见 [v60 发布说明](docs/v60.md)。
+后续以通过验证的性能优化为一轮，汇总后 push、收尾；本次发布后停止实验。
+
 ## 运行
 
 ```bash
@@ -17,7 +22,7 @@ DDR，探测不到则不加参数（即题面原命令）。`CONV_HBM=0` 可关�
 或手动：
 
 ```bash
-gcc -O3 -march=armv9-a+sme+sve2 -fopenmp bench_conv.c conv2d.c -o conv2d_test -lm   # 或题面的 gcc -O3 ...（文件内 pragma 打开 SME）
+gcc -O3 bench_conv.c conv2d.c -o conv2d_test -lm -fopenmp
 OMP_NUM_THREADS=38 numactl -N 1 ./conv2d_test 4096 6144 39 39 1
 ```
 
@@ -53,7 +58,7 @@ OMP_NUM_THREADS=38 numactl -N 1 ./conv2d_test 4096 6144 39 39 1
   可选并行打包现在每个 chunk 只有一个写入者，等待其完成后再读取。线程绑核取自继承的亲和掩码（兼容 numactl/taskset），
   自有线程池调用间自旋（等价 OMP_WAIT_POLICY=ACTIVE）；经典形态保留原来的 pass 调度与回写策略。
 
-## 当前本地 v56：修复线程起点数组容量
+## v60 采用源码：修复线程起点数组容量
 
 当前算子 SHA-256：`ebf36923518cb809ae5e65001a700de30b0415956f1d0420a2dffcae45684026`。
 保留此前 K5、K9、形状相位及四切片 ZA 优化，并修复继承自 v55 的计划数组越界：
@@ -80,7 +85,7 @@ DDR 39×39 有一轮回退，其余三例六轮均改善；HBM 39×39 五轮回�
 这次采用依据是修复真实越界，不宣称它单独带来额外性能收益。
 原始基准和编译/运行脚本未改。诊断包只作诊断；HBM 参数未在现有题面明确授权。
 外部调用并发、分配失败及其他 SVL 限制仍在，详见 [合规审查](docs/v56-compliance.md)。
-所有未发布工作仍为本地 v56，未 push。
+本轮本地 v56 实验已汇总为 v60；后续历史段落保留当时版本及发布状态。
 
 ## 前一检查点：形状相位及四切片 ZA（1d3f5071）
 

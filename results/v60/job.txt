@@ -1,0 +1,96 @@
+Basic Details:
+    jobId                               	1586169                                           	
+    name                                	v60_release                                       	
+    state                               	SUCCEEDED                                         	
+    user                                	niujiayin                                         	
+    queue                               	q_pacopt                                          	
+    account                             	common                                            	
+    cmd                                 	bash jobs/v60_release_job.sh                      	
+    submitNode                          	login07                                           	
+    createTime                          	2026/09/13 08:56:15                               	
+    startTime                           	2026/09/13 08:59:10                               	
+    lastModifiedTime                    	-                                                 	
+    endTime                             	2026/09/13 09:07:49                               	
+    currentOperation                    	EMPTY                                             	
+    jobRequeueMaxCnt                    	0                                                 	
+    jobRequeueCurrentCnt                	0                                                 	
+    mpiType                             	DEFAULT                                           	
+    interactionMode                     	DEFAULT                                           	
+    assistJob                           	DEFAULT                                           	
+    x11ForwardEnabled                   	false                                             	
+    description                         	-                                                 	
+    transferType                        	LOCAL                                             	
+    forwardTime                         	-                                                 	
+    recallTime                          	-                                                 	
+    autoResize                          	false                                             	
+Scheduling Details:
+    exclusive                           	true                                              	
+    priority                            	1                                                 	
+    adminPriority                       	-1                                                	
+    expectSchedTime                     	-                                                 	
+    startTimeEstimated                  	-                                                 	
+    reserveRes                          	-                                                 	
+    backfillRes                         	-                                                 	
+    backfilledRes                       	-                                                 	
+Resource Details:
+    reqJobLicense                       	-
+    allocJobLicense                     	-
+    resGroup[0]:
+        minReplica                      	1                                                 	
+        replica                         	1                                                 	
+        labels                          	queue_q_pacopt aarch64                            	
+        preferNodes                     	cn20483                                           	
+        reqNodeSelectPolicy             	-                                                 	
+        effNodeSelectPolicy             	SEQUENCE                                          	
+        reqCPU                          	38                                                	
+        reqMem                          	4096                                              	
+        reqGPU                          	gpu:0
+        reqNPU                          	0
+        allocCPU                        	38                                                	
+        allocMem                        	4096                                              	
+        allocGPU                        	gpu:0
+        allocNPU                        	0
+        reqTaskLicense                  	-
+        allocTaskLicense                	-
+    allocAffinity                       	
+        execNode             resGroup resIndex hwThreads        gpuIds           npuIds          
+        cn20483              0        0/1      -                -                -               
+Runtime Details:
+    execNodes                           	cn20483                                           	
+    execNodeCnt                         	1                                                 	
+    execPath                            	/home/share/niujiayin/conv2d-v55-20260912         	
+    resizeCmd                           	-                                                 	
+    timeout                             	1800                                              	
+    stderrRedirectPath                  	-                                                 	
+    stderrRedirectType                  	append                                            	
+    stdoutRedirectPath                  	/home/share/niujiayin/conv2d-v55-20260912/results/v60/release.log	
+    stdoutRedirectType                  	override                                          	
+    totalUtime                          	15301                                             	
+    totalStime                          	32                                                	
+    totalMaxMemSwp                      	413                                               	
+    totalMaxMem                         	413                                               	
+    hostPreHookRunTime                  	0                                                 	
+    preHookRunTime                      	0                                                 	
+    jobWallclockDuration                	448                                               	
+    postHookRunTime                     	0                                                 	
+    hostPostHookRunTime                 	0                                                 	
+    jobSstoppedTime                     	0                                                 	
+    coreHours                           	272384                                            	
+    jobExitCode                         	0                                                 	
+    systemExitCode                      	0                                                 	
+    exitMessage                         	Job execution succeeded                           	
+    stderrRedirectOutputPath            	-                                                 	
+    stdoutRedirectOutputPath            	/home/share/niujiayin/conv2d-v55-20260912/results/v60/release.log	
+    nodeUsages                          	
+        execNode             resGroup resIndex utime    stime    wallclockDuration    sstoppedTime     cpuUtil          gpuUtil          npuUtil          memResource                     
+        cn20483              0        0/1      15301    32       448                  0                3425/3704        -                -                0/0/0/0/444/444/303/0           
+    nodePids                            	
+        execNode             pids    
+        cn20483              -       
+    traceMessages                       	2026/09/13 08:56:15    :    [JOB_ADD] Job 1586169 is submitted by niujiayin, job state is PENDING.	
+                                        	2026/09/13 08:59:08    :    [JOB_MODIFY] The parameters of this job are modified: prefer_nodes(cn20481->cn20483).	
+                                        	2026/09/13 08:59:09    :    [JOB_MODIFY_RESULT] Job 1586169 is modified successfully.	
+                                        	2026/09/13 08:59:10    :    [JOB_START] Job 1586169 start message has been sent.	
+                                        	2026/09/13 08:59:10    :    [JOB_START_ACK] Job 1586169 start message has been received by agent cn20483.	
+                                        	2026/09/13 08:59:10    :    [JOB_EXECUTION] Job 1586169 state is from PENDING to RUNNING, execution path: /home/share/niujiayin/conv2d-v55-20260912.	
+                                        	2026/09/13 09:07:49    :    [JOB_FINISH] Job 1586169 state is from RUNNING to SUCCEEDED.	
