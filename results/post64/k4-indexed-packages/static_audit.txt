@@ -1,0 +1,3 @@
+all/conv: all four members match fixed source/transformation, unchanged benchmark/script, and stage README.
+all/conv_nf3: all four members match fixed source/transformation, unchanged benchmark/script, and stage README.
+all/conv_diag: all four members match fixed source/transformation, unchanged benchmark/script, and stage README.

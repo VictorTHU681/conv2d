@@ -1,0 +1,3 @@
+Two downloaded post-run binaries match pre-run hashes in profile.log.
+2f5ecb014cdcf2245da7c5f126436742a5d5d6aca823c3a6367c1dcc7f940aba  build/post64/pairf4-unroll/profile_baseline
+fa2cfdf6f6c3a827655d0455f3ea639595d2811503ba55c32f5af5d164ff59f0  build/post64/pairf4-unroll/profile_u4

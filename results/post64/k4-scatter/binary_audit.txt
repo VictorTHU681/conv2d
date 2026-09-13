@@ -1,0 +1,7 @@
+994becee0a1939a62b84d92a005299d182fe91466ace3aafd1df0df1077c5473  build/post64/k4-scatter/bench_baseline  PASS downloaded post-run binary matches run log
+dca4038fd325e7ce1bc386f7db5a460c59d4b94eafec083a61ecf70bf181e37f  build/post64/k4-scatter/bench_bits  PASS downloaded post-run binary matches run log
+06d269123d980e3f08b14791428829d2ea567878aa72dd24d56fbd647e09f361  build/post64/k4-scatter/bench_scatter  PASS downloaded post-run binary matches run log
+23721ba4079764ee549b25b7eb6976a9417f0dcd6ec1117a9b3a429d12993c79  build/post64/k4-scatter/guard_bits  PASS downloaded post-run binary matches run log
+182dad6f85ea68707fd35392ad0f3b97c2217f3e62b21de28e145289bfcfe06b  build/post64/k4-scatter/guard_scatter  PASS downloaded post-run binary matches run log
+a5ac804b5ef490689911c6089d525a738cbc95e2c36266bb2928fde1e228dc69  build/post64/k4-scatter/state_bits  PASS downloaded post-run binary matches run log
+25e4ece98c2ec85d297d57b6a0f2e6e4328c35e57608e19c274c88cecbd5085f  build/post64/k4-scatter/state_scatter  PASS downloaded post-run binary matches run log

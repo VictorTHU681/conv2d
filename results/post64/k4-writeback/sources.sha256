@@ -1,0 +1,4 @@
+490cd8d972a7d4b5acc7d576f03eaf23c65ed18d08de32aaa64c952c2ce63d95  build/post64/k4-writeback/baseline.c
+988ca3c4b91bb91cbfa02eb07bc69b84218d22f3b0da268109f3d0d13654fbc9  build/post64/k4-writeback/post.c
+764a31316aeba7f29cf0e77c8e5a3f2a40b32b1be0c2055d7816dfad91516dc8  build/post64/k4-writeback/pre.c
+e5e52c8d666584cc49ca6f11162be4868b240e2cc99a3c3ef0a2f8ac292c65ad  build/post64/k4-writeback/fbench.c

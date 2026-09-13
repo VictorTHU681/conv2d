@@ -1,0 +1,4 @@
+baseline disassembly SHA256 5c2fe38ea480c413e4111412e46a92468b000594b44f3472800031741d09d2af
+paired disassembly SHA256 ef41bf976955ae07a20555af670d203d574d7bcf43cb4b19dd49a0ab85fc8107
+paired: all four nine-instruction event blocks match exact permutation; all other linked addresses/instructions identical; 32 changed positions at 0x423240..0x4232cc.
+Every slice is read before clear; all four result vectors are captured before the same ST4W. All clears finish before the next row. Static dependencies do not replace dynamic state/guard or performance tests.

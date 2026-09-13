@@ -1,0 +1,29 @@
+baseline disassembly SHA256 c02d71fa17eb50a82c3a50af462f608159e525dc8aad73ba9b627d26330bfcbc
+post disassembly SHA256 3326b32f265835d4a4139d151cbfdd4231a00a710ff9de31750a6533905b3b74
+post: tail 0x4230e0..0x4230fc; 5 body instructions vs 6; worker arithmetic opcode/operand sequence identical (168 instructions).
+Total instructions 43879 vs 43879; non-worker address/opcode/operand identity=True.
+Common-address changes: 37 positions, 0x4230e4..0x423178.
+All changes confined to K4 scalar tail / following setup before compute entry 0x423180; every instruction/address elsewhere identical.
+  4230e0: f9408a58 ldr x24, [x18, #272]
+  4230e4: b40000d8 cbz x24, 4230fc <roll_worker+0x738>
+  4230e8: b84045b7 ldr w23, [x13], #4
+  4230ec: b9000297 str w23, [x20]
+  4230f0: 8b030294 add x20, x20, x3
+  4230f4: f1000718 subs x24, x24, #0x1
+  4230f8: 54ffff81 b.ne 4230e8 <roll_worker+0x724>
+  4230fc: f9409a54 ldr x20, [x18, #304]
+pre disassembly SHA256 7ec9f29d343c89185b71563a5bc78e7395c15f072508e1ae940da9c7b6529aa1
+pre: tail 0x4230e0..0x423100; 6 body instructions vs 6; worker arithmetic opcode/operand sequence identical (168 instructions).
+Total instructions 43879 vs 43879; non-worker address/opcode/operand identity=True.
+Common-address changes: 4 positions, 0x4230e8..0x4230fc.
+All changes confined to K4 scalar tail / following setup before compute entry 0x423180; every instruction/address elsewhere identical.
+  4230e0: f9408a58 ldr x24, [x18, #272]
+  4230e4: b40000f8 cbz x24, 423100 <roll_worker+0x73c>
+  4230e8: d10011ad sub x13, x13, #0x4
+  4230ec: b8404db7 ldr w23, [x13, #4]!
+  4230f0: b9000297 str w23, [x20]
+  4230f4: 8b030294 add x20, x20, x3
+  4230f8: f1000718 subs x24, x24, #0x1
+  4230fc: 54ffff81 b.ne 4230ec <roll_worker+0x728>
+  423100: f9409a54 ldr x20, [x18, #304]
+Static linked instruction audit only. Correctness and performance require the separate server tests; layout changes are not a proven timing mechanism.

@@ -1,0 +1,3 @@
+Pre-run log matches exact pinned manifest. Post-run server recheck:
+build/post64/pairf4-alignment/official_baseline: OK
+build/post64/pairf4-alignment/official_aligned: OK

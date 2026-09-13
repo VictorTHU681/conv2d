@@ -1,0 +1,65 @@
+gpr_loop: 39 common-address differences, 0x4230e4..0x42317c; all in worker=True.
+  0x4230e4..0x42317c: 39 positions
+  4230e4: cbz x24, 423104 <roll_worker+0x740> => cbz x24, 423100 <roll_worker+0x73c>
+  4230e8: ptrue p4.s, vl1 => ldr w23, [x13]
+  4230ec: ld1rw {z0.s}, p0/z, [x13] => str w23, [x20]
+  4230f0: st1w {z0.s}, p4, [x20] => add x13, x13, #0x4
+  4230f4: add x13, x13, #0x4 => add x20, x20, x3
+  4230f8: add x20, x20, x3 => subs x24, x24, #0x1
+  4230fc: subs x24, x24, #0x1 => b.ne 4230e8 <roll_worker+0x724>
+  423100: b.ne 4230ec <roll_worker+0x728> => ldr x20, [x18, #304]
+  423104: ldr x20, [x18, #304] => cbz x20, 423144 <roll_worker+0x780>
+  423108: cbz x20, 423148 <roll_worker+0x784> => ldr x12, [x18, #296]
+  42310c: ldr x12, [x18, #296] => add x13, x22, x12, lsl #8
+  423110: add x13, x22, x12, lsl #8 => add x24, x17, x12, lsl #6
+  423114: add x24, x17, x12, lsl #6 => ld4w {z0.s-z3.s}, p0/z, [x13]
+  423118: ld4w {z0.s-z3.s}, p0/z, [x13] => st1w {z0.s}, p0, [x24]
+  42311c: st1w {z0.s}, p0, [x24] => add x23, x24, x3
+  423120: add x23, x24, x3 => st1w {z1.s}, p0, [x23]
+  423124: st1w {z1.s}, p0, [x23] => add x23, x23, x3
+  423128: add x23, x23, x3 => st1w {z2.s}, p0, [x23]
+  42312c: st1w {z2.s}, p0, [x23] => add x23, x23, x3
+  423130: add x23, x23, x3 => st1w {z3.s}, p0, [x23]
+  423134: st1w {z3.s}, p0, [x23] => add x13, x13, #0x100
+  423138: add x13, x13, #0x100 => add x24, x24, #0x40
+  42313c: add x24, x24, #0x40 => subs x20, x20, #0x1
+  423140: subs x20, x20, #0x1 => b.ne 423114 <roll_worker+0x750>
+  423144: b.ne 423118 <roll_worker+0x754> => mov x13, x22
+  423148: mov x13, x22 => mov x12, x17
+  42314c: mov x12, x17 => ldr x22, [x18, #192]
+  423150: ldr x22, [x18, #192] => add x22, x22, x16
+  423154: add x22, x22, x16 => ldr x23, [x18, #208]
+  423158: ldr x23, [x18, #208] => add x23, x23, x16
+  42315c: add x23, x23, x16 => ldr x25, [x18, #216]
+  423160: ldr x25, [x18, #216] => add x25, x25, x16
+  423164: add x25, x25, x16 => ldr x20, [x18, #184]
+  423168: ldr x20, [x18, #184] => add x16, x16, x20
+  42316c: add x16, x16, x20 => ldr x20, [x18, #296]
+  423170: ldr x20, [x18, #296] => mov x15, x7
+  423174: mov x15, x7 => cbz x20, 423268 <roll_worker+0x8a4>
+  423178: cbz x20, 423268 <roll_worker+0x8a4> => sub x15, x15, x20
+  42317c: sub x15, x15, x20 => nop
+gpr_bits: 1139 common-address differences, 0x422a10..0x42501c; all in worker=True.
+  0x422a10..0x422a10: 1 positions
+  0x422a18..0x422a18: 1 positions
+  0x422a24..0x422a24: 1 positions
+  0x422a48..0x422a48: 1 positions
+  0x422a50..0x422a50: 1 positions
+  0x422b88..0x422b88: 1 positions
+  0x422bbc..0x422bc0: 2 positions
+  0x422c14..0x422c14: 1 positions
+  0x422d74..0x422d74: 1 positions
+  0x422d80..0x422d80: 1 positions
+  0x422dc8..0x422dc8: 1 positions
+  0x422e04..0x422e04: 1 positions
+  0x422e0c..0x422e0c: 1 positions
+  0x422e14..0x422e14: 1 positions
+  0x422e1c..0x422e1c: 1 positions
+  0x4230e4..0x4230f4: 5 positions
+  0x4230fc..0x424258: 1112 positions
+  0x424794..0x424794: 1 positions
+  0x4249b4..0x4249b4: 1 positions
+  0x424d38..0x424d38: 1 positions
+  0x424d48..0x424d48: 1 positions
+  0x424d58..0x424d58: 1 positions
+  0x42501c..0x42501c: 1 positions

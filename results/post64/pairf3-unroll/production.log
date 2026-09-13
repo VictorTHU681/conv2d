@@ -1,0 +1,1370 @@
+HOST cn20490 2026-09-13T18:20:13+08:00
+pid 509235's current affinity list: 37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+PLACEMENT cpu_node=1 hbm_node=17
+Cpus_allowed_list:	37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+Mems_allowed_list:	0-31
+1549493
+policy: default
+preferred node: current
+physcpubind: 37 75 113 151 189 227 265 303 341 379 417 455 493 531 569 607 
+cpubind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+nodebind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 
+preferred: 
+EFFECTIVE_PLACEMENT
+policy: preferred
+preferred node: 17
+physcpubind: 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 
+cpubind: 1 
+nodebind: 1 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 
+preferred: 17 
+build/post64/pairf3-unroll/baseline.c: OK
+build/post64/pairf3-unroll/u4.c: OK
+build/post64/pairf3-unroll/bench_conv.c: OK
+2548861ae7e29826e454b4c0b098d682f7f04996222e664cd1ea9bc92dd2e927  build/post64/pairf3-unroll/bench_conv.c
+08400a7659134bf7bee3b14df24fc919537c9fef634d1b580bf66fba0b112357  build/post64/pairf3-unroll/baseline.c
+918de09b3e8bcff98134c9d95f2d5582e3da5e66ff91cc49a2c563f8a9bcd7d3  build/post64/pairf3-unroll/official_baseline
+f88b3f90295fd5ad5a749016343b266535857b53d2588801f65e18e6c7f2d499  build/post64/pairf3-unroll/u4.c
+996695900c8c2585f01481268090fa62c369c1cea5d1dddf8f82d4f10f95cbe0  build/post64/pairf3-unroll/official_u4
+d225ae6f245a364439449c6aef4ae0a3172711068d9d05fc2e5720460afc1da2  build/post64/pairf3-unroll/state_u4
+f5dda28e717b951d7191793d8a1f591c12de1e3b528250ddb633bc7686eda85d  build/post64/pairf3-unroll/guard_u4
+5691da4c6496801eca34d1f48fc519bd5cd530a2875009e91f5a4e1dff4994f8  build/post64/pairf3-unroll/suffix_guard_u4
+PAIRF3_PACK mode=-1
+   572 x 567  k  39 x  7 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   614 x 569  k  81 x  9 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   588 x 571  k  55 x 11 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   574 x 573  k  41 x 13 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   646 x 575  k 113 x 15 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   678 x 577  k 145 x 17 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   710 x 579  k 177 x 19 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   742 x 581  k 209 x 21 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   774 x 583  k 241 x 23 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   572 x 585  k  39 x 25 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   573 x 567  k  39 x  7 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   615 x 569  k  81 x  9 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   589 x 571  k  55 x 11 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   575 x 573  k  41 x 13 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   647 x 575  k 113 x 15 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   679 x 577  k 145 x 17 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   711 x 579  k 177 x 19 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   743 x 581  k 209 x 21 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   775 x 583  k 241 x 23 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   573 x 585  k  39 x 25 : ok  maxerr 0  bad 0/300135  bitdiff 0
+STATE_SWEEP PASS cases=261
+PAIRF3_PACK mode=0
+   572 x 567  k  39 x  7 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   614 x 569  k  81 x  9 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   588 x 571  k  55 x 11 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   574 x 573  k  41 x 13 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   646 x 575  k 113 x 15 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   678 x 577  k 145 x 17 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   710 x 579  k 177 x 19 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   742 x 581  k 209 x 21 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   774 x 583  k 241 x 23 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   572 x 585  k  39 x 25 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   573 x 567  k  39 x  7 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   615 x 569  k  81 x  9 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   589 x 571  k  55 x 11 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   575 x 573  k  41 x 13 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   647 x 575  k 113 x 15 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   679 x 577  k 145 x 17 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   711 x 579  k 177 x 19 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   743 x 581  k 209 x 21 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   775 x 583  k 241 x 23 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   573 x 585  k  39 x 25 : ok  maxerr 0  bad 0/300135  bitdiff 0
+STATE_SWEEP PASS cases=261
+PAIRF3_PACK mode=1
+   572 x 567  k  39 x  7 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   614 x 569  k  81 x  9 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   588 x 571  k  55 x 11 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   574 x 573  k  41 x 13 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   646 x 575  k 113 x 15 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   678 x 577  k 145 x 17 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   710 x 579  k 177 x 19 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   742 x 581  k 209 x 21 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   774 x 583  k 241 x 23 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   572 x 585  k  39 x 25 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   573 x 567  k  39 x  7 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   615 x 569  k  81 x  9 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   589 x 571  k  55 x 11 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   575 x 573  k  41 x 13 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   647 x 575  k 113 x 15 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   679 x 577  k 145 x 17 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   711 x 579  k 177 x 19 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   743 x 581  k 209 x 21 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   775 x 583  k 241 x 23 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   573 x 585  k  39 x 25 : ok  maxerr 0  bad 0/300135  bitdiff 0
+STATE_SWEEP PASS cases=261
+PAIRF3_PACK mode=2
+   572 x 567  k  39 x  7 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   614 x 569  k  81 x  9 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   588 x 571  k  55 x 11 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   574 x 573  k  41 x 13 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   646 x 575  k 113 x 15 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   678 x 577  k 145 x 17 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   710 x 579  k 177 x 19 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   742 x 581  k 209 x 21 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   774 x 583  k 241 x 23 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   572 x 585  k  39 x 25 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   573 x 567  k  39 x  7 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   615 x 569  k  81 x  9 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   589 x 571  k  55 x 11 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   575 x 573  k  41 x 13 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   647 x 575  k 113 x 15 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   679 x 577  k 145 x 17 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   711 x 579  k 177 x 19 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   743 x 581  k 209 x 21 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   775 x 583  k 241 x 23 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   573 x 585  k  39 x 25 : ok  maxerr 0  bad 0/300135  bitdiff 0
+STATE_SWEEP PASS cases=261
+PAIRF3_PACK mode=3
+   572 x 567  k  39 x  7 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   614 x 569  k  81 x  9 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   588 x 571  k  55 x 11 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   574 x 573  k  41 x 13 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   646 x 575  k 113 x 15 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   678 x 577  k 145 x 17 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   710 x 579  k 177 x 19 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   742 x 581  k 209 x 21 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   774 x 583  k 241 x 23 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   572 x 585  k  39 x 25 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   573 x 567  k  39 x  7 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   615 x 569  k  81 x  9 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   589 x 571  k  55 x 11 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   575 x 573  k  41 x 13 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   647 x 575  k 113 x 15 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   679 x 577  k 145 x 17 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   711 x 579  k 177 x 19 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   743 x 581  k 209 x 21 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   775 x 583  k 241 x 23 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   573 x 585  k  39 x 25 : ok  maxerr 0  bad 0/300135  bitdiff 0
+STATE_SWEEP PASS cases=261
+GUARD kh=19 kw=3 outW=256 PASS
+GUARD kh=19 kw=3 outW=257 PASS
+GUARD kh=19 kw=4 outW=256 PASS
+GUARD kh=19 kw=4 outW=257 PASS
+GUARD kh=19 kw=5 outW=256 PASS
+GUARD kh=19 kw=5 outW=257 PASS
+GUARD kh=19 kw=6 outW=256 PASS
+GUARD kh=19 kw=6 outW=257 PASS
+GUARD kh=19 kw=7 outW=256 PASS
+GUARD kh=19 kw=7 outW=257 PASS
+GUARD kh=19 kw=8 outW=256 PASS
+GUARD kh=19 kw=8 outW=257 PASS
+GUARD kh=19 kw=9 outW=256 PASS
+GUARD kh=19 kw=9 outW=257 PASS
+GUARD kh=19 kw=10 outW=256 PASS
+GUARD kh=19 kw=10 outW=257 PASS
+GUARD kh=19 kw=17 outW=256 PASS
+GUARD kh=19 kw=17 outW=257 PASS
+GUARD kh=19 kw=39 outW=256 PASS
+GUARD kh=19 kw=39 outW=257 PASS
+GUARD kh=19 kw=40 outW=256 PASS
+GUARD kh=19 kw=40 outW=257 PASS
+GUARD kh=19 kw=41 outW=256 PASS
+GUARD kh=19 kw=41 outW=257 PASS
+GUARD kh=19 kw=399 outW=256 PASS
+GUARD kh=19 kw=399 outW=257 PASS
+GUARD kh=19 kw=400 outW=256 PASS
+GUARD kh=19 kw=400 outW=257 PASS
+GUARD kh=25 kw=3 outW=256 PASS
+GUARD kh=25 kw=3 outW=257 PASS
+GUARD kh=25 kw=4 outW=256 PASS
+GUARD kh=25 kw=4 outW=257 PASS
+GUARD kh=25 kw=5 outW=256 PASS
+GUARD kh=25 kw=5 outW=257 PASS
+GUARD kh=25 kw=6 outW=256 PASS
+GUARD kh=25 kw=6 outW=257 PASS
+GUARD kh=25 kw=7 outW=256 PASS
+GUARD kh=25 kw=7 outW=257 PASS
+GUARD kh=25 kw=8 outW=256 PASS
+GUARD kh=25 kw=8 outW=257 PASS
+GUARD kh=25 kw=9 outW=256 PASS
+GUARD kh=25 kw=9 outW=257 PASS
+GUARD kh=25 kw=10 outW=256 PASS
+GUARD kh=25 kw=10 outW=257 PASS
+GUARD kh=25 kw=17 outW=256 PASS
+GUARD kh=25 kw=17 outW=257 PASS
+GUARD kh=25 kw=39 outW=256 PASS
+GUARD kh=25 kw=39 outW=257 PASS
+GUARD kh=25 kw=40 outW=256 PASS
+GUARD kh=25 kw=40 outW=257 PASS
+GUARD kh=25 kw=41 outW=256 PASS
+GUARD kh=25 kw=41 outW=257 PASS
+GUARD kh=25 kw=399 outW=256 PASS
+GUARD kh=25 kw=399 outW=257 PASS
+GUARD kh=25 kw=400 outW=256 PASS
+GUARD kh=25 kw=400 outW=257 PASS
+GUARD kh=39 kw=3 outW=256 PASS
+GUARD kh=39 kw=3 outW=257 PASS
+GUARD kh=39 kw=4 outW=256 PASS
+GUARD kh=39 kw=4 outW=257 PASS
+GUARD kh=39 kw=5 outW=256 PASS
+GUARD kh=39 kw=5 outW=257 PASS
+GUARD kh=39 kw=6 outW=256 PASS
+GUARD kh=39 kw=6 outW=257 PASS
+GUARD kh=39 kw=7 outW=256 PASS
+GUARD kh=39 kw=7 outW=257 PASS
+GUARD kh=39 kw=8 outW=256 PASS
+GUARD kh=39 kw=8 outW=257 PASS
+GUARD kh=39 kw=9 outW=256 PASS
+GUARD kh=39 kw=9 outW=257 PASS
+GUARD kh=39 kw=10 outW=256 PASS
+GUARD kh=39 kw=10 outW=257 PASS
+GUARD kh=39 kw=17 outW=256 PASS
+GUARD kh=39 kw=17 outW=257 PASS
+GUARD kh=39 kw=39 outW=256 PASS
+GUARD kh=39 kw=39 outW=257 PASS
+GUARD kh=39 kw=40 outW=256 PASS
+GUARD kh=39 kw=40 outW=257 PASS
+GUARD kh=39 kw=41 outW=256 PASS
+GUARD kh=39 kw=41 outW=257 PASS
+GUARD kh=39 kw=399 outW=256 PASS
+GUARD kh=39 kw=399 outW=257 PASS
+GUARD kh=39 kw=400 outW=256 PASS
+GUARD kh=39 kw=400 outW=257 PASS
+GUARD kh=41 kw=3 outW=256 PASS
+GUARD kh=41 kw=3 outW=257 PASS
+GUARD kh=41 kw=4 outW=256 PASS
+GUARD kh=41 kw=4 outW=257 PASS
+GUARD kh=41 kw=5 outW=256 PASS
+GUARD kh=41 kw=5 outW=257 PASS
+GUARD kh=41 kw=6 outW=256 PASS
+GUARD kh=41 kw=6 outW=257 PASS
+GUARD kh=41 kw=7 outW=256 PASS
+GUARD kh=41 kw=7 outW=257 PASS
+GUARD kh=41 kw=8 outW=256 PASS
+GUARD kh=41 kw=8 outW=257 PASS
+GUARD kh=41 kw=9 outW=256 PASS
+GUARD kh=41 kw=9 outW=257 PASS
+GUARD kh=41 kw=10 outW=256 PASS
+GUARD kh=41 kw=10 outW=257 PASS
+GUARD kh=41 kw=17 outW=256 PASS
+GUARD kh=41 kw=17 outW=257 PASS
+GUARD kh=41 kw=39 outW=256 PASS
+GUARD kh=41 kw=39 outW=257 PASS
+GUARD kh=41 kw=40 outW=256 PASS
+GUARD kh=41 kw=40 outW=257 PASS
+GUARD kh=41 kw=41 outW=256 PASS
+GUARD kh=41 kw=41 outW=257 PASS
+GUARD kh=41 kw=399 outW=256 PASS
+GUARD kh=41 kw=399 outW=257 PASS
+GUARD kh=41 kw=400 outW=256 PASS
+GUARD kh=41 kw=400 outW=257 PASS
+GUARD kh=55 kw=3 outW=256 PASS
+GUARD kh=55 kw=3 outW=257 PASS
+GUARD kh=55 kw=4 outW=256 PASS
+GUARD kh=55 kw=4 outW=257 PASS
+GUARD kh=55 kw=5 outW=256 PASS
+GUARD kh=55 kw=5 outW=257 PASS
+GUARD kh=55 kw=6 outW=256 PASS
+GUARD kh=55 kw=6 outW=257 PASS
+GUARD kh=55 kw=7 outW=256 PASS
+GUARD kh=55 kw=7 outW=257 PASS
+GUARD kh=55 kw=8 outW=256 PASS
+GUARD kh=55 kw=8 outW=257 PASS
+GUARD kh=55 kw=9 outW=256 PASS
+GUARD kh=55 kw=9 outW=257 PASS
+GUARD kh=55 kw=10 outW=256 PASS
+GUARD kh=55 kw=10 outW=257 PASS
+GUARD kh=55 kw=17 outW=256 PASS
+GUARD kh=55 kw=17 outW=257 PASS
+GUARD kh=55 kw=39 outW=256 PASS
+GUARD kh=55 kw=39 outW=257 PASS
+GUARD kh=55 kw=40 outW=256 PASS
+GUARD kh=55 kw=40 outW=257 PASS
+GUARD kh=55 kw=41 outW=256 PASS
+GUARD kh=55 kw=41 outW=257 PASS
+GUARD kh=55 kw=399 outW=256 PASS
+GUARD kh=55 kw=399 outW=257 PASS
+GUARD kh=55 kw=400 outW=256 PASS
+GUARD kh=55 kw=400 outW=257 PASS
+GUARD kh=81 kw=3 outW=256 PASS
+GUARD kh=81 kw=3 outW=257 PASS
+GUARD kh=81 kw=4 outW=256 PASS
+GUARD kh=81 kw=4 outW=257 PASS
+GUARD kh=81 kw=5 outW=256 PASS
+GUARD kh=81 kw=5 outW=257 PASS
+GUARD kh=81 kw=6 outW=256 PASS
+GUARD kh=81 kw=6 outW=257 PASS
+GUARD kh=81 kw=7 outW=256 PASS
+GUARD kh=81 kw=7 outW=257 PASS
+GUARD kh=81 kw=8 outW=256 PASS
+GUARD kh=81 kw=8 outW=257 PASS
+GUARD kh=81 kw=9 outW=256 PASS
+GUARD kh=81 kw=9 outW=257 PASS
+GUARD kh=81 kw=10 outW=256 PASS
+GUARD kh=81 kw=10 outW=257 PASS
+GUARD kh=81 kw=17 outW=256 PASS
+GUARD kh=81 kw=17 outW=257 PASS
+GUARD kh=81 kw=39 outW=256 PASS
+GUARD kh=81 kw=39 outW=257 PASS
+GUARD kh=81 kw=40 outW=256 PASS
+GUARD kh=81 kw=40 outW=257 PASS
+GUARD kh=81 kw=41 outW=256 PASS
+GUARD kh=81 kw=41 outW=257 PASS
+GUARD kh=81 kw=399 outW=256 PASS
+GUARD kh=81 kw=399 outW=257 PASS
+GUARD kh=81 kw=400 outW=256 PASS
+GUARD kh=81 kw=400 outW=257 PASS
+GUARD kh=113 kw=3 outW=256 PASS
+GUARD kh=113 kw=3 outW=257 PASS
+GUARD kh=113 kw=4 outW=256 PASS
+GUARD kh=113 kw=4 outW=257 PASS
+GUARD kh=113 kw=5 outW=256 PASS
+GUARD kh=113 kw=5 outW=257 PASS
+GUARD kh=113 kw=6 outW=256 PASS
+GUARD kh=113 kw=6 outW=257 PASS
+GUARD kh=113 kw=7 outW=256 PASS
+GUARD kh=113 kw=7 outW=257 PASS
+GUARD kh=113 kw=8 outW=256 PASS
+GUARD kh=113 kw=8 outW=257 PASS
+GUARD kh=113 kw=9 outW=256 PASS
+GUARD kh=113 kw=9 outW=257 PASS
+GUARD kh=113 kw=10 outW=256 PASS
+GUARD kh=113 kw=10 outW=257 PASS
+GUARD kh=113 kw=17 outW=256 PASS
+GUARD kh=113 kw=17 outW=257 PASS
+GUARD kh=113 kw=39 outW=256 PASS
+GUARD kh=113 kw=39 outW=257 PASS
+GUARD kh=113 kw=40 outW=256 PASS
+GUARD kh=113 kw=40 outW=257 PASS
+GUARD kh=113 kw=41 outW=256 PASS
+GUARD kh=113 kw=41 outW=257 PASS
+GUARD kh=113 kw=399 outW=256 PASS
+GUARD kh=113 kw=399 outW=257 PASS
+GUARD kh=113 kw=400 outW=256 PASS
+GUARD kh=113 kw=400 outW=257 PASS
+GUARD kh=231 kw=3 outW=256 PASS
+GUARD kh=231 kw=3 outW=257 PASS
+GUARD kh=231 kw=4 outW=256 PASS
+GUARD kh=231 kw=4 outW=257 PASS
+GUARD kh=231 kw=5 outW=256 PASS
+GUARD kh=231 kw=5 outW=257 PASS
+GUARD kh=231 kw=6 outW=256 PASS
+GUARD kh=231 kw=6 outW=257 PASS
+GUARD kh=231 kw=7 outW=256 PASS
+GUARD kh=231 kw=7 outW=257 PASS
+GUARD kh=231 kw=8 outW=256 PASS
+GUARD kh=231 kw=8 outW=257 PASS
+GUARD kh=231 kw=9 outW=256 PASS
+GUARD kh=231 kw=9 outW=257 PASS
+GUARD kh=231 kw=10 outW=256 PASS
+GUARD kh=231 kw=10 outW=257 PASS
+GUARD kh=231 kw=17 outW=256 PASS
+GUARD kh=231 kw=17 outW=257 PASS
+GUARD kh=231 kw=39 outW=256 PASS
+GUARD kh=231 kw=39 outW=257 PASS
+GUARD kh=231 kw=40 outW=256 PASS
+GUARD kh=231 kw=40 outW=257 PASS
+GUARD kh=231 kw=41 outW=256 PASS
+GUARD kh=231 kw=41 outW=257 PASS
+GUARD kh=231 kw=399 outW=256 PASS
+GUARD kh=231 kw=399 outW=257 PASS
+GUARD kh=231 kw=400 outW=256 PASS
+GUARD kh=231 kw=400 outW=257 PASS
+PLANAR_GUARD_PASS cases=224
+GUARD kh=19 kw=3 outW=256 PASS
+GUARD kh=19 kw=3 outW=257 PASS
+GUARD kh=19 kw=4 outW=256 PASS
+GUARD kh=19 kw=4 outW=257 PASS
+GUARD kh=19 kw=5 outW=256 PASS
+GUARD kh=19 kw=5 outW=257 PASS
+GUARD kh=19 kw=6 outW=256 PASS
+GUARD kh=19 kw=6 outW=257 PASS
+GUARD kh=19 kw=7 outW=256 PASS
+GUARD kh=19 kw=7 outW=257 PASS
+GUARD kh=19 kw=8 outW=256 PASS
+GUARD kh=19 kw=8 outW=257 PASS
+GUARD kh=19 kw=9 outW=256 PASS
+GUARD kh=19 kw=9 outW=257 PASS
+GUARD kh=19 kw=10 outW=256 PASS
+GUARD kh=19 kw=10 outW=257 PASS
+GUARD kh=19 kw=17 outW=256 PASS
+GUARD kh=19 kw=17 outW=257 PASS
+GUARD kh=19 kw=39 outW=256 PASS
+GUARD kh=19 kw=39 outW=257 PASS
+GUARD kh=19 kw=40 outW=256 PASS
+GUARD kh=19 kw=40 outW=257 PASS
+GUARD kh=19 kw=41 outW=256 PASS
+GUARD kh=19 kw=41 outW=257 PASS
+GUARD kh=19 kw=399 outW=256 PASS
+GUARD kh=19 kw=399 outW=257 PASS
+GUARD kh=19 kw=400 outW=256 PASS
+GUARD kh=19 kw=400 outW=257 PASS
+GUARD kh=25 kw=3 outW=256 PASS
+GUARD kh=25 kw=3 outW=257 PASS
+GUARD kh=25 kw=4 outW=256 PASS
+GUARD kh=25 kw=4 outW=257 PASS
+GUARD kh=25 kw=5 outW=256 PASS
+GUARD kh=25 kw=5 outW=257 PASS
+GUARD kh=25 kw=6 outW=256 PASS
+GUARD kh=25 kw=6 outW=257 PASS
+GUARD kh=25 kw=7 outW=256 PASS
+GUARD kh=25 kw=7 outW=257 PASS
+GUARD kh=25 kw=8 outW=256 PASS
+GUARD kh=25 kw=8 outW=257 PASS
+GUARD kh=25 kw=9 outW=256 PASS
+GUARD kh=25 kw=9 outW=257 PASS
+GUARD kh=25 kw=10 outW=256 PASS
+GUARD kh=25 kw=10 outW=257 PASS
+GUARD kh=25 kw=17 outW=256 PASS
+GUARD kh=25 kw=17 outW=257 PASS
+GUARD kh=25 kw=39 outW=256 PASS
+GUARD kh=25 kw=39 outW=257 PASS
+GUARD kh=25 kw=40 outW=256 PASS
+GUARD kh=25 kw=40 outW=257 PASS
+GUARD kh=25 kw=41 outW=256 PASS
+GUARD kh=25 kw=41 outW=257 PASS
+GUARD kh=25 kw=399 outW=256 PASS
+GUARD kh=25 kw=399 outW=257 PASS
+GUARD kh=25 kw=400 outW=256 PASS
+GUARD kh=25 kw=400 outW=257 PASS
+GUARD kh=39 kw=3 outW=256 PASS
+GUARD kh=39 kw=3 outW=257 PASS
+GUARD kh=39 kw=4 outW=256 PASS
+GUARD kh=39 kw=4 outW=257 PASS
+GUARD kh=39 kw=5 outW=256 PASS
+GUARD kh=39 kw=5 outW=257 PASS
+GUARD kh=39 kw=6 outW=256 PASS
+GUARD kh=39 kw=6 outW=257 PASS
+GUARD kh=39 kw=7 outW=256 PASS
+GUARD kh=39 kw=7 outW=257 PASS
+GUARD kh=39 kw=8 outW=256 PASS
+GUARD kh=39 kw=8 outW=257 PASS
+GUARD kh=39 kw=9 outW=256 PASS
+GUARD kh=39 kw=9 outW=257 PASS
+GUARD kh=39 kw=10 outW=256 PASS
+GUARD kh=39 kw=10 outW=257 PASS
+GUARD kh=39 kw=17 outW=256 PASS
+GUARD kh=39 kw=17 outW=257 PASS
+GUARD kh=39 kw=39 outW=256 PASS
+GUARD kh=39 kw=39 outW=257 PASS
+GUARD kh=39 kw=40 outW=256 PASS
+GUARD kh=39 kw=40 outW=257 PASS
+GUARD kh=39 kw=41 outW=256 PASS
+GUARD kh=39 kw=41 outW=257 PASS
+GUARD kh=39 kw=399 outW=256 PASS
+GUARD kh=39 kw=399 outW=257 PASS
+GUARD kh=39 kw=400 outW=256 PASS
+GUARD kh=39 kw=400 outW=257 PASS
+GUARD kh=41 kw=3 outW=256 PASS
+GUARD kh=41 kw=3 outW=257 PASS
+GUARD kh=41 kw=4 outW=256 PASS
+GUARD kh=41 kw=4 outW=257 PASS
+GUARD kh=41 kw=5 outW=256 PASS
+GUARD kh=41 kw=5 outW=257 PASS
+GUARD kh=41 kw=6 outW=256 PASS
+GUARD kh=41 kw=6 outW=257 PASS
+GUARD kh=41 kw=7 outW=256 PASS
+GUARD kh=41 kw=7 outW=257 PASS
+GUARD kh=41 kw=8 outW=256 PASS
+GUARD kh=41 kw=8 outW=257 PASS
+GUARD kh=41 kw=9 outW=256 PASS
+GUARD kh=41 kw=9 outW=257 PASS
+GUARD kh=41 kw=10 outW=256 PASS
+GUARD kh=41 kw=10 outW=257 PASS
+GUARD kh=41 kw=17 outW=256 PASS
+GUARD kh=41 kw=17 outW=257 PASS
+GUARD kh=41 kw=39 outW=256 PASS
+GUARD kh=41 kw=39 outW=257 PASS
+GUARD kh=41 kw=40 outW=256 PASS
+GUARD kh=41 kw=40 outW=257 PASS
+GUARD kh=41 kw=41 outW=256 PASS
+GUARD kh=41 kw=41 outW=257 PASS
+GUARD kh=41 kw=399 outW=256 PASS
+GUARD kh=41 kw=399 outW=257 PASS
+GUARD kh=41 kw=400 outW=256 PASS
+GUARD kh=41 kw=400 outW=257 PASS
+GUARD kh=55 kw=3 outW=256 PASS
+GUARD kh=55 kw=3 outW=257 PASS
+GUARD kh=55 kw=4 outW=256 PASS
+GUARD kh=55 kw=4 outW=257 PASS
+GUARD kh=55 kw=5 outW=256 PASS
+GUARD kh=55 kw=5 outW=257 PASS
+GUARD kh=55 kw=6 outW=256 PASS
+GUARD kh=55 kw=6 outW=257 PASS
+GUARD kh=55 kw=7 outW=256 PASS
+GUARD kh=55 kw=7 outW=257 PASS
+GUARD kh=55 kw=8 outW=256 PASS
+GUARD kh=55 kw=8 outW=257 PASS
+GUARD kh=55 kw=9 outW=256 PASS
+GUARD kh=55 kw=9 outW=257 PASS
+GUARD kh=55 kw=10 outW=256 PASS
+GUARD kh=55 kw=10 outW=257 PASS
+GUARD kh=55 kw=17 outW=256 PASS
+GUARD kh=55 kw=17 outW=257 PASS
+GUARD kh=55 kw=39 outW=256 PASS
+GUARD kh=55 kw=39 outW=257 PASS
+GUARD kh=55 kw=40 outW=256 PASS
+GUARD kh=55 kw=40 outW=257 PASS
+GUARD kh=55 kw=41 outW=256 PASS
+GUARD kh=55 kw=41 outW=257 PASS
+GUARD kh=55 kw=399 outW=256 PASS
+GUARD kh=55 kw=399 outW=257 PASS
+GUARD kh=55 kw=400 outW=256 PASS
+GUARD kh=55 kw=400 outW=257 PASS
+GUARD kh=81 kw=3 outW=256 PASS
+GUARD kh=81 kw=3 outW=257 PASS
+GUARD kh=81 kw=4 outW=256 PASS
+GUARD kh=81 kw=4 outW=257 PASS
+GUARD kh=81 kw=5 outW=256 PASS
+GUARD kh=81 kw=5 outW=257 PASS
+GUARD kh=81 kw=6 outW=256 PASS
+GUARD kh=81 kw=6 outW=257 PASS
+GUARD kh=81 kw=7 outW=256 PASS
+GUARD kh=81 kw=7 outW=257 PASS
+GUARD kh=81 kw=8 outW=256 PASS
+GUARD kh=81 kw=8 outW=257 PASS
+GUARD kh=81 kw=9 outW=256 PASS
+GUARD kh=81 kw=9 outW=257 PASS
+GUARD kh=81 kw=10 outW=256 PASS
+GUARD kh=81 kw=10 outW=257 PASS
+GUARD kh=81 kw=17 outW=256 PASS
+GUARD kh=81 kw=17 outW=257 PASS
+GUARD kh=81 kw=39 outW=256 PASS
+GUARD kh=81 kw=39 outW=257 PASS
+GUARD kh=81 kw=40 outW=256 PASS
+GUARD kh=81 kw=40 outW=257 PASS
+GUARD kh=81 kw=41 outW=256 PASS
+GUARD kh=81 kw=41 outW=257 PASS
+GUARD kh=81 kw=399 outW=256 PASS
+GUARD kh=81 kw=399 outW=257 PASS
+GUARD kh=81 kw=400 outW=256 PASS
+GUARD kh=81 kw=400 outW=257 PASS
+GUARD kh=113 kw=3 outW=256 PASS
+GUARD kh=113 kw=3 outW=257 PASS
+GUARD kh=113 kw=4 outW=256 PASS
+GUARD kh=113 kw=4 outW=257 PASS
+GUARD kh=113 kw=5 outW=256 PASS
+GUARD kh=113 kw=5 outW=257 PASS
+GUARD kh=113 kw=6 outW=256 PASS
+GUARD kh=113 kw=6 outW=257 PASS
+GUARD kh=113 kw=7 outW=256 PASS
+GUARD kh=113 kw=7 outW=257 PASS
+GUARD kh=113 kw=8 outW=256 PASS
+GUARD kh=113 kw=8 outW=257 PASS
+GUARD kh=113 kw=9 outW=256 PASS
+GUARD kh=113 kw=9 outW=257 PASS
+GUARD kh=113 kw=10 outW=256 PASS
+GUARD kh=113 kw=10 outW=257 PASS
+GUARD kh=113 kw=17 outW=256 PASS
+GUARD kh=113 kw=17 outW=257 PASS
+GUARD kh=113 kw=39 outW=256 PASS
+GUARD kh=113 kw=39 outW=257 PASS
+GUARD kh=113 kw=40 outW=256 PASS
+GUARD kh=113 kw=40 outW=257 PASS
+GUARD kh=113 kw=41 outW=256 PASS
+GUARD kh=113 kw=41 outW=257 PASS
+GUARD kh=113 kw=399 outW=256 PASS
+GUARD kh=113 kw=399 outW=257 PASS
+GUARD kh=113 kw=400 outW=256 PASS
+GUARD kh=113 kw=400 outW=257 PASS
+GUARD kh=231 kw=3 outW=256 PASS
+GUARD kh=231 kw=3 outW=257 PASS
+GUARD kh=231 kw=4 outW=256 PASS
+GUARD kh=231 kw=4 outW=257 PASS
+GUARD kh=231 kw=5 outW=256 PASS
+GUARD kh=231 kw=5 outW=257 PASS
+GUARD kh=231 kw=6 outW=256 PASS
+GUARD kh=231 kw=6 outW=257 PASS
+GUARD kh=231 kw=7 outW=256 PASS
+GUARD kh=231 kw=7 outW=257 PASS
+GUARD kh=231 kw=8 outW=256 PASS
+GUARD kh=231 kw=8 outW=257 PASS
+GUARD kh=231 kw=9 outW=256 PASS
+GUARD kh=231 kw=9 outW=257 PASS
+GUARD kh=231 kw=10 outW=256 PASS
+GUARD kh=231 kw=10 outW=257 PASS
+GUARD kh=231 kw=17 outW=256 PASS
+GUARD kh=231 kw=17 outW=257 PASS
+GUARD kh=231 kw=39 outW=256 PASS
+GUARD kh=231 kw=39 outW=257 PASS
+GUARD kh=231 kw=40 outW=256 PASS
+GUARD kh=231 kw=40 outW=257 PASS
+GUARD kh=231 kw=41 outW=256 PASS
+GUARD kh=231 kw=41 outW=257 PASS
+GUARD kh=231 kw=399 outW=256 PASS
+GUARD kh=231 kw=399 outW=257 PASS
+GUARD kh=231 kw=400 outW=256 PASS
+GUARD kh=231 kw=400 outW=257 PASS
+PLANAR_GUARD_PASS cases=224
+GUARD kh=39 kw=3 outW=256 PASS
+GUARD kh=39 kw=3 outW=257 PASS
+GUARD kh=39 kw=4 outW=256 PASS
+GUARD kh=39 kw=4 outW=257 PASS
+GUARD kh=39 kw=5 outW=256 PASS
+GUARD kh=39 kw=5 outW=257 PASS
+GUARD kh=39 kw=6 outW=256 PASS
+GUARD kh=39 kw=6 outW=257 PASS
+GUARD kh=39 kw=7 outW=256 PASS
+GUARD kh=39 kw=7 outW=257 PASS
+GUARD kh=39 kw=8 outW=256 PASS
+GUARD kh=39 kw=8 outW=257 PASS
+GUARD kh=39 kw=9 outW=256 PASS
+GUARD kh=39 kw=9 outW=257 PASS
+GUARD kh=39 kw=10 outW=256 PASS
+GUARD kh=39 kw=10 outW=257 PASS
+GUARD kh=39 kw=11 outW=256 PASS
+GUARD kh=39 kw=11 outW=257 PASS
+GUARD kh=39 kw=12 outW=256 PASS
+GUARD kh=39 kw=12 outW=257 PASS
+GUARD kh=39 kw=13 outW=256 PASS
+GUARD kh=39 kw=13 outW=257 PASS
+GUARD kh=39 kw=14 outW=256 PASS
+GUARD kh=39 kw=14 outW=257 PASS
+GUARD kh=39 kw=15 outW=256 PASS
+GUARD kh=39 kw=15 outW=257 PASS
+GUARD kh=39 kw=16 outW=256 PASS
+GUARD kh=39 kw=16 outW=257 PASS
+GUARD kh=39 kw=17 outW=256 PASS
+GUARD kh=39 kw=17 outW=257 PASS
+GUARD kh=39 kw=18 outW=256 PASS
+GUARD kh=39 kw=18 outW=257 PASS
+GUARD kh=39 kw=31 outW=256 PASS
+GUARD kh=39 kw=31 outW=257 PASS
+GUARD kh=39 kw=32 outW=256 PASS
+GUARD kh=39 kw=32 outW=257 PASS
+GUARD kh=39 kw=33 outW=256 PASS
+GUARD kh=39 kw=33 outW=257 PASS
+GUARD kh=39 kw=54 outW=256 PASS
+GUARD kh=39 kw=54 outW=257 PASS
+GUARD kh=39 kw=55 outW=256 PASS
+GUARD kh=39 kw=55 outW=257 PASS
+GUARD kh=39 kw=56 outW=256 PASS
+GUARD kh=39 kw=56 outW=257 PASS
+GUARD kh=39 kw=63 outW=256 PASS
+GUARD kh=39 kw=63 outW=257 PASS
+GUARD kh=39 kw=64 outW=256 PASS
+GUARD kh=39 kw=64 outW=257 PASS
+GUARD kh=39 kw=65 outW=256 PASS
+GUARD kh=39 kw=65 outW=257 PASS
+GUARD kh=55 kw=3 outW=256 PASS
+GUARD kh=55 kw=3 outW=257 PASS
+GUARD kh=55 kw=4 outW=256 PASS
+GUARD kh=55 kw=4 outW=257 PASS
+GUARD kh=55 kw=5 outW=256 PASS
+GUARD kh=55 kw=5 outW=257 PASS
+GUARD kh=55 kw=6 outW=256 PASS
+GUARD kh=55 kw=6 outW=257 PASS
+GUARD kh=55 kw=7 outW=256 PASS
+GUARD kh=55 kw=7 outW=257 PASS
+GUARD kh=55 kw=8 outW=256 PASS
+GUARD kh=55 kw=8 outW=257 PASS
+GUARD kh=55 kw=9 outW=256 PASS
+GUARD kh=55 kw=9 outW=257 PASS
+GUARD kh=55 kw=10 outW=256 PASS
+GUARD kh=55 kw=10 outW=257 PASS
+GUARD kh=55 kw=11 outW=256 PASS
+GUARD kh=55 kw=11 outW=257 PASS
+GUARD kh=55 kw=12 outW=256 PASS
+GUARD kh=55 kw=12 outW=257 PASS
+GUARD kh=55 kw=13 outW=256 PASS
+GUARD kh=55 kw=13 outW=257 PASS
+GUARD kh=55 kw=14 outW=256 PASS
+GUARD kh=55 kw=14 outW=257 PASS
+GUARD kh=55 kw=15 outW=256 PASS
+GUARD kh=55 kw=15 outW=257 PASS
+GUARD kh=55 kw=16 outW=256 PASS
+GUARD kh=55 kw=16 outW=257 PASS
+GUARD kh=55 kw=17 outW=256 PASS
+GUARD kh=55 kw=17 outW=257 PASS
+GUARD kh=55 kw=18 outW=256 PASS
+GUARD kh=55 kw=18 outW=257 PASS
+GUARD kh=55 kw=31 outW=256 PASS
+GUARD kh=55 kw=31 outW=257 PASS
+GUARD kh=55 kw=32 outW=256 PASS
+GUARD kh=55 kw=32 outW=257 PASS
+GUARD kh=55 kw=33 outW=256 PASS
+GUARD kh=55 kw=33 outW=257 PASS
+GUARD kh=55 kw=54 outW=256 PASS
+GUARD kh=55 kw=54 outW=257 PASS
+GUARD kh=55 kw=55 outW=256 PASS
+GUARD kh=55 kw=55 outW=257 PASS
+GUARD kh=55 kw=56 outW=256 PASS
+GUARD kh=55 kw=56 outW=257 PASS
+GUARD kh=55 kw=63 outW=256 PASS
+GUARD kh=55 kw=63 outW=257 PASS
+GUARD kh=55 kw=64 outW=256 PASS
+GUARD kh=55 kw=64 outW=257 PASS
+GUARD kh=55 kw=65 outW=256 PASS
+GUARD kh=55 kw=65 outW=257 PASS
+GUARD kh=87 kw=3 outW=256 PASS
+GUARD kh=87 kw=3 outW=257 PASS
+GUARD kh=87 kw=4 outW=256 PASS
+GUARD kh=87 kw=4 outW=257 PASS
+GUARD kh=87 kw=5 outW=256 PASS
+GUARD kh=87 kw=5 outW=257 PASS
+GUARD kh=87 kw=6 outW=256 PASS
+GUARD kh=87 kw=6 outW=257 PASS
+GUARD kh=87 kw=7 outW=256 PASS
+GUARD kh=87 kw=7 outW=257 PASS
+GUARD kh=87 kw=8 outW=256 PASS
+GUARD kh=87 kw=8 outW=257 PASS
+GUARD kh=87 kw=9 outW=256 PASS
+GUARD kh=87 kw=9 outW=257 PASS
+GUARD kh=87 kw=10 outW=256 PASS
+GUARD kh=87 kw=10 outW=257 PASS
+GUARD kh=87 kw=11 outW=256 PASS
+GUARD kh=87 kw=11 outW=257 PASS
+GUARD kh=87 kw=12 outW=256 PASS
+GUARD kh=87 kw=12 outW=257 PASS
+GUARD kh=87 kw=13 outW=256 PASS
+GUARD kh=87 kw=13 outW=257 PASS
+GUARD kh=87 kw=14 outW=256 PASS
+GUARD kh=87 kw=14 outW=257 PASS
+GUARD kh=87 kw=15 outW=256 PASS
+GUARD kh=87 kw=15 outW=257 PASS
+GUARD kh=87 kw=16 outW=256 PASS
+GUARD kh=87 kw=16 outW=257 PASS
+GUARD kh=87 kw=17 outW=256 PASS
+GUARD kh=87 kw=17 outW=257 PASS
+GUARD kh=87 kw=18 outW=256 PASS
+GUARD kh=87 kw=18 outW=257 PASS
+GUARD kh=87 kw=31 outW=256 PASS
+GUARD kh=87 kw=31 outW=257 PASS
+GUARD kh=87 kw=32 outW=256 PASS
+GUARD kh=87 kw=32 outW=257 PASS
+GUARD kh=87 kw=33 outW=256 PASS
+GUARD kh=87 kw=33 outW=257 PASS
+GUARD kh=87 kw=54 outW=256 PASS
+GUARD kh=87 kw=54 outW=257 PASS
+GUARD kh=87 kw=55 outW=256 PASS
+GUARD kh=87 kw=55 outW=257 PASS
+GUARD kh=87 kw=56 outW=256 PASS
+GUARD kh=87 kw=56 outW=257 PASS
+GUARD kh=87 kw=63 outW=256 PASS
+GUARD kh=87 kw=63 outW=257 PASS
+GUARD kh=87 kw=64 outW=256 PASS
+GUARD kh=87 kw=64 outW=257 PASS
+GUARD kh=87 kw=65 outW=256 PASS
+GUARD kh=87 kw=65 outW=257 PASS
+GUARD kh=119 kw=3 outW=256 PASS
+GUARD kh=119 kw=3 outW=257 PASS
+GUARD kh=119 kw=4 outW=256 PASS
+GUARD kh=119 kw=4 outW=257 PASS
+GUARD kh=119 kw=5 outW=256 PASS
+GUARD kh=119 kw=5 outW=257 PASS
+GUARD kh=119 kw=6 outW=256 PASS
+GUARD kh=119 kw=6 outW=257 PASS
+GUARD kh=119 kw=7 outW=256 PASS
+GUARD kh=119 kw=7 outW=257 PASS
+GUARD kh=119 kw=8 outW=256 PASS
+GUARD kh=119 kw=8 outW=257 PASS
+GUARD kh=119 kw=9 outW=256 PASS
+GUARD kh=119 kw=9 outW=257 PASS
+GUARD kh=119 kw=10 outW=256 PASS
+GUARD kh=119 kw=10 outW=257 PASS
+GUARD kh=119 kw=11 outW=256 PASS
+GUARD kh=119 kw=11 outW=257 PASS
+GUARD kh=119 kw=12 outW=256 PASS
+GUARD kh=119 kw=12 outW=257 PASS
+GUARD kh=119 kw=13 outW=256 PASS
+GUARD kh=119 kw=13 outW=257 PASS
+GUARD kh=119 kw=14 outW=256 PASS
+GUARD kh=119 kw=14 outW=257 PASS
+GUARD kh=119 kw=15 outW=256 PASS
+GUARD kh=119 kw=15 outW=257 PASS
+GUARD kh=119 kw=16 outW=256 PASS
+GUARD kh=119 kw=16 outW=257 PASS
+GUARD kh=119 kw=17 outW=256 PASS
+GUARD kh=119 kw=17 outW=257 PASS
+GUARD kh=119 kw=18 outW=256 PASS
+GUARD kh=119 kw=18 outW=257 PASS
+GUARD kh=119 kw=31 outW=256 PASS
+GUARD kh=119 kw=31 outW=257 PASS
+GUARD kh=119 kw=32 outW=256 PASS
+GUARD kh=119 kw=32 outW=257 PASS
+GUARD kh=119 kw=33 outW=256 PASS
+GUARD kh=119 kw=33 outW=257 PASS
+GUARD kh=119 kw=54 outW=256 PASS
+GUARD kh=119 kw=54 outW=257 PASS
+GUARD kh=119 kw=55 outW=256 PASS
+GUARD kh=119 kw=55 outW=257 PASS
+GUARD kh=119 kw=56 outW=256 PASS
+GUARD kh=119 kw=56 outW=257 PASS
+GUARD kh=119 kw=63 outW=256 PASS
+GUARD kh=119 kw=63 outW=257 PASS
+GUARD kh=119 kw=64 outW=256 PASS
+GUARD kh=119 kw=64 outW=257 PASS
+GUARD kh=119 kw=65 outW=256 PASS
+GUARD kh=119 kw=65 outW=257 PASS
+PAIRF3_SUFFIX_GUARD_PASS cases=200
+PAIRF3_UNROLL memory=DDR round=0 variant=baseline shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.33   14135.6762     0.00e+00     PASS
+PAIRF3_UNROLL memory=DDR round=0 variant=u4 shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.33   14147.3130     0.00e+00     PASS
+PAIRF3_UNROLL memory=DDR round=0 variant=baseline shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.78   14399.9373     0.00e+00     PASS
+PAIRF3_UNROLL memory=DDR round=0 variant=u4 shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.78   14399.8629     0.00e+00     PASS
+PAIRF3_UNROLL memory=DDR round=0 variant=baseline shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.11   14496.9252     0.00e+00     PASS
+PAIRF3_UNROLL memory=DDR round=0 variant=u4 shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.07   14551.3655     0.00e+00     PASS
+PAIRF3_UNROLL memory=DDR round=0 variant=baseline shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.34   15479.6527     0.00e+00     PASS
+PAIRF3_UNROLL memory=DDR round=0 variant=u4 shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.34   15474.2935     0.00e+00     PASS
+PAIRF3_UNROLL memory=HBM round=0 variant=baseline shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.29   14248.5226     0.00e+00     PASS
+PAIRF3_UNROLL memory=HBM round=0 variant=u4 shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.29   14247.9840     0.00e+00     PASS
+PAIRF3_UNROLL memory=HBM round=0 variant=baseline shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.73   14527.5956     0.00e+00     PASS
+PAIRF3_UNROLL memory=HBM round=0 variant=u4 shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.73   14517.6170     0.00e+00     PASS
+PAIRF3_UNROLL memory=HBM round=0 variant=baseline shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.08   14537.4631     0.00e+00     PASS
+PAIRF3_UNROLL memory=HBM round=0 variant=u4 shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.04   14583.5629     0.00e+00     PASS
+PAIRF3_UNROLL memory=HBM round=0 variant=baseline shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.36   15461.4586     0.00e+00     PASS
+PAIRF3_UNROLL memory=HBM round=0 variant=u4 shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.37   15455.3177     0.00e+00     PASS
+PAIRF3_UNROLL memory=DDR round=1 variant=u4 shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.33   14148.2260     0.00e+00     PASS
+PAIRF3_UNROLL memory=DDR round=1 variant=baseline shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.34   14121.4220     0.00e+00     PASS
+PAIRF3_UNROLL memory=DDR round=1 variant=u4 shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.76   14456.0091     0.00e+00     PASS
+PAIRF3_UNROLL memory=DDR round=1 variant=baseline shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.78   14400.1070     0.00e+00     PASS
+PAIRF3_UNROLL memory=DDR round=1 variant=u4 shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.08   14543.9283     0.00e+00     PASS
+PAIRF3_UNROLL memory=DDR round=1 variant=baseline shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.15   14449.6462     0.00e+00     PASS
+PAIRF3_UNROLL memory=DDR round=1 variant=u4 shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.35   15469.5066     0.00e+00     PASS
+PAIRF3_UNROLL memory=DDR round=1 variant=baseline shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.39   15441.3725     0.00e+00     PASS
+PAIRF3_UNROLL memory=HBM round=1 variant=u4 shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.29   14249.6540     0.00e+00     PASS
+PAIRF3_UNROLL memory=HBM round=1 variant=baseline shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.30   14210.4298     0.00e+00     PASS
+PAIRF3_UNROLL memory=HBM round=1 variant=u4 shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.73   14516.4015     0.00e+00     PASS
+PAIRF3_UNROLL memory=HBM round=1 variant=baseline shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.74   14494.5452     0.00e+00     PASS
+PAIRF3_UNROLL memory=HBM round=1 variant=u4 shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.05   14579.1929     0.00e+00     PASS
+PAIRF3_UNROLL memory=HBM round=1 variant=baseline shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.08   14532.1164     0.00e+00     PASS
+PAIRF3_UNROLL memory=HBM round=1 variant=u4 shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.34   15478.4730     0.00e+00     PASS
+PAIRF3_UNROLL memory=HBM round=1 variant=baseline shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.36   15464.0741     0.00e+00     PASS
+PAIRF3_UNROLL memory=DDR round=2 variant=baseline shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.33   14150.7019     0.00e+00     PASS
+PAIRF3_UNROLL memory=DDR round=2 variant=u4 shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.34   14110.5087     0.00e+00     PASS
+PAIRF3_UNROLL memory=DDR round=2 variant=baseline shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.76   14441.0552     0.00e+00     PASS
+PAIRF3_UNROLL memory=DDR round=2 variant=u4 shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.94   14010.3629     0.00e+00     PASS
+PAIRF3_UNROLL memory=DDR round=2 variant=baseline shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.11   14498.3449     0.00e+00     PASS
+PAIRF3_UNROLL memory=DDR round=2 variant=u4 shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.07   14552.9721     0.00e+00     PASS
+PAIRF3_UNROLL memory=DDR round=2 variant=baseline shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.37   15454.5136     0.00e+00     PASS
+PAIRF3_UNROLL memory=DDR round=2 variant=u4 shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.29   15515.2232     0.00e+00     PASS
+PAIRF3_UNROLL memory=HBM round=2 variant=baseline shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.29   14240.8342     0.00e+00     PASS
+PAIRF3_UNROLL memory=HBM round=2 variant=u4 shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.29   14240.3822     0.00e+00     PASS
+PAIRF3_UNROLL memory=HBM round=2 variant=baseline shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.75   14463.3088     0.00e+00     PASS
+PAIRF3_UNROLL memory=HBM round=2 variant=u4 shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.74   14491.2747     0.00e+00     PASS
+PAIRF3_UNROLL memory=HBM round=2 variant=baseline shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.08   14540.0872     0.00e+00     PASS
+PAIRF3_UNROLL memory=HBM round=2 variant=u4 shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.05   14579.7316     0.00e+00     PASS
+PAIRF3_UNROLL memory=HBM round=2 variant=baseline shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.31   15495.2945     0.00e+00     PASS
+PAIRF3_UNROLL memory=HBM round=2 variant=u4 shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.37   15458.7102     0.00e+00     PASS
+PAIRF3_UNROLL memory=DDR round=3 variant=u4 shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.35   14083.0580     0.00e+00     PASS
+PAIRF3_UNROLL memory=DDR round=3 variant=baseline shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.34   14120.2639     0.00e+00     PASS
+PAIRF3_UNROLL memory=DDR round=3 variant=u4 shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.76   14440.0236     0.00e+00     PASS
+PAIRF3_UNROLL memory=DDR round=3 variant=baseline shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.76   14443.0954     0.00e+00     PASS
+PAIRF3_UNROLL memory=DDR round=3 variant=u4 shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.07   14544.9635     0.00e+00     PASS
+PAIRF3_UNROLL memory=DDR round=3 variant=baseline shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.11   14493.1498     0.00e+00     PASS
+PAIRF3_UNROLL memory=DDR round=3 variant=u4 shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.33   15481.6904     0.00e+00     PASS
+PAIRF3_UNROLL memory=DDR round=3 variant=baseline shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.36   15467.1914     0.00e+00     PASS
+PAIRF3_UNROLL memory=HBM round=3 variant=u4 shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.29   14239.3368     0.00e+00     PASS
+PAIRF3_UNROLL memory=HBM round=3 variant=baseline shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.31   14205.9078     0.00e+00     PASS
+PAIRF3_UNROLL memory=HBM round=3 variant=u4 shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.74   14510.3216     0.00e+00     PASS
+PAIRF3_UNROLL memory=HBM round=3 variant=baseline shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.76   14442.7936     0.00e+00     PASS
+PAIRF3_UNROLL memory=HBM round=3 variant=u4 shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.04   14590.0343     0.00e+00     PASS
+PAIRF3_UNROLL memory=HBM round=3 variant=baseline shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.08   14539.5772     0.00e+00     PASS
+PAIRF3_UNROLL memory=HBM round=3 variant=u4 shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.36   15465.7496     0.00e+00     PASS
+PAIRF3_UNROLL memory=HBM round=3 variant=baseline shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.29   15510.2752     0.00e+00     PASS
+PAIRF3_UNROLL memory=DDR round=4 variant=baseline shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.34   14122.9190     0.00e+00     PASS
+PAIRF3_UNROLL memory=DDR round=4 variant=u4 shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.32   14156.7181     0.00e+00     PASS
+PAIRF3_UNROLL memory=DDR round=4 variant=baseline shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.79   14383.3042     0.00e+00     PASS
+PAIRF3_UNROLL memory=DDR round=4 variant=u4 shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.76   14454.4015     0.00e+00     PASS
+PAIRF3_UNROLL memory=DDR round=4 variant=baseline shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.11   14497.7749     0.00e+00     PASS
+PAIRF3_UNROLL memory=DDR round=4 variant=u4 shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.06   14569.7026     0.00e+00     PASS
+PAIRF3_UNROLL memory=DDR round=4 variant=baseline shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.38   15452.7186     0.00e+00     PASS
+PAIRF3_UNROLL memory=DDR round=4 variant=u4 shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.36   15461.8275     0.00e+00     PASS
+PAIRF3_UNROLL memory=HBM round=4 variant=baseline shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.29   14249.0364     0.00e+00     PASS
+PAIRF3_UNROLL memory=HBM round=4 variant=u4 shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.29   14247.6846     0.00e+00     PASS
+PAIRF3_UNROLL memory=HBM round=4 variant=baseline shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.75   14480.4001     0.00e+00     PASS
+PAIRF3_UNROLL memory=HBM round=4 variant=u4 shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.73   14526.9081     0.00e+00     PASS
+PAIRF3_UNROLL memory=HBM round=4 variant=baseline shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.08   14537.6479     0.00e+00     PASS
+PAIRF3_UNROLL memory=HBM round=4 variant=u4 shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.05   14582.1521     0.00e+00     PASS
+PAIRF3_UNROLL memory=HBM round=4 variant=baseline shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.37   15457.3108     0.00e+00     PASS
+PAIRF3_UNROLL memory=HBM round=4 variant=u4 shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.37   15457.7379     0.00e+00     PASS
+PAIRF3_UNROLL memory=DDR round=5 variant=u4 shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.34   14104.7130     0.00e+00     PASS
+PAIRF3_UNROLL memory=DDR round=5 variant=baseline shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.32   14159.3379     0.00e+00     PASS
+PAIRF3_UNROLL memory=DDR round=5 variant=u4 shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.76   14454.8056     0.00e+00     PASS
+PAIRF3_UNROLL memory=DDR round=5 variant=baseline shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.77   14415.1672     0.00e+00     PASS
+PAIRF3_UNROLL memory=DDR round=5 variant=u4 shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.08   14542.4990     0.00e+00     PASS
+PAIRF3_UNROLL memory=DDR round=5 variant=baseline shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.11   14496.1049     0.00e+00     PASS
+PAIRF3_UNROLL memory=DDR round=5 variant=u4 shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.39   15445.7996     0.00e+00     PASS
+PAIRF3_UNROLL memory=DDR round=5 variant=baseline shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.37   15459.0522     0.00e+00     PASS
+PAIRF3_UNROLL memory=HBM round=5 variant=u4 shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.32   14162.3912     0.00e+00     PASS
+PAIRF3_UNROLL memory=HBM round=5 variant=baseline shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.28   14278.5863     0.00e+00     PASS
+PAIRF3_UNROLL memory=HBM round=5 variant=u4 shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.74   14502.9263     0.00e+00     PASS
+PAIRF3_UNROLL memory=HBM round=5 variant=baseline shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.74   14491.9782     0.00e+00     PASS
+PAIRF3_UNROLL memory=HBM round=5 variant=u4 shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.05   14575.1999     0.00e+00     PASS
+PAIRF3_UNROLL memory=HBM round=5 variant=baseline shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.08   14531.4283     0.00e+00     PASS
+PAIRF3_UNROLL memory=HBM round=5 variant=u4 shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.34   15480.3540     0.00e+00     PASS
+PAIRF3_UNROLL memory=HBM round=5 variant=baseline shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.36   15464.1362     0.00e+00     PASS
+PAIRF3_UNROLL_DONE 2026-09-13T18:30:02+08:00

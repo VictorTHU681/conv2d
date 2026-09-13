@@ -1,0 +1,29 @@
+baseline disassembly SHA256 39ebd8cc997242162fb1efe84a9cd4f5d41a95e3be0aa2512109019b681a569e
+scatter disassembly SHA256 2d744c3bc9c5e76c918c12b9b01a17e3fec9edfd087477f231c62f61cdd264d4
+scatter: tail 0x4230e0..0x4230f8; 4 body instructions vs 7; worker arithmetic opcode/operand sequence identical (168 instructions).
+Total instructions 43879 vs 43879; non-worker address/opcode/operand identity=True.
+  4230e0: f9408a58 ldr x24, [x18, #272]
+  4230e4: b40000b8 cbz x24, 4230f8 <roll_worker+0x734>
+  4230e8: 25b81fe4 whilelo p4.s, xzr, x24
+  4230ec: a540b1a0 ld1w {z0.s}, p4/z, [x13]
+  4230f0: 04a34801 index z1.s, #0, w3
+  4230f4: e5419280 st1w {z0.s}, p4, [x20, z1.s, uxtw]
+  4230f8: f9409a54 ldr x20, [x18, #304]
+bits disassembly SHA256 15a329bf52178ec6bdeaa85b071445447391cba81e188e420edf14e0d8535d36
+bits: tail 0x4230e0..0x423114; 11 body instructions vs 7; worker arithmetic opcode/operand sequence identical (168 instructions).
+Total instructions 43879 vs 43879; non-worker address/opcode/operand identity=True.
+  4230e0: f9408a58 ldr x24, [x18, #272]
+  4230e4: b4000198 cbz x24, 423114 <roll_worker+0x750>
+  4230e8: 2598e024 ptrue p4.s, vl1
+  4230ec: 8540c1a0 ld1rw {z0.s}, p0/z, [x13]
+  4230f0: e540f280 st1w {z0.s}, p4, [x20]
+  4230f4: 36080118 tbz w24, #1, 423114 <roll_worker+0x750>
+  4230f8: 8541c1a0 ld1rw {z0.s}, p0/z, [x13, #4]
+  4230fc: 8b030294 add x20, x20, x3
+  423100: e540f280 st1w {z0.s}, p4, [x20]
+  423104: 36000098 tbz w24, #0, 423114 <roll_worker+0x750>
+  423108: 8542c1a0 ld1rw {z0.s}, p0/z, [x13, #8]
+  42310c: 8b030294 add x20, x20, x3
+  423110: e540f280 st1w {z0.s}, p4, [x20]
+  423114: f9409a54 ldr x20, [x18, #304]
+Static linked instruction audit only. Correctness and performance require the separate server tests; layout changes are not a proven timing mechanism.

@@ -1,0 +1,93 @@
+Basic Details:
+    jobId                               	1593100                                           	
+    name                                	f3_u4_repeat                                      	
+    state                               	SUCCEEDED                                         	
+    user                                	niujiayin                                         	
+    queue                               	q_pacopt                                          	
+    account                             	common                                            	
+    cmd                                 	bash jobs/post64_pairf3_unroll_repeat_job.sh      	
+    submitNode                          	login07                                           	
+    createTime                          	2026/09/13 18:31:47                               	
+    startTime                           	2026/09/13 18:31:49                               	
+    lastModifiedTime                    	-                                                 	
+    endTime                             	2026/09/13 18:40:10                               	
+    currentOperation                    	EMPTY                                             	
+    jobRequeueMaxCnt                    	0                                                 	
+    jobRequeueCurrentCnt                	0                                                 	
+    mpiType                             	DEFAULT                                           	
+    interactionMode                     	DEFAULT                                           	
+    assistJob                           	DEFAULT                                           	
+    x11ForwardEnabled                   	false                                             	
+    description                         	-                                                 	
+    transferType                        	LOCAL                                             	
+    forwardTime                         	-                                                 	
+    recallTime                          	-                                                 	
+    autoResize                          	false                                             	
+Scheduling Details:
+    exclusive                           	true                                              	
+    priority                            	1                                                 	
+    adminPriority                       	-1                                                	
+    expectSchedTime                     	-                                                 	
+    startTimeEstimated                  	-                                                 	
+    reserveRes                          	-                                                 	
+    backfillRes                         	-                                                 	
+    backfilledRes                       	-                                                 	
+Resource Details:
+    reqJobLicense                       	-
+    allocJobLicense                     	-
+    resGroup[0]:
+        replica                         	1                                                 	
+        labels                          	queue_q_pacopt aarch64                            	
+        preferNodes                     	cn20491                                           	
+        reqNodeSelectPolicy             	-                                                 	
+        effNodeSelectPolicy             	SEQUENCE                                          	
+        reqCPU                          	38                                                	
+        reqMem                          	4096                                              	
+        reqGPU                          	gpu:0
+        reqNPU                          	0
+        allocCPU                        	38                                                	
+        allocMem                        	4096                                              	
+        allocGPU                        	gpu:0
+        allocNPU                        	0
+        reqTaskLicense                  	-
+        allocTaskLicense                	-
+    allocAffinity                       	
+        execNode             resGroup resIndex hwThreads        gpuIds           npuIds          
+        cn20491              0        0/1      -                -                -               
+Runtime Details:
+    execNodes                           	cn20491                                           	
+    execNodeCnt                         	1                                                 	
+    execPath                            	/home/share/niujiayin/conv2d-v55-20260912         	
+    resizeCmd                           	-                                                 	
+    timeout                             	1800                                              	
+    stderrRedirectPath                  	-                                                 	
+    stderrRedirectType                  	append                                            	
+    stdoutRedirectPath                  	/home/share/niujiayin/conv2d-v55-20260912/results/post64/pairf3-unroll/repeat.log	
+    stdoutRedirectType                  	override                                          	
+    totalUtime                          	15274                                             	
+    totalStime                          	27                                                	
+    totalMaxMemSwp                      	441                                               	
+    totalMaxMem                         	441                                               	
+    hostPreHookRunTime                  	0                                                 	
+    preHookRunTime                      	0                                                 	
+    jobWallclockDuration                	430                                               	
+    postHookRunTime                     	0                                                 	
+    hostPostHookRunTime                 	0                                                 	
+    jobSstoppedTime                     	0                                                 	
+    coreHours                           	261440                                            	
+    jobExitCode                         	0                                                 	
+    systemExitCode                      	0                                                 	
+    exitMessage                         	Job execution succeeded                           	
+    stderrRedirectOutputPath            	-                                                 	
+    stdoutRedirectOutputPath            	/home/share/niujiayin/conv2d-v55-20260912/results/post64/pairf3-unroll/repeat.log	
+    nodeUsages                          	
+        execNode             resGroup resIndex utime    stime    wallclockDuration    sstoppedTime     cpuUtil          gpuUtil          npuUtil          memResource                     
+        cn20491              0        0/1      15274    27       430                  0                3555/3712        -                -                0/0/0/0/445/445/320/0           
+    nodePids                            	
+        execNode             pids    
+        cn20491              -       
+    traceMessages                       	2026/09/13 18:31:47    :    [JOB_ADD] Job 1593100 is submitted by niujiayin, job state is PENDING.	
+                                        	2026/09/13 18:31:49    :    [JOB_START] Job 1593100 start message has been sent.	
+                                        	2026/09/13 18:31:49    :    [JOB_START_ACK] Job 1593100 start message has been received by agent cn20491.	
+                                        	2026/09/13 18:31:49    :    [JOB_EXECUTION] Job 1593100 state is from PENDING to RUNNING, execution path: /home/share/niujiayin/conv2d-v55-20260912.	
+                                        	2026/09/13 18:40:10    :    [JOB_FINISH] Job 1593100 state is from RUNNING to SUCCEEDED.	

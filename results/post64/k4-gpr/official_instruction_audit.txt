@@ -1,0 +1,16 @@
+baseline disassembly SHA256 5574c1ee805695889ed3af982a114ae5fb92a339dd6f96ad4c3edce20c5ca804
+gpr_loop disassembly SHA256 c2d469eabf926d8c3dbe0abb4b43687cb705d89e5127baf739e119292d70541c
+gpr_loop: tail 0x422f60..0x422f80; 6 body instructions vs 7; worker arithmetic opcode/operand sequence identical (168 instructions).
+Total instructions 43831 vs 43831; non-worker address/opcode/operand identity=True.
+Common-address changes: 39 positions, 0x422f64..0x422ffc.
+All changes confined to K4 scalar tail / following setup before compute entry 0x423000; every instruction/address elsewhere identical.
+  422f60: f9408a58 ldr x24, [x18, #272]
+  422f64: b40000f8 cbz x24, 422f80 <roll_worker+0x73c>
+  422f68: b94001b7 ldr w23, [x13]
+  422f6c: b9000297 str w23, [x20]
+  422f70: 910011ad add x13, x13, #0x4
+  422f74: 8b030294 add x20, x20, x3
+  422f78: f1000718 subs x24, x24, #0x1
+  422f7c: 54ffff61 b.ne 422f68 <roll_worker+0x724>
+  422f80: f9409a54 ldr x20, [x18, #304]
+Static linked instruction audit only. Correctness and performance require the separate server tests; layout changes are not a proven timing mechanism.

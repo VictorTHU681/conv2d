@@ -1,0 +1,9 @@
+outlined disassembly SHA256 54623e347f650c3883cd309196cb66fcb9123373158692da112b37408a3bb24e
+outlined_u4 disassembly SHA256 680318e7460a0d9709b17a4177f3137eb99653e9aa1296606f51d78bf20689fb
+Outlined k16pairf4 entry 0x422a00 is 128-byte aligned; one static BL site in roll_worker at 0x42483c.
+Outlined k16pairf4 entry 0x422a00 is 128-byte aligned; one static BL site in roll_worker at 0x4249bc.
+outlined_u4: short compute entry 0x422c78, same as baseline, offset 120 modulo 128 (not 128-byte aligned).
+outlined_u4: 4 ordered copies of 4 FMOPA/8 FMLA, exact load offsets, grouped pointer updates, full-block branch and identical scalar remainder verified.
+outlined_u4: full block 77 instructions vs baseline 92; setup/remainder overhead excluded.
+outlined_u4: linked instructions 44019 vs baseline 43923; code grows and following addresses may move. No non-target timing attribution from code identity.
+Audit checks emitted short-loop instructions/control flow; it is not a proof of all runtime memory accesses.

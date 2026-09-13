@@ -1,0 +1,38 @@
+baseline disassembly SHA256 d8b536dc31ffe9202ed1ec788fd3dba9367d7ff98a205d24a0b2b3a3d0262438
+direct disassembly SHA256 1f19aafa9423c420fdb3714be2ef7c1a83ff72ea43520953ddefb92ae3c866b6
+direct: tail 0x4230e0..0x42311c; 13 body instructions vs 7; worker arithmetic opcode/operand sequence identical (168 instructions).
+Total instructions 43879 vs 43879; non-worker address/opcode/operand identity=True.
+  4230e0: f9408a58 ldr x24, [x18, #272]
+  4230e4: b40001d8 cbz x24, 42311c <roll_worker+0x758>
+  4230e8: 2598e024 ptrue p4.s, vl1
+  4230ec: 8540c1a0 ld1rw {z0.s}, p0/z, [x13]
+  4230f0: e540f280 st1w {z0.s}, p4, [x20]
+  4230f4: f100071f cmp x24, #0x1
+  4230f8: 54000120 b.eq 42311c <roll_worker+0x758>
+  4230fc: 8541c1a0 ld1rw {z0.s}, p0/z, [x13, #4]
+  423100: 8b030294 add x20, x20, x3
+  423104: e540f280 st1w {z0.s}, p4, [x20]
+  423108: f1000b1f cmp x24, #0x2
+  42310c: 54000080 b.eq 42311c <roll_worker+0x758>
+  423110: 8542c1a0 ld1rw {z0.s}, p0/z, [x13, #8]
+  423114: 8b030294 add x20, x20, x3
+  423118: e540f280 st1w {z0.s}, p4, [x20]
+  42311c: f9409a54 ldr x20, [x18, #304]
+bits disassembly SHA256 6eb88929b7157575965c61dba8372031f9bd0354e310b8a4bb0f2c7a313e0622
+bits: tail 0x4230e0..0x423114; 11 body instructions vs 7; worker arithmetic opcode/operand sequence identical (168 instructions).
+Total instructions 43879 vs 43879; non-worker address/opcode/operand identity=True.
+  4230e0: f9408a58 ldr x24, [x18, #272]
+  4230e4: b4000198 cbz x24, 423114 <roll_worker+0x750>
+  4230e8: 2598e024 ptrue p4.s, vl1
+  4230ec: 8540c1a0 ld1rw {z0.s}, p0/z, [x13]
+  4230f0: e540f280 st1w {z0.s}, p4, [x20]
+  4230f4: 36080118 tbz w24, #1, 423114 <roll_worker+0x750>
+  4230f8: 8541c1a0 ld1rw {z0.s}, p0/z, [x13, #4]
+  4230fc: 8b030294 add x20, x20, x3
+  423100: e540f280 st1w {z0.s}, p4, [x20]
+  423104: 36000098 tbz w24, #0, 423114 <roll_worker+0x750>
+  423108: 8542c1a0 ld1rw {z0.s}, p0/z, [x13, #8]
+  42310c: 8b030294 add x20, x20, x3
+  423110: e540f280 st1w {z0.s}, p4, [x20]
+  423114: f9409a54 ldr x20, [x18, #304]
+Static linked instruction audit only. Correctness and performance require the separate server tests; layout changes are not a proven timing mechanism.

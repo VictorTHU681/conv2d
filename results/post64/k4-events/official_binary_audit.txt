@@ -1,0 +1,2 @@
+918de09b3e8bcff98134c9d95f2d5582e3da5e66ff91cc49a2c563f8a9bcd7d3  build/post64/k4-events/official_baseline  PASS downloaded post-run binary matches run log
+61688971a0de02faa467711aa52c964a9102a8860740b196ea3cc3256f5b0c5e  build/post64/k4-events/official_paired  PASS downloaded post-run binary matches run log

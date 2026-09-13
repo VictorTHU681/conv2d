@@ -1,0 +1,7 @@
+baseline disassembly SHA256 1682b214edc1df4b9d105396ddfde88b1facc1b52db8d01bdc9560e150e7ee1e
+u4 disassembly SHA256 af3643a179c9a24118e6bc53968a3dff3255d149b9262f4075d6a83d9a1290ab
+u4: short compute entry 0x424378, same as baseline, offset 120 modulo 128 (not 128-byte aligned).
+u4: 4 ordered copies of 4 FMOPA/8 FMLA, exact load offsets, grouped pointer updates, full-block branch and identical scalar remainder verified.
+u4: full block 77 instructions vs baseline 92; setup/remainder overhead excluded.
+u4: linked instructions 43975 vs baseline 43879; code grows and following addresses may move. No non-target timing attribution from code identity.
+Audit checks emitted short-loop instructions/control flow; it is not a proof of all runtime memory accesses.

@@ -1,0 +1,7 @@
+baseline disassembly SHA256 1ba7029a3a70747b21a726d0e7bad804b59c40c1de718425349801bb06e62d86
+aligned disassembly SHA256 c9b2bd3411f355d8392f6ca0e24545e8750e2f7d42750c2046b8689c0ff0353d
+aligned: short compute starts at 0x424200, 128-byte aligned; baseline 0x4241f8.
+aligned: total instructions 43831 vs baseline 43831; non-roll_worker address/opcode/operand identity=True.
+151 common-address changed positions exclusively inside roll_worker, first 0x4240c8, last 0x4245e8.
+All 23 short-step/loop machine words identical after an eight-byte relocation. Other changed worker regions are not asserted identical.
+This audits static linked layout only; timing attribution and runtime memory correctness need separate evidence.

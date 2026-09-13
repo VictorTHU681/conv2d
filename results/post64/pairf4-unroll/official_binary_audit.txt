@@ -1,0 +1,3 @@
+2 downloaded post-run binary hashes match pre-run confirm.log.
+726075d7953d6e03567772ebc4098df3c15f3e46983bbfb5eb5aceffd903ae3a  build/post64/pairf4-unroll/official_baseline
+5b933017b760e6a16397520bddc1f3d7aa4cd57c29ade6ca60fbcf0a28e1cc98  build/post64/pairf4-unroll/official_u4

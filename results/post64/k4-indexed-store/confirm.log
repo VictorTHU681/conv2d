@@ -1,0 +1,606 @@
+HOST cn20490 2026-09-13T17:32:54+08:00
+pid 230761's current affinity list: 37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+PLACEMENT cpu_node=1 hbm_node=17
+Cpus_allowed_list:	37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+Mems_allowed_list:	0-31
+1550000
+policy: default
+preferred node: current
+physcpubind: 37 75 113 151 189 227 265 303 341 379 417 455 493 531 569 607 
+cpubind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+nodebind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 
+preferred: 
+EFFECTIVE_PLACEMENT
+policy: preferred
+preferred node: 17
+physcpubind: 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 
+cpubind: 1 
+nodebind: 1 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 
+preferred: 17 
+build/post64/k4-indexed-store/baseline.c: OK
+build/post64/k4-indexed-store/all.c: OK
+build/post64/k4-indexed-store/bench_conv.c: OK
+2548861ae7e29826e454b4c0b098d682f7f04996222e664cd1ea9bc92dd2e927  build/post64/k4-indexed-store/bench_conv.c
+08400a7659134bf7bee3b14df24fc919537c9fef634d1b580bf66fba0b112357  build/post64/k4-indexed-store/baseline.c
+918de09b3e8bcff98134c9d95f2d5582e3da5e66ff91cc49a2c563f8a9bcd7d3  build/post64/k4-indexed-store/official_baseline
+d56e8e9b9b427cf1f1b1f91c40f19ffb0e88ce18b52a03d5be0878b3bce9fa1b  build/post64/k4-indexed-store/all.c
+fee6b6c42f4e98db1b9977825a1bfe03460a545725db758133e101ffde7c3375  build/post64/k4-indexed-store/official_all
+K4_INDEXED_STORE_CONFIRM memory=DDR round=0 variant=baseline shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.30   14219.6426     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=DDR round=0 variant=all shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.33   14134.5422     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=DDR round=0 variant=baseline shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.75   14469.2248     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=DDR round=0 variant=all shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.76   14441.7392     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=DDR round=0 variant=baseline shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.12   14490.8091     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=DDR round=0 variant=all shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.12   14488.5797     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=DDR round=0 variant=baseline shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.26   15531.9383     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=DDR round=0 variant=all shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.27   15528.5809     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=HBM round=0 variant=baseline shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.31   14203.0693     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=HBM round=0 variant=all shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.48   13752.0310     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=HBM round=0 variant=baseline shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.75   14469.1956     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=HBM round=0 variant=all shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.98   13921.7681     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=HBM round=0 variant=baseline shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.08   14539.9853     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=HBM round=0 variant=all shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.09   14521.5588     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=HBM round=0 variant=baseline shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.27   15524.2304     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=HBM round=0 variant=all shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.26   15530.9925     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=DDR round=1 variant=all shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.32   14157.3041     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=DDR round=1 variant=baseline shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.33   14131.5360     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=DDR round=1 variant=all shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.77   14425.3089     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=DDR round=1 variant=baseline shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.78   14408.5325     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=DDR round=1 variant=all shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.12   14483.2274     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=DDR round=1 variant=baseline shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.11   14499.3478     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=DDR round=1 variant=all shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.35   15470.5102     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=DDR round=1 variant=baseline shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.32   15488.6491     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=HBM round=1 variant=all shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.29   14252.9953     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=HBM round=1 variant=baseline shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.29   14238.5524     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=HBM round=1 variant=all shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.74   14506.3341     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=HBM round=1 variant=baseline shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.74   14501.1022     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=HBM round=1 variant=all shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.09   14530.3595     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=HBM round=1 variant=baseline shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.09   14520.1186     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=HBM round=1 variant=all shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.35   15471.9318     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=HBM round=1 variant=baseline shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.43   15418.4381     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=DDR round=2 variant=baseline shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.34   14122.0761     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=DDR round=2 variant=all shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.33   14145.3552     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=DDR round=2 variant=baseline shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.95   13978.6481     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=DDR round=2 variant=all shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.78   14409.7967     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=DDR round=2 variant=baseline shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.10   14509.3168     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=DDR round=2 variant=all shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.12   14480.9758     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=DDR round=2 variant=baseline shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.33   15484.0366     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=DDR round=2 variant=all shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.36   15465.6574     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=HBM round=2 variant=baseline shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.29   14246.4307     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=HBM round=2 variant=all shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.30   14223.5785     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=HBM round=2 variant=baseline shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.76   14459.0864     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=HBM round=2 variant=all shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.74   14503.4293     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=HBM round=2 variant=baseline shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.08   14536.0462     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=HBM round=2 variant=all shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.07   14545.3579     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=HBM round=2 variant=baseline shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.35   15473.9313     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=HBM round=2 variant=all shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.37   15455.5291     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=DDR round=3 variant=all shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.32   14163.9725     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=DDR round=3 variant=baseline shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.33   14145.9902     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=DDR round=3 variant=all shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.78   14410.7536     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=DDR round=3 variant=baseline shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.77   14421.7703     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=DDR round=3 variant=all shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.11   14497.4526     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=DDR round=3 variant=baseline shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.11   14498.8252     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=DDR round=3 variant=all shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.68   15244.8539     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=DDR round=3 variant=baseline shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.33   15485.0102     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=HBM round=3 variant=all shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.28   14273.1225     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=HBM round=3 variant=baseline shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.29   14261.9088     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=HBM round=3 variant=all shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.75   14482.6253     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=HBM round=3 variant=baseline shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.74   14493.4236     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=HBM round=3 variant=all shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.08   14532.2692     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=HBM round=3 variant=baseline shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.08   14533.7328     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=HBM round=3 variant=all shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.34   15475.8389     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=HBM round=3 variant=baseline shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.37   15459.0318     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=DDR round=4 variant=baseline shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.35   14099.0443     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=DDR round=4 variant=all shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.34   14125.9485     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=DDR round=4 variant=baseline shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.77   14425.2240     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=DDR round=4 variant=all shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.78   14395.0779     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=DDR round=4 variant=baseline shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.11   14493.0394     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=DDR round=4 variant=all shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.12   14483.8585     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=DDR round=4 variant=baseline shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.36   15466.7916     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=DDR round=4 variant=all shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.35   15468.8060     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=HBM round=4 variant=baseline shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.28   14283.4561     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=HBM round=4 variant=all shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.30   14217.5870     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=HBM round=4 variant=baseline shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.75   14483.5079     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=HBM round=4 variant=all shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.74   14490.9104     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=HBM round=4 variant=baseline shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.09   14529.7668     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=HBM round=4 variant=all shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.09   14526.6602     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=HBM round=4 variant=baseline shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.29   15515.1801     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=HBM round=4 variant=all shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.39   15441.3005     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=DDR round=5 variant=all shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.34   14122.2612     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=DDR round=5 variant=baseline shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.32   14172.8336     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=DDR round=5 variant=all shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.76   14448.4179     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=DDR round=5 variant=baseline shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.78   14413.0863     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=DDR round=5 variant=all shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.12   14487.2218     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=DDR round=5 variant=baseline shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.10   14510.7661     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=DDR round=5 variant=all shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.37   15459.9236     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=DDR round=5 variant=baseline shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.36   15461.2367     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=HBM round=5 variant=all shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.29   14239.6413     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=HBM round=5 variant=baseline shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.30   14232.1882     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=HBM round=5 variant=all shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.74   14508.6705     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=HBM round=5 variant=baseline shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.75   14474.9557     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=HBM round=5 variant=all shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.09   14527.8894     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=HBM round=5 variant=baseline shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.08   14534.8641     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=HBM round=5 variant=all shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.36   15466.3971     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM memory=HBM round=5 variant=baseline shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.36   15461.4427     0.00e+00     PASS
+K4_INDEXED_STORE_CONFIRM_DONE 2026-09-13T17:40:19+08:00

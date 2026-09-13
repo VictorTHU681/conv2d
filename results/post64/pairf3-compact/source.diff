@@ -1,0 +1,95 @@
+--- baseline.c
++++ compact.c
+@@ -1771,7 +1771,7 @@
+         "fmla z13.s, z1.s, z4.s[1]\n\t" \
+         "fmla z14.s, z0.s, z4.s[2]\n\t" \
+         "fmla z15.s, z1.s, z4.s[2]\n\t" \
+-        "add x13, x13, #16\n\t" \
++        "add x13, x13, #12\n\t" \
+         "add x16, x16, #4\n\t" \
+         "add x2, x2, #64\n\t" \
+         "add x3, x3, #64\n\t"
+@@ -1779,7 +1779,7 @@
+ {
+     ka_t A; fill_args(&A, P, 1, 512, 31 + P->steps);
+     A.n2 = (int64_t)P->kb0; A.e2 = (int64_t)P->kbase; A.T = (int64_t)P->kend; A.nlines = P->cf0;
+-    A.kw4 = P->steps * 16;   // kf 每 kernel 行的字节跨度 = steps*4floats*4B
++    A.kw4 = (P->steps * 3 + 1) * 4;   // kf 每 kernel 行的字节跨度 = steps*4floats*4B
+     asm volatile(
+         LOAD_ARGS
+         "ldr x13, [%[A], #184]\n\t"     // kf 线性游标（起始行 a0）
+@@ -1799,6 +1799,7 @@
+         "1:\n\t"
+         ROW_HEAD_OVL
+         OVL_LOOP(PAIRF3_STEP)
++        "add x13, x13, #4\n\t"  // skip this row's private padding before wrap
+         WRAP_B(x2) WRAP_B(x3)
+         "ldr x24, [%[A], #208]\n\t"              // kf 行回绕（到表尾则回表头）
+         "cmp x13, x24\n\t"
+@@ -2733,7 +2734,7 @@
+         }
+     }
+ }
+-typedef struct { int kind; long s_base, nvA, nvB, width, steps, RSB; float* R; size_t Rcap; float* kf; size_t kfcap; int Rowner; int sf; } rgrp_t;   // kind 32=pair,16=single,8,4; 33/34=pair+fmla；kf = pairf3 的三链 b 打包 [KH][steps][4]
++typedef struct { int kind; long s_base, nvA, nvB, width, steps, RSB; float* R; size_t Rcap; float* kf; size_t kfcap; int Rowner; int sf; } rgrp_t;   // kind 32=pair,16=single,8,4; 33/34=pair+fmla；kf: F3 [KH][3*steps+1], F4 [KH][4*steps]
+ typedef struct { int g; long base; } ritem_t;
+ typedef struct { int item; unsigned char ya, yb, af, cf; long ja, jb; int dep_first, dep_end; } rpiece_t;
+ _Static_assert(sizeof(rpiece_t)==32 && offsetof(rpiece_t,ja)==8 && offsetof(rpiece_t,dep_first)==24,
+@@ -2765,12 +2766,23 @@
+     if (G->kind == 34 || G->kind == 35) {       // kf[a][X] = {k[a][X], k[(a+1)%KH][X], k[(a+2)%KH][X], (k[(a+3)%KH][X])}，a = y
+         const long a = y;
+         const long a1 = a + 1 >= KH ? a + 1 - KH : a + 1, a2 = a + 2 >= KH ? a + 2 - KH : a + 2, a3 = a + 3 >= KH ? a + 3 - KH : a + 3;
+-        float* d = G->kf + a * G->steps * 4;
+-        for (long X = 0; X < G->steps; X++, d += 4) {
+-            d[0] = X < KW ? k[a * KW + X] : 0.f;
+-            d[1] = X < KW ? k[a1 * KW + X] : 0.f;
+-            d[2] = X < KW ? k[a2 * KW + X] : 0.f;
+-            d[3] = (G->kind == 35 && X < KW) ? k[a3 * KW + X] : 0.f;
++        if (G->kind == 34) {
++            float* d = G->kf + a * (G->steps * 3 + 1);
++            for (long X = 0; X < G->steps; X++, d += 3) {
++                d[0] = X < KW ? k[a * KW + X] : 0.f;
++                d[1] = X < KW ? k[a1 * KW + X] : 0.f;
++                d[2] = X < KW ? k[a2 * KW + X] : 0.f;
++            }
++            // Final LD1RQW stays inside this uniquely owned row chunk.
++            d[0] = 0.f;
++        } else {
++            float* d = G->kf + a * G->steps * 4;
++            for (long X = 0; X < G->steps; X++, d += 4) {
++                d[0] = X < KW ? k[a * KW + X] : 0.f;
++                d[1] = X < KW ? k[a1 * KW + X] : 0.f;
++                d[2] = X < KW ? k[a2 * KW + X] : 0.f;
++                d[3] = X < KW ? k[a3 * KW + X] : 0.f;
++            }
+         }
+     }
+ }
+@@ -2932,7 +2944,7 @@
+             }
+ 
+             if (G->kind == 34 || G->kind == 35) {
+-                size_t kfneed = (size_t)KH * G->steps * 4 * sizeof(float);
++                size_t kfneed = (size_t)KH * (G->kind == 34 ? G->steps * 3 + 1 : G->steps * 4) * sizeof(float);
+                 if (g_rbuf[g].kfcap < kfneed) { free(g_rbuf[g].kf); g_rbuf[g].kf = alloc_aligned(kfneed); g_rbuf[g].kfcap = g_rbuf[g].kf ? kfneed : 0; }
+                 G->kf = g_rbuf[g].kf; G->kfcap = g_rbuf[g].kfcap;
+             }
+@@ -3155,7 +3167,8 @@
+                    NULL, NULL, NULL, 0, NULL, 0 };
+         if (g->kind == 34 || g->kind == 35) {
+             const long sF = g->sf, a0 = pc->af;   // kf 链的起始 kernel 行
+-            K.kb0 = g->kf + a0 * g->steps * 4; K.kbase = g->kf; K.kend = g->kf + KH * g->steps * 4;
++            const long kfrow = g->kind == 34 ? g->steps * 3 + 1 : g->steps * 4;
++            K.kb0 = g->kf + a0 * kfrow; K.kbase = g->kf; K.kend = g->kf + KH * kfrow;
+             K.cf0 = pc->cf;
+         } else if (g->kind == 33 || g->kind == 9) {
+             const long sF = g->sf, kj0 = pc->af;
+@@ -3310,7 +3323,7 @@
+     g_roll_step = env_int("CONV_ROLL_STEP", step_default);
+     g_pk_nc = g_rp.ng * (int)KH; g_pk_next = 0;            // 重置打包 chunk 游标/完成标志（ng ≤ 12、KH ≤ 256 → nc ≤ 3072）
+     memset(g_pk_done, 0, (size_t)g_pk_nc);
+-    long pk_el = 0;                                        // 打包总元素数（R 16/步 + kf 4/步）
++    long pk_el = 0;                                        // Conservative packing-policy estimate; keep original mode selection
+     for (int g = 0; g < g_rp.ng; g++) pk_el += KH * g_rp.G[g].steps * ((g_rp.G[g].kind == 34 || g_rp.G[g].kind == 35) ? 20 : 16);
+     int ps = g_knobs.pack_ser;
+     if (ps < 0) ps = pk_el <= 96 * 1024 ? 3 : 1;   // 小表（k39/k41）并行按组放行更快，大表（k55/k81）主线程串行局部性更好

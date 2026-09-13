@@ -1,0 +1,2 @@
+a7f3186ba28583ee6edd80d338ae7eed19dd9daa28493981086a4c9cf3edb610  build/post64/k4-scalar/profile_baseline  PASS downloaded post-run binary matches run log
+6c58745684e6aab207e9a0aa7e2b46f9df86f2fed3c7adcc69be5871018fa672  build/post64/k4-scalar/profile_bits  PASS downloaded post-run binary matches run log

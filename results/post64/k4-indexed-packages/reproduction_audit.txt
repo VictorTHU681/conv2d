@@ -1,0 +1,1 @@
+All three verified indexed-store archives reproduce byte-for-byte. Root source and submission archives remain unchanged.

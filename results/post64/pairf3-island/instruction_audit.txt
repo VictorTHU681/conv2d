@@ -1,0 +1,8 @@
+baseline disassembly SHA256 e04930f12e0643708ba8281bcc704c9132d9eaf608ae356e07f465537e14d707
+u4 disassembly SHA256 7dd19d3de4528ea3560898ea64bde1173fbf0ccdf79381ba9c8e56c72eed05ef
+island disassembly SHA256 c62e9258f86c62c345e7b4792424f0508f39dbfa24f86ac42bc23c8da8149ede
+PASS: exactly 21 original F3 instruction slots at 0x423da0..0x423df0 become entry branch plus 20 unreachable NOPs.
+PASS: all other 2434 roll_worker instruction words and addresses identical to upstream, including other kernel paths.
+PASS: island 0x42b8c0..0x42ba3c; all 95 original u4 setup/compute/remainder instructions and relative branch targets identical; exit jumps to original row-wrap 0x423df4.
+Original-address machine-word differences by symbol: {'validate_result': 1, 'test_performance': 22, 'roll_pack_chunk': 2, 'roll_worker': 21, 'roll_groups_base': 2, 'roll_groups_width': 4, 'read_knobs.part.0': 23, 'conv2d_roll': 9, 'conv2d_sme': 4, 'conv2d': 2, '_fini': 5}
+Non-worker constant addresses and final sections move; not a whole-binary identity claim. Objdump attributes appended code to nearest preceding symbol; it is reached by direct branch, not a call to that function. No dynamic correctness/performance claim.

@@ -1,0 +1,1717 @@
+HOST cn20490 2026-09-13T17:10:26+08:00
+pid 100872's current affinity list: 37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+PLACEMENT cpu_node=1 hbm_node=17
+Cpus_allowed_list:	37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+Mems_allowed_list:	0-31
+1549032
+policy: default
+preferred node: current
+physcpubind: 37 75 113 151 189 227 265 303 341 379 417 455 493 531 569 607 
+cpubind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+nodebind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 
+preferred: 
+EFFECTIVE_PLACEMENT
+policy: preferred
+preferred node: 17
+physcpubind: 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 
+cpubind: 1 
+nodebind: 1 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 
+preferred: 17 
+build/post64/k4-writeback/baseline.c: OK
+build/post64/k4-writeback/post.c: OK
+build/post64/k4-writeback/pre.c: OK
+build/post64/k4-writeback/fbench.c: OK
+e5e52c8d666584cc49ca6f11162be4868b240e2cc99a3c3ef0a2f8ac292c65ad  build/post64/k4-writeback/fbench.c
+490cd8d972a7d4b5acc7d576f03eaf23c65ed18d08de32aaa64c952c2ce63d95  build/post64/k4-writeback/baseline.c
+3c97460fb2fa7cad0071a33012c76693c94630838453b5a6ef3d502b06f6f2a1  build/post64/k4-writeback/bench_baseline
+988ca3c4b91bb91cbfa02eb07bc69b84218d22f3b0da268109f3d0d13654fbc9  build/post64/k4-writeback/post.c
+6d10943177df16c8962de5db313a6af8ffdd4c370f7bd6c4f991eeb8769db4c4  build/post64/k4-writeback/bench_post
+764a31316aeba7f29cf0e77c8e5a3f2a40b32b1be0c2055d7816dfad91516dc8  build/post64/k4-writeback/pre.c
+aabdabe63532289704da1a09451b99a8d5eff4da56f5b0e86c379a2c228dd29f  build/post64/k4-writeback/bench_pre
+5708e32b498becb46992db10bf31eb2c7f99ab6a8bbed9a121bdbd28a57625d6  build/post64/k4-writeback/state_post
+1fc954fbd958a2b73104730bf41f7f56a64af08e531e2a12f67fd0ea5c443f79  build/post64/k4-writeback/guard_post
+K4_WRITEBACK_PACK variant=post mode=-1
+   572 x 567  k  39 x  7 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   614 x 569  k  81 x  9 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   588 x 571  k  55 x 11 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   574 x 573  k  41 x 13 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   646 x 575  k 113 x 15 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   678 x 577  k 145 x 17 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   710 x 579  k 177 x 19 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   742 x 581  k 209 x 21 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   774 x 583  k 241 x 23 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   572 x 585  k  39 x 25 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   573 x 567  k  39 x  7 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   615 x 569  k  81 x  9 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   589 x 571  k  55 x 11 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   575 x 573  k  41 x 13 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   647 x 575  k 113 x 15 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   679 x 577  k 145 x 17 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   711 x 579  k 177 x 19 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   743 x 581  k 209 x 21 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   775 x 583  k 241 x 23 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   573 x 585  k  39 x 25 : ok  maxerr 0  bad 0/300135  bitdiff 0
+STATE_SWEEP PASS cases=261
+K4_WRITEBACK_PACK variant=post mode=0
+   572 x 567  k  39 x  7 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   614 x 569  k  81 x  9 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   588 x 571  k  55 x 11 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   574 x 573  k  41 x 13 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   646 x 575  k 113 x 15 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   678 x 577  k 145 x 17 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   710 x 579  k 177 x 19 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   742 x 581  k 209 x 21 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   774 x 583  k 241 x 23 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   572 x 585  k  39 x 25 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   573 x 567  k  39 x  7 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   615 x 569  k  81 x  9 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   589 x 571  k  55 x 11 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   575 x 573  k  41 x 13 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   647 x 575  k 113 x 15 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   679 x 577  k 145 x 17 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   711 x 579  k 177 x 19 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   743 x 581  k 209 x 21 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   775 x 583  k 241 x 23 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   573 x 585  k  39 x 25 : ok  maxerr 0  bad 0/300135  bitdiff 0
+STATE_SWEEP PASS cases=261
+K4_WRITEBACK_PACK variant=post mode=1
+   572 x 567  k  39 x  7 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   614 x 569  k  81 x  9 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   588 x 571  k  55 x 11 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   574 x 573  k  41 x 13 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   646 x 575  k 113 x 15 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   678 x 577  k 145 x 17 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   710 x 579  k 177 x 19 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   742 x 581  k 209 x 21 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   774 x 583  k 241 x 23 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   572 x 585  k  39 x 25 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   573 x 567  k  39 x  7 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   615 x 569  k  81 x  9 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   589 x 571  k  55 x 11 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   575 x 573  k  41 x 13 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   647 x 575  k 113 x 15 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   679 x 577  k 145 x 17 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   711 x 579  k 177 x 19 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   743 x 581  k 209 x 21 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   775 x 583  k 241 x 23 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   573 x 585  k  39 x 25 : ok  maxerr 0  bad 0/300135  bitdiff 0
+STATE_SWEEP PASS cases=261
+K4_WRITEBACK_PACK variant=post mode=2
+   572 x 567  k  39 x  7 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   614 x 569  k  81 x  9 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   588 x 571  k  55 x 11 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   574 x 573  k  41 x 13 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   646 x 575  k 113 x 15 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   678 x 577  k 145 x 17 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   710 x 579  k 177 x 19 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   742 x 581  k 209 x 21 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   774 x 583  k 241 x 23 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   572 x 585  k  39 x 25 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   573 x 567  k  39 x  7 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   615 x 569  k  81 x  9 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   589 x 571  k  55 x 11 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   575 x 573  k  41 x 13 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   647 x 575  k 113 x 15 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   679 x 577  k 145 x 17 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   711 x 579  k 177 x 19 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   743 x 581  k 209 x 21 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   775 x 583  k 241 x 23 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   573 x 585  k  39 x 25 : ok  maxerr 0  bad 0/300135  bitdiff 0
+STATE_SWEEP PASS cases=261
+K4_WRITEBACK_PACK variant=post mode=3
+   572 x 567  k  39 x  7 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   614 x 569  k  81 x  9 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   588 x 571  k  55 x 11 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   574 x 573  k  41 x 13 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   646 x 575  k 113 x 15 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   678 x 577  k 145 x 17 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   710 x 579  k 177 x 19 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   742 x 581  k 209 x 21 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   774 x 583  k 241 x 23 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   572 x 585  k  39 x 25 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   573 x 567  k  39 x  7 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   615 x 569  k  81 x  9 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   589 x 571  k  55 x 11 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   575 x 573  k  41 x 13 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   647 x 575  k 113 x 15 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   679 x 577  k 145 x 17 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   711 x 579  k 177 x 19 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   743 x 581  k 209 x 21 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   775 x 583  k 241 x 23 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   573 x 585  k  39 x 25 : ok  maxerr 0  bad 0/300135  bitdiff 0
+STATE_SWEEP PASS cases=261
+K4_WRITEBACK_GUARD variant=post
+GUARD kh=19 kw=3 outW=256 PASS
+GUARD kh=19 kw=3 outW=257 PASS
+GUARD kh=19 kw=4 outW=256 PASS
+GUARD kh=19 kw=4 outW=257 PASS
+GUARD kh=19 kw=5 outW=256 PASS
+GUARD kh=19 kw=5 outW=257 PASS
+GUARD kh=19 kw=6 outW=256 PASS
+GUARD kh=19 kw=6 outW=257 PASS
+GUARD kh=19 kw=7 outW=256 PASS
+GUARD kh=19 kw=7 outW=257 PASS
+GUARD kh=19 kw=8 outW=256 PASS
+GUARD kh=19 kw=8 outW=257 PASS
+GUARD kh=19 kw=9 outW=256 PASS
+GUARD kh=19 kw=9 outW=257 PASS
+GUARD kh=19 kw=10 outW=256 PASS
+GUARD kh=19 kw=10 outW=257 PASS
+GUARD kh=19 kw=17 outW=256 PASS
+GUARD kh=19 kw=17 outW=257 PASS
+GUARD kh=19 kw=39 outW=256 PASS
+GUARD kh=19 kw=39 outW=257 PASS
+GUARD kh=19 kw=40 outW=256 PASS
+GUARD kh=19 kw=40 outW=257 PASS
+GUARD kh=19 kw=41 outW=256 PASS
+GUARD kh=19 kw=41 outW=257 PASS
+GUARD kh=19 kw=399 outW=256 PASS
+GUARD kh=19 kw=399 outW=257 PASS
+GUARD kh=19 kw=400 outW=256 PASS
+GUARD kh=19 kw=400 outW=257 PASS
+GUARD kh=25 kw=3 outW=256 PASS
+GUARD kh=25 kw=3 outW=257 PASS
+GUARD kh=25 kw=4 outW=256 PASS
+GUARD kh=25 kw=4 outW=257 PASS
+GUARD kh=25 kw=5 outW=256 PASS
+GUARD kh=25 kw=5 outW=257 PASS
+GUARD kh=25 kw=6 outW=256 PASS
+GUARD kh=25 kw=6 outW=257 PASS
+GUARD kh=25 kw=7 outW=256 PASS
+GUARD kh=25 kw=7 outW=257 PASS
+GUARD kh=25 kw=8 outW=256 PASS
+GUARD kh=25 kw=8 outW=257 PASS
+GUARD kh=25 kw=9 outW=256 PASS
+GUARD kh=25 kw=9 outW=257 PASS
+GUARD kh=25 kw=10 outW=256 PASS
+GUARD kh=25 kw=10 outW=257 PASS
+GUARD kh=25 kw=17 outW=256 PASS
+GUARD kh=25 kw=17 outW=257 PASS
+GUARD kh=25 kw=39 outW=256 PASS
+GUARD kh=25 kw=39 outW=257 PASS
+GUARD kh=25 kw=40 outW=256 PASS
+GUARD kh=25 kw=40 outW=257 PASS
+GUARD kh=25 kw=41 outW=256 PASS
+GUARD kh=25 kw=41 outW=257 PASS
+GUARD kh=25 kw=399 outW=256 PASS
+GUARD kh=25 kw=399 outW=257 PASS
+GUARD kh=25 kw=400 outW=256 PASS
+GUARD kh=25 kw=400 outW=257 PASS
+GUARD kh=39 kw=3 outW=256 PASS
+GUARD kh=39 kw=3 outW=257 PASS
+GUARD kh=39 kw=4 outW=256 PASS
+GUARD kh=39 kw=4 outW=257 PASS
+GUARD kh=39 kw=5 outW=256 PASS
+GUARD kh=39 kw=5 outW=257 PASS
+GUARD kh=39 kw=6 outW=256 PASS
+GUARD kh=39 kw=6 outW=257 PASS
+GUARD kh=39 kw=7 outW=256 PASS
+GUARD kh=39 kw=7 outW=257 PASS
+GUARD kh=39 kw=8 outW=256 PASS
+GUARD kh=39 kw=8 outW=257 PASS
+GUARD kh=39 kw=9 outW=256 PASS
+GUARD kh=39 kw=9 outW=257 PASS
+GUARD kh=39 kw=10 outW=256 PASS
+GUARD kh=39 kw=10 outW=257 PASS
+GUARD kh=39 kw=17 outW=256 PASS
+GUARD kh=39 kw=17 outW=257 PASS
+GUARD kh=39 kw=39 outW=256 PASS
+GUARD kh=39 kw=39 outW=257 PASS
+GUARD kh=39 kw=40 outW=256 PASS
+GUARD kh=39 kw=40 outW=257 PASS
+GUARD kh=39 kw=41 outW=256 PASS
+GUARD kh=39 kw=41 outW=257 PASS
+GUARD kh=39 kw=399 outW=256 PASS
+GUARD kh=39 kw=399 outW=257 PASS
+GUARD kh=39 kw=400 outW=256 PASS
+GUARD kh=39 kw=400 outW=257 PASS
+GUARD kh=41 kw=3 outW=256 PASS
+GUARD kh=41 kw=3 outW=257 PASS
+GUARD kh=41 kw=4 outW=256 PASS
+GUARD kh=41 kw=4 outW=257 PASS
+GUARD kh=41 kw=5 outW=256 PASS
+GUARD kh=41 kw=5 outW=257 PASS
+GUARD kh=41 kw=6 outW=256 PASS
+GUARD kh=41 kw=6 outW=257 PASS
+GUARD kh=41 kw=7 outW=256 PASS
+GUARD kh=41 kw=7 outW=257 PASS
+GUARD kh=41 kw=8 outW=256 PASS
+GUARD kh=41 kw=8 outW=257 PASS
+GUARD kh=41 kw=9 outW=256 PASS
+GUARD kh=41 kw=9 outW=257 PASS
+GUARD kh=41 kw=10 outW=256 PASS
+GUARD kh=41 kw=10 outW=257 PASS
+GUARD kh=41 kw=17 outW=256 PASS
+GUARD kh=41 kw=17 outW=257 PASS
+GUARD kh=41 kw=39 outW=256 PASS
+GUARD kh=41 kw=39 outW=257 PASS
+GUARD kh=41 kw=40 outW=256 PASS
+GUARD kh=41 kw=40 outW=257 PASS
+GUARD kh=41 kw=41 outW=256 PASS
+GUARD kh=41 kw=41 outW=257 PASS
+GUARD kh=41 kw=399 outW=256 PASS
+GUARD kh=41 kw=399 outW=257 PASS
+GUARD kh=41 kw=400 outW=256 PASS
+GUARD kh=41 kw=400 outW=257 PASS
+GUARD kh=55 kw=3 outW=256 PASS
+GUARD kh=55 kw=3 outW=257 PASS
+GUARD kh=55 kw=4 outW=256 PASS
+GUARD kh=55 kw=4 outW=257 PASS
+GUARD kh=55 kw=5 outW=256 PASS
+GUARD kh=55 kw=5 outW=257 PASS
+GUARD kh=55 kw=6 outW=256 PASS
+GUARD kh=55 kw=6 outW=257 PASS
+GUARD kh=55 kw=7 outW=256 PASS
+GUARD kh=55 kw=7 outW=257 PASS
+GUARD kh=55 kw=8 outW=256 PASS
+GUARD kh=55 kw=8 outW=257 PASS
+GUARD kh=55 kw=9 outW=256 PASS
+GUARD kh=55 kw=9 outW=257 PASS
+GUARD kh=55 kw=10 outW=256 PASS
+GUARD kh=55 kw=10 outW=257 PASS
+GUARD kh=55 kw=17 outW=256 PASS
+GUARD kh=55 kw=17 outW=257 PASS
+GUARD kh=55 kw=39 outW=256 PASS
+GUARD kh=55 kw=39 outW=257 PASS
+GUARD kh=55 kw=40 outW=256 PASS
+GUARD kh=55 kw=40 outW=257 PASS
+GUARD kh=55 kw=41 outW=256 PASS
+GUARD kh=55 kw=41 outW=257 PASS
+GUARD kh=55 kw=399 outW=256 PASS
+GUARD kh=55 kw=399 outW=257 PASS
+GUARD kh=55 kw=400 outW=256 PASS
+GUARD kh=55 kw=400 outW=257 PASS
+GUARD kh=81 kw=3 outW=256 PASS
+GUARD kh=81 kw=3 outW=257 PASS
+GUARD kh=81 kw=4 outW=256 PASS
+GUARD kh=81 kw=4 outW=257 PASS
+GUARD kh=81 kw=5 outW=256 PASS
+GUARD kh=81 kw=5 outW=257 PASS
+GUARD kh=81 kw=6 outW=256 PASS
+GUARD kh=81 kw=6 outW=257 PASS
+GUARD kh=81 kw=7 outW=256 PASS
+GUARD kh=81 kw=7 outW=257 PASS
+GUARD kh=81 kw=8 outW=256 PASS
+GUARD kh=81 kw=8 outW=257 PASS
+GUARD kh=81 kw=9 outW=256 PASS
+GUARD kh=81 kw=9 outW=257 PASS
+GUARD kh=81 kw=10 outW=256 PASS
+GUARD kh=81 kw=10 outW=257 PASS
+GUARD kh=81 kw=17 outW=256 PASS
+GUARD kh=81 kw=17 outW=257 PASS
+GUARD kh=81 kw=39 outW=256 PASS
+GUARD kh=81 kw=39 outW=257 PASS
+GUARD kh=81 kw=40 outW=256 PASS
+GUARD kh=81 kw=40 outW=257 PASS
+GUARD kh=81 kw=41 outW=256 PASS
+GUARD kh=81 kw=41 outW=257 PASS
+GUARD kh=81 kw=399 outW=256 PASS
+GUARD kh=81 kw=399 outW=257 PASS
+GUARD kh=81 kw=400 outW=256 PASS
+GUARD kh=81 kw=400 outW=257 PASS
+GUARD kh=113 kw=3 outW=256 PASS
+GUARD kh=113 kw=3 outW=257 PASS
+GUARD kh=113 kw=4 outW=256 PASS
+GUARD kh=113 kw=4 outW=257 PASS
+GUARD kh=113 kw=5 outW=256 PASS
+GUARD kh=113 kw=5 outW=257 PASS
+GUARD kh=113 kw=6 outW=256 PASS
+GUARD kh=113 kw=6 outW=257 PASS
+GUARD kh=113 kw=7 outW=256 PASS
+GUARD kh=113 kw=7 outW=257 PASS
+GUARD kh=113 kw=8 outW=256 PASS
+GUARD kh=113 kw=8 outW=257 PASS
+GUARD kh=113 kw=9 outW=256 PASS
+GUARD kh=113 kw=9 outW=257 PASS
+GUARD kh=113 kw=10 outW=256 PASS
+GUARD kh=113 kw=10 outW=257 PASS
+GUARD kh=113 kw=17 outW=256 PASS
+GUARD kh=113 kw=17 outW=257 PASS
+GUARD kh=113 kw=39 outW=256 PASS
+GUARD kh=113 kw=39 outW=257 PASS
+GUARD kh=113 kw=40 outW=256 PASS
+GUARD kh=113 kw=40 outW=257 PASS
+GUARD kh=113 kw=41 outW=256 PASS
+GUARD kh=113 kw=41 outW=257 PASS
+GUARD kh=113 kw=399 outW=256 PASS
+GUARD kh=113 kw=399 outW=257 PASS
+GUARD kh=113 kw=400 outW=256 PASS
+GUARD kh=113 kw=400 outW=257 PASS
+GUARD kh=231 kw=3 outW=256 PASS
+GUARD kh=231 kw=3 outW=257 PASS
+GUARD kh=231 kw=4 outW=256 PASS
+GUARD kh=231 kw=4 outW=257 PASS
+GUARD kh=231 kw=5 outW=256 PASS
+GUARD kh=231 kw=5 outW=257 PASS
+GUARD kh=231 kw=6 outW=256 PASS
+GUARD kh=231 kw=6 outW=257 PASS
+GUARD kh=231 kw=7 outW=256 PASS
+GUARD kh=231 kw=7 outW=257 PASS
+GUARD kh=231 kw=8 outW=256 PASS
+GUARD kh=231 kw=8 outW=257 PASS
+GUARD kh=231 kw=9 outW=256 PASS
+GUARD kh=231 kw=9 outW=257 PASS
+GUARD kh=231 kw=10 outW=256 PASS
+GUARD kh=231 kw=10 outW=257 PASS
+GUARD kh=231 kw=17 outW=256 PASS
+GUARD kh=231 kw=17 outW=257 PASS
+GUARD kh=231 kw=39 outW=256 PASS
+GUARD kh=231 kw=39 outW=257 PASS
+GUARD kh=231 kw=40 outW=256 PASS
+GUARD kh=231 kw=40 outW=257 PASS
+GUARD kh=231 kw=41 outW=256 PASS
+GUARD kh=231 kw=41 outW=257 PASS
+GUARD kh=231 kw=399 outW=256 PASS
+GUARD kh=231 kw=399 outW=257 PASS
+GUARD kh=231 kw=400 outW=256 PASS
+GUARD kh=231 kw=400 outW=257 PASS
+PLANAR_GUARD_PASS cases=224
+b7647624e185ecd933d9818ad9a2afc9dd9f6600b8ace74d6c5a5a1f72f756ef  build/post64/k4-writeback/state_pre
+99dadfae9d00c3aaf9ca285617c4696be67d23fea6186b7a84c0efcd03bb9c41  build/post64/k4-writeback/guard_pre
+K4_WRITEBACK_PACK variant=pre mode=-1
+   572 x 567  k  39 x  7 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   614 x 569  k  81 x  9 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   588 x 571  k  55 x 11 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   574 x 573  k  41 x 13 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   646 x 575  k 113 x 15 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   678 x 577  k 145 x 17 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   710 x 579  k 177 x 19 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   742 x 581  k 209 x 21 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   774 x 583  k 241 x 23 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   572 x 585  k  39 x 25 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   573 x 567  k  39 x  7 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   615 x 569  k  81 x  9 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   589 x 571  k  55 x 11 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   575 x 573  k  41 x 13 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   647 x 575  k 113 x 15 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   679 x 577  k 145 x 17 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   711 x 579  k 177 x 19 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   743 x 581  k 209 x 21 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   775 x 583  k 241 x 23 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   573 x 585  k  39 x 25 : ok  maxerr 0  bad 0/300135  bitdiff 0
+STATE_SWEEP PASS cases=261
+K4_WRITEBACK_PACK variant=pre mode=0
+   572 x 567  k  39 x  7 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   614 x 569  k  81 x  9 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   588 x 571  k  55 x 11 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   574 x 573  k  41 x 13 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   646 x 575  k 113 x 15 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   678 x 577  k 145 x 17 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   710 x 579  k 177 x 19 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   742 x 581  k 209 x 21 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   774 x 583  k 241 x 23 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   572 x 585  k  39 x 25 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   573 x 567  k  39 x  7 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   615 x 569  k  81 x  9 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   589 x 571  k  55 x 11 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   575 x 573  k  41 x 13 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   647 x 575  k 113 x 15 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   679 x 577  k 145 x 17 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   711 x 579  k 177 x 19 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   743 x 581  k 209 x 21 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   775 x 583  k 241 x 23 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   573 x 585  k  39 x 25 : ok  maxerr 0  bad 0/300135  bitdiff 0
+STATE_SWEEP PASS cases=261
+K4_WRITEBACK_PACK variant=pre mode=1
+   572 x 567  k  39 x  7 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   614 x 569  k  81 x  9 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   588 x 571  k  55 x 11 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   574 x 573  k  41 x 13 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   646 x 575  k 113 x 15 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   678 x 577  k 145 x 17 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   710 x 579  k 177 x 19 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   742 x 581  k 209 x 21 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   774 x 583  k 241 x 23 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   572 x 585  k  39 x 25 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   573 x 567  k  39 x  7 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   615 x 569  k  81 x  9 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   589 x 571  k  55 x 11 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   575 x 573  k  41 x 13 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   647 x 575  k 113 x 15 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   679 x 577  k 145 x 17 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   711 x 579  k 177 x 19 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   743 x 581  k 209 x 21 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   775 x 583  k 241 x 23 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   573 x 585  k  39 x 25 : ok  maxerr 0  bad 0/300135  bitdiff 0
+STATE_SWEEP PASS cases=261
+K4_WRITEBACK_PACK variant=pre mode=2
+   572 x 567  k  39 x  7 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   614 x 569  k  81 x  9 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   588 x 571  k  55 x 11 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   574 x 573  k  41 x 13 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   646 x 575  k 113 x 15 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   678 x 577  k 145 x 17 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   710 x 579  k 177 x 19 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   742 x 581  k 209 x 21 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   774 x 583  k 241 x 23 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   572 x 585  k  39 x 25 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   573 x 567  k  39 x  7 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   615 x 569  k  81 x  9 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   589 x 571  k  55 x 11 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   575 x 573  k  41 x 13 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   647 x 575  k 113 x 15 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   679 x 577  k 145 x 17 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   711 x 579  k 177 x 19 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   743 x 581  k 209 x 21 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   775 x 583  k 241 x 23 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   573 x 585  k  39 x 25 : ok  maxerr 0  bad 0/300135  bitdiff 0
+STATE_SWEEP PASS cases=261
+K4_WRITEBACK_PACK variant=pre mode=3
+   572 x 567  k  39 x  7 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   614 x 569  k  81 x  9 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   588 x 571  k  55 x 11 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   574 x 573  k  41 x 13 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   646 x 575  k 113 x 15 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   678 x 577  k 145 x 17 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   710 x 579  k 177 x 19 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   742 x 581  k 209 x 21 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   774 x 583  k 241 x 23 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   572 x 585  k  39 x 25 : ok  maxerr 0  bad 0/299574  bitdiff 0
+   573 x 567  k  39 x  7 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   615 x 569  k  81 x  9 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   589 x 571  k  55 x 11 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   575 x 573  k  41 x 13 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   647 x 575  k 113 x 15 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   679 x 577  k 145 x 17 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   711 x 579  k 177 x 19 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   743 x 581  k 209 x 21 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   775 x 583  k 241 x 23 : ok  maxerr 0  bad 0/300135  bitdiff 0
+   573 x 585  k  39 x 25 : ok  maxerr 0  bad 0/300135  bitdiff 0
+STATE_SWEEP PASS cases=261
+K4_WRITEBACK_GUARD variant=pre
+GUARD kh=19 kw=3 outW=256 PASS
+GUARD kh=19 kw=3 outW=257 PASS
+GUARD kh=19 kw=4 outW=256 PASS
+GUARD kh=19 kw=4 outW=257 PASS
+GUARD kh=19 kw=5 outW=256 PASS
+GUARD kh=19 kw=5 outW=257 PASS
+GUARD kh=19 kw=6 outW=256 PASS
+GUARD kh=19 kw=6 outW=257 PASS
+GUARD kh=19 kw=7 outW=256 PASS
+GUARD kh=19 kw=7 outW=257 PASS
+GUARD kh=19 kw=8 outW=256 PASS
+GUARD kh=19 kw=8 outW=257 PASS
+GUARD kh=19 kw=9 outW=256 PASS
+GUARD kh=19 kw=9 outW=257 PASS
+GUARD kh=19 kw=10 outW=256 PASS
+GUARD kh=19 kw=10 outW=257 PASS
+GUARD kh=19 kw=17 outW=256 PASS
+GUARD kh=19 kw=17 outW=257 PASS
+GUARD kh=19 kw=39 outW=256 PASS
+GUARD kh=19 kw=39 outW=257 PASS
+GUARD kh=19 kw=40 outW=256 PASS
+GUARD kh=19 kw=40 outW=257 PASS
+GUARD kh=19 kw=41 outW=256 PASS
+GUARD kh=19 kw=41 outW=257 PASS
+GUARD kh=19 kw=399 outW=256 PASS
+GUARD kh=19 kw=399 outW=257 PASS
+GUARD kh=19 kw=400 outW=256 PASS
+GUARD kh=19 kw=400 outW=257 PASS
+GUARD kh=25 kw=3 outW=256 PASS
+GUARD kh=25 kw=3 outW=257 PASS
+GUARD kh=25 kw=4 outW=256 PASS
+GUARD kh=25 kw=4 outW=257 PASS
+GUARD kh=25 kw=5 outW=256 PASS
+GUARD kh=25 kw=5 outW=257 PASS
+GUARD kh=25 kw=6 outW=256 PASS
+GUARD kh=25 kw=6 outW=257 PASS
+GUARD kh=25 kw=7 outW=256 PASS
+GUARD kh=25 kw=7 outW=257 PASS
+GUARD kh=25 kw=8 outW=256 PASS
+GUARD kh=25 kw=8 outW=257 PASS
+GUARD kh=25 kw=9 outW=256 PASS
+GUARD kh=25 kw=9 outW=257 PASS
+GUARD kh=25 kw=10 outW=256 PASS
+GUARD kh=25 kw=10 outW=257 PASS
+GUARD kh=25 kw=17 outW=256 PASS
+GUARD kh=25 kw=17 outW=257 PASS
+GUARD kh=25 kw=39 outW=256 PASS
+GUARD kh=25 kw=39 outW=257 PASS
+GUARD kh=25 kw=40 outW=256 PASS
+GUARD kh=25 kw=40 outW=257 PASS
+GUARD kh=25 kw=41 outW=256 PASS
+GUARD kh=25 kw=41 outW=257 PASS
+GUARD kh=25 kw=399 outW=256 PASS
+GUARD kh=25 kw=399 outW=257 PASS
+GUARD kh=25 kw=400 outW=256 PASS
+GUARD kh=25 kw=400 outW=257 PASS
+GUARD kh=39 kw=3 outW=256 PASS
+GUARD kh=39 kw=3 outW=257 PASS
+GUARD kh=39 kw=4 outW=256 PASS
+GUARD kh=39 kw=4 outW=257 PASS
+GUARD kh=39 kw=5 outW=256 PASS
+GUARD kh=39 kw=5 outW=257 PASS
+GUARD kh=39 kw=6 outW=256 PASS
+GUARD kh=39 kw=6 outW=257 PASS
+GUARD kh=39 kw=7 outW=256 PASS
+GUARD kh=39 kw=7 outW=257 PASS
+GUARD kh=39 kw=8 outW=256 PASS
+GUARD kh=39 kw=8 outW=257 PASS
+GUARD kh=39 kw=9 outW=256 PASS
+GUARD kh=39 kw=9 outW=257 PASS
+GUARD kh=39 kw=10 outW=256 PASS
+GUARD kh=39 kw=10 outW=257 PASS
+GUARD kh=39 kw=17 outW=256 PASS
+GUARD kh=39 kw=17 outW=257 PASS
+GUARD kh=39 kw=39 outW=256 PASS
+GUARD kh=39 kw=39 outW=257 PASS
+GUARD kh=39 kw=40 outW=256 PASS
+GUARD kh=39 kw=40 outW=257 PASS
+GUARD kh=39 kw=41 outW=256 PASS
+GUARD kh=39 kw=41 outW=257 PASS
+GUARD kh=39 kw=399 outW=256 PASS
+GUARD kh=39 kw=399 outW=257 PASS
+GUARD kh=39 kw=400 outW=256 PASS
+GUARD kh=39 kw=400 outW=257 PASS
+GUARD kh=41 kw=3 outW=256 PASS
+GUARD kh=41 kw=3 outW=257 PASS
+GUARD kh=41 kw=4 outW=256 PASS
+GUARD kh=41 kw=4 outW=257 PASS
+GUARD kh=41 kw=5 outW=256 PASS
+GUARD kh=41 kw=5 outW=257 PASS
+GUARD kh=41 kw=6 outW=256 PASS
+GUARD kh=41 kw=6 outW=257 PASS
+GUARD kh=41 kw=7 outW=256 PASS
+GUARD kh=41 kw=7 outW=257 PASS
+GUARD kh=41 kw=8 outW=256 PASS
+GUARD kh=41 kw=8 outW=257 PASS
+GUARD kh=41 kw=9 outW=256 PASS
+GUARD kh=41 kw=9 outW=257 PASS
+GUARD kh=41 kw=10 outW=256 PASS
+GUARD kh=41 kw=10 outW=257 PASS
+GUARD kh=41 kw=17 outW=256 PASS
+GUARD kh=41 kw=17 outW=257 PASS
+GUARD kh=41 kw=39 outW=256 PASS
+GUARD kh=41 kw=39 outW=257 PASS
+GUARD kh=41 kw=40 outW=256 PASS
+GUARD kh=41 kw=40 outW=257 PASS
+GUARD kh=41 kw=41 outW=256 PASS
+GUARD kh=41 kw=41 outW=257 PASS
+GUARD kh=41 kw=399 outW=256 PASS
+GUARD kh=41 kw=399 outW=257 PASS
+GUARD kh=41 kw=400 outW=256 PASS
+GUARD kh=41 kw=400 outW=257 PASS
+GUARD kh=55 kw=3 outW=256 PASS
+GUARD kh=55 kw=3 outW=257 PASS
+GUARD kh=55 kw=4 outW=256 PASS
+GUARD kh=55 kw=4 outW=257 PASS
+GUARD kh=55 kw=5 outW=256 PASS
+GUARD kh=55 kw=5 outW=257 PASS
+GUARD kh=55 kw=6 outW=256 PASS
+GUARD kh=55 kw=6 outW=257 PASS
+GUARD kh=55 kw=7 outW=256 PASS
+GUARD kh=55 kw=7 outW=257 PASS
+GUARD kh=55 kw=8 outW=256 PASS
+GUARD kh=55 kw=8 outW=257 PASS
+GUARD kh=55 kw=9 outW=256 PASS
+GUARD kh=55 kw=9 outW=257 PASS
+GUARD kh=55 kw=10 outW=256 PASS
+GUARD kh=55 kw=10 outW=257 PASS
+GUARD kh=55 kw=17 outW=256 PASS
+GUARD kh=55 kw=17 outW=257 PASS
+GUARD kh=55 kw=39 outW=256 PASS
+GUARD kh=55 kw=39 outW=257 PASS
+GUARD kh=55 kw=40 outW=256 PASS
+GUARD kh=55 kw=40 outW=257 PASS
+GUARD kh=55 kw=41 outW=256 PASS
+GUARD kh=55 kw=41 outW=257 PASS
+GUARD kh=55 kw=399 outW=256 PASS
+GUARD kh=55 kw=399 outW=257 PASS
+GUARD kh=55 kw=400 outW=256 PASS
+GUARD kh=55 kw=400 outW=257 PASS
+GUARD kh=81 kw=3 outW=256 PASS
+GUARD kh=81 kw=3 outW=257 PASS
+GUARD kh=81 kw=4 outW=256 PASS
+GUARD kh=81 kw=4 outW=257 PASS
+GUARD kh=81 kw=5 outW=256 PASS
+GUARD kh=81 kw=5 outW=257 PASS
+GUARD kh=81 kw=6 outW=256 PASS
+GUARD kh=81 kw=6 outW=257 PASS
+GUARD kh=81 kw=7 outW=256 PASS
+GUARD kh=81 kw=7 outW=257 PASS
+GUARD kh=81 kw=8 outW=256 PASS
+GUARD kh=81 kw=8 outW=257 PASS
+GUARD kh=81 kw=9 outW=256 PASS
+GUARD kh=81 kw=9 outW=257 PASS
+GUARD kh=81 kw=10 outW=256 PASS
+GUARD kh=81 kw=10 outW=257 PASS
+GUARD kh=81 kw=17 outW=256 PASS
+GUARD kh=81 kw=17 outW=257 PASS
+GUARD kh=81 kw=39 outW=256 PASS
+GUARD kh=81 kw=39 outW=257 PASS
+GUARD kh=81 kw=40 outW=256 PASS
+GUARD kh=81 kw=40 outW=257 PASS
+GUARD kh=81 kw=41 outW=256 PASS
+GUARD kh=81 kw=41 outW=257 PASS
+GUARD kh=81 kw=399 outW=256 PASS
+GUARD kh=81 kw=399 outW=257 PASS
+GUARD kh=81 kw=400 outW=256 PASS
+GUARD kh=81 kw=400 outW=257 PASS
+GUARD kh=113 kw=3 outW=256 PASS
+GUARD kh=113 kw=3 outW=257 PASS
+GUARD kh=113 kw=4 outW=256 PASS
+GUARD kh=113 kw=4 outW=257 PASS
+GUARD kh=113 kw=5 outW=256 PASS
+GUARD kh=113 kw=5 outW=257 PASS
+GUARD kh=113 kw=6 outW=256 PASS
+GUARD kh=113 kw=6 outW=257 PASS
+GUARD kh=113 kw=7 outW=256 PASS
+GUARD kh=113 kw=7 outW=257 PASS
+GUARD kh=113 kw=8 outW=256 PASS
+GUARD kh=113 kw=8 outW=257 PASS
+GUARD kh=113 kw=9 outW=256 PASS
+GUARD kh=113 kw=9 outW=257 PASS
+GUARD kh=113 kw=10 outW=256 PASS
+GUARD kh=113 kw=10 outW=257 PASS
+GUARD kh=113 kw=17 outW=256 PASS
+GUARD kh=113 kw=17 outW=257 PASS
+GUARD kh=113 kw=39 outW=256 PASS
+GUARD kh=113 kw=39 outW=257 PASS
+GUARD kh=113 kw=40 outW=256 PASS
+GUARD kh=113 kw=40 outW=257 PASS
+GUARD kh=113 kw=41 outW=256 PASS
+GUARD kh=113 kw=41 outW=257 PASS
+GUARD kh=113 kw=399 outW=256 PASS
+GUARD kh=113 kw=399 outW=257 PASS
+GUARD kh=113 kw=400 outW=256 PASS
+GUARD kh=113 kw=400 outW=257 PASS
+GUARD kh=231 kw=3 outW=256 PASS
+GUARD kh=231 kw=3 outW=257 PASS
+GUARD kh=231 kw=4 outW=256 PASS
+GUARD kh=231 kw=4 outW=257 PASS
+GUARD kh=231 kw=5 outW=256 PASS
+GUARD kh=231 kw=5 outW=257 PASS
+GUARD kh=231 kw=6 outW=256 PASS
+GUARD kh=231 kw=6 outW=257 PASS
+GUARD kh=231 kw=7 outW=256 PASS
+GUARD kh=231 kw=7 outW=257 PASS
+GUARD kh=231 kw=8 outW=256 PASS
+GUARD kh=231 kw=8 outW=257 PASS
+GUARD kh=231 kw=9 outW=256 PASS
+GUARD kh=231 kw=9 outW=257 PASS
+GUARD kh=231 kw=10 outW=256 PASS
+GUARD kh=231 kw=10 outW=257 PASS
+GUARD kh=231 kw=17 outW=256 PASS
+GUARD kh=231 kw=17 outW=257 PASS
+GUARD kh=231 kw=39 outW=256 PASS
+GUARD kh=231 kw=39 outW=257 PASS
+GUARD kh=231 kw=40 outW=256 PASS
+GUARD kh=231 kw=40 outW=257 PASS
+GUARD kh=231 kw=41 outW=256 PASS
+GUARD kh=231 kw=41 outW=257 PASS
+GUARD kh=231 kw=399 outW=256 PASS
+GUARD kh=231 kw=399 outW=257 PASS
+GUARD kh=231 kw=400 outW=256 PASS
+GUARD kh=231 kw=400 outW=257 PASS
+PLANAR_GUARD_PASS cases=224
+K4_WRITEBACK memory=DDR round=0 variant=baseline shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.297 ms    14231.1 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.310 ms    14194.0 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.311 ms    14192.8 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.299 ms    14223.2 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.299 ms    14224.8 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.297 ms    14231.1 GFLOPS | avg    5.303 ms    14213.2 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=0 variant=post shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.306 ms    14204.7 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.297 ms    14229.0 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.309 ms    14196.4 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.315 ms    14181.0 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.297 ms    14230.6 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.297 ms    14230.6 GFLOPS | avg    5.305 ms    14208.3 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=0 variant=pre shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.323 ms    14160.5 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.321 ms    14166.0 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.320 ms    14169.2 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.321 ms    14165.2 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.318 ms    14172.6 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.318 ms    14172.6 GFLOPS | avg    5.321 ms    14166.7 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=0 variant=baseline shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    5.806 ms    14334.9 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    5.790 ms    14375.5 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    5.785 ms    14388.5 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    5.791 ms    14373.3 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    5.794 ms    14365.6 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.785 ms    14388.5 GFLOPS | avg    5.793 ms    14367.5 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=0 variant=post shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    5.788 ms    14380.7 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    5.776 ms    14409.6 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    5.796 ms    14359.9 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    5.766 ms    14436.5 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    5.780 ms    14400.4 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.766 ms    14436.5 GFLOPS | avg    5.781 ms    14397.4 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=0 variant=pre shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    5.796 ms    14359.9 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    5.779 ms    14403.3 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    5.786 ms    14386.4 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    5.776 ms    14410.4 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    5.791 ms    14372.1 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.776 ms    14410.4 GFLOPS | avg    5.786 ms    14386.4 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=0 variant=baseline shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.125 ms    14478.4 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.130 ms    14472.4 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.120 ms    14485.0 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.111 ms    14497.4 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.110 ms    14498.0 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.110 ms    14498.0 GFLOPS | avg   11.119 ms    14486.2 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=0 variant=post shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.116 ms    14490.8 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.122 ms    14481.9 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.120 ms    14484.9 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.108 ms    14500.9 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.124 ms    14480.2 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.108 ms    14500.9 GFLOPS | avg   11.118 ms    14487.7 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=0 variant=pre shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.128 ms    14475.3 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.116 ms    14490.8 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.120 ms    14485.3 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.113 ms    14493.7 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.122 ms    14482.9 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.113 ms    14493.7 GFLOPS | avg   11.120 ms    14485.6 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=0 variant=baseline shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   22.344 ms    15475.2 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.325 ms    15487.8 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.285 ms    15515.7 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.399 ms    15436.8 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.341 ms    15477.1 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.285 ms    15515.7 GFLOPS | avg   22.339 ms    15478.5 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=0 variant=post shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   22.335 ms    15481.3 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.325 ms    15488.4 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.298 ms    15507.2 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.315 ms    15494.9 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.313 ms    15496.7 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.298 ms    15507.2 GFLOPS | avg   22.317 ms    15493.7 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=0 variant=pre shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   22.328 ms    15486.0 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.334 ms    15482.2 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.332 ms    15483.4 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.392 ms    15442.1 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.320 ms    15491.9 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.320 ms    15491.9 GFLOPS | avg   22.341 ms    15477.1 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=0 variant=baseline shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.303 ms    14212.6 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.304 ms    14212.1 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.299 ms    14225.7 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.301 ms    14218.1 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.298 ms    14226.9 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.298 ms    14226.9 GFLOPS | avg    5.301 ms    14219.1 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=0 variant=post shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.283 ms    14266.2 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.289 ms    14252.3 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.291 ms    14245.2 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.298 ms    14228.0 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.287 ms    14257.3 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.283 ms    14266.2 GFLOPS | avg    5.290 ms    14249.8 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=0 variant=pre shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.285 ms    14262.7 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.258 ms    14336.1 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.289 ms    14251.0 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.285 ms    14262.5 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.278 ms    14281.8 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.258 ms    14336.1 GFLOPS | avg    5.279 ms    14278.7 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=0 variant=baseline shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    5.761 ms    14447.0 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    5.758 ms    14455.1 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    5.773 ms    14417.8 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    5.772 ms    14420.2 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    5.769 ms    14428.3 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.758 ms    14455.1 GFLOPS | avg    5.767 ms    14433.7 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=0 variant=post shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    5.767 ms    14433.2 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    5.769 ms    14428.4 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    5.761 ms    14447.5 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    5.763 ms    14443.9 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    5.748 ms    14480.3 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.748 ms    14480.3 GFLOPS | avg    5.762 ms    14446.6 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=0 variant=pre shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    5.760 ms    14451.5 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    5.760 ms    14450.9 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    5.749 ms    14478.6 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    5.763 ms    14443.2 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    5.757 ms    14458.3 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.749 ms    14478.6 GFLOPS | avg    5.758 ms    14456.5 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=0 variant=baseline shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.089 ms    14525.1 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.090 ms    14523.8 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.094 ms    14519.1 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.088 ms    14526.8 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.095 ms    14517.1 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.088 ms    14526.8 GFLOPS | avg   11.091 ms    14522.4 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=0 variant=post shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.102 ms    14508.3 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.106 ms    14502.9 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.172 ms    14417.1 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.111 ms    14496.8 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.102 ms    14508.5 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.102 ms    14508.5 GFLOPS | avg   11.119 ms    14486.6 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=0 variant=pre shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.095 ms    14518.3 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.088 ms    14527.3 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.090 ms    14524.8 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.088 ms    14526.6 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.084 ms    14532.6 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.084 ms    14532.6 GFLOPS | avg   11.089 ms    14525.9 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=0 variant=baseline shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   22.259 ms    15533.9 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.231 ms    15553.4 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.249 ms    15540.9 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.234 ms    15551.7 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.238 ms    15548.7 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.231 ms    15553.4 GFLOPS | avg   22.242 ms    15545.7 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=0 variant=post shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   22.247 ms    15542.4 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.227 ms    15556.2 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.310 ms    15498.3 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.221 ms    15560.5 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.235 ms    15550.8 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.221 ms    15560.5 GFLOPS | avg   22.248 ms    15541.6 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=0 variant=pre shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   22.316 ms    15494.4 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.280 ms    15519.7 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.330 ms    15484.4 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.285 ms    15516.2 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.311 ms    15497.9 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.280 ms    15519.7 GFLOPS | avg   22.304 ms    15502.5 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=1 variant=post shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.317 ms    14175.3 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.347 ms    14096.3 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.318 ms    14172.7 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.324 ms    14158.0 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.327 ms    14150.1 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.317 ms    14175.3 GFLOPS | avg    5.327 ms    14150.4 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=1 variant=pre shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.336 ms    14125.8 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.348 ms    14095.0 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.339 ms    14116.8 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.349 ms    14092.3 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.344 ms    14105.5 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.336 ms    14125.8 GFLOPS | avg    5.343 ms    14107.1 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=1 variant=baseline shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.341 ms    14112.7 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.329 ms    14145.5 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.327 ms    14148.5 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.320 ms    14168.9 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.319 ms    14169.6 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.319 ms    14169.6 GFLOPS | avg    5.327 ms    14149.0 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=1 variant=post shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    5.785 ms    14388.6 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    5.783 ms    14392.6 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    5.779 ms    14403.2 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    5.792 ms    14372.0 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    5.773 ms    14419.0 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.773 ms    14419.0 GFLOPS | avg    5.782 ms    14395.1 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=1 variant=pre shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    5.783 ms    14392.7 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    5.783 ms    14393.7 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    5.760 ms    14451.2 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    5.799 ms    14353.7 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    5.758 ms    14455.6 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.758 ms    14455.6 GFLOPS | avg    5.777 ms    14409.3 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=1 variant=baseline shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    5.769 ms    14427.2 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    5.763 ms    14442.0 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    5.765 ms    14437.0 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    5.765 ms    14438.9 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    5.776 ms    14411.5 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.763 ms    14442.0 GFLOPS | avg    5.768 ms    14431.3 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=1 variant=post shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.129 ms    14473.7 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.141 ms    14458.0 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.124 ms    14479.8 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.115 ms    14491.5 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.135 ms    14465.7 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.115 ms    14491.5 GFLOPS | avg   11.129 ms    14473.7 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=1 variant=pre shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.121 ms    14484.5 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.121 ms    14484.0 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.134 ms    14467.2 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.126 ms    14477.3 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.134 ms    14466.9 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.121 ms    14484.5 GFLOPS | avg   11.127 ms    14476.0 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=1 variant=baseline shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.117 ms    14489.4 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.124 ms    14480.0 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.118 ms    14488.3 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.218 ms    14359.0 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.113 ms    14493.8 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.113 ms    14493.8 GFLOPS | avg   11.138 ms    14461.9 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=1 variant=post shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   22.318 ms    15492.8 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.294 ms    15509.8 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.303 ms    15503.2 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.293 ms    15510.1 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.309 ms    15499.4 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.293 ms    15510.1 GFLOPS | avg   22.303 ms    15503.0 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=1 variant=pre shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   22.336 ms    15480.6 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.334 ms    15481.9 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.341 ms    15476.7 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.328 ms    15485.9 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.337 ms    15479.8 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.328 ms    15485.9 GFLOPS | avg   22.335 ms    15481.0 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=1 variant=baseline shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   22.223 ms    15559.0 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.209 ms    15569.1 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.217 ms    15563.3 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.225 ms    15557.8 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.212 ms    15566.6 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.209 ms    15569.1 GFLOPS | avg   22.217 ms    15563.2 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=1 variant=post shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.289 ms    14251.6 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.275 ms    14290.0 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.287 ms    14256.3 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.274 ms    14290.7 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.294 ms    14238.3 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.274 ms    14290.7 GFLOPS | avg    5.284 ms    14265.3 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=1 variant=pre shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.305 ms    14208.0 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.285 ms    14261.8 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.288 ms    14253.9 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.303 ms    14214.1 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.290 ms    14249.9 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.285 ms    14261.8 GFLOPS | avg    5.294 ms    14237.5 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=1 variant=baseline shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.284 ms    14265.5 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.286 ms    14260.2 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.271 ms    14300.0 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.275 ms    14288.8 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.279 ms    14278.8 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.271 ms    14300.0 GFLOPS | avg    5.279 ms    14278.6 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=1 variant=post shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    5.771 ms    14423.9 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    5.756 ms    14460.1 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    5.758 ms    14456.2 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    5.742 ms    14495.9 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    5.760 ms    14451.8 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.742 ms    14495.9 GFLOPS | avg    5.757 ms    14457.5 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=1 variant=pre shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    5.751 ms    14473.7 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    5.759 ms    14452.2 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    5.766 ms    14435.2 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    5.745 ms    14488.2 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    5.745 ms    14487.4 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.745 ms    14488.2 GFLOPS | avg    5.753 ms    14467.3 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=1 variant=baseline shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    5.759 ms    14453.4 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    5.762 ms    14446.2 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    5.758 ms    14455.0 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    5.767 ms    14434.1 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    5.755 ms    14463.3 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.755 ms    14463.3 GFLOPS | avg    5.760 ms    14450.4 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=1 variant=post shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.079 ms    14538.8 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.083 ms    14533.1 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.085 ms    14530.7 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.093 ms    14520.5 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.092 ms    14522.2 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.079 ms    14538.8 GFLOPS | avg   11.086 ms    14529.0 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=1 variant=pre shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.079 ms    14538.3 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.094 ms    14518.9 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.072 ms    14547.6 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.080 ms    14537.9 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.083 ms    14533.5 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.072 ms    14547.6 GFLOPS | avg   11.082 ms    14535.2 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=1 variant=baseline shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.080 ms    14536.9 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.081 ms    14536.0 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.080 ms    14537.3 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.084 ms    14531.7 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.082 ms    14534.3 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.080 ms    14537.3 GFLOPS | avg   11.082 ms    14535.2 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=1 variant=post shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   22.346 ms    15473.6 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.342 ms    15476.5 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.357 ms    15465.6 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.345 ms    15474.4 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.486 ms    15377.1 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.342 ms    15476.5 GFLOPS | avg   22.375 ms    15453.4 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=1 variant=pre shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   22.373 ms    15454.8 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.375 ms    15453.7 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.302 ms    15503.8 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.324 ms    15489.1 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.278 ms    15520.9 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.278 ms    15520.9 GFLOPS | avg   22.330 ms    15484.4 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=1 variant=baseline shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   22.360 ms    15463.5 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.334 ms    15481.7 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.354 ms    15468.3 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.351 ms    15470.4 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.343 ms    15475.9 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.334 ms    15481.7 GFLOPS | avg   22.348 ms    15471.9 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=2 variant=pre shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.318 ms    14172.7 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.339 ms    14118.4 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.334 ms    14131.4 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.311 ms    14193.3 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.303 ms    14213.6 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.303 ms    14213.6 GFLOPS | avg    5.321 ms    14165.8 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=2 variant=baseline shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.304 ms    14212.0 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.301 ms    14218.1 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.307 ms    14202.3 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.313 ms    14186.2 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.306 ms    14206.3 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.301 ms    14218.1 GFLOPS | avg    5.306 ms    14205.0 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=2 variant=post shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.319 ms    14171.5 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.306 ms    14205.2 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.326 ms    14152.4 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.323 ms    14159.9 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.311 ms    14193.3 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.306 ms    14205.2 GFLOPS | avg    5.317 ms    14176.4 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=2 variant=pre shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    5.785 ms    14388.1 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    5.801 ms    14348.6 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    5.786 ms    14386.7 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    5.769 ms    14427.9 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    5.780 ms    14400.8 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.769 ms    14427.9 GFLOPS | avg    5.784 ms    14390.4 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=2 variant=baseline shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    5.786 ms    14386.8 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    5.791 ms    14373.2 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    5.787 ms    14384.1 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    5.773 ms    14418.2 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    5.790 ms    14375.8 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.773 ms    14418.2 GFLOPS | avg    5.785 ms    14387.6 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=2 variant=post shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    5.790 ms    14376.4 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    5.784 ms    14389.9 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    5.766 ms    14434.7 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    5.754 ms    14465.4 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    5.775 ms    14412.0 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.754 ms    14465.4 GFLOPS | avg    5.774 ms    14415.6 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=2 variant=pre shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.125 ms    14479.0 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.117 ms    14488.6 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.128 ms    14475.3 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.124 ms    14479.5 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.131 ms    14471.0 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.117 ms    14488.6 GFLOPS | avg   11.125 ms    14478.7 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=2 variant=baseline shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.116 ms    14490.0 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.118 ms    14487.7 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.118 ms    14488.3 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.125 ms    14478.8 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.118 ms    14487.1 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.116 ms    14490.0 GFLOPS | avg   11.119 ms    14486.4 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=2 variant=post shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.109 ms    14500.0 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.128 ms    14474.3 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.099 ms    14511.9 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.119 ms    14486.4 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.124 ms    14479.8 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.099 ms    14511.9 GFLOPS | avg   11.116 ms    14490.5 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=2 variant=pre shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   23.001 ms    15032.8 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.359 ms    15464.2 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.359 ms    15464.3 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.357 ms    15466.2 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.336 ms    15480.5 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.336 ms    15480.5 GFLOPS | avg   22.482 ms    15379.6 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=2 variant=baseline shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   22.260 ms    15533.1 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.228 ms    15555.9 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.224 ms    15558.6 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.345 ms    15474.5 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.324 ms    15488.6 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.224 ms    15558.6 GFLOPS | avg   22.276 ms    15522.0 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=2 variant=post shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   22.353 ms    15468.4 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.337 ms    15479.9 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.376 ms    15452.7 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.391 ms    15442.3 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.355 ms    15467.6 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.337 ms    15479.9 GFLOPS | avg   22.362 ms    15462.2 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=2 variant=pre shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.289 ms    14250.3 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.291 ms    14246.6 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.286 ms    14258.3 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.284 ms    14266.0 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.264 ms    14319.5 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.264 ms    14319.5 GFLOPS | avg    5.283 ms    14268.1 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=2 variant=baseline shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.288 ms    14255.2 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.291 ms    14246.5 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.287 ms    14255.4 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.274 ms    14291.5 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.302 ms    14217.4 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.274 ms    14291.5 GFLOPS | avg    5.288 ms    14253.2 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=2 variant=post shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.294 ms    14237.2 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.275 ms    14288.7 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.297 ms    14230.3 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.286 ms    14260.7 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.283 ms    14267.4 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.275 ms    14288.7 GFLOPS | avg    5.287 ms    14256.8 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=2 variant=pre shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    5.756 ms    14461.3 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    5.760 ms    14451.5 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    5.772 ms    14420.4 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    5.757 ms    14459.2 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    5.762 ms    14446.6 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.756 ms    14461.3 GFLOPS | avg    5.761 ms    14447.8 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=2 variant=baseline shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    5.750 ms    14475.2 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    5.769 ms    14427.7 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    5.762 ms    14445.2 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    5.744 ms    14491.9 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    5.764 ms    14440.1 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.744 ms    14491.9 GFLOPS | avg    5.758 ms    14456.0 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=2 variant=post shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    5.754 ms    14465.2 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    5.753 ms    14468.6 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    5.771 ms    14424.0 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    5.770 ms    14425.5 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    5.749 ms    14478.3 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.749 ms    14478.3 GFLOPS | avg    5.759 ms    14452.3 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=2 variant=pre shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.091 ms    14522.5 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.093 ms    14520.3 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.097 ms    14514.6 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.091 ms    14523.5 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.095 ms    14517.6 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.091 ms    14523.5 GFLOPS | avg   11.094 ms    14519.7 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=2 variant=baseline shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.079 ms    14539.2 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.083 ms    14533.6 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.073 ms    14546.9 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.083 ms    14533.6 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.085 ms    14530.7 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.073 ms    14546.9 GFLOPS | avg   11.080 ms    14536.8 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=2 variant=post shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.092 ms    14521.5 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.089 ms    14525.1 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.091 ms    14523.3 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.097 ms    14515.8 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.089 ms    14525.8 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.089 ms    14525.8 GFLOPS | avg   11.092 ms    14522.3 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=2 variant=pre shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   22.243 ms    15545.5 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.269 ms    15527.3 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.285 ms    15515.6 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.228 ms    15555.5 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.257 ms    15535.2 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.228 ms    15555.5 GFLOPS | avg   22.256 ms    15535.8 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=2 variant=baseline shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   22.276 ms    15522.5 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.321 ms    15490.8 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.262 ms    15531.8 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.256 ms    15536.1 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.251 ms    15539.9 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.251 ms    15539.9 GFLOPS | avg   22.273 ms    15524.2 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=2 variant=post shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   22.372 ms    15455.6 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.354 ms    15468.1 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.374 ms    15454.2 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.372 ms    15455.8 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.359 ms    15464.5 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.354 ms    15468.1 GFLOPS | avg   22.366 ms    15459.6 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=3 variant=pre shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.327 ms    14150.0 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.335 ms    14129.2 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.323 ms    14160.2 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.333 ms    14134.7 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.326 ms    14152.4 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.323 ms    14160.2 GFLOPS | avg    5.329 ms    14145.3 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=3 variant=post shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.334 ms    14131.7 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.323 ms    14161.1 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.310 ms    14194.9 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.324 ms    14157.1 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.317 ms    14175.5 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.310 ms    14194.9 GFLOPS | avg    5.322 ms    14164.0 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=3 variant=baseline shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.328 ms    14146.7 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.332 ms    14135.9 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.330 ms    14141.6 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.332 ms    14135.5 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.338 ms    14120.6 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.328 ms    14146.7 GFLOPS | avg    5.332 ms    14136.0 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=3 variant=pre shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    5.779 ms    14404.4 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    5.769 ms    14427.4 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    5.779 ms    14402.0 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    5.788 ms    14381.8 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    5.775 ms    14413.9 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.769 ms    14427.4 GFLOPS | avg    5.778 ms    14405.9 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=3 variant=post shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    5.764 ms    14441.0 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    5.762 ms    14445.0 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    5.768 ms    14430.2 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    5.764 ms    14440.0 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    5.757 ms    14458.8 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.757 ms    14458.8 GFLOPS | avg    5.763 ms    14443.0 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=3 variant=baseline shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    5.779 ms    14403.3 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    5.759 ms    14452.4 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    5.775 ms    14411.9 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    5.766 ms    14436.2 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    5.777 ms    14407.1 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.759 ms    14452.4 GFLOPS | avg    5.771 ms    14422.2 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=3 variant=pre shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.114 ms    14492.9 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.125 ms    14479.1 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.138 ms    14461.1 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.131 ms    14471.1 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.124 ms    14480.3 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.114 ms    14492.9 GFLOPS | avg   11.126 ms    14476.9 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=3 variant=post shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.113 ms    14494.5 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.116 ms    14489.8 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.116 ms    14489.7 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.107 ms    14501.4 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.110 ms    14498.1 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.107 ms    14501.4 GFLOPS | avg   11.113 ms    14494.7 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=3 variant=baseline shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.109 ms    14499.6 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.117 ms    14489.4 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.118 ms    14488.0 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.122 ms    14482.9 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.112 ms    14495.5 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.109 ms    14499.6 GFLOPS | avg   11.115 ms    14491.1 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=3 variant=pre shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   22.315 ms    15495.2 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.306 ms    15501.3 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.309 ms    15499.1 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.314 ms    15495.5 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.350 ms    15470.6 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.306 ms    15501.3 GFLOPS | avg   22.319 ms    15492.3 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=3 variant=post shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   22.389 ms    15443.6 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.361 ms    15463.0 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.328 ms    15486.2 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.360 ms    15463.9 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.355 ms    15467.5 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.328 ms    15486.2 GFLOPS | avg   22.359 ms    15464.8 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=3 variant=baseline shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   22.338 ms    15478.9 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.324 ms    15488.6 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.333 ms    15482.5 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.350 ms    15470.9 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.340 ms    15478.0 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.324 ms    15488.6 GFLOPS | avg   22.337 ms    15479.8 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=3 variant=pre shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.296 ms    14233.8 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.352 ms    14084.8 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.293 ms    14240.0 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.298 ms    14226.7 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.293 ms    14241.1 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.293 ms    14241.1 GFLOPS | avg    5.306 ms    14205.0 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=3 variant=post shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.292 ms    14242.3 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.271 ms    14299.0 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.276 ms    14287.6 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.274 ms    14291.3 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.306 ms    14206.9 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.271 ms    14299.0 GFLOPS | avg    5.284 ms    14265.3 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=3 variant=baseline shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.288 ms    14254.4 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.304 ms    14211.1 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.291 ms    14247.2 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.289 ms    14251.0 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.291 ms    14245.6 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.288 ms    14254.4 GFLOPS | avg    5.293 ms    14241.8 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=3 variant=pre shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    5.777 ms    14409.3 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    5.776 ms    14410.3 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    5.761 ms    14447.2 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    5.764 ms    14439.8 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    5.750 ms    14474.7 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.750 ms    14474.7 GFLOPS | avg    5.766 ms    14436.2 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=3 variant=post shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    5.759 ms    14453.6 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    5.748 ms    14480.8 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    5.762 ms    14446.7 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    5.746 ms    14485.9 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    5.740 ms    14501.0 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.740 ms    14501.0 GFLOPS | avg    5.751 ms    14473.6 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=3 variant=baseline shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    5.746 ms    14486.5 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    5.748 ms    14479.8 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    5.762 ms    14446.3 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    5.753 ms    14468.1 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    5.754 ms    14465.2 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.746 ms    14486.5 GFLOPS | avg    5.753 ms    14469.2 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=3 variant=pre shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.097 ms    14515.4 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.087 ms    14528.8 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.086 ms    14529.0 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.090 ms    14523.8 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.084 ms    14531.7 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.084 ms    14531.7 GFLOPS | avg   11.089 ms    14525.7 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=3 variant=post shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.095 ms    14518.1 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.092 ms    14522.0 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.086 ms    14528.9 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.093 ms    14521.0 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.088 ms    14526.3 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.086 ms    14528.9 GFLOPS | avg   11.091 ms    14523.3 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=3 variant=baseline shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.098 ms    14513.5 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.087 ms    14528.8 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.305 ms    14248.2 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.083 ms    14533.1 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.088 ms    14526.7 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.083 ms    14533.1 GFLOPS | avg   11.132 ms    14469.2 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=3 variant=pre shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   22.330 ms    15484.3 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.302 ms    15504.2 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.323 ms    15489.2 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.323 ms    15489.5 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.341 ms    15476.7 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.302 ms    15504.2 GFLOPS | avg   22.324 ms    15488.8 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=3 variant=post shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   22.362 ms    15462.2 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.357 ms    15465.9 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.343 ms    15475.5 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.340 ms    15477.9 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.348 ms    15472.1 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.340 ms    15477.9 GFLOPS | avg   22.350 ms    15470.7 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=3 variant=baseline shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   22.330 ms    15484.3 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.316 ms    15494.3 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.332 ms    15483.1 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.329 ms    15485.6 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.330 ms    15484.8 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.316 ms    15494.3 GFLOPS | avg   22.327 ms    15486.4 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=4 variant=baseline shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.285 ms    14263.0 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.298 ms    14226.0 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.313 ms    14185.8 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.309 ms    14198.8 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.311 ms    14193.0 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.285 ms    14263.0 GFLOPS | avg    5.303 ms    14213.3 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=4 variant=pre shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.326 ms    14152.9 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.309 ms    14198.7 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.311 ms    14191.9 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.317 ms    14175.9 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.304 ms    14211.1 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.304 ms    14211.1 GFLOPS | avg    5.313 ms    14186.1 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=4 variant=post shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.313 ms    14186.4 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.333 ms    14133.5 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.332 ms    14136.6 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.337 ms    14124.3 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.311 ms    14191.7 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.311 ms    14191.7 GFLOPS | avg    5.325 ms    14154.5 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=4 variant=baseline shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    5.771 ms    14423.0 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    5.768 ms    14431.1 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    5.770 ms    14425.4 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    5.762 ms    14444.8 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    5.774 ms    14416.0 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.762 ms    14444.8 GFLOPS | avg    5.769 ms    14428.0 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=4 variant=pre shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    5.773 ms    14419.0 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    5.782 ms    14395.4 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    5.768 ms    14431.1 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    5.772 ms    14421.8 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    5.772 ms    14421.2 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.768 ms    14431.1 GFLOPS | avg    5.773 ms    14417.7 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=4 variant=post shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    5.776 ms    14410.3 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    5.775 ms    14412.7 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    5.767 ms    14434.0 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    5.767 ms    14432.1 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    5.769 ms    14428.0 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.767 ms    14434.0 GFLOPS | avg    5.771 ms    14423.4 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=4 variant=baseline shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.110 ms    14498.2 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.116 ms    14490.2 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.113 ms    14494.7 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.098 ms    14513.6 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.107 ms    14502.5 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.098 ms    14513.6 GFLOPS | avg   11.109 ms    14499.9 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=4 variant=pre shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.127 ms    14476.6 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.114 ms    14492.9 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.117 ms    14488.4 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.124 ms    14480.0 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.110 ms    14498.1 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.110 ms    14498.1 GFLOPS | avg   11.118 ms    14487.2 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=4 variant=post shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.124 ms    14479.3 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.118 ms    14488.2 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.120 ms    14485.7 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.126 ms    14477.7 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.128 ms    14474.6 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.118 ms    14488.2 GFLOPS | avg   11.123 ms    14481.1 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=4 variant=baseline shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   22.272 ms    15524.8 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.242 ms    15546.1 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.239 ms    15548.3 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.237 ms    15549.6 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.238 ms    15548.9 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.237 ms    15549.6 GFLOPS | avg   22.245 ms    15543.5 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=4 variant=pre shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   22.403 ms    15434.1 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.396 ms    15439.3 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.372 ms    15455.8 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.377 ms    15451.8 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.418 ms    15423.8 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.372 ms    15455.8 GFLOPS | avg   22.393 ms    15441.0 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=4 variant=post shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   22.370 ms    15457.0 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.356 ms    15466.5 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.360 ms    15464.0 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.352 ms    15469.7 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.373 ms    15454.6 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.352 ms    15469.7 GFLOPS | avg   22.362 ms    15462.3 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=4 variant=baseline shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.298 ms    14226.7 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.289 ms    14250.9 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.294 ms    14236.9 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.288 ms    14254.7 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.295 ms    14234.3 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.288 ms    14254.7 GFLOPS | avg    5.293 ms    14240.7 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=4 variant=pre shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.293 ms    14240.2 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.292 ms    14243.9 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.288 ms    14254.4 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.269 ms    14304.9 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.283 ms    14266.4 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.269 ms    14304.9 GFLOPS | avg    5.285 ms    14261.9 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=4 variant=post shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.273 ms    14293.7 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.281 ms    14271.9 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.278 ms    14280.3 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.281 ms    14274.1 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.285 ms    14262.2 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.273 ms    14293.7 GFLOPS | avg    5.280 ms    14276.4 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=4 variant=baseline shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    5.785 ms    14389.4 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    5.755 ms    14464.0 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    5.750 ms    14475.8 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    5.765 ms    14439.2 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    5.755 ms    14463.6 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.750 ms    14475.8 GFLOPS | avg    5.762 ms    14446.3 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=4 variant=pre shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    5.762 ms    14446.6 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    5.746 ms    14486.0 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    5.747 ms    14483.4 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    5.754 ms    14465.5 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    5.766 ms    14434.6 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.746 ms    14486.0 GFLOPS | avg    5.755 ms    14463.2 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=4 variant=post shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    5.750 ms    14474.9 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    5.754 ms    14464.6 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    5.750 ms    14476.5 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    5.744 ms    14490.3 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    5.748 ms    14482.1 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.744 ms    14490.3 GFLOPS | avg    5.749 ms    14477.7 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=4 variant=baseline shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.083 ms    14534.0 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.085 ms    14530.6 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.095 ms    14517.4 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.089 ms    14526.0 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.085 ms    14530.4 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.083 ms    14534.0 GFLOPS | avg   11.087 ms    14527.7 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=4 variant=pre shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.090 ms    14524.5 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.116 ms    14490.9 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.096 ms    14517.1 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.090 ms    14524.2 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.105 ms    14504.2 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.090 ms    14524.5 GFLOPS | avg   11.099 ms    14512.2 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=4 variant=post shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.096 ms    14516.9 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.095 ms    14517.9 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.099 ms    14511.9 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.099 ms    14512.4 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.102 ms    14509.1 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.095 ms    14517.9 GFLOPS | avg   11.098 ms    14513.7 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=4 variant=baseline shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   22.328 ms    15486.3 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.350 ms    15470.7 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.340 ms    15477.9 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.349 ms    15471.5 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.317 ms    15493.5 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.317 ms    15493.5 GFLOPS | avg   22.337 ms    15480.0 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=4 variant=pre shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   22.274 ms    15523.2 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.260 ms    15533.5 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.252 ms    15538.7 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.379 ms    15450.7 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.281 ms    15518.5 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.252 ms    15538.7 GFLOPS | avg   22.289 ms    15512.9 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=4 variant=post shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   22.358 ms    15465.3 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.344 ms    15474.6 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.349 ms    15471.3 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.332 ms    15483.0 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.346 ms    15473.5 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.332 ms    15483.0 GFLOPS | avg   22.346 ms    15473.5 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=5 variant=post shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.325 ms    14156.3 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.321 ms    14164.9 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.328 ms    14146.1 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.322 ms    14163.1 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.332 ms    14135.4 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.321 ms    14164.9 GFLOPS | avg    5.326 ms    14153.1 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=5 variant=baseline shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.319 ms    14169.8 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.310 ms    14194.0 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.303 ms    14213.5 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.319 ms    14169.7 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.307 ms    14203.6 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.303 ms    14213.5 GFLOPS | avg    5.312 ms    14190.1 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=5 variant=pre shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.338 ms    14120.9 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.315 ms    14181.0 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.319 ms    14171.7 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.321 ms    14166.2 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.304 ms    14209.7 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.304 ms    14209.7 GFLOPS | avg    5.319 ms    14169.8 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=5 variant=post shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    5.785 ms    14388.6 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    5.769 ms    14428.5 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    5.783 ms    14393.2 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    5.794 ms    14364.6 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    5.791 ms    14374.0 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.769 ms    14428.5 GFLOPS | avg    5.784 ms    14389.7 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=5 variant=baseline shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    5.786 ms    14385.5 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    5.782 ms    14396.2 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    5.789 ms    14379.1 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    5.777 ms    14409.3 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    5.783 ms    14393.7 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.777 ms    14409.3 GFLOPS | avg    5.783 ms    14392.8 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=5 variant=pre shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    5.752 ms    14471.1 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    5.776 ms    14409.6 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    5.766 ms    14436.5 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    5.764 ms    14439.6 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    5.776 ms    14411.8 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.752 ms    14471.1 GFLOPS | avg    5.767 ms    14433.7 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=5 variant=post shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.126 ms    14476.7 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.109 ms    14500.0 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.119 ms    14486.8 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.130 ms    14472.3 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.128 ms    14474.9 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.109 ms    14500.0 GFLOPS | avg   11.122 ms    14482.1 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=5 variant=baseline shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.119 ms    14486.9 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.128 ms    14474.3 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.130 ms    14472.4 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.114 ms    14492.8 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.113 ms    14494.8 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.113 ms    14494.8 GFLOPS | avg   11.121 ms    14484.2 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=5 variant=pre shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.116 ms    14490.4 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.122 ms    14482.8 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.139 ms    14460.3 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.130 ms    14472.5 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.108 ms    14501.2 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.108 ms    14501.2 GFLOPS | avg   11.123 ms    14481.4 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=5 variant=post shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   22.435 ms    15411.9 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.348 ms    15472.2 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.346 ms    15473.7 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.435 ms    15411.9 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.345 ms    15474.6 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.345 ms    15474.6 GFLOPS | avg   22.382 ms    15448.8 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=5 variant=baseline shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   22.371 ms    15456.5 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.319 ms    15492.6 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.333 ms    15482.8 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.345 ms    15474.5 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.341 ms    15476.8 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.319 ms    15492.6 GFLOPS | avg   22.342 ms    15476.7 GFLOPS  PASS
+K4_WRITEBACK memory=DDR round=5 variant=pre shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   22.353 ms    15468.6 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.328 ms    15485.8 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.350 ms    15470.6 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.330 ms    15484.5 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.324 ms    15488.6 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.324 ms    15488.6 GFLOPS | avg   22.337 ms    15479.6 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=5 variant=post shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.288 ms    14254.1 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.282 ms    14271.4 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.284 ms    14264.7 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.285 ms    14261.0 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.292 ms    14243.6 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.282 ms    14271.4 GFLOPS | avg    5.286 ms    14259.0 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=5 variant=baseline shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.287 ms    14256.4 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.289 ms    14250.6 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.486 ms    13739.5 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.285 ms    14260.8 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.290 ms    14249.4 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.285 ms    14260.8 GFLOPS | avg    5.328 ms    14148.3 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=5 variant=pre shape=4096 6144 39 39
+  4096 x  6144     39 x    39 run0    5.285 ms    14260.8 GFLOPS PASS
+  4096 x  6144     39 x    39 run1    5.311 ms    14192.9 GFLOPS PASS
+  4096 x  6144     39 x    39 run2    5.294 ms    14238.9 GFLOPS PASS
+  4096 x  6144     39 x    39 run3    5.274 ms    14290.6 GFLOPS PASS
+  4096 x  6144     39 x    39 run4    5.294 ms    14238.9 GFLOPS PASS
+  4096 x  6144     39 x    39 best    5.274 ms    14290.6 GFLOPS | avg    5.292 ms    14244.3 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=5 variant=post shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    5.753 ms    14468.0 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    5.764 ms    14440.7 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    5.776 ms    14410.1 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    5.764 ms    14439.6 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    5.769 ms    14428.8 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.753 ms    14468.0 GFLOPS | avg    5.765 ms    14437.4 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=5 variant=baseline shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    5.764 ms    14439.5 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    5.762 ms    14446.7 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    5.769 ms    14427.6 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    5.758 ms    14454.8 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    5.768 ms    14430.0 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.758 ms    14454.8 GFLOPS | avg    5.764 ms    14439.7 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=5 variant=pre shape=6144 4096 41 41
+  6144 x  4096     41 x    41 run0    5.765 ms    14438.9 GFLOPS PASS
+  6144 x  4096     41 x    41 run1    5.768 ms    14431.7 GFLOPS PASS
+  6144 x  4096     41 x    41 run2    5.786 ms    14384.9 GFLOPS PASS
+  6144 x  4096     41 x    41 run3    5.760 ms    14450.6 GFLOPS PASS
+  6144 x  4096     41 x    41 run4    5.762 ms    14445.8 GFLOPS PASS
+  6144 x  4096     41 x    41 best    5.760 ms    14450.6 GFLOPS | avg    5.768 ms    14430.4 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=5 variant=post shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.082 ms    14535.3 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.081 ms    14535.9 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.083 ms    14533.8 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.085 ms    14530.2 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.087 ms    14527.8 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.081 ms    14535.9 GFLOPS | avg   11.084 ms    14532.6 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=5 variant=baseline shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.094 ms    14518.4 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.095 ms    14518.3 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.090 ms    14524.3 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.088 ms    14527.1 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.093 ms    14520.7 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.088 ms    14527.1 GFLOPS | avg   11.092 ms    14521.8 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=5 variant=pre shape=4256 6390 55 55
+  4256 x  6390     55 x    55 run0   11.080 ms    14537.1 GFLOPS PASS
+  4256 x  6390     55 x    55 run1   11.096 ms    14516.3 GFLOPS PASS
+  4256 x  6390     55 x    55 run2   11.087 ms    14528.9 GFLOPS PASS
+  4256 x  6390     55 x    55 run3   11.097 ms    14515.4 GFLOPS PASS
+  4256 x  6390     55 x    55 run4   11.108 ms    14500.6 GFLOPS PASS
+  4256 x  6390     55 x    55 best   11.080 ms    14537.1 GFLOPS | avg   11.094 ms    14519.6 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=5 variant=post shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   22.377 ms    15452.3 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.360 ms    15463.7 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.361 ms    15463.2 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.373 ms    15454.8 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.391 ms    15442.7 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.360 ms    15463.7 GFLOPS | avg   22.372 ms    15455.3 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=5 variant=baseline shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   22.375 ms    15453.6 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.449 ms    15402.9 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.341 ms    15476.7 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.357 ms    15466.1 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.347 ms    15472.7 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.341 ms    15476.7 GFLOPS | avg   22.374 ms    15454.3 GFLOPS  PASS
+K4_WRITEBACK memory=HBM round=5 variant=pre shape=6390 4256 81 81
+  6390 x  4256     81 x    81 run0   22.337 ms    15479.5 GFLOPS PASS
+  6390 x  4256     81 x    81 run1   22.341 ms    15476.7 GFLOPS PASS
+  6390 x  4256     81 x    81 run2   22.321 ms    15491.0 GFLOPS PASS
+  6390 x  4256     81 x    81 run3   22.340 ms    15477.5 GFLOPS PASS
+  6390 x  4256     81 x    81 run4   22.322 ms    15490.5 GFLOPS PASS
+  6390 x  4256     81 x    81 best   22.321 ms    15491.0 GFLOPS | avg   22.332 ms    15483.0 GFLOPS  PASS
+K4_WRITEBACK_DONE 2026-09-13T17:15:10+08:00

@@ -1,0 +1,33 @@
+baseline disassembly SHA256 51ec0e401136c297f843c716ce0cec1bbddca68648817599fa245f1c09bd4582
+gpr_loop disassembly SHA256 70be259655fdab3916b8fed1e0ca845456c152a5311471c9ae6155897d973e24
+gpr_loop: tail 0x4230e0..0x423100; 6 body instructions vs 7; worker arithmetic opcode/operand sequence identical (168 instructions).
+Total instructions 43879 vs 43879; non-worker address/opcode/operand identity=True.
+Common-address changes: 39 positions, 0x4230e4..0x42317c.
+All changes confined to K4 scalar tail / following setup before compute entry 0x423180; every instruction/address elsewhere identical.
+  4230e0: f9408a58 ldr x24, [x18, #272]
+  4230e4: b40000f8 cbz x24, 423100 <roll_worker+0x73c>
+  4230e8: b94001b7 ldr w23, [x13]
+  4230ec: b9000297 str w23, [x20]
+  4230f0: 910011ad add x13, x13, #0x4
+  4230f4: 8b030294 add x20, x20, x3
+  4230f8: f1000718 subs x24, x24, #0x1
+  4230fc: 54ffff61 b.ne 4230e8 <roll_worker+0x724>
+  423100: f9409a54 ldr x20, [x18, #304]
+gpr_bits disassembly SHA256 7b3de4fb283c30e1a4546caa8d602717de49a072e9979e0a8c61d65274a25276
+gpr_bits: tail 0x4230e0..0x423110; 10 body instructions vs 7; worker arithmetic opcode/operand sequence identical (168 instructions).
+Total instructions 43879 vs 43879; non-worker address/opcode/operand identity=True.
+Common-address changes: 1139 positions, 0x422a10..0x42501c.
+  4230e0: f9408a58 ldr x24, [x18, #272]
+  4230e4: b4000178 cbz x24, 423110 <roll_worker+0x74c>
+  4230e8: b94001b7 ldr w23, [x13]
+  4230ec: b9000297 str w23, [x20]
+  4230f0: 36080118 tbz w24, #1, 423110 <roll_worker+0x74c>
+  4230f4: b94005b7 ldr w23, [x13, #4]
+  4230f8: 8b030294 add x20, x20, x3
+  4230fc: b9000297 str w23, [x20]
+  423100: 36000098 tbz w24, #0, 423110 <roll_worker+0x74c>
+  423104: b94009b7 ldr w23, [x13, #8]
+  423108: 8b030294 add x20, x20, x3
+  42310c: b9000297 str w23, [x20]
+  423110: f9409a54 ldr x20, [x18, #304]
+Static linked instruction audit only. Correctness and performance require the separate server tests; layout changes are not a proven timing mechanism.

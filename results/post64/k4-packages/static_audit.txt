@@ -1,0 +1,3 @@
+bits/conv: all four members match fixed source/transformation, unchanged benchmark/script, and stage README.
+bits/conv_nf3: all four members match fixed source/transformation, unchanged benchmark/script, and stage README.
+bits/conv_diag: all four members match fixed source/transformation, unchanged benchmark/script, and stage README.

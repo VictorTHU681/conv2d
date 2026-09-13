@@ -1,0 +1,258 @@
+HOST cn20490 2026-09-13T16:31:22+08:00
+pid 4039182's current affinity list: 37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+PLACEMENT cpu_node=1 hbm_node=17
+Cpus_allowed_list:	37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+Mems_allowed_list:	0-31
+1549045
+policy: default
+preferred node: current
+physcpubind: 37 75 113 151 189 227 265 303 341 379 417 455 493 531 569 607 
+cpubind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+nodebind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 
+preferred: 
+EFFECTIVE_PLACEMENT
+policy: preferred
+preferred node: 17
+physcpubind: 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 
+cpubind: 1 
+nodebind: 1 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 
+preferred: 17 
+build/post64/package-check/upstream/submissions/conv.zip: OK
+build/post64/package-check/upstream/submissions/conv_nf3.zip: OK
+build/post64/package-check/upstream/submissions/conv_diag.zip: OK
+build/post64/package-check/aligned/submissions/conv.zip: OK
+build/post64/package-check/aligned/submissions/conv_nf3.zip: OK
+build/post64/package-check/aligned/submissions/conv_diag.zip: OK
+ARCHIVE_BEGIN variant=upstream archive=conv 2026-09-13T16:31:23+08:00
+bd226f27ce2130f84241985cd0f0c4e9e20dbda0ae74a3b01aa0455dd6a276f9  build/post64/package-check/upstream/submissions/conv.zip
+08400a7659134bf7bee3b14df24fc919537c9fef634d1b580bf66fba0b112357  /tmp/conv-post64-package.GnwEow/upstream/conv/conv/conv2d.c
+[run.sh] host=cn20490 node=1 hbm=17 threads=38
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.28   14272.6024     0.00e+00     PASS
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.76   14453.6066     0.00e+00     PASS
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.07   14548.6519     0.00e+00     PASS
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.26   15532.6657     0.00e+00     PASS
+ARCHIVE_PASS variant=upstream archive=conv
+ARCHIVE_BEGIN variant=upstream archive=conv_nf3 2026-09-13T16:32:02+08:00
+66c4f931b597ada5998fca53924f893cae6fce4c91b9cd3e4682f3ccca9d8ce5  build/post64/package-check/upstream/submissions/conv_nf3.zip
+9a3375076b18e22c6184fd365d520c05d6fb6fa8b9937f5932fe310c8c640ceb  /tmp/conv-post64-package.GnwEow/upstream/conv_nf3/conv/conv2d.c
+[run.sh] host=cn20490 node=1 hbm=17 threads=38
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.24   14388.1879     0.00e+00     PASS
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.72   14550.4140     0.00e+00     PASS
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.06   14562.9223     0.00e+00     PASS
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.31   15497.8818     0.00e+00     PASS
+ARCHIVE_PASS variant=upstream archive=conv_nf3
+ARCHIVE_BEGIN variant=upstream archive=conv_diag 2026-09-13T16:32:42+08:00
+2ad5830af61fc229b3c6dac7a0e8b4cbd00c7dcce38c463c6ed9e91ef37f30f6  build/post64/package-check/upstream/submissions/conv_diag.zip
+0ca75921ff1da21c891448fff0b4720d25eadb9286bf78759dd867dfa4ccb649  /tmp/conv-post64-package.GnwEow/upstream/conv_diag/conv/conv2d.c
+[run-diag] host=cn20490 kernel=5.10.0-285.5.v2403.ky10p.aarch64 date=2026-09-13 16:32:52 gcc=12.3.1
+[run-diag] loadavg=23.42 15.24 13.69 4/5795 4049574
+[run-diag] CPU(s):                             608
+[run-diag] NUMA node(s):                       32
+[run-diag] thp=[always] madvise never
+[run-diag] MemFree: 558460640 kB
+[run-diag] AnonHugePages: 0 kB
+[run-diag] node=1 hbm=17 threads=38 firstcpu=38 numa_free=node 1 free: 27631 MB
+[run-diag] case '4096 6144 39 39 1' start=16:33:05 loadavg=21.57 15.12 13.67 freq_kHz=1549045
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+[conv-diag] env: threads 38 | cpu part 0xd22 | affinity 1 cpus, cpu0=38 | svl 64 B | dczid 0x4 | cntfrq 100000000 | page 4096 | thp [always] madvise never | cpufreq cur 1549045 max 2000000 gov userspace | nprocs 608
+[conv-diag] self-mem: |Rss:              417856 kB |AnonHugePages:    413696 kB
+[conv-diag] call 1 4096x6144 k39x39: region 21.338 ms | thr total min/avg/max 0.007/5.265/10.375 ms | ghz@end min/avg/max 1.549/1.550/1.552 | kern cyc/step: pair 2.15 4x4 2.46
+[conv-diag] call 2 4096x6144 k39x39: region 75.762 ms | thr total min/avg/max 0.003/5.216/11.994 ms | ghz@end min/avg/max 1.540/1.550/1.552 | kern cyc/step: pair 2.13 4x4 2.44
+[conv-diag] probes: ghz@start min/avg/max 1.549/1.550/1.551 | fmopa ns min/avg/max 1.290/1.290/1.290 (= 2.00 cyc @ avg ghz) | bw GB/s read 327.9, st1w 333.0, pstl2keep+st1w 205.4, stnt1w 322.1
+[conv-diag] all-core fmopa burst 15 ms: ns avg/max 1.290/1.293 (= 1.55 GHz if 2 cyc) | ghz after burst min/avg/max 1.549/1.550/1.552 | droop vs start 0.0% | half(19 cores) 1.290 ns ghz 1.551 | quarter(9) 1.290 ns
+  4096 x  6144     39 x    39         5.36   14069.1014     0.00e+00     PASS
+[conv-diag] call 3 4096x6144 k39x39: region 5.353 ms | thr total min/avg/max 5.220/5.241/5.295 ms | ghz@end min/avg/max 1.550/1.551/1.552 | kern cyc/step: pair 2.15 4x4 2.40
+[run-diag] case '6144 4096 41 41 1' start=16:33:08 loadavg=23.85 15.70 13.86 freq_kHz=1549045
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+[conv-diag] env: threads 38 | cpu part 0xd22 | affinity 1 cpus, cpu0=38 | svl 64 B | dczid 0x4 | cntfrq 100000000 | page 4096 | thp [always] madvise never | cpufreq cur 1549045 max 2000000 gov userspace | nprocs 608
+[conv-diag] self-mem: |Rss:              417600 kB |AnonHugePages:    411648 kB
+[conv-diag] call 1 6144x4096 k41x41: region 30.427 ms | thr total min/avg/max 0.007/5.774/11.042 ms | ghz@end min/avg/max 1.550/1.550/1.552 | kern cyc/step: pair 2.17 4x4 2.22
+[conv-diag] call 2 6144x4096 k41x41: region 75.012 ms | thr total min/avg/max 0.003/5.855/12.757 ms | ghz@end min/avg/max 1.549/1.550/1.552 | kern cyc/step: pair 2.17 4x4 2.23
+[conv-diag] probes: ghz@start min/avg/max 1.549/1.550/1.551 | fmopa ns min/avg/max 1.290/1.290/1.290 (= 2.00 cyc @ avg ghz) | bw GB/s read 310.3, st1w 330.9, pstl2keep+st1w 204.1, stnt1w 320.6
+[conv-diag] all-core fmopa burst 15 ms: ns avg/max 1.290/1.293 (= 1.55 GHz if 2 cyc) | ghz after burst min/avg/max 1.549/1.550/1.552 | droop vs start 0.0% | half(19 cores) 1.290 ns ghz 1.550 | quarter(9) 1.290 ns
+  6144 x  4096     41 x    41         5.82   14306.7877     0.00e+00     PASS
+[conv-diag] call 3 6144x4096 k41x41: region 5.814 ms | thr total min/avg/max 5.683/5.706/5.753 ms | ghz@end min/avg/max 1.549/1.551/1.553 | kern cyc/step: pair 2.15 4x4 2.21
+[run-diag] case '4256 6390 55 55 1' start=16:33:11 loadavg=23.85 15.70 13.86 freq_kHz=1549045
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+[conv-diag] env: threads 38 | cpu part 0xd22 | affinity 1 cpus, cpu0=38 | svl 64 B | dczid 0x4 | cntfrq 100000000 | page 4096 | thp [always] madvise never | cpufreq cur 1549045 max 2000000 gov userspace | nprocs 608
+[conv-diag] self-mem: |Rss:              449472 kB |AnonHugePages:    444416 kB
+[conv-diag] call 1 4256x6390 k55x55: region 21.192 ms | thr total min/avg/max 0.402/10.992/17.360 ms | ghz@end min/avg/max 1.537/1.549/1.552 | kern cyc/step: pair 2.09 single 2.09 4x4 2.34
+[conv-diag] call 2 4256x6390 k55x55: region 85.082 ms | thr total min/avg/max 10.180/15.958/22.266 ms | ghz@end min/avg/max 1.549/1.551/1.552 | kern cyc/step: pair 2.08 single 2.10 4x4 2.34
+[conv-diag] probes: ghz@start min/avg/max 1.543/1.550/1.551 | fmopa ns min/avg/max 1.290/1.290/1.290 (= 2.00 cyc @ avg ghz) | bw GB/s read 318.1, st1w 333.8, pstl2keep+st1w 204.0, stnt1w 323.8
+[conv-diag] all-core fmopa burst 15 ms: ns avg/max 1.290/1.295 (= 1.55 GHz if 2 cyc) | ghz after burst min/avg/max 1.549/1.550/1.552 | droop vs start -0.0% | half(19 cores) 1.290 ns ghz 1.551 | quarter(9) 1.290 ns
+  4256 x  6390     55 x    55        11.07   14554.9582     0.00e+00     PASS
+[conv-diag] call 3 4256x6390 k55x55: region 11.062 ms | thr total min/avg/max 10.949/10.964/10.998 ms | ghz@end min/avg/max 1.550/1.552/1.553 | kern cyc/step: pair 2.08 single 2.09 4x4 2.32
+[run-diag] case '6390 4256 81 81 1' start=16:33:15 loadavg=22.74 15.60 13.84 freq_kHz=1549045
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+[conv-diag] env: threads 38 | cpu part 0xd22 | affinity 1 cpus, cpu0=38 | svl 64 B | dczid 0x4 | cntfrq 100000000 | page 4096 | thp [always] madvise never | cpufreq cur 1549045 max 2000000 gov userspace | nprocs 608
+[conv-diag] self-mem: |Rss:              450364 kB |AnonHugePages:    446464 kB
+[conv-diag] call 1 6390x4256 k81x81: region 30.623 ms | thr total min/avg/max 14.811/22.141/26.897 ms | ghz@end min/avg/max 1.495/1.548/1.552 | kern cyc/step: pair 2.09 8x2 2.30
+[conv-diag] call 2 6390x4256 k81x81: region 92.198 ms | thr total min/avg/max 17.929/23.864/30.219 ms | ghz@end min/avg/max 1.540/1.550/1.552 | kern cyc/step: pair 2.09 8x2 2.30
+[conv-diag] probes: ghz@start min/avg/max 1.549/1.550/1.551 | fmopa ns min/avg/max 1.290/1.290/1.290 (= 2.00 cyc @ avg ghz) | bw GB/s read 314.7, st1w 334.2, pstl2keep+st1w 204.7, stnt1w 320.6
+[conv-diag] all-core fmopa burst 15 ms: ns avg/max 1.290/1.292 (= 1.55 GHz if 2 cyc) | ghz after burst min/avg/max 1.549/1.550/1.552 | droop vs start -0.0% | half(19 cores) 1.290 ns ghz 1.550 | quarter(9) 1.290 ns
+  6390 x  4256     81 x    81        22.36   15465.5697     0.00e+00     PASS
+[conv-diag] call 3 6390x4256 k81x81: region 22.353 ms | thr total min/avg/max 22.122/22.174/22.284 ms | ghz@end min/avg/max 1.550/1.551/1.552 | kern cyc/step: pair 2.09 8x2 2.30
+[run-diag] all done 16:33:24 loadavg=27.04 16.75 14.24
+ARCHIVE_PASS variant=upstream archive=conv_diag
+ARCHIVE_BEGIN variant=aligned archive=conv 2026-09-13T16:33:24+08:00
+45d96229392cc2b0f84d27f4199cf888feb76b573b45f811bda2d198daf86862  build/post64/package-check/aligned/submissions/conv.zip
+d542ee52d8a1b3262dabee98f3ef27b6bd174aeba12a0bf4ec86e1862c7e6c67  /tmp/conv-post64-package.GnwEow/aligned/conv/conv/conv2d.c
+[run.sh] host=cn20490 node=1 hbm=17 threads=38
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.28   14271.5051     0.00e+00     PASS
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.75   14463.5622     0.00e+00     PASS
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.08   14534.7321     0.00e+00     PASS
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.26   15533.7305     0.00e+00     PASS
+ARCHIVE_PASS variant=aligned archive=conv
+ARCHIVE_BEGIN variant=aligned archive=conv_nf3 2026-09-13T16:34:04+08:00
+3ad888b1c5e1be4e79c2b239104ad8387fab1a5f639cbbda240a0a6ae85265b6  build/post64/package-check/aligned/submissions/conv_nf3.zip
+b6c31bfa770550dd1e33a74a83859c657a31ac347f5fa28ad31c001a95f4eee5  /tmp/conv-post64-package.GnwEow/aligned/conv_nf3/conv/conv2d.c
+[run.sh] host=cn20490 node=1 hbm=17 threads=38
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.23   14401.7108     0.00e+00     PASS
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.73   14526.6708     0.00e+00     PASS
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.08   14535.0089     0.00e+00     PASS
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.37   15460.2943     0.00e+00     PASS
+ARCHIVE_PASS variant=aligned archive=conv_nf3
+ARCHIVE_BEGIN variant=aligned archive=conv_diag 2026-09-13T16:34:45+08:00
+240928483952a6e69a0446701fdf77c62c1466ac3d4f4816638c7b12d2893490  build/post64/package-check/aligned/submissions/conv_diag.zip
+e7869398805c7ff125ebcce7be0a4e063afa4d7e098230b01e5372a57e05b264  /tmp/conv-post64-package.GnwEow/aligned/conv_diag/conv/conv2d.c
+[run-diag] host=cn20490 kernel=5.10.0-285.5.v2403.ky10p.aarch64 date=2026-09-13 16:34:54 gcc=12.3.1
+[run-diag] loadavg=20.79 17.05 14.55 5/5794 4063129
+[run-diag] CPU(s):                             608
+[run-diag] NUMA node(s):                       32
+[run-diag] thp=[always] madvise never
+[run-diag] MemFree: 558471556 kB
+[run-diag] AnonHugePages: 0 kB
+[run-diag] node=1 hbm=17 threads=38 firstcpu=38 numa_free=node 1 free: 27635 MB
+[run-diag] case '4096 6144 39 39 1' start=16:35:08 loadavg=17.51 16.51 14.41 freq_kHz=1549045
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+[conv-diag] env: threads 38 | cpu part 0xd22 | affinity 1 cpus, cpu0=38 | svl 64 B | dczid 0x4 | cntfrq 100000000 | page 4096 | thp [always] madvise never | cpufreq cur 1549045 max 2000000 gov userspace | nprocs 608
+[conv-diag] self-mem: |Rss:              417860 kB |AnonHugePages:    411648 kB
+[conv-diag] call 1 4096x6144 k39x39: region 15.414 ms | thr total min/avg/max 0.006/5.243/11.107 ms | ghz@end min/avg/max 1.550/1.550/1.552 | kern cyc/step: pair 2.15 4x4 2.45
+[conv-diag] call 2 4096x6144 k39x39: region 77.008 ms | thr total min/avg/max 0.003/5.205/12.416 ms | ghz@end min/avg/max 1.538/1.550/1.552 | kern cyc/step: pair 2.13 4x4 2.44
+[conv-diag] probes: ghz@start min/avg/max 1.549/1.550/1.551 | fmopa ns min/avg/max 1.290/1.290/1.290 (= 2.00 cyc @ avg ghz) | bw GB/s read 324.6, st1w 334.9, pstl2keep+st1w 203.7, stnt1w 322.8
+[conv-diag] all-core fmopa burst 15 ms: ns avg/max 1.290/1.292 (= 1.55 GHz if 2 cyc) | ghz after burst min/avg/max 1.549/1.550/1.552 | droop vs start -0.0% | half(19 cores) 1.290 ns ghz 1.550 | quarter(9) 1.290 ns
+  4096 x  6144     39 x    39         5.32   14160.3676     0.00e+00     PASS
+[conv-diag] call 3 4096x6144 k39x39: region 5.319 ms | thr total min/avg/max 5.208/5.224/5.256 ms | ghz@end min/avg/max 1.540/1.551/1.552 | kern cyc/step: pair 2.14 4x4 2.41
+[run-diag] case '6144 4096 41 41 1' start=16:35:11 loadavg=17.51 16.51 14.41 freq_kHz=1549045
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+[conv-diag] env: threads 38 | cpu part 0xd22 | affinity 1 cpus, cpu0=38 | svl 64 B | dczid 0x4 | cntfrq 100000000 | page 4096 | thp [always] madvise never | cpufreq cur 1549045 max 2000000 gov userspace | nprocs 608
+[conv-diag] self-mem: |Rss:              417616 kB |AnonHugePages:    413696 kB
+[conv-diag] call 1 6144x4096 k41x41: region 14.902 ms | thr total min/avg/max 0.007/5.756/10.820 ms | ghz@end min/avg/max 1.550/1.550/1.552 | kern cyc/step: pair 2.16 4x4 2.22
+[conv-diag] call 2 6144x4096 k41x41: region 78.798 ms | thr total min/avg/max 0.003/5.835/12.899 ms | ghz@end min/avg/max 1.537/1.549/1.552 | kern cyc/step: pair 2.16 4x4 2.26
+[conv-diag] probes: ghz@start min/avg/max 1.549/1.550/1.551 | fmopa ns min/avg/max 1.290/1.290/1.290 (= 2.00 cyc @ avg ghz) | bw GB/s read 326.2, st1w 332.2, pstl2keep+st1w 102.6, stnt1w 324.5
+[conv-diag] all-core fmopa burst 15 ms: ns avg/max 1.290/1.296 (= 1.55 GHz if 2 cyc) | ghz after burst min/avg/max 1.549/1.550/1.552 | droop vs start -0.0% | half(19 cores) 1.290 ns ghz 1.550 | quarter(9) 1.290 ns
+  6144 x  4096     41 x    41         5.82   14304.1570     0.00e+00     PASS
+[conv-diag] call 3 6144x4096 k41x41: region 5.815 ms | thr total min/avg/max 5.675/5.703/5.754 ms | ghz@end min/avg/max 1.496/1.550/1.552 | kern cyc/step: pair 2.14 4x4 2.22
+[run-diag] case '4256 6390 55 55 1' start=16:35:14 loadavg=16.99 16.42 14.39 freq_kHz=1549045
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+[conv-diag] env: threads 38 | cpu part 0xd22 | affinity 1 cpus, cpu0=38 | svl 64 B | dczid 0x4 | cntfrq 100000000 | page 4096 | thp [always] madvise never | cpufreq cur 1549045 max 2000000 gov userspace | nprocs 608
+[conv-diag] self-mem: |Rss:              449472 kB |AnonHugePages:    444416 kB
+[conv-diag] call 1 4256x6390 k55x55: region 21.297 ms | thr total min/avg/max 0.015/10.982/18.232 ms | ghz@end min/avg/max 1.528/1.549/1.552 | kern cyc/step: pair 2.09 single 2.09 4x4 2.34
+[conv-diag] call 2 4256x6390 k55x55: region 84.923 ms | thr total min/avg/max 10.683/16.744/23.066 ms | ghz@end min/avg/max 1.538/1.550/1.552 | kern cyc/step: pair 2.08 single 2.10 4x4 2.33
+[conv-diag] probes: ghz@start min/avg/max 1.549/1.550/1.551 | fmopa ns min/avg/max 1.290/1.290/1.290 (= 2.00 cyc @ avg ghz) | bw GB/s read 318.0, st1w 333.6, pstl2keep+st1w 204.8, stnt1w 320.9
+[conv-diag] all-core fmopa burst 15 ms: ns avg/max 1.290/1.293 (= 1.55 GHz if 2 cyc) | ghz after burst min/avg/max 1.549/1.550/1.552 | droop vs start -0.0% | half(19 cores) 1.290 ns ghz 1.550 | quarter(9) 1.290 ns
+  4256 x  6390     55 x    55        11.05   14572.0498     0.00e+00     PASS
+[conv-diag] call 3 4256x6390 k55x55: region 11.050 ms | thr total min/avg/max 10.943/10.956/10.981 ms | ghz@end min/avg/max 1.550/1.551/1.553 | kern cyc/step: pair 2.08 single 2.09 4x4 2.31
+[run-diag] case '6390 4256 81 81 1' start=16:35:18 loadavg=19.23 16.89 14.56 freq_kHz=1549045
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+[conv-diag] env: threads 38 | cpu part 0xd22 | affinity 1 cpus, cpu0=38 | svl 64 B | dczid 0x4 | cntfrq 100000000 | page 4096 | thp [always] madvise never | cpufreq cur 1549045 max 2000000 gov userspace | nprocs 608
+[conv-diag] self-mem: |Rss:              450372 kB |AnonHugePages:    444416 kB
+[conv-diag] call 1 6390x4256 k81x81: region 30.223 ms | thr total min/avg/max 14.913/22.178/26.787 ms | ghz@end min/avg/max 1.538/1.550/1.552 | kern cyc/step: pair 2.10 8x2 2.34
+[conv-diag] call 2 6390x4256 k81x81: region 97.280 ms | thr total min/avg/max 21.913/28.189/34.868 ms | ghz@end min/avg/max 1.549/1.550/1.552 | kern cyc/step: pair 2.09 8x2 2.36
+[conv-diag] probes: ghz@start min/avg/max 1.549/1.550/1.551 | fmopa ns min/avg/max 1.290/1.290/1.290 (= 2.00 cyc @ avg ghz) | bw GB/s read 320.1, st1w 333.6, pstl2keep+st1w 205.2, stnt1w 319.5
+[conv-diag] all-core fmopa burst 15 ms: ns avg/max 1.291/1.298 (= 1.55 GHz if 2 cyc) | ghz after burst min/avg/max 1.344/1.507/1.550 | droop vs start 2.8% | half(19 cores) 1.290 ns ghz 1.551 | quarter(9) 1.290 ns
+  6390 x  4256     81 x    81        22.38   15452.7404     0.00e+00     PASS
+[conv-diag] call 3 6390x4256 k81x81: region 22.372 ms | thr total min/avg/max 22.167/22.221/22.305 ms | ghz@end min/avg/max 1.550/1.551/1.553 | kern cyc/step: pair 2.09 8x2 2.35
+[run-diag] all done 16:35:27 loadavg=23.38 17.86 14.90
+ARCHIVE_PASS variant=aligned archive=conv_diag
+POST64_PACKAGES_DONE 2026-09-13T16:35:27+08:00

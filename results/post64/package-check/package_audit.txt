@@ -1,0 +1,7 @@
+upstream/conv: exact archive/source identity and four original full-reference checks PASS; max error zero.
+upstream/conv_nf3: exact archive/source identity and four original full-reference checks PASS; max error zero.
+upstream/conv_diag: exact archive/source identity and four original full-reference checks PASS; max error zero.
+aligned/conv: exact archive/source identity and four original full-reference checks PASS; max error zero.
+aligned/conv_nf3: exact archive/source identity and four original full-reference checks PASS; max error zero.
+aligned/conv_diag: exact archive/source identity and four original full-reference checks PASS; max error zero.
+24 original full-reference checks passed. Package timing is not comparative performance evidence; pending source acceptance is separate.

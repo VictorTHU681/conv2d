@@ -1,0 +1,608 @@
+HOST cn20491 2026-09-13T18:33:01+08:00
+pid 2917478's current affinity list: 37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+PLACEMENT cpu_node=1 hbm_node=17
+Cpus_allowed_list:	37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+Mems_allowed_list:	0-31
+1549196
+policy: default
+preferred node: current
+physcpubind: 37 75 113 151 189 227 265 303 341 379 417 455 493 531 569 607 
+cpubind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+nodebind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 
+preferred: 
+EFFECTIVE_PLACEMENT
+policy: preferred
+preferred node: 17
+physcpubind: 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 
+cpubind: 1 
+nodebind: 1 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 
+preferred: 17 
+build/post64/pairf3-unroll/baseline.c: OK
+build/post64/pairf3-unroll/u4.c: OK
+build/post64/pairf3-unroll/bench_conv.c: OK
+2548861ae7e29826e454b4c0b098d682f7f04996222e664cd1ea9bc92dd2e927  build/post64/pairf3-unroll/bench_conv.c
+08400a7659134bf7bee3b14df24fc919537c9fef634d1b580bf66fba0b112357  build/post64/pairf3-unroll/baseline.c
+918de09b3e8bcff98134c9d95f2d5582e3da5e66ff91cc49a2c563f8a9bcd7d3  build/post64/pairf3-unroll/official_baseline
+f88b3f90295fd5ad5a749016343b266535857b53d2588801f65e18e6c7f2d499  build/post64/pairf3-unroll/u4.c
+996695900c8c2585f01481268090fa62c369c1cea5d1dddf8f82d4f10f95cbe0  build/post64/pairf3-unroll/official_u4
+build/post64/pairf3-unroll/official_baseline: OK
+build/post64/pairf3-unroll/official_u4: OK
+PAIRF3_UNROLL_REPEAT memory=DDR round=0 variant=baseline shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.34   14119.4148     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=DDR round=0 variant=u4 shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.31   14185.2551     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=DDR round=0 variant=baseline shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.75   14467.5150     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=DDR round=0 variant=u4 shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.73   14531.7943     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=DDR round=0 variant=baseline shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.12   14490.5270     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=DDR round=0 variant=u4 shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.05   14572.7749     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=DDR round=0 variant=baseline shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.27   15524.0633     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=DDR round=0 variant=u4 shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.34   15475.7411     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=HBM round=0 variant=baseline shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.28   14269.2196     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=HBM round=0 variant=u4 shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.27   14300.2390     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=HBM round=0 variant=baseline shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.74   14512.5869     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=HBM round=0 variant=u4 shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.72   14557.1423     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=HBM round=0 variant=baseline shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.07   14548.1461     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=HBM round=0 variant=u4 shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.03   14603.0225     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=HBM round=0 variant=baseline shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.28   15520.2543     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=HBM round=0 variant=u4 shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.40   15438.7679     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=DDR round=1 variant=u4 shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.30   14210.8241     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=DDR round=1 variant=baseline shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.33   14143.3654     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=DDR round=1 variant=u4 shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.75   14477.1930     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=DDR round=1 variant=baseline shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.77   14435.1822     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=DDR round=1 variant=u4 shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.04   14588.6579     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=DDR round=1 variant=baseline shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.10   14506.1950     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=DDR round=1 variant=u4 shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.34   15478.1041     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=DDR round=1 variant=baseline shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.28   15517.9038     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=HBM round=1 variant=u4 shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.29   14260.1490     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=HBM round=1 variant=baseline shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.29   14237.8182     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=HBM round=1 variant=u4 shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.72   14560.1457     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=HBM round=1 variant=baseline shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.76   14447.9564     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=HBM round=1 variant=u4 shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.03   14604.7327     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=HBM round=1 variant=baseline shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.07   14549.1727     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=HBM round=1 variant=u4 shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.30   15507.5502     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=HBM round=1 variant=baseline shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.35   15472.3608     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=DDR round=2 variant=baseline shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.32   14163.9044     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=DDR round=2 variant=u4 shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.30   14210.7806     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=DDR round=2 variant=baseline shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.76   14457.4876     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=DDR round=2 variant=u4 shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.74   14513.6299     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=DDR round=2 variant=baseline shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.11   14498.0495     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=DDR round=2 variant=u4 shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.05   14570.4042     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=DDR round=2 variant=baseline shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.33   15481.2669     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=DDR round=2 variant=u4 shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.26   15533.5643     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=HBM round=2 variant=baseline shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.33   14149.7053     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=HBM round=2 variant=u4 shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.29   14238.3877     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=HBM round=2 variant=baseline shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.73   14524.3981     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=HBM round=2 variant=u4 shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.71   14571.9527     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=HBM round=2 variant=baseline shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.08   14539.3858     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=HBM round=2 variant=u4 shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.02   14618.3820     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=HBM round=2 variant=baseline shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.26   15530.8582     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=HBM round=2 variant=u4 shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.35   15468.9203     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=DDR round=3 variant=u4 shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.32   14177.0050     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=DDR round=3 variant=baseline shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.30   14214.4742     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=DDR round=3 variant=u4 shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.74   14504.9948     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=DDR round=3 variant=baseline shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.76   14443.5335     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=DDR round=3 variant=u4 shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.04   14589.1888     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=DDR round=3 variant=baseline shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.09   14520.7678     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=DDR round=3 variant=u4 shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.33   15481.6464     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=DDR round=3 variant=baseline shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.33   15487.0037     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=HBM round=3 variant=u4 shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.29   14246.2933     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=HBM round=3 variant=baseline shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.28   14271.3306     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=HBM round=3 variant=u4 shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.71   14587.5223     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=HBM round=3 variant=baseline shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.73   14516.1146     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=HBM round=3 variant=u4 shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.03   14609.5245     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=HBM round=3 variant=baseline shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.08   14531.1319     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=HBM round=3 variant=u4 shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.34   15480.6192     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=HBM round=3 variant=baseline shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.33   15487.6973     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=DDR round=4 variant=baseline shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.30   14213.1323     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=DDR round=4 variant=u4 shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.30   14208.8509     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=DDR round=4 variant=baseline shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.77   14422.3005     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=DDR round=4 variant=u4 shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.73   14515.1576     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=DDR round=4 variant=baseline shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.10   14508.0935     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=DDR round=4 variant=u4 shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.05   14570.5381     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=DDR round=4 variant=baseline shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.37   15459.5952     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=DDR round=4 variant=u4 shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.31   15499.5997     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=HBM round=4 variant=baseline shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.29   14239.6995     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=HBM round=4 variant=u4 shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.28   14286.8208     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=HBM round=4 variant=baseline shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.74   14504.4635     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=HBM round=4 variant=u4 shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.71   14569.7790     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=HBM round=4 variant=baseline shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.07   14554.1643     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=HBM round=4 variant=u4 shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.03   14598.3141     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=HBM round=4 variant=baseline shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.39   15445.9227     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=HBM round=4 variant=u4 shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.34   15476.0316     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=DDR round=5 variant=u4 shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.31   14203.8177     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=DDR round=5 variant=baseline shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.32   14172.2816     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=DDR round=5 variant=u4 shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.74   14494.7385     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=DDR round=5 variant=baseline shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.76   14440.5155     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=DDR round=5 variant=u4 shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.05   14575.0073     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=DDR round=5 variant=baseline shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.12   14491.5553     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=DDR round=5 variant=u4 shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.31   15495.0778     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=DDR round=5 variant=baseline shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.37   15458.0152     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=HBM round=5 variant=u4 shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.27   14310.2989     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=HBM round=5 variant=baseline shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.26   14316.8555     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=HBM round=5 variant=u4 shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.72   14547.5848     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=HBM round=5 variant=baseline shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         5.72   14541.8962     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=HBM round=5 variant=u4 shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.02   14612.3708     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=HBM round=5 variant=baseline shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.07   14552.6683     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=HBM round=5 variant=u4 shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.38   15451.5231     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT memory=HBM round=5 variant=baseline shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.22   15562.4705     0.00e+00     PASS
+PAIRF3_UNROLL_REPEAT_DONE 2026-09-13T18:40:10+08:00

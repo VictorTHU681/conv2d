@@ -1,0 +1,4 @@
+gpr_loop/conv: exact archive/source identity and four original full-reference checks PASS; max error zero.
+gpr_loop/conv_nf3: exact archive/source identity and four original full-reference checks PASS; max error zero.
+gpr_loop/conv_diag: exact archive/source identity and four original full-reference checks PASS; max error zero.
+12 original full-reference checks passed. Package timing is not comparative performance evidence; correctness does not imply performance acceptance; the candidate was not adopted.

@@ -1,0 +1,19 @@
+baseline disassembly SHA256 e04832766fb36883695ddaff7b92ca71c0bceb73dc5147306784a698db7ee01b
+bits disassembly SHA256 725d8d20fa147cb327dd4366a1e31ee13425d9c81599e31bd17147b3e6fd43a3
+bits: tail 0x422f60..0x422f94; 11 body instructions vs 7; worker arithmetic opcode/operand sequence identical (168 instructions).
+Total instructions 43831 vs 43831; non-worker address/opcode/operand identity=True.
+  422f60: f9408a58 ldr x24, [x18, #272]
+  422f64: b4000198 cbz x24, 422f94 <roll_worker+0x750>
+  422f68: 2598e024 ptrue p4.s, vl1
+  422f6c: 8540c1a0 ld1rw {z0.s}, p0/z, [x13]
+  422f70: e540f280 st1w {z0.s}, p4, [x20]
+  422f74: 36080118 tbz w24, #1, 422f94 <roll_worker+0x750>
+  422f78: 8541c1a0 ld1rw {z0.s}, p0/z, [x13, #4]
+  422f7c: 8b030294 add x20, x20, x3
+  422f80: e540f280 st1w {z0.s}, p4, [x20]
+  422f84: 36000098 tbz w24, #0, 422f94 <roll_worker+0x750>
+  422f88: 8542c1a0 ld1rw {z0.s}, p0/z, [x13, #8]
+  422f8c: 8b030294 add x20, x20, x3
+  422f90: e540f280 st1w {z0.s}, p4, [x20]
+  422f94: f9409a54 ldr x20, [x18, #304]
+Static linked instruction audit only. Correctness and performance require the separate server tests; layout changes are not a proven timing mechanism.

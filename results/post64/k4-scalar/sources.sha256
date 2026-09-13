@@ -1,0 +1,4 @@
+08400a7659134bf7bee3b14df24fc919537c9fef634d1b580bf66fba0b112357  build/post64/k4-scalar/baseline.c
+14a054df8ea8f9c8a901a199a5bfef6f1317f6db7eeb17f6ab2f84ad31d30830  build/post64/k4-scalar/direct.c
+f79dadf140de544ebe6dcd3477868a70bba8d2ebdd8d77f331077aa7d3973c38  build/post64/k4-scalar/bits.c
+e5e52c8d666584cc49ca6f11162be4868b240e2cc99a3c3ef0a2f8ac292c65ad  build/post64/k4-scalar/fbench.c

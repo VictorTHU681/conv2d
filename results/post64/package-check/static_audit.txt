@@ -1,0 +1,6 @@
+upstream/conv: all four members match intended source, unchanged benchmark/script, and stage README.
+upstream/conv_nf3: all four members match intended source, unchanged benchmark/script, and stage README.
+upstream/conv_diag: all four members match intended source, unchanged benchmark/script, and stage README.
+aligned/conv: all four members match intended source, unchanged benchmark/script, and stage README.
+aligned/conv_nf3: all four members match intended source, unchanged benchmark/script, and stage README.
+aligned/conv_diag: all four members match intended source, unchanged benchmark/script, and stage README.

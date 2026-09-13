@@ -1,0 +1,7 @@
+d6974ac64ee391bfcc8c1ebff5b414cae7c32f2691d43e9c0c0c667be9290f31  build/post64/k4-indexed-store/bench_all  PASS downloaded post-run binary matches run log
+994becee0a1939a62b84d92a005299d182fe91466ace3aafd1df0df1077c5473  build/post64/k4-indexed-store/bench_baseline  PASS downloaded post-run binary matches run log
+4fc5364db61a53a08fc1ac55f68d5da19dcbc6dee063b736e7a045fa47cb4a63  build/post64/k4-indexed-store/bench_full  PASS downloaded post-run binary matches run log
+da38559cb82c2bc6b55df8757f871e5290f2ab933bdf1806e185584ebaa2f8eb  build/post64/k4-indexed-store/guard_all  PASS downloaded post-run binary matches run log
+92834f677231f22c824c362c16dab54a72e76ae68385e8c97d9fa1499110715c  build/post64/k4-indexed-store/guard_full  PASS downloaded post-run binary matches run log
+3017ace38124a9f0f56caa8e8f6ce3e7b043261b8f05df9dfa0c13f8610ed290  build/post64/k4-indexed-store/state_all  PASS downloaded post-run binary matches run log
+1bcef8c074f1ffbc39f95564239576513abf095eab4654a7e8960c62b835f3b7  build/post64/k4-indexed-store/state_full  PASS downloaded post-run binary matches run log

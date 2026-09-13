@@ -1,0 +1,1 @@
+All three verified GPR-loop archives reproduced byte-for-byte by the pinned generator. Root submissions and source remain unchanged.

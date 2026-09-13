@@ -1,0 +1,7 @@
+baseline disassembly SHA256 b876242f4bd10e1d02176d2457f29557a5dbd4f18450732f37551ab4b5dcfd64
+u4 disassembly SHA256 6e6d735e894581811b4f674889c730df247266368d3c1b7ce77c7d9f087826ec
+PASS: overlap and remainder each preserve the original 19-instruction F3 step; full block has four ordered copies of five loads/four FMOPA/six FMLA with exact offsets.
+PASS: grouped coefficient cursor updates, four input updates, block and remainder backedges, zero-block and zero-remainder exits match intended targets.
+PASS: deleting the four added full-block arithmetic copies leaves the original worker arithmetic sequence; source outside k16pairf3 byte-identical.
+Full loop entry 0x423db0, 69 instructions vs original 84 per four steps; setup/remainder excluded. Original suffix entry 0x423da0.
+Linked addresses move; no claim of non-target machine-code identity or proof of all dynamic accesses.

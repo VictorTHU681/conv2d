@@ -1,0 +1,3 @@
+OBJECT: 52 defined symbols have identical addresses/sizes. Changed: {'_IO_stdin_used': ((4372704, 4), (4373088, 4)), '__FRAME_END__': ((4377168, 0), (4377552, 0))}
+FUNC: 39 defined symbols have identical addresses/sizes. Changed: {'_fini': ((4372672, 0), (4373056, 0))}
+Read-only bytes identical; ABI/static-state objects and all computational function entries/sizes unchanged. Compiler function ranges do not cover the appended island. This does not make all non-worker instructions identical or remove dynamic performance uncertainty.

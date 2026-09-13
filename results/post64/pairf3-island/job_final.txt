@@ -1,0 +1,93 @@
+Basic Details:
+    jobId                               	1593234                                           	
+    name                                	pairf3_island                                     	
+    state                               	SUCCEEDED                                         	
+    user                                	niujiayin                                         	
+    queue                               	q_pacopt                                          	
+    account                             	common                                            	
+    cmd                                 	bash jobs/post64_pairf3_island_job.sh             	
+    submitNode                          	login07                                           	
+    createTime                          	2026/09/13 18:46:46                               	
+    startTime                           	2026/09/13 18:46:47                               	
+    lastModifiedTime                    	-                                                 	
+    endTime                             	2026/09/13 19:00:36                               	
+    currentOperation                    	EMPTY                                             	
+    jobRequeueMaxCnt                    	0                                                 	
+    jobRequeueCurrentCnt                	0                                                 	
+    mpiType                             	DEFAULT                                           	
+    interactionMode                     	DEFAULT                                           	
+    assistJob                           	DEFAULT                                           	
+    x11ForwardEnabled                   	false                                             	
+    description                         	-                                                 	
+    transferType                        	LOCAL                                             	
+    forwardTime                         	-                                                 	
+    recallTime                          	-                                                 	
+    autoResize                          	false                                             	
+Scheduling Details:
+    exclusive                           	true                                              	
+    priority                            	1                                                 	
+    adminPriority                       	-1                                                	
+    expectSchedTime                     	-                                                 	
+    startTimeEstimated                  	-                                                 	
+    reserveRes                          	-                                                 	
+    backfillRes                         	-                                                 	
+    backfilledRes                       	-                                                 	
+Resource Details:
+    reqJobLicense                       	-
+    allocJobLicense                     	-
+    resGroup[0]:
+        replica                         	1                                                 	
+        labels                          	queue_q_pacopt aarch64                            	
+        preferNodes                     	cn20491                                           	
+        reqNodeSelectPolicy             	-                                                 	
+        effNodeSelectPolicy             	SEQUENCE                                          	
+        reqCPU                          	38                                                	
+        reqMem                          	4096                                              	
+        reqGPU                          	gpu:0
+        reqNPU                          	0
+        allocCPU                        	38                                                	
+        allocMem                        	4096                                              	
+        allocGPU                        	gpu:0
+        allocNPU                        	0
+        reqTaskLicense                  	-
+        allocTaskLicense                	-
+    allocAffinity                       	
+        execNode             resGroup resIndex hwThreads        gpuIds           npuIds          
+        cn20491              0        0/1      -                -                -               
+Runtime Details:
+    execNodes                           	cn20491                                           	
+    execNodeCnt                         	1                                                 	
+    execPath                            	/home/share/niujiayin/conv2d-v55-20260912         	
+    resizeCmd                           	-                                                 	
+    timeout                             	1800                                              	
+    stderrRedirectPath                  	-                                                 	
+    stderrRedirectType                  	append                                            	
+    stdoutRedirectPath                  	/home/share/niujiayin/conv2d-v55-20260912/results/post64/pairf3-island/production.log	
+    stdoutRedirectType                  	override                                          	
+    totalUtime                          	23721                                             	
+    totalStime                          	47                                                	
+    totalMaxMemSwp                      	413                                               	
+    totalMaxMem                         	413                                               	
+    hostPreHookRunTime                  	0                                                 	
+    preHookRunTime                      	0                                                 	
+    jobWallclockDuration                	823                                               	
+    postHookRunTime                     	0                                                 	
+    hostPostHookRunTime                 	0                                                 	
+    jobSstoppedTime                     	0                                                 	
+    coreHours                           	500384                                            	
+    jobExitCode                         	0                                                 	
+    systemExitCode                      	0                                                 	
+    exitMessage                         	Job execution succeeded                           	
+    stderrRedirectOutputPath            	-                                                 	
+    stdoutRedirectOutputPath            	/home/share/niujiayin/conv2d-v55-20260912/results/post64/pairf3-island/production.log	
+    nodeUsages                          	
+        execNode             resGroup resIndex utime    stime    wallclockDuration    sstoppedTime     cpuUtil          gpuUtil          npuUtil          memResource                     
+        cn20491              0        0/1      23721    47       823                  0                2889/3708        -                -                0/1/0/0/446/446/278/0           
+    nodePids                            	
+        execNode             pids    
+        cn20491              -       
+    traceMessages                       	2026/09/13 18:46:46    :    [JOB_ADD] Job 1593234 is submitted by niujiayin, job state is PENDING.	
+                                        	2026/09/13 18:46:46    :    [JOB_START] Job 1593234 start message has been sent.	
+                                        	2026/09/13 18:46:46    :    [JOB_START_ACK] Job 1593234 start message has been received by agent cn20491.	
+                                        	2026/09/13 18:46:47    :    [JOB_EXECUTION] Job 1593234 state is from PENDING to RUNNING, execution path: /home/share/niujiayin/conv2d-v55-20260912.	
+                                        	2026/09/13 19:00:36    :    [JOB_FINISH] Job 1593234 state is from RUNNING to SUCCEEDED.	

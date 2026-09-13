@@ -1,0 +1,4 @@
+bits/conv: exact archive/source identity and four original full-reference checks PASS; max error zero.
+bits/conv_nf3: exact archive/source identity and four original full-reference checks PASS; max error zero.
+bits/conv_diag: exact archive/source identity and four original full-reference checks PASS; max error zero.
+12 original full-reference checks passed. Package timing is not comparative performance evidence; pending source acceptance is separate.

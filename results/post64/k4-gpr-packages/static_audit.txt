@@ -1,0 +1,3 @@
+gpr_loop/conv: all four members match fixed source/transformation, unchanged benchmark/script, and stage README.
+gpr_loop/conv_nf3: all four members match fixed source/transformation, unchanged benchmark/script, and stage README.
+gpr_loop/conv_diag: all four members match fixed source/transformation, unchanged benchmark/script, and stage README.

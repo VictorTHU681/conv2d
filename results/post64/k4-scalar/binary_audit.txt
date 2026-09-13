@@ -1,0 +1,7 @@
+994becee0a1939a62b84d92a005299d182fe91466ace3aafd1df0df1077c5473  build/post64/k4-scalar/bench_baseline  PASS downloaded post-run binary matches run log
+dca4038fd325e7ce1bc386f7db5a460c59d4b94eafec083a61ecf70bf181e37f  build/post64/k4-scalar/bench_bits  PASS downloaded post-run binary matches run log
+c55dda4ab66273dab7779471da89aeac00a4e57c7522f920e5fac54a732b8596  build/post64/k4-scalar/bench_direct  PASS downloaded post-run binary matches run log
+23721ba4079764ee549b25b7eb6976a9417f0dcd6ec1117a9b3a429d12993c79  build/post64/k4-scalar/guard_bits  PASS downloaded post-run binary matches run log
+bb8742e7f1e096d7db162869165270b03c4fb88fc1ddea160c80ae7fe1898282  build/post64/k4-scalar/guard_direct  PASS downloaded post-run binary matches run log
+a5ac804b5ef490689911c6089d525a738cbc95e2c36266bb2928fde1e228dc69  build/post64/k4-scalar/state_bits  PASS downloaded post-run binary matches run log
+760e9c89e9e2158831d406b06962004fd719d1d91d765480a0a28defa2dd50a7  build/post64/k4-scalar/state_direct  PASS downloaded post-run binary matches run log

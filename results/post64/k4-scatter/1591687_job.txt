@@ -1,0 +1,93 @@
+Basic Details:
+    jobId                               	1591687                                           	
+    name                                	k4_scatter                                        	
+    state                               	SUCCEEDED                                         	
+    user                                	niujiayin                                         	
+    queue                               	q_pacopt                                          	
+    account                             	common                                            	
+    cmd                                 	bash jobs/post64_k4_scatter_job.sh                	
+    submitNode                          	login07                                           	
+    createTime                          	2026/09/13 16:53:51                               	
+    startTime                           	2026/09/13 16:53:51                               	
+    lastModifiedTime                    	-                                                 	
+    endTime                             	2026/09/13 16:58:55                               	
+    currentOperation                    	EMPTY                                             	
+    jobRequeueMaxCnt                    	0                                                 	
+    jobRequeueCurrentCnt                	0                                                 	
+    mpiType                             	DEFAULT                                           	
+    interactionMode                     	DEFAULT                                           	
+    assistJob                           	DEFAULT                                           	
+    x11ForwardEnabled                   	false                                             	
+    description                         	-                                                 	
+    transferType                        	LOCAL                                             	
+    forwardTime                         	-                                                 	
+    recallTime                          	-                                                 	
+    autoResize                          	false                                             	
+Scheduling Details:
+    exclusive                           	true                                              	
+    priority                            	1                                                 	
+    adminPriority                       	-1                                                	
+    expectSchedTime                     	-                                                 	
+    startTimeEstimated                  	-                                                 	
+    reserveRes                          	-                                                 	
+    backfillRes                         	-                                                 	
+    backfilledRes                       	-                                                 	
+Resource Details:
+    reqJobLicense                       	-
+    allocJobLicense                     	-
+    resGroup[0]:
+        replica                         	1                                                 	
+        labels                          	queue_q_pacopt aarch64                            	
+        preferNodes                     	cn20491                                           	
+        reqNodeSelectPolicy             	-                                                 	
+        effNodeSelectPolicy             	SEQUENCE                                          	
+        reqCPU                          	38                                                	
+        reqMem                          	4096                                              	
+        reqGPU                          	gpu:0
+        reqNPU                          	0
+        allocCPU                        	38                                                	
+        allocMem                        	4096                                              	
+        allocGPU                        	gpu:0
+        allocNPU                        	0
+        reqTaskLicense                  	-
+        allocTaskLicense                	-
+    allocAffinity                       	
+        execNode             resGroup resIndex hwThreads        gpuIds           npuIds          
+        cn20491              0        0/1      -                -                -               
+Runtime Details:
+    execNodes                           	cn20491                                           	
+    execNodeCnt                         	1                                                 	
+    execPath                            	/home/share/niujiayin/conv2d-v55-20260912         	
+    resizeCmd                           	-                                                 	
+    timeout                             	1800                                              	
+    stderrRedirectPath                  	-                                                 	
+    stderrRedirectType                  	append                                            	
+    stdoutRedirectPath                  	/home/share/niujiayin/conv2d-v55-20260912/results/post64/k4-scatter/production.log	
+    stdoutRedirectType                  	override                                          	
+    totalUtime                          	2342                                              	
+    totalStime                          	51                                                	
+    totalMaxMemSwp                      	93                                                	
+    totalMaxMem                         	93                                                	
+    hostPreHookRunTime                  	0                                                 	
+    preHookRunTime                      	0                                                 	
+    jobWallclockDuration                	302                                               	
+    postHookRunTime                     	0                                                 	
+    hostPostHookRunTime                 	0                                                 	
+    jobSstoppedTime                     	0                                                 	
+    coreHours                           	183616                                            	
+    jobExitCode                         	0                                                 	
+    systemExitCode                      	0                                                 	
+    exitMessage                         	Job execution succeeded                           	
+    stderrRedirectOutputPath            	-                                                 	
+    stdoutRedirectOutputPath            	/home/share/niujiayin/conv2d-v55-20260912/results/post64/k4-scatter/production.log	
+    nodeUsages                          	
+        execNode             resGroup resIndex utime    stime    wallclockDuration    sstoppedTime     cpuUtil          gpuUtil          npuUtil          memResource                     
+        cn20491              0        0/1      2342     51       302                  0                792/2028         -                -                0/2/0/0/348/348/75/0            
+    nodePids                            	
+        execNode             pids    
+        cn20491              -       
+    traceMessages                       	2026/09/13 16:53:51    :    [JOB_ADD] Job 1591687 is submitted by niujiayin, job state is PENDING.	
+                                        	2026/09/13 16:53:51    :    [JOB_START] Job 1591687 start message has been sent.	
+                                        	2026/09/13 16:53:51    :    [JOB_START_ACK] Job 1591687 start message has been received by agent cn20491.	
+                                        	2026/09/13 16:53:51    :    [JOB_EXECUTION] Job 1591687 state is from PENDING to RUNNING, execution path: /home/share/niujiayin/conv2d-v55-20260912.	
+                                        	2026/09/13 16:58:55    :    [JOB_FINISH] Job 1591687 state is from RUNNING to SUCCEEDED.	

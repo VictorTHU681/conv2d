@@ -1,0 +1,6 @@
+baseline disassembly SHA256 d727cde9f5a87e66a44c2a7ec610ecfc5982f2f56335508bb25acf0da9655be5
+compact disassembly SHA256 de28bc7b7c745be0ad11c8df5d86a3ee1d9a79809e4620d00f356ba1e97bf868
+PASS: two actual F3 compute blocks preserve five loads, four FMOPA, six FMLA and other cursor updates; only step cursor stride changes 16 -> 12 bytes.
+PASS: final F3 loop backedge returns to its first load; exit skips four-byte private row padding before existing coefficient-table wrap.
+PASS: all 168 worker FMOPA/FMLA operands and order identical; F4 macro/function source byte-identical.
+Linked addresses and compiler-generated packing/preparation code change. This is not an all-instruction identity proof or a dynamic ownership proof.

@@ -1,0 +1,74 @@
+--- upstream/conv2d.c
++++ indexed-all/conv2d.c
+@@ -2374,7 +2374,7 @@
+     A.ovn = A.it - 1 < A.ncp_full ? A.it - 1 : A.ncp_full;         // 穿插的整块数 ≤ 外步数-1（纯步循环 ≥ 1）
+     if (A.ovn < 0) A.ovn = 0;
+     A.ovr = A.ncp_full - A.ovn;
+-    A.TSB = TSB;
++    A.TSB = TSB / 4;
+     A.n2 = TSB * ((sh + 0) & 3) + 4 * ((sh + 0) >> 2);             // 子步 i 的平面起点偏移（相对槽基址）
+     A.e2 = TSB * ((sh + 1) & 3) + 4 * ((sh + 1) >> 2);
+     A.T  = TSB * ((sh + 2) & 3) + 4 * ((sh + 2) >> 2);
+@@ -2382,7 +2382,7 @@
+     roll_first_planes(P->ring, P->in_row, P->KW + 255, sh, 4, TSB / 4);
+     asm volatile(
+         LOAD_ARGS
+-        "ldr x3, [%[A], #200]\n\t"      // TSB（覆盖 bB）
++        "ldr x3, [%[A], #200]\n\t"      // TSB/4，SVE word-index stride（覆盖 bB）
+         "ldr x7, [%[A], #136]\n\t"      // it = steps4/4
+         "fmov z31.s, #0.0\n\t"
+         // 序言：行 0 → 槽 0
+@@ -2411,8 +2411,12 @@
+         "ldr x24, [%[A], #176]\n\t"
+         "whilelo p4.s, xzr, x24\n\t"
+         "ld4w {z0.s, z1.s, z2.s, z3.s}, p4/z, [x13]\n\t"
+-        "st1w {z0.s}, p0, [x20]\n\t" "add x23, x20, x3\n\t" "st1w {z1.s}, p0, [x23]\n\t"
+-        "add x23, x23, x3\n\t" "st1w {z2.s}, p0, [x23]\n\t" "add x23, x23, x3\n\t" "st1w {z3.s}, p0, [x23]\n\t"
++        "st1w {z0.s}, p0, [x20]\n\t"
++        "st1w {z1.s}, p0, [x20, x3, lsl #2]\n\t"
++        "lsl x23, x3, #1\n\t"
++        "st1w {z2.s}, p0, [x20, x23, lsl #2]\n\t"
++        "add x23, x23, x3\n\t"
++        "st1w {z3.s}, p0, [x20, x23, lsl #2]\n\t"
+         "add x13, x13, x24, lsl #4\n\t"
+         "add x20, x20, x24, lsl #2\n\t"
+         "ldr x24, [%[A], #272]\n\t"
+@@ -2422,7 +2426,7 @@
+         "ld1rw {z0.s}, p0/z, [x13]\n\t"
+         "st1w {z0.s}, p4, [x20]\n\t"
+         "add x13, x13, #4\n\t"
+-        "add x20, x20, x3\n\t"
++        "add x20, x20, x3, lsl #2\n\t"
+         "subs x24, x24, #1\n\t"
+         "b.ne 71b\n\t"
+         "72:\n\t"
+@@ -2433,8 +2437,12 @@
+         "add x24, x17, x12, lsl #6\n\t"
+         "63:\n\t"
+         "ld4w {z0.s, z1.s, z2.s, z3.s}, p0/z, [x13]\n\t"
+-        "st1w {z0.s}, p0, [x24]\n\t" "add x23, x24, x3\n\t" "st1w {z1.s}, p0, [x23]\n\t"
+-        "add x23, x23, x3\n\t" "st1w {z2.s}, p0, [x23]\n\t" "add x23, x23, x3\n\t" "st1w {z3.s}, p0, [x23]\n\t"
++        "st1w {z0.s}, p0, [x24]\n\t"
++        "st1w {z1.s}, p0, [x24, x3, lsl #2]\n\t"
++        "lsl x23, x3, #1\n\t"
++        "st1w {z2.s}, p0, [x24, x23, lsl #2]\n\t"
++        "add x23, x23, x3\n\t"
++        "st1w {z3.s}, p0, [x24, x23, lsl #2]\n\t"
+         "add x13, x13, #256\n\t" "add x24, x24, #64\n\t"
+         "subs x20, x20, #1\n\t" "b.ne 63b\n\t"
+         "64:\n\t"
+@@ -2462,8 +2470,12 @@
+         "add x2, x2, #256\n\t"
+         "prfm pldl2keep, [x21]\n\t" "prfm pldl2keep, [x21, #64]\n\t" "prfm pldl2keep, [x21, #128]\n\t" "prfm pldl2keep, [x21, #192]\n\t"
+         "ld4w {z25.s, z26.s, z27.s, z28.s}, p0/z, [x13]\n\t"
+-        "st1w {z25.s}, p0, [x12]\n\t" "add x24, x12, x3\n\t" "st1w {z26.s}, p0, [x24]\n\t"
+-        "add x24, x24, x3\n\t" "st1w {z27.s}, p0, [x24]\n\t" "add x24, x24, x3\n\t" "st1w {z28.s}, p0, [x24]\n\t"
++        "st1w {z25.s}, p0, [x12]\n\t"
++        "st1w {z26.s}, p0, [x12, x3, lsl #2]\n\t"
++        "lsl x24, x3, #1\n\t"
++        "st1w {z27.s}, p0, [x12, x24, lsl #2]\n\t"
++        "add x24, x24, x3\n\t"
++        "st1w {z28.s}, p0, [x12, x24, lsl #2]\n\t"
+         "add x13, x13, #256\n\t" "add x12, x12, #64\n\t" "add x21, x21, #256\n\t"
+         "subs x20, x20, #1\n\t"
+         "b.ne 61b\n\t"

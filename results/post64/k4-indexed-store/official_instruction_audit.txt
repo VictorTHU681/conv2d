@@ -1,0 +1,7 @@
+baseline disassembly SHA256 a449f5b1f330ea4e2a7ab300effa4544476e95b7af62a28a85d325de398e2b1e
+all disassembly SHA256 18d39357a9988fce2f59ddeb1677c32dae9fa4567db4c939eff4aef3eb85e202
+all: copy z25..z28, base x12, float index x24, starts at 0x4230b8: four stores + two integer index operations.
+all: copy z0..z3, base x20, float index x23, starts at 0x422f3c: four stores + two integer index operations.
+all: copy z0..z3, base x24, float index x23, starts at 0x422f98: four stores + two integer index operations.
+all: all FMOPA/FMLA and LD4W words/operands retain their order. Remaining byte-address increments are scaled. Non-worker address/instruction identity=True.
+The pinned generator separately converts A.TSB to a float stride while retaining C-side byte offsets. This linked audit does not prove every compiler-generated address or all dynamic accesses; state/guard and original benchmark checks remain necessary.

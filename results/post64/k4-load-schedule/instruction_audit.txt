@@ -1,0 +1,7 @@
+baseline disassembly SHA256 5c0a4e2f0df7be2b7279bb8347c05d35083f255b6bc96065ba01c9645151aa1e
+bfirst disassembly SHA256 d05bc62e89ed4bb4d0b790d71073257093884661e069e06773365164bbaeac8a
+bfirst: all 11 K4_STEP blocks match exact load permutation; 55 changed positions inside those blocks; all other linked instructions and addresses identical.
+interleave disassembly SHA256 8f5d9e173b57f804ed8635e5f468390a151937d06ffef5416beb49f26e3401ee
+interleave: all 11 K4_STEP blocks match exact load permutation; 77 changed positions inside those blocks; all other linked instructions and addresses identical.
+K4_STEP starts: 0x423180, 0x4231a4, 0x4231c8, 0x4231ec, 0x423270, 0x423294, 0x4232b8, 0x4232dc, 0x423324, 0x423350, 0x42337c
+All original operands and instruction counts preserved; all FMOPA/FMLA word/operand ordering preserved. Static scheduling proof is not a throughput or memory-safety test.

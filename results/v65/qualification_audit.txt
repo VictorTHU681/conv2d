@@ -1,0 +1,4 @@
+conv.zip: verified original archive 45530f59d287611880c5bcf7b76adb8533d276f6a672e07ba4f32e211b1d9a09; only conv/README.md changed; all three program members byte-identical.
+conv_nf3.zip: verified original archive 36983fca2ff15b12928eff93a01ec1f361d7305dfd5dda61e52b96c478eaf5b4; only conv/README.md changed; all three program members byte-identical.
+conv_diag.zip: verified original archive 4bec332175374b85a31ab31f5372d554971b5b94569cc08c494bfb37ebee476a; only conv/README.md changed; all three program members byte-identical.
+Second packaging run reproduced all three complete ZIP SHA-256 values.
