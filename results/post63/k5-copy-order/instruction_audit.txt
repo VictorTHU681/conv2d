@@ -1,0 +1,10 @@
+baseline disassembly SHA256 9f230946f741d8988df41cf8d6169df206ff205bd6e892f4d5dc3206f3e040a4
+early disassembly SHA256 1a7501c7cc965726677f03501b8699f507e7948e214d5a03d8c2e9492d4bbb83
+early: all 43727 instruction addresses match; 35 changed positions exclusively inside K5, same opcode/operand multiset. All remaining instructions match.
+early: all 32 K5 FMOPA instructions retain identical opcode/operand sequence; addresses within the permuted loop can move.
+early: changed region 0x4221f0..0x422278.
+spread disassembly SHA256 1ac2747a7afead28d9b54b936f3e33a2bb59eecb7113cf96e2ffb414ff440139
+spread: all 43727 instruction addresses match; 40 changed positions exclusively inside K5, same opcode/operand multiset. All remaining instructions match.
+spread: all 32 K5 FMOPA instructions retain identical opcode/operand sequence; addresses within the permuted loop can move.
+spread: changed region 0x4221f0..0x42228c.
+This proves linked instruction identity/order properties, not absence of every possible memory or concurrency fault; live correctness and performance are validated separately.

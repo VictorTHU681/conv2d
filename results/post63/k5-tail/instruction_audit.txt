@@ -1,0 +1,10 @@
+baseline disassembly SHA256 952945f0ff4b6420491dbf649a0d8d60a780d7c0a5788fcbba97b853da7b2514
+guard disassembly SHA256 feade5c567940396875e8c135383eec95ac23c7c6c47b5369285221186316b47
+guard: non-K5 address/opcode/operand identity=True; total instructions 43727 vs baseline 43727.
+guard: K5 ZA arithmetic/state/output instruction identity=True; 60 baseline positions.
+48 common-address changes are exclusively inside K5; this is not a pure instruction permutation.
+unroll disassembly SHA256 a46bb9628a8d13af0b20c9b3226f62ff38c596574ce9eca23b3f808c47ce2cc9
+unroll: non-K5 address/opcode/operand identity=True; total instructions 43727 vs baseline 43727.
+unroll: K5 ZA arithmetic/state/output instruction identity=True; 60 baseline positions.
+34 common-address changes are exclusively inside K5; this is not a pure instruction permutation.
+This records final linked instruction identity, not a correctness proof. Timings of non-K5 shapes are retained without attributing them to K5 copy work.

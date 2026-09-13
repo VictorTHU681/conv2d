@@ -1,0 +1,4 @@
+conv: exact archive and source hashes match; four original full-reference checks PASS, maximum errors zero.
+conv_nf3: exact archive and source hashes match; four original full-reference checks PASS, maximum errors zero.
+conv_diag: exact archive and source hashes match; four original full-reference checks PASS, maximum errors zero.
+Job 1590008, cn20490: 12 full checks passed for the v62 scalar-tail-unrolled candidate. This does not itself establish comparative performance.

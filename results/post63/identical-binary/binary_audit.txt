@@ -1,0 +1,4 @@
+Downloaded post-run binaries match pre-run SHA-256 values in production.log.
+fedb6ea1d4dfac290a0b3d87476533b38d2bee8bf4654f6748414b554703e83b  build/post63/identical-binary/control0/bench
+fedb6ea1d4dfac290a0b3d87476533b38d2bee8bf4654f6748414b554703e83b  build/post63/identical-binary/control1/bench
+fedb6ea1d4dfac290a0b3d87476533b38d2bee8bf4654f6748414b554703e83b  build/post63/identical-binary/control2/bench

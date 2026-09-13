@@ -1,0 +1,5 @@
+Server nm -S on the downloaded-and-hash-verified PMU bench:
+0000000000422e00 00000000000005b8 t k5
+0000000000422800 00000000000005b8 t k5_early
+0000000000422200 00000000000005b8 t k5_spread
+All three function entry addresses are divisible by 128. This checks entry alignment, not full instruction equivalence.
