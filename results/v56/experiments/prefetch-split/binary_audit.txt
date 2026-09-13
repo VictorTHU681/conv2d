@@ -1,0 +1,3 @@
+Job 1585838: downloaded post-run bench SHA256 8ca62617876e05a4f13b12dbda30b0916ce7e6d2a483eb334f53bacc61d79c41 matches the pre-run logged executable hash.
+Job 1585839: downloaded post-run profile SHA256 3d7aa5d710c745f24ba7ea0947565d1779cc223c2d94de5bb3d80bc61680fb05 matches the pre-run logged executable hash.
+Each job compiles once, then reuses its one executable across all four input/output configurations. Screen and profile binaries are distinct; no cross-binary performance attribution.
