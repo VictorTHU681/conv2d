@@ -1,0 +1,8 @@
+baseline F4_step_1 start=0x423978 mod128=120 words_sha256=8dcc5bded20426ec8ee8577abf18d7be1b550d46c9353c9d66361e5687d51b65
+baseline F4_step_2 start=0x423b20 mod128=32 words_sha256=8dcc5bded20426ec8ee8577abf18d7be1b550d46c9353c9d66361e5687d51b65
+baseline F4_step_3 start=0x423c00 mod128=0 words_sha256=8dcc5bded20426ec8ee8577abf18d7be1b550d46c9353c9d66361e5687d51b65
+merged F4_step_1 start=0x4239f8 mod128=120 words_sha256=8dcc5bded20426ec8ee8577abf18d7be1b550d46c9353c9d66361e5687d51b65
+merged F4_step_2 start=0x423ba0 mod128=32 words_sha256=8dcc5bded20426ec8ee8577abf18d7be1b550d46c9353c9d66361e5687d51b65
+merged F4_step_3 start=0x423c80 mod128=0 words_sha256=8dcc5bded20426ec8ee8577abf18d7be1b550d46c9353c9d66361e5687d51b65
+All F4 arithmetic step bodies have identical 21 instruction words (5 loads, 4 FMOPA, 8 FMLA, 4 pointer increments).
+Instruction equality is limited to these step bodies, not the entire short path or all function bytes.

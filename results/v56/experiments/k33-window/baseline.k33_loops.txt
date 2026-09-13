@@ -1,0 +1,37 @@
+  4235dc:	d503201f 	nop
+  4235e0:	a540a200 	ld1w	{z0.s}, p0/z, [x16]
+  4235e4:	a541a201 	ld1w	{z1.s}, p0/z, [x16, #1, mul vl]
+  4235e8:	a540a042 	ld1w	{z2.s}, p0/z, [x2]
+  4235ec:	a540a063 	ld1w	{z3.s}, p0/z, [x3]
+  4235f0:	80820000 	fmopa	za0.s, p0/m, p0/m, z0.s, z2.s
+  4235f4:	80820021 	fmopa	za1.s, p0/m, p0/m, z1.s, z2.s
+  4235f8:	80830002 	fmopa	za2.s, p0/m, p0/m, z0.s, z3.s
+  4235fc:	80830023 	fmopa	za3.s, p0/m, p0/m, z1.s, z3.s
+  423600:	8540c1a4 	ld1rw	{z4.s}, p0/z, [x13]
+  423604:	65a4000a 	fmla	z10.s, p0/m, z0.s, z4.s
+  423608:	65a4002b 	fmla	z11.s, p0/m, z1.s, z4.s
+  42360c:	910011ad 	add	x13, x13, #0x4
+  423610:	91001210 	add	x16, x16, #0x4
+  423614:	91010042 	add	x2, x2, #0x40
+  423618:	91010063 	add	x3, x3, #0x40
+  42361c:	f98002a2 	prfm	pldl2keep, [x21]
+  423620:	a540a2d8 	ld1w	{z24.s}, p0/z, [x22]
+
+  42366c:	e540eef8 	st1w	{z24.s}, p3, [x23]
+  423670:	a540a200 	ld1w	{z0.s}, p0/z, [x16]
+  423674:	a541a201 	ld1w	{z1.s}, p0/z, [x16, #1, mul vl]
+  423678:	a540a042 	ld1w	{z2.s}, p0/z, [x2]
+  42367c:	a540a063 	ld1w	{z3.s}, p0/z, [x3]
+  423680:	80820000 	fmopa	za0.s, p0/m, p0/m, z0.s, z2.s
+  423684:	80820021 	fmopa	za1.s, p0/m, p0/m, z1.s, z2.s
+  423688:	80830002 	fmopa	za2.s, p0/m, p0/m, z0.s, z3.s
+  42368c:	80830023 	fmopa	za3.s, p0/m, p0/m, z1.s, z3.s
+  423690:	8540c1a4 	ld1rw	{z4.s}, p0/z, [x13]
+  423694:	65a4000a 	fmla	z10.s, p0/m, z0.s, z4.s
+  423698:	65a4002b 	fmla	z11.s, p0/m, z1.s, z4.s
+  42369c:	910011ad 	add	x13, x13, #0x4
+  4236a0:	91001210 	add	x16, x16, #0x4
+  4236a4:	91010042 	add	x2, x2, #0x40
+  4236a8:	91010063 	add	x3, x3, #0x40
+  4236ac:	f10005ef 	subs	x15, x15, #0x1
+  4236b0:	54fffe01 	b.ne	423670 <roll_worker+0x1380>  // b.any

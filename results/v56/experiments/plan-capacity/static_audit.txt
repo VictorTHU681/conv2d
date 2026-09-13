@@ -1,0 +1,11 @@
+Accepted review source SHA256 1d3f5071d51cd4f8c88720b8d4fa91983515ffd83bdeb4983377a991df2b871a
+Repair source SHA256 ebf36923518cb809ae5e65001a700de30b0415956f1d0420a2dffcae45684026
+bench_conv.c: identical to published v55; SHA256 2548861ae7e29826e454b4c0b098d682f7f04996222e664cd1ea9bc92dd2e927
+run.sh: identical to published v55; SHA256 f534c477d6b6e4f552860c374c2e8c138d027b4e9adc1bceade4b4745db61474
+run_diag.sh: identical to published v55; SHA256 cc88f911feea05a406124206c21c4601fbc6722f07aa178eb66d0adf62982386
+bench_conv.c also identical to initial d2b65c4. nf3 archive uses run.sh; no standalone run_nf3.sh exists.
+The mismatched pstart allocation is also present in published v55 source.
+conv.zip: four expected members verified; SHA256 b205be4fe6e49445a1de28c72d7373edd236473ddbc23a5e84b5f7790fb14727
+conv_nf3.zip: four expected members verified; SHA256 e49901466d89a0f2f709f1fc454af49b861fb8f110994e8895c5f49947c71161
+conv_diag.zip: four expected members verified; SHA256 0f86e75c6677138c9c3cc78b20a1702d9a8a07209758f2a9772e4e45ecd5952c
+Static/package identity checks only; server acceptance recorded separately. No full rules guarantee.

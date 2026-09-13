@@ -1,0 +1,5 @@
+Job 1585377: three candidate archives pass 12 full-reference checks, maximum errors zero.
+conv.zip: candidate hash verified locally and in server log: b205be4fe6e49445a1de28c72d7373edd236473ddbc23a5e84b5f7790fb14727
+conv_nf3.zip: candidate hash verified locally and in server log: e49901466d89a0f2f709f1fc454af49b861fb8f110994e8895c5f49947c71161
+conv_diag.zip: candidate hash verified locally and in server log: 0f86e75c6677138c9c3cc78b20a1702d9a8a07209758f2a9772e4e45ecd5952c
+Expected four members verified separately in static_audit.txt. Diagnostic archive remains diagnostic-only.

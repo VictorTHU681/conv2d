@@ -1,0 +1,7 @@
+mix0: static_FMOPA=16 static_EXT=0 first_fmopa=0x400c80 modulo128=0 timed_memory_instructions=0 region_sha256=2fe2f552abc37f351ea9fd2f1eb6cf2276f1fad4dfe57ab616cf43bace1972bc
+mix4: static_FMOPA=16 static_EXT=16 first_fmopa=0x400e00 modulo128=0 timed_memory_instructions=0 region_sha256=597d8b390c07b13316a113f35278e527d68723fb48dd12de553870452f9a7b83
+mix8: static_FMOPA=16 static_EXT=32 first_fmopa=0x401000 modulo128=0 timed_memory_instructions=0 region_sha256=a537e976e74fd7844b0ee9e65f0564dc0825d0a523618d8168dd166d9d421fa4
+mix16: static_FMOPA=16 static_EXT=64 first_fmopa=0x401200 modulo128=0 timed_memory_instructions=0 region_sha256=a01c364d04486fdb71dd5a270de4dfc54f6e9a44a60b3be70343a9a7f4f6c4e5
+window_block: static_FMOPA=64 static_EXT=64 first_fmopa=0x401480 modulo128=0 timed_memory_instructions=0 region_sha256=af6debc77f7ea853be1786f38404841d7e725e2ae0a37ed8f8318158798eabe0
+window_interleaved: static_FMOPA=64 static_EXT=64 first_fmopa=0x401800 modulo128=0 timed_memory_instructions=0 region_sha256=72c2672b64c4b99309cd92ff73b9ba82ec232fa404692fd96744676d42c81c45
+Counts are for four unrolled units; dependent window units contain four times as many FMOPA as mix units, accounted for in time normalization.

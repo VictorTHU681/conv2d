@@ -1,0 +1,5 @@
+conv: four intended members; benchmark and script match; operator sha256=bb82ce3b4826514e9ce6f729ef017a23d5aa08d2396f5d0975a512e39da76819
+conv_nf3: four intended members; benchmark and script match; operator sha256=bf1955c9134b8fd50f8797d61421b70ea27c8f7a8a978fecf925d43a9acbb286
+conv_diag: four intended members; benchmark and script match; operator sha256=2fedfabb3baf466a6a266a44aa9d3fcb4e0c7e454029b6a71b476bb704f76863
+Candidate archive job 1584311: all three manifest hashes match logs and local files; 12 complete checks PASS, maximum error zero.
+Accepted root remains bb82ce3b; candidate archives remain isolated. No new claim of full rules compliance.

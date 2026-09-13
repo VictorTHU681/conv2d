@@ -1,0 +1,10 @@
+baseline ldr: 4 adjacent transfers/iteration, 16 iterations, 64 total transfers, bytes=[0,4096), loop=0x422c28
+baseline str: 4 adjacent transfers/iteration, 16 iterations, 64 total transfers, bytes=[0,4096), loop=0x423384
+baseline disassembly_sha256=b8be9caf90fac7ca20f47bd808bc5857abdf80d3de9a59d62f3a782ddd5809b6
+u8 ldr: 8 adjacent transfers/iteration, 8 iterations, 64 total transfers, bytes=[0,4096), loop=0x422c28
+u8 str: 8 adjacent transfers/iteration, 8 iterations, 64 total transfers, bytes=[0,4096), loop=0x423394
+u8 disassembly_sha256=c7f695bac7ffb0cbf100a403bb579d2013defd1e87b1e1605b6896ebdd008f2d
+u16 ldr: 16 adjacent transfers/iteration, 4 iterations, 64 total transfers, bytes=[0,4096), loop=0x42355c
+u16 str: 16 adjacent transfers/iteration, 4 iterations, 64 total transfers, bytes=[0,4096), loop=0x4237c8
+u16 disassembly_sha256=0fd4a93a23e979a9a7dad3b4361daa09437c69ccd106dad0d6b5129327dd68fe
+SVL=64 only. This verifies emitted loop control and address coverage, not all kernel accesses or performance.

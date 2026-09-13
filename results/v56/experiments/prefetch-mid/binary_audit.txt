@@ -1,0 +1,3 @@
+Job 1585891: downloaded post-run executable matches the pre-run logged hash.
+SHA256 c407def7f13d43c5cc49db9764c901d06b782aee1ec639e0d23e4315d5a65f18
+One accepted-source binary serves all three settings; original reference acceptance is not implied.

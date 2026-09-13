@@ -81,7 +81,7 @@ static int env_int(const char* name, int def)
 }
 
 // 可调参数只在首次调用时读环境（getenv 每次要扫整个环境表，~2 µs/次，一次调用 9 次就是 ~0.3%）
-typedef struct { int inited, slice, sp, prof, pf_in, pf_out, postart, uzp, poolwfe, pool, store_asm, pf_fresh, pf_l2, br, sw_dense, pf_st, zva, roll, roll_pd, roll_w8, roll_w4, roll_w16, roll_w9, pack_ser; } knobs_t;
+typedef struct { int inited, slice, sp, prof, pf_in, pf_out, postart, uzp, poolwfe, pool, store_asm, pf_fresh, pf_l2, br, sw_dense, pf_st, zva, roll, roll_pd, roll_w8, roll_w4, roll_w16, pack_ser; } knobs_t;
 static knobs_t g_knobs;
 #ifdef CONV_ROWPROF
 static uint64_t* g_rowts = NULL;      // 线程 0 的逐行时间戳：行首 cntvct；pass 末追加 (cyc | 1<<63) 作结束标记
@@ -103,7 +103,6 @@ static void read_knobs(void)
     g_knobs.roll_w8 = env_int("CONV_ROLL_W8", 104);   // 静态划分的相对慢速权重（%）：8×2 / 4×4 / single16
     g_knobs.roll_w4 = env_int("CONV_ROLL_W4", 123);
     g_knobs.roll_w16 = env_int("CONV_ROLL_W16", 102);
-    g_knobs.roll_w9 = env_int("CONV_ROLL_W9", 140);   // K9 相对权重（远端 v55 定 1.40；pairf4 门控加速后可能偏移）
     g_knobs.pack_ser = env_int("CONV_PACKSER", -1);   // R/kf：-1/1 按组重叠，2 完整串行基线，0 全体并行
     // -DCONV_ZVA_CURSOR 实验用：输出线 dc zva 预清零（不从 DRAM 读 RFO，每次调用少读 ~100 MB），需 zva 块 64 B 且允许
     { uint64_t dczid; asm volatile("mrs %0, dczid_el0" : "=r"(dczid));
@@ -1218,7 +1217,7 @@ _Static_assert(offsetof(ka_t, carry) == 280 && offsetof(ka_t, resume) == 288, "r
 _Static_assert(offsetof(ka_t, ovn) == 296 && offsetof(ka_t, ovr) == 304, "overlapped-copy assembly offsets");
 typedef struct {
     const float* in_row; long rsb; const float* R; long RSB; long KH, steps, nrows;
-    float* out_row0; float* scratch; long cA0, cB0, yA0, yB0, nvA, nvB; float* ring; long KW; long osb;   // osb: 输出行距（字节）
+    uintptr_t out_row0; float* scratch; long cA0, cB0, yA0, yB0, nvA, nvB; float* ring; long KW; long osb;   // osb: 输出行距（字节）
     const float* kb0; const float* kbase; const float* kend; long cf0;   // pair+fmla：第 33 残差的 kernel 行游标与事件计数值
     const float* kb20; long cf20;                                         // single16+2fmla：第二条 fmla 残差
     float* carry; long resume;
@@ -1230,7 +1229,7 @@ static void fill_args(ka_t* A, const kp_t* P, long div, long slot_unused, long n
     // 拷贝源对齐到 64 B：ld1w/st1w 两侧全对齐（否则跨 4 KB 页的非对齐 L2 载入每行 +40 周期，
     // 且非对齐 L2 命中 2.5 周期/条）；a 基址 = 槽 + sh4。
     const long sh = ncp ? (((uintptr_t)P->in_row >> 2) & 15) : 0;
-    const float* src = P->in_row - sh;
+    const float* src = (const float*)((uintptr_t)P->in_row - (uintptr_t)sh * sizeof(float));
     ncp += sh;
     const long slot = ncp ? ((ncp * 4 + 63) & ~63L) : 0;
     A->ncp_full = ncp / 16; A->ncp_tail = ncp % 16;
@@ -1248,7 +1247,7 @@ static void fill_args(ka_t* A, const kp_t* P, long div, long slot_unused, long n
         if (f < 0) f = 0;
         A->ovn = f; A->ovr = A->ncp_full - f;
     }
-    if (ncp) roll_copy_row(P->ring, src, ncp);   // 第 0 行进槽 0；K4 自己做去交织拷贝
+    if (ncp) roll_copy_row(P->ring + sh, P->in_row, ncp - sh);   // 第 0 行进槽 0；K4 自己做去交织拷贝
 }
 // 寄存器约定：x0 行指针(输入) x1 rsb x2 bA x3 bB x4 R x5 Rend x6 KH x7 steps/it x8 行计数 x9 out 行 x10 scr x11 Y x12/x13 切片号
 //  x14 va x15 步计数 x16 a 指针(环槽) x17 环槽当前 x19 cB x20 out/scr 选择 x21 预取地址 x22/x23 临时 x24 nvA x25 nvB x26 pf x27 cA x28 环基址
@@ -2001,7 +2000,13 @@ static void k16singlef2(const kp_t* P)
         "add x2, x2, #128\n\t"
 static void k8(const kp_t* P)
 {
-    ka_t A; fill_args(&A, P, 2, 896, 126 + P->steps);
+    ka_t A; fill_args(&A, P, 2, 896, 127 + P->KW);
+    // Even KW computes one padded input element: initialize it inside both
+    // ring slots instead of reading beyond the live input row span.
+    const long live = 127 + P->KW + A.sh4 / 4;
+    A.slot = ((live + 1) * 4 + 63) & ~63L;
+    P->ring[live] = 0.f;
+    P->ring[A.slot / 4 + live] = 0.f;
     asm volatile(
         LOAD_ARGS
         "ldr x7, [%[A], #136]\n\t"      // it = steps/2
@@ -2049,6 +2054,18 @@ static void k8(const kp_t* P)
 }
 
 
+// Initialize only from live input; unused aligned prefix and tail are zero.
+static __attribute__((noinline)) void roll_first_planes(float* dst, const float* src,
+                                                       long live, long sh, long planes, long stride)
+{
+    for (long p = 0; p < planes; p++) {
+        float* d = dst + p * stride;
+        for (long i = 0; i < stride; i++) {
+            long x = i * planes + p - sh;
+            d[i] = (unsigned long)x < (unsigned long)live ? src[x] : 0.f;
+        }
+    }
+}
 // Exact input span -> two padded planes. Full tail stores initialize padding;
 // an odd final float uses one scalar load, avoiding a rounded-up source read.
 #define K9_CP(DST) \
@@ -2078,12 +2095,13 @@ static __attribute__((noinline)) void k8f(const kp_t* P)
     const long sh = ((uintptr_t)P->in_row >> 2) & 15;
     const long ncp = P->KW + 127 + sh;
     const long tsb = (((ncp + 1)/2 + 15) & ~15L)*4 + 64;
-    A.in_row = (int64_t)(P->in_row - sh); A.slot = 2*tsb; A.TSB = tsb;
+    A.in_row = (int64_t)((uintptr_t)P->in_row - (uintptr_t)sh * sizeof(float)); A.slot = 2*tsb; A.TSB = tsb;
     A.ncp_full = ncp/32; A.ncp_tail = (ncp%32)/2; A.khkw4 = ncp&1;
     A.kb2 = tsb*(sh&1) + 4*(sh>>1);
     A.cf2 = tsb*((sh+1)&1) + 4*((sh+1)>>1);
     A.n2 = (int64_t)P->kb0; A.e2 = (int64_t)P->kbase;
-    A.T = (int64_t)P->kend; A.nlines = P->cf0; A.kw4 = P->KW;
+    A.T = (int64_t)P->kend; A.nlines = P->cf0; A.kw4 = P->KW; A.it = P->KW / 2;
+    roll_first_planes(P->ring, P->in_row, P->KW + 127, sh, 2, tsb / 4);
     asm volatile(
         LOAD_ARGS
         "ldr x7, [%[A], #136]\n\t"      // it = steps/2
@@ -2110,9 +2128,6 @@ static __attribute__((noinline)) void k8f(const kp_t* P)
         "ld1w {z23.s}, p0/z, [x12, #7, mul vl]\n\t"
         "81:\n\t"
         "ldr x3, [%[A], #200]\n\t"
-        "mov x22, x0\n\t"
-        "add x21, x0, x26\n\t"
-        K9_CP(x17)
         "1:\n\t"
         "mov x16, x17\n\t"
         "sub x17, x28, x17\n\t"
@@ -2135,12 +2150,59 @@ static __attribute__((noinline)) void k8f(const kp_t* P)
         "6:\n\t"
         "ldr x12, [%[A], #264]\n\t"
         "mov x15, x7\n\t"
-        // K9 内循环 128B 对齐（跳过式垫；同 F4 的对齐收益路径，K9 循环 ~200B 无对齐指示）
-        "b 2f\n\t"
-        ".p2align 7\n"
+        "ld1w {z0.s}, p0/z, [x16, #0, mul vl]\n\t"
+        "ld1w {z2.s}, p0/z, [x16, #1, mul vl]\n\t"
+        "ld1w {z4.s}, p0/z, [x16, #2, mul vl]\n\t"
+        "ld1w {z6.s}, p0/z, [x16, #3, mul vl]\n\t"
         "2:\n\t"
-        "ld1w {z0.s}, p0/z, [x16]\n\t"
-        "ld1w {z1.s}, p0/z, [x25]\n\t"
+        "ld1w {z1.s}, p0/z, [x25, #0, mul vl]\n\t"
+        "ld1w {z3.s}, p0/z, [x25, #1, mul vl]\n\t"
+        "ld1w {z5.s}, p0/z, [x25, #2, mul vl]\n\t"
+        "ld1w {z7.s}, p0/z, [x25, #3, mul vl]\n\t"
+        "ld1w {z8.s}, p0/z, [x2]\n\t"
+        "ld1w {z9.s}, p0/z, [x2, #1, mul vl]\n\t"
+        "ld1rw {z24.s}, p0/z, [x13]\n\t"
+        "add x13, x13, #4\n\t"
+        "fmopa za0.s, p0/m, p0/m, z0.s, z8.s\n\t"
+        "fmla z16.s, p0/m, z0.s, z24.s\n\t"
+        "fmla z17.s, p0/m, z1.s, z24.s\n\t"
+        "fmopa za1.s, p0/m, p0/m, z2.s, z8.s\n\t"
+        "fmla z18.s, p0/m, z2.s, z24.s\n\t"
+        "fmla z19.s, p0/m, z3.s, z24.s\n\t"
+        "fmopa za2.s, p0/m, p0/m, z4.s, z8.s\n\t"
+        "fmla z20.s, p0/m, z4.s, z24.s\n\t"
+        "fmla z21.s, p0/m, z5.s, z24.s\n\t"
+        "fmopa za3.s, p0/m, p0/m, z6.s, z8.s\n\t"
+        "fmla z22.s, p0/m, z6.s, z24.s\n\t"
+        "fmla z23.s, p0/m, z7.s, z24.s\n\t"
+        "ld1rw {z24.s}, p0/z, [x13]\n\t"
+        "add x13, x13, #4\n\t"
+        "add x21, x16, #4\n\t"
+        "ld1w {z0.s}, p0/z, [x21, #0, mul vl]\n\t"
+        "ld1w {z2.s}, p0/z, [x21, #1, mul vl]\n\t"
+        "ld1w {z4.s}, p0/z, [x21, #2, mul vl]\n\t"
+        "ld1w {z6.s}, p0/z, [x21, #3, mul vl]\n\t"
+        "fmopa za0.s, p0/m, p0/m, z1.s, z9.s\n\t"
+        "fmla z16.s, p0/m, z1.s, z24.s\n\t"
+        "fmla z17.s, p0/m, z0.s, z24.s\n\t"
+        "fmopa za1.s, p0/m, p0/m, z3.s, z9.s\n\t"
+        "fmla z18.s, p0/m, z3.s, z24.s\n\t"
+        "fmla z19.s, p0/m, z2.s, z24.s\n\t"
+        "fmopa za2.s, p0/m, p0/m, z5.s, z9.s\n\t"
+        "fmla z20.s, p0/m, z5.s, z24.s\n\t"
+        "fmla z21.s, p0/m, z4.s, z24.s\n\t"
+        "fmopa za3.s, p0/m, p0/m, z7.s, z9.s\n\t"
+        "fmla z22.s, p0/m, z7.s, z24.s\n\t"
+        "fmla z23.s, p0/m, z6.s, z24.s\n\t"
+        "add x16, x16, #4\n\t"
+        "add x25, x25, #4\n\t"
+        "add x2, x2, #128\n\t"
+        "subs x15, x15, #1\n\t"
+        "b.ne 2b\n\t"
+        "ldr x12, [%[A], #264]\n\t"
+        "and x12, x12, #1\n\t"
+        "ld1w {z0.s}, p0/z, [x16, #0, mul vl]\n\t"
+        "ld1w {z1.s}, p0/z, [x25, #0, mul vl]\n\t"
         "ld1w {z2.s}, p0/z, [x16, #1, mul vl]\n\t"
         "ld1w {z3.s}, p0/z, [x25, #1, mul vl]\n\t"
         "ld1w {z4.s}, p0/z, [x16, #2, mul vl]\n\t"
@@ -2149,50 +2211,36 @@ static __attribute__((noinline)) void k8f(const kp_t* P)
         "ld1w {z7.s}, p0/z, [x25, #3, mul vl]\n\t"
         "ld1w {z8.s}, p0/z, [x2]\n\t"
         "ld1w {z9.s}, p0/z, [x2, #1, mul vl]\n\t"
-        "fmopa za0.s, p0/m, p0/m, z0.s, z8.s\n\t"
-        "fmopa za1.s, p0/m, p0/m, z2.s, z8.s\n\t"
-        "fmopa za2.s, p0/m, p0/m, z4.s, z8.s\n\t"
-        "fmopa za3.s, p0/m, p0/m, z6.s, z8.s\n\t"
         "cbz x12, 82f\n\t"
         "ld1rw {z24.s}, p0/z, [x13]\n\t"
         "add x13, x13, #4\n\t"
         "sub x12, x12, #1\n\t"
+        "fmopa za0.s, p0/m, p0/m, z0.s, z8.s\n\t"
         "fmla z16.s, p0/m, z0.s, z24.s\n\t"
         "fmla z17.s, p0/m, z1.s, z24.s\n\t"
+        "fmopa za1.s, p0/m, p0/m, z2.s, z8.s\n\t"
         "fmla z18.s, p0/m, z2.s, z24.s\n\t"
         "fmla z19.s, p0/m, z3.s, z24.s\n\t"
+        "fmopa za2.s, p0/m, p0/m, z4.s, z8.s\n\t"
         "fmla z20.s, p0/m, z4.s, z24.s\n\t"
         "fmla z21.s, p0/m, z5.s, z24.s\n\t"
+        "fmopa za3.s, p0/m, p0/m, z6.s, z8.s\n\t"
         "fmla z22.s, p0/m, z6.s, z24.s\n\t"
         "fmla z23.s, p0/m, z7.s, z24.s\n\t"
+        "b 92f\n\t"
         "82:\n\t"
+        "fmopa za0.s, p0/m, p0/m, z0.s, z8.s\n\t"
+        "fmopa za1.s, p0/m, p0/m, z2.s, z8.s\n\t"
+        "fmopa za2.s, p0/m, p0/m, z4.s, z8.s\n\t"
+        "fmopa za3.s, p0/m, p0/m, z6.s, z8.s\n\t"
+        "92:\n\t"
         "fmopa za0.s, p0/m, p0/m, z1.s, z9.s\n\t"
         "fmopa za1.s, p0/m, p0/m, z3.s, z9.s\n\t"
         "fmopa za2.s, p0/m, p0/m, z5.s, z9.s\n\t"
         "fmopa za3.s, p0/m, p0/m, z7.s, z9.s\n\t"
-        "cbz x12, 83f\n\t"
-        "ld1rw {z24.s}, p0/z, [x13]\n\t"
-        "add x13, x13, #4\n\t"
-        "sub x12, x12, #1\n\t"
-        "add x21, x16, #4\n\t"
-        "ld1w {z0.s}, p0/z, [x21]\n\t"
-        "ld1w {z2.s}, p0/z, [x21, #1, mul vl]\n\t"
-        "ld1w {z4.s}, p0/z, [x21, #2, mul vl]\n\t"
-        "ld1w {z6.s}, p0/z, [x21, #3, mul vl]\n\t"
-        "fmla z16.s, p0/m, z1.s, z24.s\n\t"
-        "fmla z17.s, p0/m, z0.s, z24.s\n\t"
-        "fmla z18.s, p0/m, z3.s, z24.s\n\t"
-        "fmla z19.s, p0/m, z2.s, z24.s\n\t"
-        "fmla z20.s, p0/m, z5.s, z24.s\n\t"
-        "fmla z21.s, p0/m, z4.s, z24.s\n\t"
-        "fmla z22.s, p0/m, z7.s, z24.s\n\t"
-        "fmla z23.s, p0/m, z6.s, z24.s\n\t"
-        "83:\n\t"
         "add x16, x16, #4\n\t"
         "add x25, x25, #4\n\t"
         "add x2, x2, #128\n\t"
-        "subs x15, x15, #1\n\t"
-        "b.ne 2b\n\t"
         "ldr x21, [%[A], #208]\n\t"
         "cmp x13, x21\n\t"
         "ldr x21, [%[A], #192]\n\t"
@@ -2274,8 +2322,21 @@ static __attribute__((noinline)) void k8f(const kp_t* P)
         "ldr x24, [%[A], #176]\n\t" \
         "whilelo p4.s, xzr, x24\n\t" \
         "ld4w {z0.s, z1.s, z2.s, z3.s}, p4/z, [x12]\n\t" \
-        "st1w {z0.s}, p4, [x13]\n\t" "add x23, x13, x3\n\t" "st1w {z1.s}, p4, [x23]\n\t" \
-        "add x23, x23, x3\n\t" "st1w {z2.s}, p4, [x23]\n\t" "add x23, x23, x3\n\t" "st1w {z3.s}, p4, [x23]\n\t" \
+        "st1w {z0.s}, p0, [x13]\n\t" "add x23, x13, x3\n\t" "st1w {z1.s}, p0, [x23]\n\t" \
+        "add x23, x23, x3\n\t" "st1w {z2.s}, p0, [x23]\n\t" "add x23, x23, x3\n\t" "st1w {z3.s}, p0, [x23]\n\t" \
+        "add x12, x12, x24, lsl #4\n\t" \
+        "add x13, x13, x24, lsl #2\n\t" \
+        "ldr x24, [%[A], #272]\n\t" \
+        "cbz x24, 72f\n\t" \
+        "ptrue p4.s, vl1\n\t" \
+        "71:\n\t" \
+        "ld1rw {z0.s}, p0/z, [x12]\n\t" \
+        "st1w {z0.s}, p4, [x13]\n\t" \
+        "add x12, x12, #4\n\t" \
+        "add x13, x13, x3\n\t" \
+        "subs x24, x24, #1\n\t" \
+        "b.ne 71b\n\t" \
+        "72:\n\t" \
         "ldr x24, [%[A], #112]\n\t"
 #define K4_STEP(PQ, BOFF) \
         "ld1w {z0.s}, p0/z, [" #PQ "]\n\t" \
@@ -2287,26 +2348,6 @@ static __attribute__((noinline)) void k8f(const kp_t* P)
         "fmopa za1.s, p0/m, p0/m, z1.s, z4.s\n\t" \
         "fmopa za2.s, p0/m, p0/m, z2.s, z4.s\n\t" \
         "fmopa za3.s, p0/m, p0/m, z3.s, z4.s\n\t"
-// K4 滑窗 EXT 版：四平面窗口（16 寄存器）驻留，每外步每平面 1 条边界 ld1w + 4 条 EXT 平移，
-// 替代 16 条 4B 偏移非对齐 ld1w（载入 21→9/外步）；K4 的 fmla 预算全空（32 槽），16 条 EXT 免费。
-// EXT 复现载入值（同字节），逐位一致；边界载入越出平面尾的 lane 不被消费，且落在本线程环内（内存安全）。
-#define K4E_SUB(Z0, Z1, Z2, Z3, BOFF) \
-        "ld1w {z20.s}, p0/z, [x2, #" #BOFF ", mul vl]\n\t" \
-        "fmopa za0.s, p0/m, p0/m, " #Z0 ".s, z20.s\n\t" \
-        "fmopa za1.s, p0/m, p0/m, " #Z1 ".s, z20.s\n\t" \
-        "fmopa za2.s, p0/m, p0/m, " #Z2 ".s, z20.s\n\t" \
-        "fmopa za3.s, p0/m, p0/m, " #Z3 ".s, z20.s\n\t"
-#define K4E_WIN(PQ, Z0, Z1, Z2, Z3) \
-        "ld1w {" #Z0 ".s}, p0/z, [" #PQ "]\n\t" \
-        "ld1w {" #Z1 ".s}, p0/z, [" #PQ ", #1, mul vl]\n\t" \
-        "ld1w {" #Z2 ".s}, p0/z, [" #PQ ", #2, mul vl]\n\t" \
-        "ld1w {" #Z3 ".s}, p0/z, [" #PQ ", #3, mul vl]\n\t"
-#define K4E_ADV(PQ, Z0, Z1, Z2, Z3, ZB) \
-        "ld1w {" #ZB ".s}, p0/z, [" #PQ ", #4, mul vl]\n\t" \
-        "ext " #Z0 ".b, " #Z0 ".b, " #Z1 ".b, #4\n\t" \
-        "ext " #Z1 ".b, " #Z1 ".b, " #Z2 ".b, #4\n\t" \
-        "ext " #Z2 ".b, " #Z2 ".b, " #Z3 ".b, #4\n\t" \
-        "ext " #Z3 ".b, " #Z3 ".b, " #ZB ".b, #4\n\t"
 #define K4_EV(T) \
         "mova z0.s, p0/m, za" #T "v.s[w12, 0]\n\t" \
         "mova z1.s, p0/m, za" #T "v.s[w12, 1]\n\t" \
@@ -2321,14 +2362,14 @@ static void k4(const kp_t* P)
 {
     const long steps4 = P->steps;                                  // 已 pad 到 4 的倍数
     const long sh = ((uintptr_t)P->in_row >> 2) & 15;              // 对齐拷贝源到 64 B；平面起点相应排列
-    const long ncp = steps4 + 252 + sh;                            // a 跨度：192 + 60 + (steps4-1) + 1 + 偏移
-    const long TSB = (((ncp + 3) / 4 + 15) & ~15L) * 4;            // 平面距（字节）
+    const long ncp = P->KW + 255 + sh;                            // a 跨度：192 + 60 + (steps4-1) + 1 + 偏移
+    const long TSB = (((ncp + 3) / 4 + 15) & ~15L) * 4 + 64;            // 平面距（字节）
     ka_t A; fill_args(&A, P, 1, 0, 0);
-    A.in_row = (int64_t)(P->in_row - sh);
+    A.in_row = (int64_t)((uintptr_t)P->in_row - (uintptr_t)sh * sizeof(float));
     A.slot = 4 * TSB;
     A.it = (P->KW + 3) / 4;
     A.kw4 = (P->KW + 3) % 4;
-    A.ncp_full = ncp / 64; A.ncp_tail = ((ncp % 64) + 3) / 4;      // ld4w 整块数、尾块每平面元素数
+    A.ncp_full = ncp / 64; A.ncp_tail = (ncp % 64) / 4; A.khkw4 = ncp % 4;      // ld4w 整块数、尾块每平面元素数
     A.ovn = A.it - 1 < A.ncp_full ? A.it - 1 : A.ncp_full;         // 穿插的整块数 ≤ 外步数-1（纯步循环 ≥ 1）
     if (A.ovn < 0) A.ovn = 0;
     A.ovr = A.ncp_full - A.ovn;
@@ -2337,15 +2378,13 @@ static void k4(const kp_t* P)
     A.e2 = TSB * ((sh + 1) & 3) + 4 * ((sh + 1) >> 2);
     A.T  = TSB * ((sh + 2) & 3) + 4 * ((sh + 2) >> 2);
     A.nlines = TSB * ((sh + 3) & 3) + 4 * ((sh + 3) >> 2);
+    roll_first_planes(P->ring, P->in_row, P->KW + 255, sh, 4, TSB / 4);
     asm volatile(
         LOAD_ARGS
         "ldr x3, [%[A], #200]\n\t"      // TSB（覆盖 bB）
         "ldr x7, [%[A], #136]\n\t"      // it = steps4/4
         "fmov z31.s, #0.0\n\t"
         // 序言：行 0 → 槽 0
-        "mov x22, x0\n\t"
-        "add x21, x0, x26\n\t"
-        K4_CP(x17)
         "1:\n\t"
         // 输出预取（与 k8 同法）：PD 行后有事件（(cA+PD) mod KH < nv）则预取输出行 16 线（事件 st4w 共 1 KB）
         "ldr x12, [%[A], #144]\n\t"
@@ -2371,8 +2410,21 @@ static void k4(const kp_t* P)
         "ldr x24, [%[A], #176]\n\t"
         "whilelo p4.s, xzr, x24\n\t"
         "ld4w {z0.s, z1.s, z2.s, z3.s}, p4/z, [x13]\n\t"
-        "st1w {z0.s}, p4, [x20]\n\t" "add x23, x20, x3\n\t" "st1w {z1.s}, p4, [x23]\n\t"
-        "add x23, x23, x3\n\t" "st1w {z2.s}, p4, [x23]\n\t" "add x23, x23, x3\n\t" "st1w {z3.s}, p4, [x23]\n\t"
+        "st1w {z0.s}, p0, [x20]\n\t" "add x23, x20, x3\n\t" "st1w {z1.s}, p0, [x23]\n\t"
+        "add x23, x23, x3\n\t" "st1w {z2.s}, p0, [x23]\n\t" "add x23, x23, x3\n\t" "st1w {z3.s}, p0, [x23]\n\t"
+        "add x13, x13, x24, lsl #4\n\t"
+        "add x20, x20, x24, lsl #2\n\t"
+        "ldr x24, [%[A], #272]\n\t"
+        "cbz x24, 72f\n\t"
+        "ptrue p4.s, vl1\n\t"
+        "71:\n\t"
+        "ld1rw {z0.s}, p0/z, [x13]\n\t"
+        "st1w {z0.s}, p4, [x20]\n\t"
+        "add x13, x13, #4\n\t"
+        "add x20, x20, x3\n\t"
+        "subs x24, x24, #1\n\t"
+        "b.ne 71b\n\t"
+        "72:\n\t"
         "ldr x20, [%[A], #304]\n\t"              // 装不进步循环的整块（仅极小 KW）：串行补拷
         "cbz x20, 64f\n\t"
         "ldr x12, [%[A], #296]\n\t"
@@ -2392,24 +2444,16 @@ static void k4(const kp_t* P)
         "ldr x23, [%[A], #208]\n\t" "add x23, x23, x16\n\t"
         "ldr x25, [%[A], #216]\n\t" "add x25, x25, x16\n\t"
         "ldr x20, [%[A], #184]\n\t" "add x16, x16, x20\n\t"
-        K4E_WIN(x16, z0, z1, z2, z3)
-        K4E_WIN(x22, z4, z5, z6, z7)
-        K4E_WIN(x23, z8, z9, z10, z11)
-        K4E_WIN(x25, z12, z13, z14, z15)
         "ldr x20, [%[A], #296]\n\t"
         "mov x15, x7\n\t"
         "cbz x20, 62f\n\t"
         "sub x15, x15, x20\n\t"
         ".p2align 4\n"
         "61:\n\t"
-        K4E_SUB(z0, z1, z2, z3, 0)
-        K4E_SUB(z4, z5, z6, z7, 1)
-        K4E_SUB(z8, z9, z10, z11, 2)
-        K4E_SUB(z12, z13, z14, z15, 3)
-        K4E_ADV(x16, z0, z1, z2, z3, z16)
-        K4E_ADV(x22, z4, z5, z6, z7, z17)
-        K4E_ADV(x23, z8, z9, z10, z11, z18)
-        K4E_ADV(x25, z12, z13, z14, z15, z19)
+        K4_STEP(x16, 0)
+        K4_STEP(x22, 1)
+        K4_STEP(x23, 2)
+        K4_STEP(x25, 3)
         "add x16, x16, #4\n\t"
         "add x22, x22, #4\n\t"
         "add x23, x23, #4\n\t"
@@ -2426,14 +2470,10 @@ static void k4(const kp_t* P)
         "ldr x24, [%[A], #112]\n\t"              // 头部/穿插拷贝用过 x24：恢复 nvA（事件判定用）
         ".p2align 4\n"
         "2:\n\t"
-        K4E_SUB(z0, z1, z2, z3, 0)
-        K4E_SUB(z4, z5, z6, z7, 1)
-        K4E_SUB(z8, z9, z10, z11, 2)
-        K4E_SUB(z12, z13, z14, z15, 3)
-        K4E_ADV(x16, z0, z1, z2, z3, z16)
-        K4E_ADV(x22, z4, z5, z6, z7, z17)
-        K4E_ADV(x23, z8, z9, z10, z11, z18)
-        K4E_ADV(x25, z12, z13, z14, z15, z19)
+        K4_STEP(x16, 0)
+        K4_STEP(x22, 1)
+        K4_STEP(x23, 2)
+        K4_STEP(x25, 3)
         "add x16, x16, #4\n\t"
         "add x22, x22, #4\n\t"
         "add x23, x23, #4\n\t"
@@ -2443,11 +2483,11 @@ static void k4(const kp_t* P)
         "b.ne 2b\n\t"
         "ldr x12, [%[A], #264]\n\t"
         "cbz x12, 42f\n\t"
-        K4E_SUB(z0, z1, z2, z3, 0)
+        K4_STEP(x16, 0)
         "cmp x12, #1\n\t" "b.eq 41f\n\t"
-        K4E_SUB(z4, z5, z6, z7, 1)
+        K4_STEP(x22, 1)
         "cmp x12, #2\n\t" "b.eq 41f\n\t"
-        K4E_SUB(z8, z9, z10, z11, 2)
+        K4_STEP(x23, 2)
         "41:\n\t" "add x2, x2, #256\n\t"
         "42:\n\t"
         WRAP_B(x2) SEL_OUT
@@ -2462,8 +2502,161 @@ static void k4(const kp_t* P)
         ROW_TAIL
         :
         : [A]"r"(&A)
-        : XCLOB, "z0", "z1", "z2", "z3", "z4", "z5", "z6", "z7", "z8", "z9", "z10", "z11", "z12", "z13", "z14", "z15", "z16", "z17", "z18", "z19", "z20", "z25", "z26", "z27", "z28", "z31", "p0", "p3", "p4", "memory", "cc");
+        : XCLOB, "z0", "z1", "z2", "z3", "z4", "z25", "z26", "z27", "z28", "z31", "p0", "p3", "p4", "memory", "cc");
 }
+// Five output-row residues, each with three interleaved column classes.
+// ZA column 15 is inactive; exact live input is KW+191 floats.
+#define K5_STEP(PQ, BOFF) \
+        "ld1w {z0.s}, p0/z, [" #PQ "]\n\t" \
+        "ld1w {z1.s}, p0/z, [" #PQ ", #1, mul vl]\n\t" \
+        "ld1w {z2.s}, p0/z, [" #PQ ", #2, mul vl]\n\t" \
+        "ld1w {z3.s}, p0/z, [" #PQ ", #3, mul vl]\n\t" \
+        "ld1w {z4.s}, p0/z, [x2, #" #BOFF ", mul vl]\n\t" \
+        "fmopa za0.s, p0/m, p0/m, z0.s, z4.s\n\t" \
+        "fmopa za1.s, p0/m, p0/m, z1.s, z4.s\n\t" \
+        "fmopa za2.s, p0/m, p0/m, z2.s, z4.s\n\t" \
+        "fmopa za3.s, p0/m, p0/m, z3.s, z4.s\n\t"
+static __attribute__((noinline)) void k5(const kp_t* P)
+{
+    const long sh = ((uintptr_t)P->in_row >> 2) & 15;
+    const long live = P->KW + 191, ncp = live + sh;
+    const long TSB = (((ncp + 2) / 3 + 15) & ~15L) * 4 + 64;
+    ka_t A; fill_args(&A, P, 1, 0, 0);
+    A.in_row = (int64_t)((uintptr_t)P->in_row - (uintptr_t)sh * sizeof(float));
+    A.slot = 3 * TSB; A.TSB = TSB;
+    A.it = (P->KW + 2) / 3; A.kw4 = (P->KW + 2) % 3;
+    A.ncp_full = ncp / 48; A.ncp_tail = (ncp % 48) / 3; A.khkw4 = ncp % 3;
+    A.n2 = TSB * ((sh + 0) % 3) + 4 * ((sh + 0) / 3);
+    A.e2 = TSB * ((sh + 1) % 3) + 4 * ((sh + 1) / 3);
+    A.T  = TSB * ((sh + 2) % 3) + 4 * ((sh + 2) / 3);
+    roll_first_planes(P->ring, P->in_row, live, sh, 3, TSB / 4);
+    asm volatile(
+        LOAD_ARGS
+        "ldr x3, [%[A], #200]\n\t"
+        "ldr x7, [%[A], #136]\n\t"
+        "fmov z31.s, #0.0\n\t"
+        "1:\n\t"
+        "mov x16, x17\n\t"
+        "sub x17, x28, x17\n\t"
+        "add x22, x0, x1\n\t"
+        "cmp x8, #1\n\t"
+        "csel x22, x0, x22, eq\n\t"
+        "add x21, x0, x26\n\t"
+        "mov x12, x22\n\t"
+        "mov x13, x17\n\t"
+        "ldr x24, [%[A], #168]\n\t"
+        "cbz x24, 71f\n\t"
+        "70:\n\t"
+        "prfm pldl2keep, [x21, #0]\n\t"
+        "prfm pldl2keep, [x21, #64]\n\t"
+        "prfm pldl2keep, [x21, #128]\n\t"
+        "ld3w {z0.s, z1.s, z2.s}, p0/z, [x12]\n\t"
+        "st1w {z0.s}, p0, [x13]\n\t"
+        "add x23, x13, x3\n\t"
+        "st1w {z1.s}, p0, [x23]\n\t"
+        "add x23, x23, x3\n\t"
+        "st1w {z2.s}, p0, [x23]\n\t"
+        "add x12, x12, #192\n\t"
+        "add x13, x13, #64\n\t"
+        "add x21, x21, #192\n\t"
+        "subs x24, x24, #1\n\t"
+        "b.ne 70b\n\t"
+        "71:\n\t"
+        "ldr x24, [%[A], #176]\n\t"
+        "whilelo p4.s, xzr, x24\n\t"
+        "ld3w {z0.s, z1.s, z2.s}, p4/z, [x12]\n\t"
+        "st1w {z0.s}, p0, [x13]\n\t"
+        "add x23, x13, x3\n\t"
+        "st1w {z1.s}, p0, [x23]\n\t"
+        "add x23, x23, x3\n\t"
+        "st1w {z2.s}, p0, [x23]\n\t"
+        "add x12, x12, x24, lsl #3\n\t"
+        "add x12, x12, x24, lsl #2\n\t"
+        "add x13, x13, x24, lsl #2\n\t"
+        "ldr x24, [%[A], #272]\n\t"
+        "cbz x24, 73f\n\t"
+        "ptrue p4.s, vl1\n\t"
+        "72:\n\t"
+        "ld1rw {z0.s}, p0/z, [x12]\n\t"
+        "st1w {z0.s}, p4, [x13]\n\t"
+        "add x12, x12, #4\n\t"
+        "add x13, x13, x3\n\t"
+        "subs x24, x24, #1\n\t"
+        "b.ne 72b\n\t"
+        "73:\n\t"
+        "ldr x24, [%[A], #112]\n\t"
+        "ldr x22, [%[A], #192]\n\t"
+        "add x22, x22, x16\n\t"
+        "ldr x23, [%[A], #208]\n\t"
+        "add x23, x23, x16\n\t"
+        "ldr x12, [%[A], #184]\n\t"
+        "add x16, x16, x12\n\t"
+        "mov x15, x7\n\t"
+        ".p2align 4\n\t"
+        "2:\n\t"
+
+        K5_STEP(x16, 0)
+        K5_STEP(x22, 1)
+        K5_STEP(x23, 2)
+        "add x16, x16, #4\n\t"
+        "add x22, x22, #4\n\t"
+        "add x23, x23, #4\n\t"
+        "add x2, x2, #192\n\t"
+        "subs x15, x15, #1\n\t"
+        "b.ne 2b\n\t"
+        "ldr x12, [%[A], #264]\n\t"
+        "cbz x12, 42f\n\t"
+
+        K5_STEP(x16, 0)
+        "cmp x12, #1\n\t"
+        "b.eq 41f\n\t"
+
+        K5_STEP(x22, 1)
+        "41:\n\t"
+        "add x2, x2, #192\n\t"
+        "42:\n\t"
+
+        WRAP_B(x2) SEL_OUT
+        "cmp x27, x24\n\t"
+        "b.hs 4f\n\t"
+        "add w12, w27, w27, lsl #1\n\t"
+        "mova z0.s, p0/m, za0v.s[w12, 0]\n\t"
+        "mova z1.s, p0/m, za0v.s[w12, 1]\n\t"
+        "mova z2.s, p0/m, za0v.s[w12, 2]\n\t"
+        "st3w {z0.s, z1.s, z2.s}, p0, [x20, #0, mul vl]\n\t"
+        "mova za0v.s[w12, 0], p0/m, z31.s\n\t"
+        "mova za0v.s[w12, 1], p0/m, z31.s\n\t"
+        "mova za0v.s[w12, 2], p0/m, z31.s\n\t"
+        "mova z0.s, p0/m, za1v.s[w12, 0]\n\t"
+        "mova z1.s, p0/m, za1v.s[w12, 1]\n\t"
+        "mova z2.s, p0/m, za1v.s[w12, 2]\n\t"
+        "st3w {z0.s, z1.s, z2.s}, p0, [x20, #3, mul vl]\n\t"
+        "mova za1v.s[w12, 0], p0/m, z31.s\n\t"
+        "mova za1v.s[w12, 1], p0/m, z31.s\n\t"
+        "mova za1v.s[w12, 2], p0/m, z31.s\n\t"
+        "mova z0.s, p0/m, za2v.s[w12, 0]\n\t"
+        "mova z1.s, p0/m, za2v.s[w12, 1]\n\t"
+        "mova z2.s, p0/m, za2v.s[w12, 2]\n\t"
+        "st3w {z0.s, z1.s, z2.s}, p0, [x20, #6, mul vl]\n\t"
+        "mova za2v.s[w12, 0], p0/m, z31.s\n\t"
+        "mova za2v.s[w12, 1], p0/m, z31.s\n\t"
+        "mova za2v.s[w12, 2], p0/m, z31.s\n\t"
+        "mova z0.s, p0/m, za3v.s[w12, 0]\n\t"
+        "mova z1.s, p0/m, za3v.s[w12, 1]\n\t"
+        "mova z2.s, p0/m, za3v.s[w12, 2]\n\t"
+        "st3w {z0.s, z1.s, z2.s}, p0, [x20, #9, mul vl]\n\t"
+        "mova za3v.s[w12, 0], p0/m, z31.s\n\t"
+        "mova za3v.s[w12, 1], p0/m, z31.s\n\t"
+        "mova za3v.s[w12, 2], p0/m, z31.s\n\t"
+        "4:\n\t"
+
+        ADV_CNT(x27)
+        ROW_TAIL
+        : : [A]"r"(&A)
+        : XCLOB, "z0", "z1", "z2", "z3", "z4", "z31", "p0", "p3", "p4", "memory", "cc");
+}
+#undef K5_STEP
+
 // b 表：kind 16: R[y][X][c] = k[(y-c) mod KH][X]（残差 s_base+c ≥ KH → 0）；kind 8: c=2s+ic → k[(y-s) mod KH][X-ic]；kind 4: c=4s+ic
 // 每次调用都重建（不缓存打包结果），按行构建：kj 只依赖 (y,c)，提出内层（无逐元素取模），X 方向三段拷贝/清零
 #include <arm_sve.h>
@@ -2471,12 +2664,12 @@ static void roll_build_R_row(float* R, const float* k, long KH, long KW, long st
 {
     int32_t offsets[16], shifts[16], live[16];
     for (int c = 0; c < 16; c++) {
-        long sidx = kind == 16 ? c : kind == 8 ? c >> 1 : c >> 2;
-        long ic = kind == 16 ? 0 : kind == 8 ? c & 1 : c & 3;
+        long sidx = kind == 16 ? c : kind == 8 ? c >> 1 : kind == 5 ? c / 3 : c >> 2;
+        long ic = kind == 16 ? 0 : kind == 8 ? c & 1 : kind == 5 ? c % 3 : c & 3;
         long kj = y - sidx; if (kj < 0) kj += KH;
         offsets[c] = (int32_t)(kj * KW - ic);
         shifts[c] = (int32_t)ic;
-        live[c] = s_base + sidx < KH;
+        live[c] = s_base + sidx < KH && (kind != 5 || c < 15);
     }
     float* Ry = R + y * steps * 16;
     for (int c = 0; c < 16; c += (int)svcntw()) {
@@ -2497,9 +2690,11 @@ static void roll_build_R_row(float* R, const float* k, long KH, long KW, long st
         }
     }
 }
-typedef struct { int kind; long s_base, nvA, nvB, width, steps, RSB; float* R; size_t Rcap; float* kf; size_t kfcap; int Rowner; int sf; int kfowner; } rgrp_t;   // kind 32=pair,16=single,8,4; 33/34=pair+fmla；kf = pairf3 的三链 b 打包 [KH][steps][4]
+typedef struct { int kind; long s_base, nvA, nvB, width, steps, RSB; float* R; size_t Rcap; float* kf; size_t kfcap; int Rowner; int sf; } rgrp_t;   // kind 32=pair,16=single,8,4; 33/34=pair+fmla；kf = pairf3 的三链 b 打包 [KH][steps][4]
 typedef struct { int g; long base; } ritem_t;
-typedef struct { int item; long ja, jb; } rpiece_t;
+typedef struct { int item; unsigned char ya, yb, af, cf; long ja, jb; int dep_first, dep_end; } rpiece_t;
+_Static_assert(sizeof(rpiece_t)==32 && offsetof(rpiece_t,ja)==8 && offsetof(rpiece_t,dep_first)==24,
+               "piece phases must use only former padding");
 typedef struct {
     rgrp_t G[12]; int ng;
     ritem_t* items; double* cost; int nit, itcap; double C;
@@ -2508,8 +2703,8 @@ typedef struct {
 } rplan_t;
 static rplan_t g_rp;
 
-// R/kf 打包的并行化：chunk = (组 g, 行 y)，id = g*KH + y。内容由 (kernel, 形状) 唯一决定 → 幂等，可重复执行。
-// 全体线程原子认领；认领耗尽后空闲线程直接重做未完成的 chunk（不自旋等慢线程，分时/换出不放大）。
+// R/kf packing: unique atomic claims; wait for each owner to publish completion.
+// Equal values do not make concurrent non-atomic writes safe.
 static uint32_t g_pk_next;
 static uint8_t g_pk_done[4096];
 static int g_pk_nc = 0;
@@ -2524,7 +2719,7 @@ static void roll_pack_chunk(const rplan_t* P, const float* k, long KH, long KW, 
     if (G->Rowner == i / (int)KH)
     roll_build_R_row(G->R, k, KH, KW, G->steps, G->s_base,
                      (G->kind == 32 || G->kind == 33 || G->kind == 34 || G->kind == 35 || G->kind == 17) ? 16 : G->kind == 9 ? 8 : G->kind, y);
-    if ((G->kind == 34 || G->kind == 35) && G->kfowner == i / (int)KH) {   // kf[a][X] = {k[a][X], k[(a+1)%KH][X], k[(a+2)%KH][X], (k[(a+3)%KH][X])}，a = y；共享组只由属主构建
+    if (G->kind == 34 || G->kind == 35) {       // kf[a][X] = {k[a][X], k[(a+1)%KH][X], k[(a+2)%KH][X], (k[(a+3)%KH][X])}，a = y
         const long a = y;
         const long a1 = a + 1 >= KH ? a + 1 - KH : a + 1, a2 = a + 2 >= KH ? a + 2 - KH : a + 2, a3 = a + 3 >= KH ? a + 3 - KH : a + 3;
         float* d = G->kf + a * G->steps * 4;
@@ -2545,15 +2740,10 @@ static void roll_pack_all(const rplan_t* P, const float* k, long KH, long KW)
         roll_pack_chunk(P, k, KH, KW, (int)i);
         __atomic_store_n(&g_pk_done[i], 1, __ATOMIC_RELEASE);
     }
-    for (;;) {   // 兜底：把仍未完成的 chunk 直接重做（幂等，写入值相同），全部完成即进入计算
-        int all = 1;
-        for (int i = 0; i < nc; i++)
-            if (!__atomic_load_n(&g_pk_done[i], __ATOMIC_ACQUIRE)) {
-                all = 0; roll_pack_chunk(P, k, KH, KW, i);
-                __atomic_store_n(&g_pk_done[i], 1, __ATOMIC_RELEASE);
-            }
-        if (all) break;
-    }
+    for (int i = 0; i < nc; i++)
+        while (!__atomic_load_n(&g_pk_done[i], __ATOMIC_ACQUIRE))
+            asm volatile("yield" ::: "memory");
+
 }
 static int g_roll_diag = 0;
 static int g_roll_step = 8;              // 条带块长 = g_roll_step*KH 行（CONV_ROLL_STEP 覆盖，默认 8 与远端 v54 一致）
@@ -2609,9 +2799,25 @@ static int roll_groups(long KH, long KW, rgrp_t* G)
 // Preserve the original rolling plan when a 128-column K9 strip cannot fit.
 static int roll_groups_width(long KH, long KW, rgrp_t* G, long outW)
 {
-    if (outW >= 128) return roll_groups(KH, KW, G);
-    int ng = roll_groups_base(KH, KW, G);
-    for (int g = 0; g < ng; g++) G[g].sf = KH - 1;
+    int ng;
+    if (outW >= 128) ng = roll_groups(KH, KW, G);
+    else {
+        ng = roll_groups_base(KH, KW, G);
+        for (int g = 0; g < ng; g++) G[g].sf = KH - 1;
+    }
+    if (outW >= 192) {
+        int pair = -1, tail = -1;
+        for (int g = 0; g < ng; g++) {
+            if (G[g].kind == 33) pair = g;
+            if (G[g].kind == 8 && G[g].nvA == 8) tail = g;
+        }
+        if (pair >= 0 && tail >= 0) {
+            G[pair].kind = 35;
+            G[tail].kind = 5; G[tail].nvA = 5; G[tail].width = 192;
+            G[tail].steps = ((KW + 4) / 3) * 3;
+            G[tail].RSB = G[tail].steps * 64;
+        }
+    }
     return ng;
 }
 // 滚动形态的结构性开关（与具体用例尺寸无关）：KH ≥ 16 才有 16 残差组（≤ 256 保证分组数 ≤ 12）、
@@ -2625,6 +2831,35 @@ static int roll_shape_ok(long H, long W, long KH, long KW)
     if (outH < 1) return 0;
     return 1;
 }
+// A clamped final strip overlaps only its immediate predecessor. Order
+// intersecting row pieces, leaving disjoint rows and all other strips parallel.
+// Dependencies point strictly to earlier items, so the claim graph is acyclic.
+static void roll_link_output_dependencies(rplan_t* P)
+{
+    for (int i = 0; i < P->npieces; i++) {
+        rpiece_t* pc = &P->pieces[i];
+        pc->dep_first = pc->dep_end = 0;
+        const int item = pc->item;
+        if (item == 0) continue;
+        const ritem_t* current = &P->items[item];
+        const ritem_t* previous = &P->items[item - 1];
+        if (previous->g != current->g ||
+            previous->base + P->G[current->g].width <= current->base) continue;
+        for (int j = i - 1; j >= 0; j--) {
+            const rpiece_t* other = &P->pieces[j];
+            if (other->item < item - 1) break;
+            if (other->item != item - 1 || other->jb <= pc->ja || other->ja >= pc->jb) continue;
+            if (!pc->dep_end) pc->dep_end = j + 1;
+            pc->dep_first = j;
+        }
+    }
+}
+
+static inline long roll_phase_sub(long a, long b, long kh)
+{
+    long d=a-b; return d<0 ? d+kh : d;
+}
+
 static void roll_prepare(const float* k, long H, long W, long KH, long KW, int nth)
 {
     rplan_t* P = &g_rp;
@@ -2651,22 +2886,9 @@ static void roll_prepare(const float* k, long H, long W, long KH, long KW, int n
             }
 
             if (G->kind == 34 || G->kind == 35) {
-                // kf 内容只依赖 (a, X, steps, kind)（与折叠起点 sf 无关）：同 kind 同 steps 的组共享一份
-                //（k81 的两个 pairf4 组逐位相同，省一半 kf 打包与 ~105KB L2 占用），gdone 放行时连带检查属主组。
-                G->kfowner = g;
-                int shared = 0;
-                for (int p = 0; p < g; p++) {
-                    const rgrp_t* A = &P->G[p];
-                    if (A->kind == G->kind && A->steps == G->steps && A->kf) {
-                        G->kf = A->kf; G->kfcap = A->kfcap; G->kfowner = A->kfowner; shared = 1;
-                        break;
-                    }
-                }
-                if (!shared) {
-                    size_t kfneed = (size_t)KH * G->steps * 4 * sizeof(float);
-                    if (g_rbuf[g].kfcap < kfneed) { free(g_rbuf[g].kf); g_rbuf[g].kf = alloc_aligned(kfneed); g_rbuf[g].kfcap = g_rbuf[g].kf ? kfneed : 0; }
-                    G->kf = g_rbuf[g].kf; G->kfcap = g_rbuf[g].kfcap;
-                }
+                size_t kfneed = (size_t)KH * G->steps * 4 * sizeof(float);
+                if (g_rbuf[g].kfcap < kfneed) { free(g_rbuf[g].kf); g_rbuf[g].kf = alloc_aligned(kfneed); g_rbuf[g].kfcap = g_rbuf[g].kf ? kfneed : 0; }
+                G->kf = g_rbuf[g].kf; G->kfcap = g_rbuf[g].kfcap;
             }
         }
         int nit = 0;
@@ -2679,7 +2901,7 @@ static void roll_prepare(const float* k, long H, long W, long KH, long KW, int n
             for (long st = 0; st < nstrip; st++) {
                 long base = st * G->width; if (base + G->width > outW) base = outW - G->width;
                 P->items[P->nit] = (ritem_t){g, base};
-                double w = G->kind == 9 ? g_knobs.roll_w9 / 100.0 : G->kind == 8 ? g_knobs.roll_w8 / 100.0 : G->kind == 4 ? g_knobs.roll_w4 / 100.0 : (G->kind == 16 || G->kind == 17) ? g_knobs.roll_w16 / 100.0 : 1.0;
+                double w = G->kind == 9 ? 140/100.0 : G->kind == 8 ? g_knobs.roll_w8 / 100.0 : (G->kind == 4 || G->kind == 5) ? g_knobs.roll_w4 / 100.0 : (G->kind == 16 || G->kind == 17) ? g_knobs.roll_w16 / 100.0 : 1.0;
                 P->cost[P->nit] = (double)G->steps * outH * w;   // ∝ tile-步数（各类都是 4 tile）× 相对慢速权重
                 P->C += P->cost[P->nit]; P->nit++;
             }
@@ -2689,7 +2911,7 @@ static void roll_prepare(const float* k, long H, long W, long KH, long KW, int n
         // 精确静态划分：片段代价 = 权重 × 步数 × (行数 + KH-1)，贪心填到目标，整项放不下就按行切开
         const long ovh = KH - 1;
         int need = 2 * P->nit + 2 * nth + 4;
-        if (P->pcap < need) { free(P->pieces); free(P->pstart); P->pieces = malloc(need * sizeof(rpiece_t)); P->pstart = malloc((nth + 1) * sizeof(int)); P->pcap = need; }
+        if (P->pcap < need) { free(P->pieces); free(P->pstart); P->pieces = malloc(need * sizeof(rpiece_t)); P->pstart = malloc(need * sizeof(int)); P->pcap = need; }
         double total = 0, wsum = 0;
         for (int i = 0; i < P->nit; i++) { double w = P->cost[i] / outH; total += w * (outH + ovh); wsum += w; }
         total += (nth - 1) * (wsum / P->nit) * ovh;
@@ -2700,15 +2922,26 @@ static void roll_prepare(const float* k, long H, long W, long KH, long KW, int n
             while (i < P->nit) {
                 double w = P->cost[i] / outH; long R = outH - r;
                 double full = w * (R + ovh);
-                if (acc + full <= target * 1.0005 || t == nth - 1) { P->pieces[np++] = (rpiece_t){i, r, outH}; acc += full; i++; r = 0; continue; }
+                if (acc + full <= target * 1.0005 || t == nth - 1) { P->pieces[np++] = (rpiece_t){.item=i, .ja=r, .jb=outH}; acc += full; i++; r = 0; continue; }
                 long rows = (long)((target - acc) / w) - ovh;
                 if (rows < 8) break;
                 if (rows > R - 8) rows = R - 8;                // 剩余太少就整项给下一个线程
-                P->pieces[np++] = (rpiece_t){i, r, r + rows}; acc += w * (rows + ovh); r += rows;
+                P->pieces[np++] = (rpiece_t){.item=i, .ja=r, .jb=r+rows}; acc += w * (rows + ovh); r += rows;
                 break;
             }
         }
         P->pstart[nth] = np; P->npieces = np; P->pnth = nth;
+        roll_link_output_dependencies(P);
+        // Continuation offsets are multiples of KH, so these phases are
+        // constant within a piece. Rebuild them with every call's plan.
+        for(int pi=0;pi<P->npieces;pi++) {
+            rpiece_t* pc=&P->pieces[pi]; const rgrp_t* g=&P->G[P->items[pc->item].g];
+            long jp=pc->ja % KH, ya=roll_phase_sub(jp,g->s_base,KH);
+            pc->ya=(unsigned char)ya;
+            pc->yb=(unsigned char)(ya>=16 ? ya-16 : ya+KH-16);
+            pc->af=(unsigned char)roll_phase_sub(jp,g->sf,KH);
+            pc->cf=(unsigned char)roll_phase_sub(g->sf,g->s_base,KH);
+        }
     }
     if (P->nthr_alloc < nth) {
         free(P->rings); free(P->scratch);
@@ -2729,18 +2962,26 @@ static void roll_prepare(const float* k, long H, long W, long KH, long KW, int n
 static inline void carry_store_za(float* p)
 {
     asm volatile("mov w12, #0\n\t"
-                 "49: str za[w12, 0], [%[p]]\n\t"
-                 "add %[p], %[p], #64\n\t"
-                 "add w12, w12, #1\n\t"
+                 "49:\n\t"
+                 "str za[w12, 0], [%[p], #0, mul vl]\n\t"
+                 "str za[w12, 1], [%[p], #1, mul vl]\n\t"
+                 "str za[w12, 2], [%[p], #2, mul vl]\n\t"
+                 "str za[w12, 3], [%[p], #3, mul vl]\n\t"
+                 "add %[p], %[p], #256\n\t"
+                 "add w12, w12, #4\n\t"
                  "cmp w12, #64\n\t" "b.lo 49b\n\t"
                  : [p] "+r"(p) : : "x12", "memory", "cc");
 }
 static inline void carry_load_za(const float* p)
 {
     asm volatile("mov w12, #0\n\t"
-                 "49: ldr za[w12, 0], [%[p]]\n\t"
-                 "add %[p], %[p], #64\n\t"
-                 "add w12, w12, #1\n\t"
+                 "49:\n\t"
+                 "ldr za[w12, 0], [%[p], #0, mul vl]\n\t"
+                 "ldr za[w12, 1], [%[p], #1, mul vl]\n\t"
+                 "ldr za[w12, 2], [%[p], #2, mul vl]\n\t"
+                 "ldr za[w12, 3], [%[p], #3, mul vl]\n\t"
+                 "add %[p], %[p], #256\n\t"
+                 "add w12, w12, #4\n\t"
                  "cmp w12, #64\n\t" "b.lo 49b\n\t"
                  : [p] "+r"(p) : : "x12", "memory", "cc");
 }
@@ -2756,12 +2997,32 @@ static int resume_claim(const rplan_t* P, int first, int last, int* cursor, long
             if (!__atomic_load_n(&g_pk_gdone[gi].v, __ATOMIC_ACQUIRE)) continue;
             const int ro = P->G[gi].Rowner;   // R 共享组：还需 R 所属组就绪（并行打包时组序不保证先后）
             if (ro != gi && !__atomic_load_n(&g_pk_gdone[ro].v, __ATOMIC_ACQUIRE)) continue;
-            const int ko = P->G[gi].kfowner;  // kf 共享组同理
-            if ((P->G[gi].kind == 34 || P->G[gi].kind == 35) && ko != gi && !__atomic_load_n(&g_pk_gdone[ko].v, __ATOMIC_ACQUIRE)) continue;
         }
         uint64_t w = __atomic_load_n(&P->ready[i].v, __ATOMIC_RELAXED);
         long total = P->pieces[i].jb - P->pieces[i].ja + KH - 1;
         if (w >= (uint64_t)total) continue; // Includes the high-bit busy marker.
+        // Wait only for the rows this chunk will actually write. A busy
+        // predecessor still publishes its completed prefix in the low bits;
+        // acquire observes that earlier release through the CAS release sequence.
+        const rpiece_t* pc = &P->pieces[i];
+        if (pc->dep_first != pc->dep_end) {
+            long step = g_roll_step * KH; if (step < KH) step = KH;
+            long rows = total - (long)w; if (rows > step) rows = step;
+            long lo = pc->ja + (long)w - KH + 1; if (lo < pc->ja) lo = pc->ja;
+            long hi = pc->ja + (long)w + rows - KH + 1;
+            int pending = 0;
+            for (int j = pc->dep_first; j < pc->dep_end; j++) {
+                const rpiece_t* previous = &P->pieces[j];
+                long begin = lo > previous->ja ? lo : previous->ja;
+                long end = hi < previous->jb ? hi : previous->jb;
+                if (begin >= end) continue;
+                uint64_t need = (uint64_t)(end - previous->ja + KH - 1);
+                uint64_t done = __atomic_load_n(&P->ready[j].v, __ATOMIC_ACQUIRE);
+                done &= ~((uint64_t)1 << 63);
+                if (done < need) { pending = 1; break; }
+            }
+            if (pending) continue;
+        }
         uint64_t nw = w | ((uint64_t)1 << 63);
         if (__atomic_compare_exchange_n(&P->ready[i].v, &w, nw, 0, __ATOMIC_ACQUIRE, __ATOMIC_RELAXED)) {
             *off = (long)w; return i;
@@ -2834,18 +3095,18 @@ static void roll_worker(int tid, int nth, const ctx_t* c)
         const long base = P->items[pc->item].base;
         uint64_t t0 = g_roll_diag ? cyc() : 0;
         kp_t K = { c->in + ja * W + base, W * 4, g->R, g->RSB, KH, g->steps, rows,
-                   c->out + (ja - KH + 1) * c->outW + base, scr,
-                   ((ja + 1 - g->s_base) % KH + KH) % KH, ((ja + 1 - g->s_base - 16) % KH + KH) % KH,
-                   ((ja - g->s_base) % KH + KH) % KH, ((ja - g->s_base - 16) % KH + KH) % KH, g->nvA, g->nvB, ring, KW, c->outW * 4,
+                   (uintptr_t)c->out + (uintptr_t)((ja - KH + 1) * c->outW + base) * sizeof(float), scr,
+                   (pc->ya+1==KH ? 0 : pc->ya+1), (pc->yb+1==KH ? 0 : pc->yb+1),
+                   pc->ya, pc->yb, g->nvA, g->nvB, ring, KW, c->outW * 4,
                    NULL, NULL, NULL, 0, NULL, 0 };
         if (g->kind == 34 || g->kind == 35) {
-            const long sF = g->sf, a0 = ((ja - sF) % KH + KH) % KH;   // kf 链的起始 kernel 行
+            const long sF = g->sf, a0 = pc->af;   // kf 链的起始 kernel 行
             K.kb0 = g->kf + a0 * g->steps * 4; K.kbase = g->kf; K.kend = g->kf + KH * g->steps * 4;
-            K.cf0 = ((sF - g->s_base) % KH + KH) % KH;
+            K.cf0 = pc->cf;
         } else if (g->kind == 33 || g->kind == 9) {
-            const long sF = g->sf, kj0 = ((ja - sF) % KH + KH) % KH;
+            const long sF = g->sf, kj0 = pc->af;
             K.kb0 = c->k + kj0 * KW; K.kbase = c->k; K.kend = c->k + KH * KW;
-            K.cf0 = ((sF - g->s_base) % KH + KH) % KH;
+            K.cf0 = pc->cf;
         } else if (g->kind == 17) {
             const long sF1 = KH - 3, sF2 = KH - 2;
             K.kb0 = c->k + (((ja - sF1) % KH + KH) % KH) * KW;
@@ -2857,7 +3118,7 @@ static void roll_worker(int tid, int nth, const ctx_t* c)
         K.carry = state + 1024; K.resume = off != 0;
         if (off) carry_load_za(state); else sme_zero_za();
         if (g->kind == 32) k16pair(&K); else if (g->kind == 33) k16pairf(&K); else if (g->kind == 34) k16pairf3(&K); else if (g->kind == 35) k16pairf4(&K); else if (g->kind == 16) k16single(&K);
-        else if (g->kind == 17) k16singlef2(&K); else if (g->kind == 9) k8f(&K); else if (g->kind == 8) k8(&K); else k4(&K);
+        else if (g->kind == 17) k16singlef2(&K); else if (g->kind == 9) k8f(&K); else if (g->kind == 8) k8(&K); else if (g->kind == 5) k5(&K); else k4(&K);
         if (g_roll_diag) { int ki = roll_kind_idx(g->kind); D->tk[ki] += cyc() - t0; D->ts[ki] += 4L * g->steps * (rows); }
         if (off + rows < total) carry_store_za(state);
 
@@ -2875,7 +3136,7 @@ static void roll_diag_print(int nth)
         for (int k = 0; k < 4; k++) { tk[k] += g_rdiag[t].tk[k]; ts[k] += g_rdiag[t].ts[k]; }
         double ms = g_rdiag[t].tot / 1e5; if (ms < mn) mn = ms; if (ms > mx) mx = ms; av += ms / nth;
     }
-    fprintf(stderr, "[roll] thr ms min/avg/max %.3f/%.3f/%.3f | 周期/tile步: pair %.2f single %.2f 8x2 %.2f 4x4 %.2f | 份额 %%: %.1f %.1f %.1f %.1f\n", mn, av, mx,
+    fprintf(stderr, "[roll] thr ms min/avg/max %.3f/%.3f/%.3f | 周期/tile步: pair %.2f single %.2f 8x2 %.2f 4x4/5x3 %.2f | 份额 %%: %.1f %.1f %.1f %.1f\n", mn, av, mx,
             ts[0] ? tk[0] * tick_cyc / ts[0] : 0, ts[1] ? tk[1] * tick_cyc / ts[1] : 0, ts[2] ? tk[2] * tick_cyc / ts[2] : 0, ts[3] ? tk[3] * tick_cyc / ts[3] : 0,
             100.0 * tk[0] / (tk[0] + tk[1] + tk[2] + tk[3] + 1), 100.0 * tk[1] / (tk[0] + tk[1] + tk[2] + tk[3] + 1), 100.0 * tk[2] / (tk[0] + tk[1] + tk[2] + tk[3] + 1), 100.0 * tk[3] / (tk[0] + tk[1] + tk[2] + tk[3] + 1));
     if (getenv("CONV_ROLL_DIAG_THR")) {
@@ -2971,8 +3232,10 @@ static void conv2d_roll(const CONVFLOAT* in, CONVINT H, CONVINT W, const CONVFLO
     read_knobs();
     g_roll_pd = g_knobs.roll_pd;
     g_roll_diag = env_int("CONV_ROLL_DIAG", 0);
-    g_roll_step = env_int("CONV_ROLL_STEP", 8);
     roll_prepare(k, H, W, KH, KW, nth);
+    int step_default=8;
+    for(int g=0;g<g_rp.ng;g++) if(g_rp.G[g].kind==5) { step_default=2; break; }
+    g_roll_step = env_int("CONV_ROLL_STEP", step_default);
     g_pk_nc = g_rp.ng * (int)KH; g_pk_next = 0;            // 重置打包 chunk 游标/完成标志（ng ≤ 12、KH ≤ 256 → nc ≤ 3072）
     memset(g_pk_done, 0, (size_t)g_pk_nc);
     long pk_el = 0;                                        // 打包总元素数（R 16/步 + kf 4/步）

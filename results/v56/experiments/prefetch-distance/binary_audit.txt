@@ -1,0 +1,3 @@
+Job 1585771: downloaded post-run executable matches the hash logged before all configurations.
+SHA256 c407def7f13d43c5cc49db9764c901d06b782aee1ec639e0d23e4315d5a65f18
+The job compiles once and uses that path for all settings; no per-setting binary rebuild.

@@ -1,0 +1,3 @@
+conv: every non-README member byte-identical to archive validated in job 1584311; sha256=3228e4fa4b3ed7cb9e6d63e2f8241ac2cc0b1b0711232424a9b440c44798d71a
+conv_nf3: every non-README member byte-identical to archive validated in job 1584311; sha256=0fd57422fb8324df2064607a0929945c3a35330e4eef2106106c1fd03e04156e
+conv_diag: every non-README member byte-identical to archive validated in job 1584311; sha256=1ef0739996d407a3cff0230ff8858145fb82c93c52a334c436735e514a1fd853

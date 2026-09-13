@@ -1,0 +1,38 @@
+Compiler output audit, GCC -O3 -fopenmp -S -fverbose-asm.
+The selected block is the chunk-size helper at a dependency-claim call site; this is not a whole-binary performance proof.
+
+old: build/v56/experiments/tail-cutoff/cut2_verbose.s; sha256=267393737f3708294cda5bee351cf4da55f869062d90e6d5c2aada745283e18b
+
+.L275:
+	.cfi_restore_state
+// build/v56/experiments/tail-cutoff/cut2.c:2998:     if (g_roll_guided && __atomic_load_n(&g_roll_unfinished.v, __ATOMIC_RELAXED) > (uint64_t)g_roll_cutoff && remaining > 4 * step) limit = 2 * step;
+	add	x19, x18, 776	// tmp232, tmp225,
+	ldr	x19, [x19]	// _113,
+// build/v56/experiments/tail-cutoff/cut2.c:2998:     if (g_roll_guided && __atomic_load_n(&g_roll_unfinished.v, __ATOMIC_RELAXED) > (uint64_t)g_roll_cutoff && remaining > 4 * step) limit = 2 * step;
+	ldrsw	x18, [x18, 840]	// g_roll_cutoff, g_roll_cutoff
+// build/v56/experiments/tail-cutoff/cut2.c:2998:     if (g_roll_guided && __atomic_load_n(&g_roll_unfinished.v, __ATOMIC_RELAXED) > (uint64_t)g_roll_cutoff && remaining > 4 * step) limit = 2 * step;
+	cmp	x19, x18	// _113, g_roll_cutoff
+	bls	.L246		//,
+// build/v56/experiments/tail-cutoff/cut2.c:2998:     if (g_roll_guided && __atomic_load_n(&g_roll_unfinished.v, __ATOMIC_RELAXED) > (uint64_t)g_roll_cutoff && remaining > 4 * step) limit = 2 * step;
+	cmp	x7, x10, lsl 2	// remaining, limit,
+	lsl	x18, x10, 1	// tmp259, limit,
+	csel	x10, x18, x10, gt	// limit, tmp259, limit,
+	b	.L246		//
+
+local: build/v56/experiments/cutoff-local/local_verbose.s; sha256=c6ec28e91a07e51792ba64ea212217fbefbfa5bc37fa9c0abd08c7e5749bf582
+
+.L275:
+	.cfi_restore_state
+// build/v56/experiments/cutoff-local/local.c:2998:     if (g_roll_guided && remaining > 4 * step && __atomic_load_n(&g_roll_unfinished.v, __ATOMIC_RELAXED) > (uint64_t)g_roll_cutoff) limit = 2 * step;
+	cmp	x7, x10, lsl 2	// remaining, limit,
+	ble	.L246		//,
+// build/v56/experiments/cutoff-local/local.c:2998:     if (g_roll_guided && remaining > 4 * step && __atomic_load_n(&g_roll_unfinished.v, __ATOMIC_RELAXED) > (uint64_t)g_roll_cutoff) limit = 2 * step;
+	add	x19, x18, 776	// tmp233, tmp225,
+	ldr	x20, [x19]	// _114,
+// build/v56/experiments/cutoff-local/local.c:2998:     if (g_roll_guided && remaining > 4 * step && __atomic_load_n(&g_roll_unfinished.v, __ATOMIC_RELAXED) > (uint64_t)g_roll_cutoff) limit = 2 * step;
+	ldrsw	x19, [x18, 840]	// g_roll_cutoff, g_roll_cutoff
+// build/v56/experiments/cutoff-local/local.c:2998:     if (g_roll_guided && remaining > 4 * step && __atomic_load_n(&g_roll_unfinished.v, __ATOMIC_RELAXED) > (uint64_t)g_roll_cutoff) limit = 2 * step;
+	lsl	x18, x10, 1	// tmp259, limit,
+	cmp	x20, x19	// _114, g_roll_cutoff
+	csel	x10, x18, x10, hi	// limit, tmp259, limit,
+	b	.L246		//

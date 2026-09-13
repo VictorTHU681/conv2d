@@ -1,0 +1,6 @@
+Job 1585149: all three candidate archives pass 12 full-reference checks, maximum errors zero.
+conv.zip: candidate hash verified locally and against server log: cafbe2769786d362c3c0eca925605e176081dd27681a6c16c5caed66b19a2705
+conv_nf3.zip: candidate hash verified locally and against server log: f540570c91dc64bf68c56afd3c760704fa821e7f8a8baddb57ef6d0c60f0c4fb
+conv_diag.zip: candidate hash verified locally and against server log: d3b091aad111b2a84537a27e95f198347f7c1e46f5f64cec129c9fe1b1f4a730
+Manifest paths were expanded from stage-relative submissions/ paths to explicit stage paths; archive bytes and hashes did not change.
+Candidate archives remain isolated. Root release source stays 1d3f5071; no performance adoption or blanket rules-compliance claim.

@@ -1,0 +1,262 @@
+
+build/v56/experiments/k33-window/bench_unroll4:     file format elf64-littleaarch64
+
+
+Disassembly of section .init:
+
+Disassembly of section .plt:
+
+Disassembly of section .text:
+
+0000000000422080 <k16pairf>:
+  422080:	aa0003e1 	mov	x1, x0
+  422084:	a9a47bfd 	stp	x29, x30, [sp, #-448]!
+  422088:	d2800022 	mov	x2, #0x1                   	// #1
+  42208c:	910003fd 	mov	x29, sp
+  422090:	910203f2 	add	x18, sp, #0x80
+  422094:	f9401423 	ldr	x3, [x1, #40]
+  422098:	aa1203e0 	mov	x0, x18
+  42209c:	a90153f3 	stp	x19, x20, [sp, #16]
+  4220a0:	91007c63 	add	x3, x3, #0x1f
+  4220a4:	a9025bf5 	stp	x21, x22, [sp, #32]
+  4220a8:	a90363f7 	stp	x23, x24, [sp, #48]
+  4220ac:	a9046bf9 	stp	x25, x26, [sp, #64]
+  4220b0:	a90573fb 	stp	x27, x28, [sp, #80]
+  4220b4:	6d0627e8 	stp	d8, d9, [sp, #96]
+  4220b8:	6d072fea 	stp	d10, d11, [sp, #112]
+  4220bc:	97fffe11 	bl	421900 <fill_args.constprop.0>
+  4220c0:	910203f2 	add	x18, sp, #0x80
+  4220c4:	3dc02420 	ldr	q0, [x1, #144]
+  4220c8:	f9405020 	ldr	x0, [x1, #160]
+  4220cc:	f900abe0 	str	x0, [sp, #336]
+  4220d0:	f9405420 	ldr	x0, [x1, #168]
+  4220d4:	910803e1 	add	x1, sp, #0x200
+  4220d8:	f900afe0 	str	x0, [sp, #344]
+  4220dc:	3c938020 	stur	q0, [x1, #-200]
+  4220e0:	f9400240 	ldr	x0, [x18]
+  4220e4:	f9400641 	ldr	x1, [x18, #8]
+  4220e8:	f9400a44 	ldr	x4, [x18, #16]
+  4220ec:	f9400e45 	ldr	x5, [x18, #24]
+  4220f0:	f9401242 	ldr	x2, [x18, #32]
+  4220f4:	f9401643 	ldr	x3, [x18, #40]
+  4220f8:	f9401a46 	ldr	x6, [x18, #48]
+  4220fc:	f9401e47 	ldr	x7, [x18, #56]
+  422100:	f9402248 	ldr	x8, [x18, #64]
+  422104:	f9402649 	ldr	x9, [x18, #72]
+  422108:	f9402a4a 	ldr	x10, [x18, #80]
+  42210c:	f9402e5b 	ldr	x27, [x18, #88]
+  422110:	f9407253 	ldr	x19, [x18, #224]
+  422114:	f940364e 	ldr	x14, [x18, #104]
+  422118:	f9403a58 	ldr	x24, [x18, #112]
+  42211c:	f9403e59 	ldr	x25, [x18, #120]
+  422120:	f940425a 	ldr	x26, [x18, #128]
+  422124:	f9404e51 	ldr	x17, [x18, #152]
+  422128:	f9405256 	ldr	x22, [x18, #160]
+  42212c:	8b11023c 	add	x28, x17, x17
+  422130:	8b16039c 	add	x28, x28, x22
+  422134:	f9405a56 	ldr	x22, [x18, #176]
+  422138:	25b61fe3 	whilelo	p3.s, xzr, x22
+  42213c:	d280000b 	mov	x11, #0x0                   	// #0
+  422140:	2598e3e0 	ptrue	p0.s
+  422144:	f9405e4d 	ldr	x13, [x18, #184]
+  422148:	25b8c01f 	mov	z31.s, #0
+  42214c:	25b8c00a 	mov	z10.s, #0
+  422150:	25b8c00b 	mov	z11.s, #0
+  422154:	f940924c 	ldr	x12, [x18, #288]
+  422158:	b400008c 	cbz	x12, 422168 <k16pairf+0xe8>
+  42215c:	f9408e4c 	ldr	x12, [x18, #280]
+  422160:	a540a18a 	ld1w	{z10.s}, p0/z, [x12]
+  422164:	a541a18b 	ld1w	{z11.s}, p0/z, [x12, #1, mul vl]
+  422168:	8b1a0015 	add	x21, x0, x26
+  42216c:	f9407a4c 	ldr	x12, [x18, #240]
+  422170:	8b0c0230 	add	x16, x17, x12
+  422174:	cb110391 	sub	x17, x28, x17
+  422178:	8b010016 	add	x22, x0, x1
+  42217c:	f100051f 	cmp	x8, #0x1
+  422180:	9a960016 	csel	x22, x0, x22, eq	// eq = none
+  422184:	aa1103f7 	mov	x23, x17
+  422188:	f940964c 	ldr	x12, [x18, #296]
+  42218c:	aa0703ef 	mov	x15, x7
+  422190:	b400036c 	cbz	x12, 4221fc <k16pairf+0x17c>
+  422194:	cb0c01ef 	sub	x15, x15, x12
+  422198:	d503201f 	nop
+  42219c:	d503201f 	nop
+  4221a0:	a540a200 	ld1w	{z0.s}, p0/z, [x16]
+  4221a4:	a541a201 	ld1w	{z1.s}, p0/z, [x16, #1, mul vl]
+  4221a8:	a540a042 	ld1w	{z2.s}, p0/z, [x2]
+  4221ac:	a540a063 	ld1w	{z3.s}, p0/z, [x3]
+  4221b0:	80820000 	fmopa	za0.s, p0/m, p0/m, z0.s, z2.s
+  4221b4:	80820021 	fmopa	za1.s, p0/m, p0/m, z1.s, z2.s
+  4221b8:	80830002 	fmopa	za2.s, p0/m, p0/m, z0.s, z3.s
+  4221bc:	80830023 	fmopa	za3.s, p0/m, p0/m, z1.s, z3.s
+  4221c0:	8540c1a4 	ld1rw	{z4.s}, p0/z, [x13]
+  4221c4:	65a4000a 	fmla	z10.s, p0/m, z0.s, z4.s
+  4221c8:	65a4002b 	fmla	z11.s, p0/m, z1.s, z4.s
+  4221cc:	910011ad 	add	x13, x13, #0x4
+  4221d0:	91001210 	add	x16, x16, #0x4
+  4221d4:	91010042 	add	x2, x2, #0x40
+  4221d8:	91010063 	add	x3, x3, #0x40
+  4221dc:	f98002a2 	prfm	pldl2keep, [x21]
+  4221e0:	a540a2d8 	ld1w	{z24.s}, p0/z, [x22]
+  4221e4:	e540e2f8 	st1w	{z24.s}, p0, [x23]
+  4221e8:	910102b5 	add	x21, x21, #0x40
+  4221ec:	910102d6 	add	x22, x22, #0x40
+  4221f0:	910102f7 	add	x23, x23, #0x40
+  4221f4:	f100058c 	subs	x12, x12, #0x1
+  4221f8:	54fffd41 	b.ne	4221a0 <k16pairf+0x120>  // b.any
+  4221fc:	f9409a4c 	ldr	x12, [x18, #304]
+  422200:	b400012c 	cbz	x12, 422224 <k16pairf+0x1a4>
+  422204:	f98002a2 	prfm	pldl2keep, [x21]
+  422208:	a540a2d8 	ld1w	{z24.s}, p0/z, [x22]
+  42220c:	e540e2f8 	st1w	{z24.s}, p0, [x23]
+  422210:	910102b5 	add	x21, x21, #0x40
+  422214:	910102d6 	add	x22, x22, #0x40
+  422218:	910102f7 	add	x23, x23, #0x40
+  42221c:	f100058c 	subs	x12, x12, #0x1
+  422220:	54ffff21 	b.ne	422204 <k16pairf+0x184>  // b.any
+  422224:	f98002a2 	prfm	pldl2keep, [x21]
+  422228:	a540aed8 	ld1w	{z24.s}, p3/z, [x22]
+  42222c:	e540eef8 	st1w	{z24.s}, p3, [x23]
+  422230:	f10011ff 	cmp	x15, #0x4
+  422234:	54000803 	b.cc	422334 <k16pairf+0x2b4>  // b.lo, b.ul, b.last
+  422238:	a540a200 	ld1w	{z0.s}, p0/z, [x16]
+  42223c:	a541a201 	ld1w	{z1.s}, p0/z, [x16, #1, mul vl]
+  422240:	a540a042 	ld1w	{z2.s}, p0/z, [x2]
+  422244:	a540a063 	ld1w	{z3.s}, p0/z, [x3]
+  422248:	80820000 	fmopa	za0.s, p0/m, p0/m, z0.s, z2.s
+  42224c:	80820021 	fmopa	za1.s, p0/m, p0/m, z1.s, z2.s
+  422250:	80830002 	fmopa	za2.s, p0/m, p0/m, z0.s, z3.s
+  422254:	80830023 	fmopa	za3.s, p0/m, p0/m, z1.s, z3.s
+  422258:	8540c1a4 	ld1rw	{z4.s}, p0/z, [x13]
+  42225c:	65a4000a 	fmla	z10.s, p0/m, z0.s, z4.s
+  422260:	65a4002b 	fmla	z11.s, p0/m, z1.s, z4.s
+  422264:	910011ad 	add	x13, x13, #0x4
+  422268:	91001210 	add	x16, x16, #0x4
+  42226c:	91010042 	add	x2, x2, #0x40
+  422270:	91010063 	add	x3, x3, #0x40
+  422274:	a540a200 	ld1w	{z0.s}, p0/z, [x16]
+  422278:	a541a201 	ld1w	{z1.s}, p0/z, [x16, #1, mul vl]
+  42227c:	a540a042 	ld1w	{z2.s}, p0/z, [x2]
+  422280:	a540a063 	ld1w	{z3.s}, p0/z, [x3]
+  422284:	80820000 	fmopa	za0.s, p0/m, p0/m, z0.s, z2.s
+  422288:	80820021 	fmopa	za1.s, p0/m, p0/m, z1.s, z2.s
+  42228c:	80830002 	fmopa	za2.s, p0/m, p0/m, z0.s, z3.s
+  422290:	80830023 	fmopa	za3.s, p0/m, p0/m, z1.s, z3.s
+  422294:	8540c1a4 	ld1rw	{z4.s}, p0/z, [x13]
+  422298:	65a4000a 	fmla	z10.s, p0/m, z0.s, z4.s
+  42229c:	65a4002b 	fmla	z11.s, p0/m, z1.s, z4.s
+  4222a0:	910011ad 	add	x13, x13, #0x4
+  4222a4:	91001210 	add	x16, x16, #0x4
+  4222a8:	91010042 	add	x2, x2, #0x40
+  4222ac:	91010063 	add	x3, x3, #0x40
+  4222b0:	a540a200 	ld1w	{z0.s}, p0/z, [x16]
+  4222b4:	a541a201 	ld1w	{z1.s}, p0/z, [x16, #1, mul vl]
+  4222b8:	a540a042 	ld1w	{z2.s}, p0/z, [x2]
+  4222bc:	a540a063 	ld1w	{z3.s}, p0/z, [x3]
+  4222c0:	80820000 	fmopa	za0.s, p0/m, p0/m, z0.s, z2.s
+  4222c4:	80820021 	fmopa	za1.s, p0/m, p0/m, z1.s, z2.s
+  4222c8:	80830002 	fmopa	za2.s, p0/m, p0/m, z0.s, z3.s
+  4222cc:	80830023 	fmopa	za3.s, p0/m, p0/m, z1.s, z3.s
+  4222d0:	8540c1a4 	ld1rw	{z4.s}, p0/z, [x13]
+  4222d4:	65a4000a 	fmla	z10.s, p0/m, z0.s, z4.s
+  4222d8:	65a4002b 	fmla	z11.s, p0/m, z1.s, z4.s
+  4222dc:	910011ad 	add	x13, x13, #0x4
+  4222e0:	91001210 	add	x16, x16, #0x4
+  4222e4:	91010042 	add	x2, x2, #0x40
+  4222e8:	91010063 	add	x3, x3, #0x40
+  4222ec:	a540a200 	ld1w	{z0.s}, p0/z, [x16]
+  4222f0:	a541a201 	ld1w	{z1.s}, p0/z, [x16, #1, mul vl]
+  4222f4:	a540a042 	ld1w	{z2.s}, p0/z, [x2]
+  4222f8:	a540a063 	ld1w	{z3.s}, p0/z, [x3]
+  4222fc:	80820000 	fmopa	za0.s, p0/m, p0/m, z0.s, z2.s
+  422300:	80820021 	fmopa	za1.s, p0/m, p0/m, z1.s, z2.s
+  422304:	80830002 	fmopa	za2.s, p0/m, p0/m, z0.s, z3.s
+  422308:	80830023 	fmopa	za3.s, p0/m, p0/m, z1.s, z3.s
+  42230c:	8540c1a4 	ld1rw	{z4.s}, p0/z, [x13]
+  422310:	65a4000a 	fmla	z10.s, p0/m, z0.s, z4.s
+  422314:	65a4002b 	fmla	z11.s, p0/m, z1.s, z4.s
+  422318:	910011ad 	add	x13, x13, #0x4
+  42231c:	91001210 	add	x16, x16, #0x4
+  422320:	91010042 	add	x2, x2, #0x40
+  422324:	91010063 	add	x3, x3, #0x40
+  422328:	d10011ef 	sub	x15, x15, #0x4
+  42232c:	f10011ff 	cmp	x15, #0x4
+  422330:	54fff842 	b.cs	422238 <k16pairf+0x1b8>  // b.hs, b.nlast
+  422334:	b400024f 	cbz	x15, 42237c <k16pairf+0x2fc>
+  422338:	a540a200 	ld1w	{z0.s}, p0/z, [x16]
+  42233c:	a541a201 	ld1w	{z1.s}, p0/z, [x16, #1, mul vl]
+  422340:	a540a042 	ld1w	{z2.s}, p0/z, [x2]
+  422344:	a540a063 	ld1w	{z3.s}, p0/z, [x3]
+  422348:	80820000 	fmopa	za0.s, p0/m, p0/m, z0.s, z2.s
+  42234c:	80820021 	fmopa	za1.s, p0/m, p0/m, z1.s, z2.s
+  422350:	80830002 	fmopa	za2.s, p0/m, p0/m, z0.s, z3.s
+  422354:	80830023 	fmopa	za3.s, p0/m, p0/m, z1.s, z3.s
+  422358:	8540c1a4 	ld1rw	{z4.s}, p0/z, [x13]
+  42235c:	65a4000a 	fmla	z10.s, p0/m, z0.s, z4.s
+  422360:	65a4002b 	fmla	z11.s, p0/m, z1.s, z4.s
+  422364:	910011ad 	add	x13, x13, #0x4
+  422368:	91001210 	add	x16, x16, #0x4
+  42236c:	91010042 	add	x2, x2, #0x40
+  422370:	91010063 	add	x3, x3, #0x40
+  422374:	f10005ef 	subs	x15, x15, #0x1
+  422378:	54fffe01 	b.ne	422338 <k16pairf+0x2b8>  // b.any
+  42237c:	eb05005f 	cmp	x2, x5
+  422380:	9a820082 	csel	x2, x4, x2, eq	// eq = none
+  422384:	eb05007f 	cmp	x3, x5
+  422388:	9a830083 	csel	x3, x4, x3, eq	// eq = none
+  42238c:	f9406a58 	ldr	x24, [x18, #208]
+  422390:	eb1801bf 	cmp	x13, x24
+  422394:	f9406258 	ldr	x24, [x18, #192]
+  422398:	9a8d030d 	csel	x13, x24, x13, eq	// eq = none
+  42239c:	eb0e017f 	cmp	x11, x14
+  4223a0:	9a8a2134 	csel	x20, x9, x10, cs	// cs = hs, nlast
+  4223a4:	f9406e58 	ldr	x24, [x18, #216]
+  4223a8:	eb18037f 	cmp	x27, x24
+  4223ac:	540002a0 	b.eq	422400 <k16pairf+0x380>  // b.none
+  4223b0:	f100837f 	cmp	x27, #0x20
+  4223b4:	540002e2 	b.cs	422410 <k16pairf+0x390>  // b.hs, b.nlast
+  4223b8:	f100437f 	cmp	x27, #0x10
+  4223bc:	54000122 	b.cs	4223e0 <k16pairf+0x360>  // b.hs, b.nlast
+  4223c0:	2a1b03ec 	mov	w12, w27
+  4223c4:	c0828008 	mov	z8.s, p0/m, za0v.s[w12, 0]
+  4223c8:	c0828089 	mov	z9.s, p0/m, za1v.s[w12, 0]
+  4223cc:	e540e288 	st1w	{z8.s}, p0, [x20]
+  4223d0:	e541e289 	st1w	{z9.s}, p0, [x20, #1, mul vl]
+  4223d4:	c08083e0 	mov	za0v.s[w12, 0], p0/m, z31.s
+  4223d8:	c08083e4 	mov	za1v.s[w12, 0], p0/m, z31.s
+  4223dc:	1400000d 	b	422410 <k16pairf+0x390>
+  4223e0:	5100436c 	sub	w12, w27, #0x10
+  4223e4:	c0828108 	mov	z8.s, p0/m, za2v.s[w12, 0]
+  4223e8:	c0828189 	mov	z9.s, p0/m, za3v.s[w12, 0]
+  4223ec:	e540e288 	st1w	{z8.s}, p0, [x20]
+  4223f0:	e541e289 	st1w	{z9.s}, p0, [x20, #1, mul vl]
+  4223f4:	c08083e8 	mov	za2v.s[w12, 0], p0/m, z31.s
+  4223f8:	c08083ec 	mov	za3v.s[w12, 0], p0/m, z31.s
+  4223fc:	14000005 	b	422410 <k16pairf+0x390>
+  422400:	e540e28a 	st1w	{z10.s}, p0, [x20]
+  422404:	e541e28b 	st1w	{z11.s}, p0, [x20, #1, mul vl]
+  422408:	25b8c00a 	mov	z10.s, #0
+  42240c:	25b8c00b 	mov	z11.s, #0
+  422410:	9100077b 	add	x27, x27, #0x1
+  422414:	eb06037f 	cmp	x27, x6
+  422418:	9a9b03fb 	csel	x27, xzr, x27, eq	// eq = none
+  42241c:	8b010000 	add	x0, x0, x1
+  422420:	8b130129 	add	x9, x9, x19
+  422424:	9100056b 	add	x11, x11, #0x1
+  422428:	f1000508 	subs	x8, x8, #0x1
+  42242c:	54ffe9e1 	b.ne	422168 <k16pairf+0xe8>  // b.any
+  422430:	f9408e4c 	ldr	x12, [x18, #280]
+  422434:	b400006c 	cbz	x12, 422440 <k16pairf+0x3c0>
+  422438:	e540e18a 	st1w	{z10.s}, p0, [x12]
+  42243c:	e541e18b 	st1w	{z11.s}, p0, [x12, #1, mul vl]
+  422440:	a94153f3 	ldp	x19, x20, [sp, #16]
+  422444:	a9425bf5 	ldp	x21, x22, [sp, #32]
+  422448:	a94363f7 	ldp	x23, x24, [sp, #48]
+  42244c:	a9446bf9 	ldp	x25, x26, [sp, #64]
+  422450:	a94573fb 	ldp	x27, x28, [sp, #80]
+  422454:	6d4627e8 	ldp	d8, d9, [sp, #96]
+  422458:	6d472fea 	ldp	d10, d11, [sp, #112]
+  42245c:	a8dc7bfd 	ldp	x29, x30, [sp], #448
+  422460:	d65f03c0 	ret
+
+Disassembly of section .fini:

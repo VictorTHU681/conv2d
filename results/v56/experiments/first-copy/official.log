@@ -1,0 +1,241 @@
+HOST cn20481 2026-09-13T00:47:21+08:00
+pid 1543600's current affinity list: 37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+PLACEMENT cpu_node=1 hbm_node=-1
+Cpus_allowed_list:	37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+Mems_allowed_list:	0-15
+1548058
+policy: default
+preferred node: current
+physcpubind: 37 75 113 151 189 227 265 303 341 379 417 455 493 531 569 607 
+cpubind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+nodebind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+preferred: 
+EFFECTIVE_PLACEMENT
+policy: default
+preferred node: current
+physcpubind: 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 
+cpubind: 1 
+nodebind: 1 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+preferred: 
+489948afe02f83758a88fc7903be6f06b3ab06b00d6c65e9f189ebd48cc52d61  build/v56/experiments/first-copy/accept/baseline.c
+472e4bcd213c538e3cc827c6476cee8a61a528f4bb4709d475e961c175339964  build/v56/experiments/first-copy/accept/previous.c
+595d7f7d88dd9bfe2ddbbff6fb50251ade05692ad876a88926999ca194102339  build/v56/experiments/first-copy/accept/candidate.c
+OFFICIAL memory=DDR round=1 variant=baseline shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.40   13967.2751     0.00e+00     PASS
+OFFICIAL memory=DDR round=1 variant=previous shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.38   14003.9577     0.00e+00     PASS
+OFFICIAL memory=DDR round=1 variant=candidate shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.35   14097.9283     0.00e+00     PASS
+OFFICIAL memory=DDR round=2 variant=candidate shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.36   14069.1922     0.00e+00     PASS
+OFFICIAL memory=DDR round=2 variant=previous shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.43   13883.5230     0.00e+00     PASS
+OFFICIAL memory=DDR round=2 variant=baseline shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.38   13998.0599     0.00e+00     PASS
+OFFICIAL memory=DDR round=3 variant=baseline shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.38   14003.6825     0.00e+00     PASS
+OFFICIAL memory=DDR round=3 variant=previous shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.39   13993.5219     0.00e+00     PASS
+OFFICIAL memory=DDR round=3 variant=candidate shape=4096 6144 39 39
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4096 x  6144     39 x    39         5.43   13889.8837     0.00e+00     PASS
+OFFICIAL memory=DDR round=1 variant=baseline shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         6.12   13592.3996     0.00e+00     PASS
+OFFICIAL memory=DDR round=1 variant=previous shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         6.15   13523.7255     0.00e+00     PASS
+OFFICIAL memory=DDR round=1 variant=candidate shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         6.23   13354.3868     0.00e+00     PASS
+OFFICIAL memory=DDR round=2 variant=candidate shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         6.13   13570.6332     0.00e+00     PASS
+OFFICIAL memory=DDR round=2 variant=previous shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         6.19   13445.5262     0.00e+00     PASS
+OFFICIAL memory=DDR round=2 variant=baseline shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         6.14   13558.0639     0.00e+00     PASS
+OFFICIAL memory=DDR round=3 variant=baseline shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         6.14   13557.7287     0.00e+00     PASS
+OFFICIAL memory=DDR round=3 variant=previous shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         6.12   13600.6754     0.00e+00     PASS
+OFFICIAL memory=DDR round=3 variant=candidate shape=6144 4096 41 41
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6144 x  4096     41 x    41         6.21   13405.6625     0.00e+00     PASS
+OFFICIAL memory=DDR round=1 variant=baseline shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.21   14362.9005     0.00e+00     PASS
+OFFICIAL memory=DDR round=1 variant=previous shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.23   14341.8271     0.00e+00     PASS
+OFFICIAL memory=DDR round=1 variant=candidate shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.22   14351.6157     0.00e+00     PASS
+OFFICIAL memory=DDR round=2 variant=candidate shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.22   14355.1967     0.00e+00     PASS
+OFFICIAL memory=DDR round=2 variant=previous shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.24   14335.9631     0.00e+00     PASS
+OFFICIAL memory=DDR round=2 variant=baseline shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.22   14349.7180     0.00e+00     PASS
+OFFICIAL memory=DDR round=3 variant=baseline shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.24   14324.9778     0.00e+00     PASS
+OFFICIAL memory=DDR round=3 variant=previous shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.22   14351.6745     0.00e+00     PASS
+OFFICIAL memory=DDR round=3 variant=candidate shape=4256 6390 55 55
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  4256 x  6390     55 x    55        11.23   14339.8353     0.00e+00     PASS
+OFFICIAL memory=DDR round=1 variant=baseline shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.85   15134.3363     0.00e+00     PASS
+OFFICIAL memory=DDR round=1 variant=previous shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.46   15397.3280     0.00e+00     PASS
+OFFICIAL memory=DDR round=1 variant=candidate shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.44   15411.4244     0.00e+00     PASS
+OFFICIAL memory=DDR round=2 variant=candidate shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.44   15405.7154     0.00e+00     PASS
+OFFICIAL memory=DDR round=2 variant=previous shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.49   15374.4052     0.00e+00     PASS
+OFFICIAL memory=DDR round=2 variant=baseline shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.76   15189.7876     0.00e+00     PASS
+OFFICIAL memory=DDR round=3 variant=baseline shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.76   15189.2016     0.00e+00     PASS
+OFFICIAL memory=DDR round=3 variant=previous shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.43   15417.7878     0.00e+00     PASS
+OFFICIAL memory=DDR round=3 variant=candidate shape=6390 4256 81 81
+
+================================= CONV测试 ================================
+   ImageSize   kernelSize         Time(ms)       GFLOPS     最大误差       校验
+---------------------------------------------------------------------------
+  6390 x  4256     81 x    81        22.82   15153.8240     0.00e+00     PASS
+OFFICIAL_DONE 2026-09-13T00:50:27+08:00

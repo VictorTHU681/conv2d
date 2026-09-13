@@ -1,0 +1,30 @@
+HOST cn20481 2026-09-13T01:27:55+08:00
+pid 1793477's current affinity list: 37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+PLACEMENT cpu_node=1 hbm_node=17
+Cpus_allowed_list:	37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+Mems_allowed_list:	0-31
+1548105
+policy: default
+preferred node: current
+physcpubind: 37 75 113 151 189 227 265 303 341 379 417 455 493 531 569 607 
+cpubind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+nodebind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 
+preferred: 
+EFFECTIVE_PLACEMENT
+policy: preferred
+preferred node: 17
+physcpubind: 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 
+cpubind: 1 
+nodebind: 1 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 
+preferred: 17 
+45bd932c59612fa008f9c4b1c0d7c1e188222d3f125e18f7d34b3d8c62fae2b6  build/v56/experiments/planar-audit/local.c
+PLANAR_AUDIT_BEGIN local
+FIRST_COPY_AUDIT PASS cases=96 copies=2480 outside_input=117 expected_overread=1
+PLANAR_AUDIT outside_input helper=0 k9=30 k4=87
+263c8efdf2f1dbd3e4882bfef401897009fe0f93ba277535f02176a08b65e339  build/v56/experiments/planar-audit/upstream.c
+PLANAR_AUDIT_BEGIN upstream
+FIRST_COPY_AUDIT PASS cases=96 copies=2480 outside_input=372 expected_overread=1
+PLANAR_AUDIT outside_input helper=255 k9=30 k4=87
+V56_PLANAR_AUDIT_DONE 2026-09-13T01:28:19+08:00

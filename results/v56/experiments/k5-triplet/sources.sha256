@@ -1,0 +1,5 @@
+4393346986d6c0c71c7db9ecd804ed76c22839923f8ed963f07488854809d121 build/v56/experiments/k5-triplet/baseline.c
+126a9a86bc805cff11a3c5c1c2ed1aa713e03bdadf753b538b3e416a220cc798 build/v56/experiments/k5-triplet/triplet.c
+e0a89b9751045cbd8c56f265a86b77db198a35ed743440c7dce236078bde76ff build/v56/experiments/k5-triplet/prefetch.c
+c1edf4aef1afbb1f496bdf3b0a94e032d8fffe3bb92d63c0e53e7c917c950bac build/v56/experiments/k5-triplet/overlap.c
+ff1257e30d9f8d2be9d2560462e99bc68ce20692f7e3265072ad261128a46715 build/v56/experiments/k5-triplet/both.c

@@ -1,0 +1,118 @@
+HOST cn20485 2026-09-13T00:05:24+08:00
+pid 3021131's current affinity list: 37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+PLACEMENT cpu_node=1 hbm_node=17
+Cpus_allowed_list:	37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+Mems_allowed_list:	0-31
+1549700
+policy: default
+preferred node: current
+physcpubind: 37 75 113 151 189 227 265 303 341 379 417 455 493 531 569 607 
+cpubind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+nodebind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 
+preferred: 
+EFFECTIVE_PLACEMENT
+policy: preferred
+preferred node: 17
+physcpubind: 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 
+cpubind: 1 
+nodebind: 1 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 
+preferred: 17 
+PMU memory=DDR round=1 variant=baseline shape=4096 6144 39 39
+STEADY_DIAGNOSTIC kh=39 runs=200 mean_ms=5.3887 sample=2.78773
+64796777681,,cycles:u,41973260220,100.00,,
+169627281025,,instructions:u,41973260220,100.00,2.62,insn per cycle
+41351079968,,L1-dcache-loads,41973260220,100.00,,
+1450527773,,L1-dcache-load-misses,41973260220,100.00,3.51,of all L1-dcache accesses
+PMU memory=DDR round=1 variant=coefall shape=4096 6144 39 39
+STEADY_DIAGNOSTIC kh=39 runs=200 mean_ms=5.4772 sample=2.78773
+65519125475,,cycles:u,42428924970,100.00,,
+170577683779,,instructions:u,42428924970,100.00,2.60,insn per cycle
+41598332772,,L1-dcache-loads,42428924970,100.00,,
+1366531669,,L1-dcache-load-misses,42428924970,100.00,3.29,of all L1-dcache accesses
+PMU memory=DDR round=2 variant=coefall shape=4096 6144 39 39
+STEADY_DIAGNOSTIC kh=39 runs=200 mean_ms=5.4049 sample=2.78773
+64649240582,,cycles:u,41862513980,100.00,,
+169231620590,,instructions:u,41862513980,100.00,2.62,insn per cycle
+41257177783,,L1-dcache-loads,41862513980,100.00,,
+1401030570,,L1-dcache-load-misses,41862513980,100.00,3.40,of all L1-dcache accesses
+PMU memory=DDR round=2 variant=baseline shape=4096 6144 39 39
+STEADY_DIAGNOSTIC kh=39 runs=200 mean_ms=5.3858 sample=2.78773
+64624212169,,cycles:u,41859230700,100.00,,
+169361513974,,instructions:u,41859230700,100.00,2.62,insn per cycle
+41287991199,,L1-dcache-loads,41859230700,100.00,,
+1421616428,,L1-dcache-load-misses,41859230700,100.00,3.44,of all L1-dcache accesses
+PMU memory=DDR round=1 variant=baseline shape=6390 4256 81 81
+STEADY_DIAGNOSTIC kh=81 runs=200 mean_ms=22.4386 sample=-0.344467
+267284982221,,cycles:u,172652207890,100.00,,
+750818038300,,instructions:u,172652207890,100.00,2.81,insn per cycle
+173073739921,,L1-dcache-loads,172652207890,100.00,,
+2453156185,,L1-dcache-load-misses,172652207890,100.00,1.42,of all L1-dcache accesses
+PMU memory=DDR round=1 variant=coefall shape=6390 4256 81 81
+STEADY_DIAGNOSTIC kh=81 runs=200 mean_ms=22.6899 sample=-0.344467
+270122367996,,cycles:u,174477953520,100.00,,
+750629653837,,instructions:u,174477953520,100.00,2.78,insn per cycle
+173029972669,,L1-dcache-loads,174477953520,100.00,,
+2375338218,,L1-dcache-load-misses,174477953520,100.00,1.37,of all L1-dcache accesses
+PMU memory=DDR round=2 variant=coefall shape=6390 4256 81 81
+STEADY_DIAGNOSTIC kh=81 runs=200 mean_ms=22.7529 sample=-0.344467
+270976883786,,cycles:u,175027764280,100.00,,
+750980963700,,instructions:u,175027764280,100.00,2.77,insn per cycle
+173140764730,,L1-dcache-loads,175027764280,100.00,,
+2371849805,,L1-dcache-load-misses,175027764280,100.00,1.37,of all L1-dcache accesses
+PMU memory=DDR round=2 variant=baseline shape=6390 4256 81 81
+STEADY_DIAGNOSTIC kh=81 runs=200 mean_ms=22.4482 sample=-0.344467
+267276419008,,cycles:u,172638539110,100.00,,
+750439966648,,instructions:u,172638539110,100.00,2.81,insn per cycle
+172977959503,,L1-dcache-loads,172638539110,100.00,,
+2422574117,,L1-dcache-load-misses,172638539110,100.00,1.40,of all L1-dcache accesses
+PMU memory=HBM round=1 variant=baseline shape=4096 6144 39 39
+STEADY_DIAGNOSTIC kh=39 runs=200 mean_ms=5.3038 sample=2.78773
+63475695439,,cycles:u,41082652680,100.00,,
+168486290982,,instructions:u,41082652680,100.00,2.65,insn per cycle
+41067590462,,L1-dcache-loads,41082652680,100.00,,
+1391760313,,L1-dcache-load-misses,41082652680,100.00,3.39,of all L1-dcache accesses
+PMU memory=HBM round=1 variant=coefall shape=4096 6144 39 39
+STEADY_DIAGNOSTIC kh=39 runs=200 mean_ms=5.2637 sample=2.78773
+62994417244,,cycles:u,40767804620,100.00,,
+167376945190,,instructions:u,40767804620,100.00,2.66,insn per cycle
+40789982351,,L1-dcache-loads,40767804620,100.00,,
+1382922341,,L1-dcache-load-misses,40767804620,100.00,3.39,of all L1-dcache accesses
+PMU memory=HBM round=2 variant=coefall shape=4096 6144 39 39
+STEADY_DIAGNOSTIC kh=39 runs=200 mean_ms=5.2726 sample=2.78773
+63099238579,,cycles:u,40838125420,100.00,,
+167593456441,,instructions:u,40838125420,100.00,2.66,insn per cycle
+40847002986,,L1-dcache-loads,40838125420,100.00,,
+1398355299,,L1-dcache-load-misses,40838125420,100.00,3.42,of all L1-dcache accesses
+PMU memory=HBM round=2 variant=baseline shape=4096 6144 39 39
+STEADY_DIAGNOSTIC kh=39 runs=200 mean_ms=5.2671 sample=2.78773
+63797504876,,cycles:u,41298724850,100.00,,
+169173196150,,instructions:u,41298724850,100.00,2.65,insn per cycle
+41236857600,,L1-dcache-loads,41298724850,100.00,,
+1352959814,,L1-dcache-load-misses,41298724850,100.00,3.28,of all L1-dcache accesses
+PMU memory=HBM round=1 variant=baseline shape=6390 4256 81 81
+STEADY_DIAGNOSTIC kh=81 runs=200 mean_ms=22.4846 sample=-0.344467
+267669984970,,cycles:u,172874168310,100.00,,
+751763543025,,instructions:u,172874168310,100.00,2.81,insn per cycle
+173299038014,,L1-dcache-loads,172874168310,100.00,,
+2430588960,,L1-dcache-load-misses,172874168310,100.00,1.40,of all L1-dcache accesses
+PMU memory=HBM round=1 variant=coefall shape=6390 4256 81 81
+STEADY_DIAGNOSTIC kh=81 runs=200 mean_ms=22.6020 sample=-0.344467
+269047291699,,cycles:u,173750176540,100.00,,
+750248574579,,instructions:u,173750176540,100.00,2.79,insn per cycle
+172930682367,,L1-dcache-loads,173750176540,100.00,,
+2336300179,,L1-dcache-load-misses,173750176540,100.00,1.35,of all L1-dcache accesses
+PMU memory=HBM round=2 variant=coefall shape=6390 4256 81 81
+STEADY_DIAGNOSTIC kh=81 runs=200 mean_ms=22.6766 sample=-0.344467
+270033765271,,cycles:u,174380842690,100.00,,
+751007592447,,instructions:u,174380842690,100.00,2.78,insn per cycle
+173129797632,,L1-dcache-loads,174380842690,100.00,,
+2380193959,,L1-dcache-load-misses,174380842690,100.00,1.37,of all L1-dcache accesses
+PMU memory=HBM round=2 variant=baseline shape=6390 4256 81 81
+STEADY_DIAGNOSTIC kh=81 runs=200 mean_ms=22.4411 sample=-0.344467
+267161659925,,cycles:u,172540149450,100.00,,
+750998872011,,instructions:u,172540149450,100.00,2.81,insn per cycle
+173108985001,,L1-dcache-loads,172540149450,100.00,,
+2452749971,,L1-dcache-load-misses,172540149450,100.00,1.42,of all L1-dcache accesses
+V58_PMU_DONE 2026-09-13T00:06:31+08:00

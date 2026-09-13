@@ -1,0 +1,84 @@
+# v56 experiment — K9 software pipeline
+
+Part of the unpublished v56 work. Baseline: `72b10c2:conv2d.c`, SHA-256
+`472e4bcd213c538e3cc827c6476cee8a61a528f4bb4709d475e961c175339964`.
+
+## Hypothesis and controls
+
+The v56 K9 loop retains next-iteration even-plane vectors, but odd-plane and
+matrix-coefficient loads still occur immediately before their first use.
+Earlier wide-kernel unroll controls predate this new K9 loop. Two controls
+from immutable `72b10c2:conv2d.c` test its load-to-use scheduling:
+
+- `unroll2`: execute two regular KW pairs per counted iteration, followed by
+  one regular pair when needed and the existing padded final pair.
+- `pipeline2`: use two banks of odd input and matrix-coefficient registers.
+  While completing the second half of the current pair, load the next bank's
+  coefficients and odd vectors. Alternate banks across the unrolled loop;
+  even-plane vectors retain the v56 register-reuse mapping.
+
+Bank A uses odd vectors z1/z3/z5/z7 and matrix coefficients z8/z9. Bank B uses
+z10..z13 and z14/z15, which are scratch registers already covered by clobbers.
+Vector accumulators z16..z23 and scalar coefficient z24 keep their original
+roles. No extra carry state or allocation is introduced. Each ZA tile and
+vector accumulator receives contributions in the original KW order.
+
+The regular-pair count is floor(KW/2). A zero two-pair count branches to the
+single-pair remainder, so KW=3 remains valid. Every row already includes a
+final padded matrix pair. The last unrolled iteration can therefore load the
+next pair's matrix coefficients within that allocated table, even if no next
+regular iteration occurs. Input preloads address prepared ring planes, not
+raw input; they stay within the same padded-pair span used by v56. Output
+extraction clobbers scratch banks only after all KW work, and each new input
+row reloads its initial bank.
+
+`tools/gen_v56_k9_pipeline.py` creates baseline and both controls under `build/v56/experiments/k9-pipeline/`.
+The server screen compiles each, runs 140 signed bitwise extended K9 cases per
+changed variant (including guard pages, odd/even widths through 400, narrow
+outputs and multi-block continuation), then compares three alternating
+process rounds across all four official shapes in DDR/HBM. The benchmark
+uses five hash-checked timings per process. Completed results follow below; neither control was promoted.
+
+Main screen job **1581591** starts on cn20481 at 00:11:35 on 2026-09-13.
+Diagnostic job **1581607** SUCCEEDED on cn20482, 00:12:38–00:13:20, and
+all 18 timed hashes pass. This node runs around 1.2 GHz; the legacy printed
+cycles/tile-step still normalize to 1.55 GHz, so only within-job ratios apply.
+K9 median normalized costs for baseline/unroll2/pipeline2 are 2.93/2.93/2.98
+in DDR and 2.95/2.93/2.93 in HBM. Pair costs stay around 2.70–2.71.
+There is no clear kernel-cost benefit in this diagnostic. Full signed and
+alternating performance results follow below. Disassembly is captured in
+`results/v56/experiments/k9-pipeline/disas_*.txt`.
+
+## Next architecture question
+
+k39's default plan is 36+3, with four vector-folded rows beside a paired
+matrix kernel. A 35+4 plan uses the same matrix-step count but folds only
+three rows, filling the K4 group's previously unused residual slot. These
+plans also currently use different row-copy macros: pairf4 has COPY4, whereas
+pairf3 has COMMON. Earlier v52 COPY4-for-all controls retained the default
+four-fold k39 plan and regressed other shapes; they did not isolate a
+three-fold k39 plan with the same improved copier. A future control should
+separate fold count, copier, and loop placement rather than attributing the
+whole difference to extra FMLA chains.
+
+
+## Completed screening and decision
+
+Job **1581591** SUCCEEDED on cn20481, 2026-09-13 00:11:35–00:16:36.
+Both variants pass 140 signed extended cases each (**280 checks**, including
+28 guard-page cases), and all **360 timed screening hashes** pass. Together
+with diagnostic job 1581607, the round has 378 timed hash checks.
+Three alternating process rounds, five timings per process:
+
+| Variant | DDR k39 | DDR k41 | DDR k55 | DDR k81 | HBM k39 | HBM k41 | HBM k55 | HBM k81 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| v56 GFLOPS | 13981.7 | 13660.5 | 14362.3 | 15421.9 | 14362.0 | 14152.5 | 14432.0 | 15408.1 |
+| unroll2 | +0.45% | -0.01% | -0.06% | -0.03% | -0.25% | -0.60% | -0.10% | +0.04% |
+| pipeline2 | +0.20% | -0.22% | -0.09% | +0.25% | -0.33% | +0.06% | -0.02% | +0.11% |
+
+**Decision:** do not promote either control. Target k81 gains are small and
+other shapes regress; the diagnostic likewise shows no substantial reduction
+in K9 kernel cost. Both jobs are terminal. Production source, compile command
+and submission packages remain validated v56; no push was performed.
+
+The completed fold/copy investigation is recorded in [fold-copy.md](fold-copy.md).

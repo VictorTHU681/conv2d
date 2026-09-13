@@ -1,0 +1,19 @@
+# To display the perf.data header info, please use --header/--header-only options.
+#
+#
+# Total Lost Samples: 0
+#
+# Samples: 4K of event 'cycles:u'
+# Event count (approx.): 71984750011
+#
+# Overhead  Command          Shared Object          Symbol                   
+# ........  ...............  .....................  .........................
+#
+    96.44%  steady_previous  steady_previous        [.] roll_worker
+     3.32%  steady_previous  steady_previous        [.] pool_worker
+     0.14%  steady_previous  steady_previous        [.] fill_args.constprop.0
+
+
+#
+# (Tip: Treat branches as callchains: perf report --branch-history)
+#

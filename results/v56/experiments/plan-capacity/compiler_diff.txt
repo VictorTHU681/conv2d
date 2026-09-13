@@ -1,0 +1,26 @@
+baseline.s SHA256 f117c554a3441c6f881294b59c263a903a14bbd765cff08f181ddb9cfae2e616
+capacity.s SHA256 6e059c2998662043203e146529248bca0f77de8b3c1f5d2a1b1f9e62ef6112d2
+--- baseline
++++ capacity
+@@ -44323,16 +44323,17 @@
+ 	mov	x0, x24
+ 	str	x2, [sp, 224]
+ 	bl	free
++	sxtw	x24, w28
+ 	ldr	x2, [sp, 224]
+ 	ldr	x0, [x2, 1200]
+ 	bl	free
+ 	sbfiz	x0, x28, 5, 32
+ 	bl	malloc
+ 	ldr	x2, [sp, 224]
+-	add	w3, w20, 1
+-	mov	x24, x0
+-	sbfiz	x0, x3, 2, 32
+-	str	x24, [x2, 1192]
++	mov	x1, x0
++	lsl	x0, x24, 2
++	mov	x24, x1
++	str	x1, [x2, 1192]
+ 	bl	malloc
+ 	ldr	x2, [sp, 224]
+ 	movi	d2, #0

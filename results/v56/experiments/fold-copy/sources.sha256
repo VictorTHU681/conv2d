@@ -1,0 +1,4 @@
+472e4bcd213c538e3cc827c6476cee8a61a528f4bb4709d475e961c175339964 build/v56/experiments/fold-copy/baseline.c
+955a5080bb31f529c3e3b829f695eafd393e2ddd1023ba0c7966623a4fb99321 build/v56/experiments/fold-copy/nf3.c
+264a820f4dc1a8558d57182a527231b5f51454c5b40891c33af24790e2a86baa build/v56/experiments/fold-copy/f3copy.c
+ed580689a1c308a37cc94aff7124822f256569c701a3305fbdaa0c5d4b309762 build/v56/experiments/fold-copy/f3copy128.c
