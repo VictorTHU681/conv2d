@@ -1,0 +1,4 @@
+2c4065478f8d40c194c996ede4fcdbd65f80c0a1c5e9b057b32889035d788ada build/post61/k5-events/baseline.c
+9c33bc1619c8a9a5516e15dde111359ced593976ff103db7d7db66360e4d4b0e build/post61/k5-events/clearfirst.c
+76b43f46245718fb499d78eb0c1477439f347efd95ae4a329add43419a8e65ce build/post61/k5-events/deferclear.c
+Only the 28 K5 output-event instructions are permuted; dataflow and instruction multiset validate. No arithmetic, source/output addresses, branches, scheduling, packing or other kernel changes.

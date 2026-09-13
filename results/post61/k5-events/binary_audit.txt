@@ -1,0 +1,7 @@
+514eff08c5f37e25113d1174a49f7bd4321a361ac1f2952761080328ea273a5f  build/post61/k5-events/bench_baseline
+db4d0cef2646aef0feae275d512bce0888971d5c4c42852d8bc7b80b580ae01c  build/post61/k5-events/bench_clearfirst
+07ef9988423773729d45bdebfa18b8f8f961b66b9174410f9f3a2d0011c5920c  build/post61/k5-events/bench_deferclear
+500dc67c33781b78dcfe57e3e3ea5534d2c2fc73f11fb95c284315e52ee14946  build/post61/k5-events/profile_baseline
+fee2d228908203bde8ca84cdc074177e74cb80baf7b12697497c80a91c21b101  build/post61/k5-events/profile_clearfirst
+30caa428553fb644a0b3fee741e2260b492270c252629074d4043655261e56f7  build/post61/k5-events/profile_deferclear
+All six post-run downloaded binaries match their pre-run logged SHA256.
