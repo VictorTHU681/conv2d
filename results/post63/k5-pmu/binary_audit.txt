@@ -1,0 +1,4 @@
+Downloaded post-run binaries match pre-run SHA-256 values in production.log.
+c1c503ecb6ea9e72cf098ad5a222a624b05f562252ad68dee630b7aa4aa6a236  build/post63/k5-pmu/bench
+47eb7bdf5f4f4af4408eb58128f62b06b0fd3386b0494ba96f292306c3f791ea  build/post63/k5-pmu/state
+e8abbbc28eca9defb08b60caba8041e94bc9cff49a509cafd00e1c5b77eac3d8  build/post63/k5-pmu/guard
