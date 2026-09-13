@@ -1,0 +1,3 @@
+19104 supported KW/alignment/policy geometries PASS; 7775328 first/last-lane checks across every compute step do not consume poisoned or zero-padding elements.
+Each interior copied plane is an uninterrupted arithmetic progression; endpoint mapping and monotonicity cover its 64-lane compute load. This is an address/value model, not dynamic instruction tracing.
+Both variants preserve valid scalar addresses and FMA order. Empty-tail bypass leaves padding untouched; the scalar unroll reads one float, then a second only when the remainder is two.
