@@ -1,0 +1,14 @@
+baseline.dis SHA256 06863c8003f543a422b84e6cf40ab26d42180541db12a4a4eaaa864d88bb01a2
+f4.dis SHA256 167d6f32204b2e1011f55d5da2b71594a392fac82630457429d232c159507bf0
+f4 permutation 424190..4241b0: 9 changed instruction positions
+f4 permutation 424338..424358: 9 changed instruction positions
+f4 permutation 424418..424438: 9 changed instruction positions
+f4: 43640 linked instruction positions identical; 27 positions differ only by checked arithmetic permutations. All other opcode words and operand text unchanged.
+f34.dis SHA256 dcd4a05e377023fa9417f716da0ad4b7f2da13e48c4fe268b649a60f9d232b84
+f34 permutation 423d08..423d28: 9 changed instruction positions
+f34 permutation 423da8..423dc8: 9 changed instruction positions
+f34 permutation 424190..4241b0: 9 changed instruction positions
+f34 permutation 424338..424358: 9 changed instruction positions
+f34 permutation 424418..424438: 9 changed instruction positions
+f34: 43640 linked instruction positions identical; 45 positions differ only by checked arithmetic permutations. All other opcode words and operand text unchanged.
+This controls emitted text layout; it does not prove a physical execution-port cause or runtime speedup.
