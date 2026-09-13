@@ -2529,6 +2529,9 @@ static __attribute__((noinline)) void k5(const kp_t* P)
     A.n2 = TSB * ((sh + 0) % 3) + 4 * ((sh + 0) / 3);
     A.e2 = TSB * ((sh + 1) % 3) + 4 * ((sh + 1) / 3);
     A.T  = TSB * ((sh + 2) % 3) + 4 * ((sh + 2) / 3);
+    A.ovn = A.it - 1 < A.ncp_full ? A.it - 1 : A.ncp_full;   // 整块拷贝随外步捎带（同 K4 模式）；纯步循环 ≥ 1
+    if (A.ovn < 0) A.ovn = 0;
+    A.ovr = A.ncp_full - A.ovn;
     roll_first_planes(P->ring, P->in_row, live, sh, 3, TSB / 4);
     asm volatile(
         LOAD_ARGS
@@ -2536,62 +2539,101 @@ static __attribute__((noinline)) void k5(const kp_t* P)
         "ldr x7, [%[A], #136]\n\t"
         "fmov z31.s, #0.0\n\t"
         "1:\n\t"
+        // 输出预取（与 k4/k8 同法）：PD 行后有事件则预取输出行 12 线（K5 事件 4×st3w 共 768 B）
+        "ldr x12, [%[A], #144]\n\t"
+        "add x13, x27, x12\n\t" "cmp x13, x6\n\t" "sub x12, x13, x6\n\t" "csel x13, x12, x13, hs\n\t"
+        "cmp x13, x24\n\t" "b.hs 74f\n\t"
+        "ldr x12, [%[A], #232]\n\t" "add x12, x9, x12\n\t"
+        "prfm pstl2keep, [x12]\n\t" "prfm pstl2keep, [x12, #64]\n\t" "prfm pstl2keep, [x12, #128]\n\t" "prfm pstl2keep, [x12, #192]\n\t"
+        "prfm pstl2keep, [x12, #256]\n\t" "prfm pstl2keep, [x12, #320]\n\t" "prfm pstl2keep, [x12, #384]\n\t" "prfm pstl2keep, [x12, #448]\n\t"
+        "prfm pstl2keep, [x12, #512]\n\t" "prfm pstl2keep, [x12, #576]\n\t" "prfm pstl2keep, [x12, #640]\n\t" "prfm pstl2keep, [x12, #704]\n\t"
+        "74:\n\t"
+        // 换槽；尾块（谓词）+ 奇浮点先拷（块间不相交、次序无关），整块由步循环每外步捎带一个
+        //（K5 外步 12 fmopa = 24 周期、~1.3 IPC，余量充足；归因 1586070：K5 尾组/参考 = 1.315，串行拷贝是主嫌疑）。
         "mov x16, x17\n\t"
         "sub x17, x28, x17\n\t"
         "add x22, x0, x1\n\t"
         "cmp x8, #1\n\t"
         "csel x22, x0, x22, eq\n\t"
         "add x21, x0, x26\n\t"
-        "mov x12, x22\n\t"
-        "mov x13, x17\n\t"
-        "ldr x24, [%[A], #168]\n\t"
-        "cbz x24, 71f\n\t"
-        "70:\n\t"
-        "prfm pldl2keep, [x21, #0]\n\t"
-        "prfm pldl2keep, [x21, #64]\n\t"
-        "prfm pldl2keep, [x21, #128]\n\t"
-        "ld3w {z0.s, z1.s, z2.s}, p0/z, [x12]\n\t"
-        "st1w {z0.s}, p0, [x13]\n\t"
-        "add x23, x13, x3\n\t"
-        "st1w {z1.s}, p0, [x23]\n\t"
-        "add x23, x23, x3\n\t"
-        "st1w {z2.s}, p0, [x23]\n\t"
-        "add x12, x12, #192\n\t"
-        "add x13, x13, #64\n\t"
-        "add x21, x21, #192\n\t"
-        "subs x24, x24, #1\n\t"
-        "b.ne 70b\n\t"
-        "71:\n\t"
+        "ldr x12, [%[A], #168]\n\t"
+        "add x13, x22, x12, lsl #7\n\t"
+        "add x13, x13, x12, lsl #6\n\t"            // src 尾 = src + blocks*192
+        "add x20, x17, x12, lsl #6\n\t"            // dst 尾 = 槽 + blocks*64
+        "add x24, x21, x12, lsl #7\n\t"
+        "add x24, x24, x12, lsl #6\n\t"
+        "prfm pldl2keep, [x24]\n\t" "prfm pldl2keep, [x24, #64]\n\t" "prfm pldl2keep, [x24, #128]\n\t"
         "ldr x24, [%[A], #176]\n\t"
         "whilelo p4.s, xzr, x24\n\t"
-        "ld3w {z0.s, z1.s, z2.s}, p4/z, [x12]\n\t"
-        "st1w {z0.s}, p0, [x13]\n\t"
-        "add x23, x13, x3\n\t"
+        "ld3w {z0.s, z1.s, z2.s}, p4/z, [x13]\n\t"
+        "st1w {z0.s}, p0, [x20]\n\t"
+        "add x23, x20, x3\n\t"
         "st1w {z1.s}, p0, [x23]\n\t"
         "add x23, x23, x3\n\t"
         "st1w {z2.s}, p0, [x23]\n\t"
-        "add x12, x12, x24, lsl #3\n\t"
-        "add x12, x12, x24, lsl #2\n\t"
+        "add x13, x13, x24, lsl #3\n\t"
         "add x13, x13, x24, lsl #2\n\t"
+        "add x20, x20, x24, lsl #2\n\t"
         "ldr x24, [%[A], #272]\n\t"
         "cbz x24, 73f\n\t"
         "ptrue p4.s, vl1\n\t"
         "72:\n\t"
-        "ld1rw {z0.s}, p0/z, [x12]\n\t"
-        "st1w {z0.s}, p4, [x13]\n\t"
-        "add x12, x12, #4\n\t"
-        "add x13, x13, x3\n\t"
+        "ld1rw {z0.s}, p0/z, [x13]\n\t"
+        "st1w {z0.s}, p4, [x20]\n\t"
+        "add x13, x13, #4\n\t"
+        "add x20, x20, x3\n\t"
         "subs x24, x24, #1\n\t"
         "b.ne 72b\n\t"
         "73:\n\t"
-        "ldr x24, [%[A], #112]\n\t"
+        "ldr x20, [%[A], #304]\n\t"                // 装不进步循环的整块（仅极小 KW）：串行补拷
+        "cbz x20, 76f\n\t"
+        "ldr x12, [%[A], #296]\n\t"
+        "add x13, x22, x12, lsl #7\n\t"
+        "add x13, x13, x12, lsl #6\n\t"
+        "add x24, x17, x12, lsl #6\n\t"
+        "75:\n\t"
+        "ld3w {z0.s, z1.s, z2.s}, p0/z, [x13]\n\t"
+        "st1w {z0.s}, p0, [x24]\n\t"
+        "add x23, x24, x3\n\t"
+        "st1w {z1.s}, p0, [x23]\n\t"
+        "add x23, x23, x3\n\t"
+        "st1w {z2.s}, p0, [x23]\n\t"
+        "add x13, x13, #192\n\t" "add x24, x24, #64\n\t"
+        "subs x20, x20, #1\n\t" "b.ne 75b\n\t"
+        "76:\n\t"
+        "mov x13, x22\n\t"                          // 穿插拷贝游标：src / dst（槽头）
+        "mov x12, x17\n\t"
         "ldr x22, [%[A], #192]\n\t"
         "add x22, x22, x16\n\t"
         "ldr x23, [%[A], #208]\n\t"
         "add x23, x23, x16\n\t"
-        "ldr x12, [%[A], #184]\n\t"
-        "add x16, x16, x12\n\t"
+        "ldr x20, [%[A], #184]\n\t"
+        "add x16, x16, x20\n\t"
+        "ldr x20, [%[A], #296]\n\t"
         "mov x15, x7\n\t"
+        "cbz x20, 62f\n\t"
+        "sub x15, x15, x20\n\t"
+        ".p2align 4\n\t"
+        "61:\n\t"
+        K5_STEP(x16, 0)
+        K5_STEP(x22, 1)
+        K5_STEP(x23, 2)
+        "add x16, x16, #4\n\t"
+        "add x22, x22, #4\n\t"
+        "add x23, x23, #4\n\t"
+        "add x2, x2, #192\n\t"
+        "prfm pldl2keep, [x21]\n\t" "prfm pldl2keep, [x21, #64]\n\t" "prfm pldl2keep, [x21, #128]\n\t"
+        "ld3w {z25.s, z26.s, z27.s}, p0/z, [x13]\n\t"
+        "st1w {z25.s}, p0, [x12]\n\t"
+        "add x24, x12, x3\n\t"
+        "st1w {z26.s}, p0, [x24]\n\t"
+        "add x24, x24, x3\n\t"
+        "st1w {z27.s}, p0, [x24]\n\t"
+        "add x13, x13, #192\n\t" "add x12, x12, #64\n\t" "add x21, x21, #192\n\t"
+        "subs x20, x20, #1\n\t"
+        "b.ne 61b\n\t"
+        "62:\n\t"
+        "ldr x24, [%[A], #112]\n\t"                // 头部/穿插拷贝用过 x24：恢复 nvA（事件判定用）
         ".p2align 4\n\t"
         "2:\n\t"
 
@@ -2653,7 +2695,7 @@ static __attribute__((noinline)) void k5(const kp_t* P)
         ADV_CNT(x27)
         ROW_TAIL
         : : [A]"r"(&A)
-        : XCLOB, "z0", "z1", "z2", "z3", "z4", "z31", "p0", "p3", "p4", "memory", "cc");
+        : XCLOB, "z0", "z1", "z2", "z3", "z4", "z25", "z26", "z27", "z31", "p0", "p3", "p4", "memory", "cc");
 }
 #undef K5_STEP
 
