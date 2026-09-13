@@ -26,9 +26,10 @@ if ! gcc -O3 -march=armv9-a+sme+sve2 -fopenmp bench_conv.c conv2d.c -o conv2d_te
     fi
 fi
 
-# 判题口径（题面）：OMP_NUM_THREADS=38 numactl -N 1。节点 1 无 CPU 时回落节点 0；numactl 不可用则直接运行。
+# 判题口径（题面）：OMP_NUM_THREADS=38 numactl -N 1。默认优先节点 9（有 CPU 时），
+# 否则回落节点 1、再回落节点 0；numactl 不可用则直接运行。CONV_NODE 可显式指定。
 cpunode=1
-for n in 1 0; do
+for n in ${CONV_NODE:-} 9 1 0; do
     if [[ -n "$(cat /sys/devices/system/node/node$n/cpulist 2>/dev/null)" ]] && numactl -N $n true >/dev/null 2>&1; then cpunode=$n; break; fi
 done
 NCPU=$(numactl -N $cpunode nproc 2>/dev/null || nproc 2>/dev/null || echo 38)
