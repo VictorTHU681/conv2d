@@ -3302,6 +3302,9 @@ static void conv2d_roll(const CONVFLOAT* in, CONVINT H, CONVINT W, const CONVFLO
     g_roll_pd = g_knobs.roll_pd;
     g_roll_diag = env_int("CONV_ROLL_DIAG", 0);
     roll_prepare(k, H, W, KH, KW, nth);
+    // 续算块长维持 8（K5 计划 2）。st16 已证伪：慢节点 env 扫描 +0.3~0.5%（1590241），
+    // 快节点同机 A/B 反而 k39 −0.3~−2.3%（1590410）——块长收益与节点速度档强相关，
+    // 判题机更接近快档；跨节点扫描只作方向提示，定案以同节点交替 A/B 为准。
     int step_default=8;
     for(int g=0;g<g_rp.ng;g++) if(g_rp.G[g].kind==5) { step_default=2; break; }
     g_roll_step = env_int("CONV_ROLL_STEP", step_default);
