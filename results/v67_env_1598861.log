@@ -1,0 +1,119 @@
+HOST cn20483 2026-09-14T02:47:59+08:00
+pid 192933's current affinity list: 37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+PLACEMENT cpu_node=1 hbm_node=17
+Cpus_allowed_list:	37,75,113,151,189,227,265,303,341,379,417,455,493,531,569,607
+Mems_allowed_list:	0-31
+1548464
+policy: default
+preferred node: current
+physcpubind: 37 75 113 151 189 227 265 303 341 379 417 455 493 531 569 607 
+cpubind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+nodebind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 
+preferred: 
+EFFECTIVE_PLACEMENT
+policy: preferred
+preferred node: 17
+physcpubind: 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 
+cpubind: 1 
+nodebind: 1 
+membind: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 
+preferred: 17 
+3e4c5fed5cdf9d5ade0d5f4fdf1081f338bdcd5e4701fc669e69c4186862a7d4  build/v54_stack/k8ext.c
+ENV memory=HBM round=1 variant=def  shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.211 ms    14463.8 GFLOPS | avg    5.227 ms    14420.5 GFLOPS  PASS
+ENV memory=HBM round=1 variant=pd2  shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.249 ms    14360.6 GFLOPS | avg    5.302 ms    14216.3 GFLOPS  PASS
+ENV memory=HBM round=1 variant=pd4  shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.217 ms    14449.0 GFLOPS | avg    5.230 ms    14413.3 GFLOPS  PASS
+ENV memory=HBM round=1 variant=ps0  shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.215 ms    14453.9 GFLOPS | avg    5.219 ms    14442.2 GFLOPS  PASS
+ENV memory=HBM round=1 variant=def  shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.681 ms    14652.7 GFLOPS | avg    5.682 ms    14649.7 GFLOPS  PASS
+ENV memory=HBM round=1 variant=pd2  shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.732 ms    14522.1 GFLOPS | avg    5.739 ms    14502.6 GFLOPS  PASS
+ENV memory=HBM round=1 variant=pd4  shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.708 ms    14583.3 GFLOPS | avg    5.721 ms    14548.5 GFLOPS  PASS
+ENV memory=HBM round=1 variant=ps0  shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.697 ms    14609.3 GFLOPS | avg    5.710 ms    14577.6 GFLOPS  PASS
+ENV memory=HBM round=1 variant=def  shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.032 ms    14600.8 GFLOPS | avg   11.034 ms    14597.5 GFLOPS  PASS
+ENV memory=HBM round=1 variant=pd2  shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.343 ms    14200.9 GFLOPS | avg   11.353 ms    14187.8 GFLOPS  PASS
+ENV memory=HBM round=1 variant=pd4  shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.064 ms    14559.0 GFLOPS | avg   11.070 ms    14550.4 GFLOPS  PASS
+ENV memory=HBM round=1 variant=ps0  shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.033 ms    14599.9 GFLOPS | avg   11.752 ms    13706.4 GFLOPS  PASS
+ENV memory=HBM round=1 variant=def  shape=6390 4256 81 81   6390 x  4256     81 x    81 best   22.291 ms    15511.7 GFLOPS | avg   22.314 ms    15495.7 GFLOPS  PASS
+ENV memory=HBM round=1 variant=pd2  shape=6390 4256 81 81   6390 x  4256     81 x    81 best   22.177 ms    15591.8 GFLOPS | avg   22.198 ms    15576.8 GFLOPS  PASS
+ENV memory=HBM round=1 variant=pd4  shape=6390 4256 81 81   6390 x  4256     81 x    81 best   22.634 ms    15276.6 GFLOPS | avg   22.655 ms    15262.3 GFLOPS  PASS
+ENV memory=HBM round=1 variant=ps0  shape=6390 4256 81 81   6390 x  4256     81 x    81 best   22.286 ms    15515.2 GFLOPS | avg   22.307 ms    15500.5 GFLOPS  PASS
+ENV memory=HBM round=2 variant=ps0  shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.188 ms    14527.7 GFLOPS | avg    5.196 ms    14505.7 GFLOPS  PASS
+ENV memory=HBM round=2 variant=pd4  shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.217 ms    14448.3 GFLOPS | avg    5.226 ms    14422.4 GFLOPS  PASS
+ENV memory=HBM round=2 variant=pd2  shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.254 ms    14346.8 GFLOPS | avg    5.272 ms    14296.3 GFLOPS  PASS
+ENV memory=HBM round=2 variant=def  shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.193 ms    14513.9 GFLOPS | avg    5.202 ms    14489.7 GFLOPS  PASS
+ENV memory=HBM round=2 variant=ps0  shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.678 ms    14659.1 GFLOPS | avg    5.693 ms    14620.2 GFLOPS  PASS
+ENV memory=HBM round=2 variant=pd4  shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.719 ms    14554.9 GFLOPS | avg    5.721 ms    14550.1 GFLOPS  PASS
+ENV memory=HBM round=2 variant=pd2  shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.730 ms    14525.3 GFLOPS | avg    5.745 ms    14489.2 GFLOPS  PASS
+ENV memory=HBM round=2 variant=def  shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.682 ms    14649.9 GFLOPS | avg    5.689 ms    14632.1 GFLOPS  PASS
+ENV memory=HBM round=2 variant=ps0  shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.031 ms    14602.5 GFLOPS | avg   11.035 ms    14597.1 GFLOPS  PASS
+ENV memory=HBM round=2 variant=pd4  shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.054 ms    14571.5 GFLOPS | avg   11.061 ms    14562.9 GFLOPS  PASS
+ENV memory=HBM round=2 variant=pd2  shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.329 ms    14218.1 GFLOPS | avg   11.341 ms    14203.2 GFLOPS  PASS
+ENV memory=HBM round=2 variant=def  shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.033 ms    14598.8 GFLOPS | avg   11.036 ms    14594.8 GFLOPS  PASS
+ENV memory=HBM round=2 variant=ps0  shape=6390 4256 81 81   6390 x  4256     81 x    81 best   22.219 ms    15562.2 GFLOPS | avg   22.243 ms    15545.1 GFLOPS  PASS
+ENV memory=HBM round=2 variant=pd4  shape=6390 4256 81 81   6390 x  4256     81 x    81 best   22.550 ms    15333.3 GFLOPS | avg   22.614 ms    15289.9 GFLOPS  PASS
+ENV memory=HBM round=2 variant=pd2  shape=6390 4256 81 81   6390 x  4256     81 x    81 best   22.243 ms    15545.4 GFLOPS | avg   22.257 ms    15535.2 GFLOPS  PASS
+ENV memory=HBM round=2 variant=def  shape=6390 4256 81 81   6390 x  4256     81 x    81 best   22.298 ms    15506.6 GFLOPS | avg   22.322 ms    15490.0 GFLOPS  PASS
+ENV memory=HBM round=3 variant=pd4  shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.238 ms    14391.0 GFLOPS | avg    5.248 ms    14361.5 GFLOPS  PASS
+ENV memory=HBM round=3 variant=def  shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.202 ms    14490.8 GFLOPS | avg    5.207 ms    14476.5 GFLOPS  PASS
+ENV memory=HBM round=3 variant=ps0  shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.188 ms    14528.6 GFLOPS | avg    5.257 ms    14337.7 GFLOPS  PASS
+ENV memory=HBM round=3 variant=pd2  shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.251 ms    14355.1 GFLOPS | avg    5.279 ms    14278.0 GFLOPS  PASS
+ENV memory=HBM round=3 variant=pd4  shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.725 ms    14538.8 GFLOPS | avg    5.731 ms    14523.8 GFLOPS  PASS
+ENV memory=HBM round=3 variant=def  shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.694 ms    14617.1 GFLOPS | avg    5.701 ms    14600.0 GFLOPS  PASS
+ENV memory=HBM round=3 variant=ps0  shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.696 ms    14613.3 GFLOPS | avg    5.702 ms    14597.1 GFLOPS  PASS
+ENV memory=HBM round=3 variant=pd2  shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.716 ms    14560.9 GFLOPS | avg    5.725 ms    14537.9 GFLOPS  PASS
+ENV memory=HBM round=3 variant=pd4  shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.063 ms    14560.3 GFLOPS | avg   11.067 ms    14554.6 GFLOPS  PASS
+ENV memory=HBM round=3 variant=def  shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.027 ms    14606.8 GFLOPS | avg   11.028 ms    14605.9 GFLOPS  PASS
+ENV memory=HBM round=3 variant=ps0  shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.017 ms    14620.0 GFLOPS | avg   11.023 ms    14612.2 GFLOPS  PASS
+ENV memory=HBM round=3 variant=pd2  shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.349 ms    14193.4 GFLOPS | avg   11.361 ms    14178.1 GFLOPS  PASS
+ENV memory=HBM round=3 variant=pd4  shape=6390 4256 81 81   6390 x  4256     81 x    81 best   22.651 ms    15265.1 GFLOPS | avg   22.655 ms    15262.6 GFLOPS  PASS
+ENV memory=HBM round=3 variant=def  shape=6390 4256 81 81   6390 x  4256     81 x    81 best   22.274 ms    15523.6 GFLOPS | avg   22.316 ms    15494.5 GFLOPS  PASS
+ENV memory=HBM round=3 variant=ps0  shape=6390 4256 81 81   6390 x  4256     81 x    81 best   22.260 ms    15533.1 GFLOPS | avg   22.279 ms    15519.9 GFLOPS  PASS
+ENV memory=HBM round=3 variant=pd2  shape=6390 4256 81 81   6390 x  4256     81 x    81 best   22.313 ms    15496.7 GFLOPS | avg   22.334 ms    15481.5 GFLOPS  PASS
+ENV memory=DDR round=1 variant=def  shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.389 ms    13988.1 GFLOPS | avg    5.403 ms    13949.6 GFLOPS  PASS
+ENV memory=DDR round=1 variant=pd2  shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.566 ms    13541.8 GFLOPS | avg    5.575 ms    13520.4 GFLOPS  PASS
+ENV memory=DDR round=1 variant=pd4  shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.399 ms    13961.4 GFLOPS | avg    5.413 ms    13924.3 GFLOPS  PASS
+ENV memory=DDR round=1 variant=ps0  shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.382 ms    14005.4 GFLOPS | avg    5.413 ms    13925.4 GFLOPS  PASS
+ENV memory=DDR round=1 variant=def  shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.766 ms    14436.2 GFLOPS | avg    5.777 ms    14408.0 GFLOPS  PASS
+ENV memory=DDR round=1 variant=pd2  shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.995 ms    13885.4 GFLOPS | avg    6.002 ms    13867.3 GFLOPS  PASS
+ENV memory=DDR round=1 variant=pd4  shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.756 ms    14460.7 GFLOPS | avg    5.765 ms    14437.3 GFLOPS  PASS
+ENV memory=DDR round=1 variant=ps0  shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.817 ms    14308.4 GFLOPS | avg    5.827 ms    14283.7 GFLOPS  PASS
+ENV memory=DDR round=1 variant=def  shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.047 ms    14580.6 GFLOPS | avg   11.052 ms    14574.2 GFLOPS  PASS
+ENV memory=DDR round=1 variant=pd2  shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.629 ms    13851.5 GFLOPS | avg   11.655 ms    13820.4 GFLOPS  PASS
+ENV memory=DDR round=1 variant=pd4  shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.047 ms    14580.5 GFLOPS | avg   11.051 ms    14574.9 GFLOPS  PASS
+ENV memory=DDR round=1 variant=ps0  shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.089 ms    14525.6 GFLOPS | avg   11.100 ms    14511.1 GFLOPS  PASS
+ENV memory=DDR round=1 variant=def  shape=6390 4256 81 81   6390 x  4256     81 x    81 best   22.327 ms    15486.5 GFLOPS | avg   22.347 ms    15473.0 GFLOPS  PASS
+ENV memory=DDR round=1 variant=pd2  shape=6390 4256 81 81   6390 x  4256     81 x    81 best   22.292 ms    15511.3 GFLOPS | avg   22.330 ms    15484.4 GFLOPS  PASS
+ENV memory=DDR round=1 variant=pd4  shape=6390 4256 81 81   6390 x  4256     81 x    81 best   22.507 ms    15362.8 GFLOPS | avg   22.548 ms    15335.2 GFLOPS  PASS
+ENV memory=DDR round=1 variant=ps0  shape=6390 4256 81 81   6390 x  4256     81 x    81 best   22.301 ms    15505.1 GFLOPS | avg   22.324 ms    15489.1 GFLOPS  PASS
+ENV memory=DDR round=2 variant=ps0  shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.399 ms    13962.2 GFLOPS | avg    5.419 ms    13908.7 GFLOPS  PASS
+ENV memory=DDR round=2 variant=pd4  shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.403 ms    13951.0 GFLOPS | avg    5.410 ms    13932.6 GFLOPS  PASS
+ENV memory=DDR round=2 variant=pd2  shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.507 ms    13686.8 GFLOPS | avg    5.551 ms    13579.1 GFLOPS  PASS
+ENV memory=DDR round=2 variant=def  shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.394 ms    13973.1 GFLOPS | avg    5.399 ms    13961.1 GFLOPS  PASS
+ENV memory=DDR round=2 variant=ps0  shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.810 ms    14327.5 GFLOPS | avg    5.828 ms    14280.9 GFLOPS  PASS
+ENV memory=DDR round=2 variant=pd4  shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.763 ms    14443.7 GFLOPS | avg    5.772 ms    14421.3 GFLOPS  PASS
+ENV memory=DDR round=2 variant=pd2  shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.977 ms    13926.8 GFLOPS | avg    6.013 ms    13841.6 GFLOPS  PASS
+ENV memory=DDR round=2 variant=def  shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.760 ms    14449.6 GFLOPS | avg    5.764 ms    14440.4 GFLOPS  PASS
+ENV memory=DDR round=2 variant=ps0  shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.075 ms    14544.0 GFLOPS | avg   11.083 ms    14533.7 GFLOPS  PASS
+ENV memory=DDR round=2 variant=pd4  shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.063 ms    14559.8 GFLOPS | avg   11.072 ms    14547.9 GFLOPS  PASS
+ENV memory=DDR round=2 variant=pd2  shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.605 ms    13879.9 GFLOPS | avg   11.625 ms    13855.5 GFLOPS  PASS
+ENV memory=DDR round=2 variant=def  shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.053 ms    14572.8 GFLOPS | avg   11.056 ms    14569.3 GFLOPS  PASS
+ENV memory=DDR round=2 variant=ps0  shape=6390 4256 81 81   6390 x  4256     81 x    81 best   22.185 ms    15585.7 GFLOPS | avg   22.208 ms    15569.6 GFLOPS  PASS
+ENV memory=DDR round=2 variant=pd4  shape=6390 4256 81 81   6390 x  4256     81 x    81 best   22.621 ms    15285.5 GFLOPS | avg   22.629 ms    15279.9 GFLOPS  PASS
+ENV memory=DDR round=2 variant=pd2  shape=6390 4256 81 81   6390 x  4256     81 x    81 best   22.239 ms    15547.8 GFLOPS | avg   22.270 ms    15526.6 GFLOPS  PASS
+ENV memory=DDR round=2 variant=def  shape=6390 4256 81 81   6390 x  4256     81 x    81 best   22.221 ms    15560.5 GFLOPS | avg   22.246 ms    15543.2 GFLOPS  PASS
+ENV memory=DDR round=3 variant=pd4  shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.395 ms    13970.8 GFLOPS | avg    5.396 ms    13969.6 GFLOPS  PASS
+ENV memory=DDR round=3 variant=def  shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.372 ms    14031.5 GFLOPS | avg    5.383 ms    14002.4 GFLOPS  PASS
+ENV memory=DDR round=3 variant=ps0  shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.404 ms    13948.6 GFLOPS | avg    5.435 ms    13869.6 GFLOPS  PASS
+ENV memory=DDR round=3 variant=pd2  shape=4096 6144 39 39   4096 x  6144     39 x    39 best    5.557 ms    13563.8 GFLOPS | avg    5.586 ms    13494.1 GFLOPS  PASS
+ENV memory=DDR round=3 variant=pd4  shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.756 ms    14460.4 GFLOPS | avg    5.781 ms    14398.8 GFLOPS  PASS
+ENV memory=DDR round=3 variant=def  shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.753 ms    14468.9 GFLOPS | avg    5.764 ms    14441.6 GFLOPS  PASS
+ENV memory=DDR round=3 variant=ps0  shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.819 ms    14303.2 GFLOPS | avg    5.835 ms    14266.1 GFLOPS  PASS
+ENV memory=DDR round=3 variant=pd2  shape=6144 4096 41 41   6144 x  4096     41 x    41 best    5.995 ms    13883.5 GFLOPS | avg    6.038 ms    13784.3 GFLOPS  PASS
+ENV memory=DDR round=3 variant=pd4  shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.048 ms    14579.5 GFLOPS | avg   11.055 ms    14570.8 GFLOPS  PASS
+ENV memory=DDR round=3 variant=def  shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.031 ms    14601.9 GFLOPS | avg   11.039 ms    14591.0 GFLOPS  PASS
+ENV memory=DDR round=3 variant=ps0  shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.065 ms    14557.2 GFLOPS | avg   11.076 ms    14542.5 GFLOPS  PASS
+ENV memory=DDR round=3 variant=pd2  shape=4256 6390 55 55   4256 x  6390     55 x    55 best   11.593 ms    13894.6 GFLOPS | avg   11.649 ms    13827.7 GFLOPS  PASS
+ENV memory=DDR round=3 variant=pd4  shape=6390 4256 81 81   6390 x  4256     81 x    81 best   22.626 ms    15282.3 GFLOPS | avg   22.633 ms    15277.5 GFLOPS  PASS
+ENV memory=DDR round=3 variant=def  shape=6390 4256 81 81   6390 x  4256     81 x    81 best   22.197 ms    15577.4 GFLOPS | avg   22.203 ms    15572.9 GFLOPS  PASS
+ENV memory=DDR round=3 variant=ps0  shape=6390 4256 81 81   6390 x  4256     81 x    81 best   22.192 ms    15581.0 GFLOPS | avg   22.213 ms    15566.4 GFLOPS  PASS
+ENV memory=DDR round=3 variant=pd2  shape=6390 4256 81 81   6390 x  4256     81 x    81 best   22.229 ms    15555.3 GFLOPS | avg   22.263 ms    15531.5 GFLOPS  PASS
+V67_ENV_DONE 2026-09-14T02:48:50+08:00
