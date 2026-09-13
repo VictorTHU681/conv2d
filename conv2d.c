@@ -81,7 +81,7 @@ static int env_int(const char* name, int def)
 }
 
 // 可调参数只在首次调用时读环境（getenv 每次要扫整个环境表，~2 µs/次，一次调用 9 次就是 ~0.3%）
-typedef struct { int inited, slice, sp, prof, pf_in, pf_out, postart, uzp, poolwfe, pool, store_asm, pf_fresh, pf_l2, br, sw_dense, pf_st, zva, roll, roll_pd, roll_w8, roll_w4, roll_w16, roll_w9, pack_ser; } knobs_t;
+typedef struct { int inited, slice, sp, prof, pf_in, pf_out, postart, uzp, poolwfe, pool, store_asm, pf_fresh, pf_l2, br, sw_dense, pf_st, zva, roll, roll_pd, roll_w8, roll_w4, roll_w16, roll_w9, k5conv, k9conv, pack_ser; } knobs_t;
 static knobs_t g_knobs;
 #ifdef CONV_ROWPROF
 static uint64_t* g_rowts = NULL;      // 线程 0 的逐行时间戳：行首 cntvct；pass 末追加 (cyc | 1<<63) 作结束标记
@@ -104,6 +104,8 @@ static void read_knobs(void)
     g_knobs.roll_w4 = env_int("CONV_ROLL_W4", 123);
     g_knobs.roll_w16 = env_int("CONV_ROLL_W16", 102);
     g_knobs.roll_w9 = env_int("CONV_ROLL_W9", 140);   // K9；实测 K9/pair 周期比 ~1.10（v61 诊断），140 疑高，见扫描
+    g_knobs.k5conv = env_int("CONV_K5CONV", 1);       // 诊断：0 = 关闭 33+8×2 → 35+K5 转换（量化 pairf4 慢档翻车）
+    g_knobs.k9conv = env_int("CONV_K9CONV", 1);       // 诊断：0 = 关闭 rem17 → 2×pairf4+K9 转换
     g_knobs.pack_ser = env_int("CONV_PACKSER", -1);   // R/kf：-1/1 按组重叠，2 完整串行基线，0 全体并行
     // -DCONV_ZVA_CURSOR 实验用：输出线 dc zva 预清零（不从 DRAM 读 RFO，每次调用少读 ~100 MB），需 zva 块 64 B 且允许
     { uint64_t dczid; asm volatile("mrs %0, dczid_el0" : "=r"(dczid));
@@ -2926,7 +2928,7 @@ static int roll_groups(long KH, long KW, rgrp_t* G)
 {
     int ng=roll_groups_base(KH,KW,G), np=KH/32, rem=KH%32;
     for (int g=0;g<ng;g++) G[g].sf=KH-1;
-    if (np<2 || rem!=17) return ng;
+    if (np<2 || rem!=17 || !g_knobs.k9conv) return ng;
     ng=0;
     long sf=KH-1, s=0;
     for (int p=0;p<np;p++) {
@@ -2950,7 +2952,7 @@ static int roll_groups_width(long KH, long KW, rgrp_t* G, long outW)
         ng = roll_groups_base(KH, KW, G);
         for (int g = 0; g < ng; g++) G[g].sf = KH - 1;
     }
-    if (outW >= 192) {
+    if (outW >= 192 && g_knobs.k5conv) {
         int pair = -1, tail = -1;
         for (int g = 0; g < ng; g++) {
             if (G[g].kind == 33) pair = g;
