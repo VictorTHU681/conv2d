@@ -1,0 +1,3 @@
+conv: four expected members verified, operator SHA256 ae525112d6b1b22f9508d5edb862ba923547527012e3477630ff89bc3b5d33c8
+conv_nf3: four expected members verified, operator SHA256 add2b73f9157ebd0e5ee3df94e9f222104527108d472f312c34cea41b240b4af
+conv_diag: four expected members verified, operator SHA256 401d5978906de12e0666ead4e8ce4a88132b9a723edfefb235722a341f9306ab

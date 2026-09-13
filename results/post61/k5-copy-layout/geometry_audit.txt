@@ -1,0 +1,13 @@
+19200 KW/alignment/mode geometries PASS. Per-plane endpoint mappings and copy lengths validate; this is a geometry model, not an audit of all assembly accesses.
+KH41/KW41 mode=0 alignment=0: prefix/full48/tail_triples/scalars/stride=(0, 4, 13, 1, 96)
+KH41/KW41 mode=0 alignment=4: prefix/full48/tail_triples/scalars/stride=(4, 4, 14, 2, 96)
+KH41/KW41 mode=0 alignment=8: prefix/full48/tail_triples/scalars/stride=(8, 5, 0, 0, 96)
+KH41/KW41 mode=0 alignment=12: prefix/full48/tail_triples/scalars/stride=(12, 5, 1, 1, 112)
+KH41/KW41 mode=1 alignment=0: prefix/full48/tail_triples/scalars/stride=(0, 4, 13, 1, 96)
+KH41/KW41 mode=1 alignment=4: prefix/full48/tail_triples/scalars/stride=(0, 4, 13, 1, 96)
+KH41/KW41 mode=1 alignment=8: prefix/full48/tail_triples/scalars/stride=(0, 4, 13, 1, 96)
+KH41/KW41 mode=1 alignment=12: prefix/full48/tail_triples/scalars/stride=(0, 4, 13, 1, 96)
+KH41/KW41 mode=2 alignment=0: prefix/full48/tail_triples/scalars/stride=(2, 4, 14, 0, 96)
+KH41/KW41 mode=2 alignment=4: prefix/full48/tail_triples/scalars/stride=(2, 4, 14, 0, 96)
+KH41/KW41 mode=2 alignment=8: prefix/full48/tail_triples/scalars/stride=(2, 4, 14, 0, 96)
+KH41/KW41 mode=2 alignment=12: prefix/full48/tail_triples/scalars/stride=(2, 4, 14, 0, 96)

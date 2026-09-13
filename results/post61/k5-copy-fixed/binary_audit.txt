@@ -1,0 +1,4 @@
+9c3e6a9ce86da5cc71a93498f62f88f6646f66ab5f665c7d0d3ba9380056a294  build/post61/k5-copy-fixed/official_baseline
+9ff1c1704d0a371afaaccf97db04babfb51ed703e40303c1f99b843bed207e43  build/post61/k5-copy-fixed/official_exact
+cf1a314e975f39534c364681d6f499a3a58046ea6a6593182b37b5ebed7250ba  build/post61/k5-copy-fixed/official_triples
+All three post-run full-reference binaries match pre-run SHA256 in job 1589157.
