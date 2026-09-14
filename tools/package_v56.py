@@ -13,7 +13,6 @@ source = (root/'conv2d.c').read_bytes()
 assert source.count(b'#define CONV_NF_REM7 0') == 1
 variants = {
     'conv.zip': (source, 'run.sh'),                       # v66 起默认即 rem7=3 链（nf3）
-    'conv_nf4.zip': (source.replace(b'#define CONV_NF_REM7 0', b'#define CONV_NF_REM7 4'), 'run.sh'),   # 线上对照：旧 nf4 路径
 }
 for name, (operator, script) in variants.items():
     files = {'conv2d.c': operator, 'bench_conv.c': (root/'bench_conv.c').read_bytes(),
