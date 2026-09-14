@@ -9,14 +9,11 @@ import zipfile
 root = Path(__file__).resolve().parent.parent
 build = root / 'build' / 'v56'
 build.mkdir(parents=True, exist_ok=True)
-subprocess.run(['python3', str(root/'tools/mkdiag.py'), str(root/'conv2d.c'),
-                str(build/'release_diag.c')], check=True, stdout=sys.stderr)
 source = (root/'conv2d.c').read_bytes()
 assert source.count(b'#define CONV_NF_REM7 0') == 1
 variants = {
     'conv.zip': (source, 'run.sh'),                       # v66 起默认即 rem7=3 链（nf3）
     'conv_nf4.zip': (source.replace(b'#define CONV_NF_REM7 0', b'#define CONV_NF_REM7 4'), 'run.sh'),   # 线上对照：旧 nf4 路径
-    'conv_diag.zip': ((build/'release_diag.c').read_bytes(), 'run_diag.sh'),
 }
 for name, (operator, script) in variants.items():
     files = {'conv2d.c': operator, 'bench_conv.c': (root/'bench_conv.c').read_bytes(),
