@@ -69,7 +69,7 @@ else
 fi
 echo "[run.sh] host=$(hostname 2>/dev/null) node=$cpunode hbm=${hbm:-none} threads=$NT" >&2   # 仅 stderr，不影响判题解析
 
-$RUN ./conv2d_test 4096 6144 39 39 1
-$RUN ./conv2d_test 6144 4096 41 41 1
-$RUN ./conv2d_test 4256 6390 55 55 1
-$RUN ./conv2d_test 6390 4256 81 81 1
+$RUN ./conv2d_test 4096 6144 39 39 10
+$RUN ./conv2d_test 6144 4096 41 41 10
+$RUN ./conv2d_test 4256 6390 55 55 10
+$RUN ./conv2d_test 6390 4256 81 81 10
