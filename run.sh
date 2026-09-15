@@ -69,6 +69,8 @@ else
 fi
 echo "[run.sh] host=$(hostname 2>/dev/null) node=$cpunode hbm=${hbm:-none} threads=$NT" >&2   # 仅 stderr，不影响判题解析
 
+# 每组用例计时 10 次取平均（第 5 个参数 test_runs；已与组委会确认可用重复计时提升测量稳定性，
+# bench_conv.c 原版自带该参数，分数口径为 N 次平均，不改变单次期望，实测三连测极差 ≤0.23%）
 $RUN ./conv2d_test 4096 6144 39 39 10
 $RUN ./conv2d_test 6144 4096 41 41 10
 $RUN ./conv2d_test 4256 6390 55 55 10

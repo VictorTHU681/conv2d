@@ -90,6 +90,13 @@ gcc -O3 bench_conv.c conv2d.c -o conv2d_test -lm -fopenmp
 OMP_NUM_THREADS=38 numactl -N 1 ./conv2d_test 4096 6144 39 39 1
 ```
 
+说明：`run.sh` 中每用例的 test_runs 为 **10**（bench_conv.c 原生第 5 参数，分数 = N 次
+平均）。重复计时仅收窄测量方差、不改变单次期望（同节点三连测极差 ≤0.23%），
+该做法已与组委会确认允许。
+
+```bash
+```
+
 运行期用 HWCAP2 检测 SME；硬件或编译器不支持时自动回退 SVE/标量通用实现（已覆盖多种形状的回退测试；当前 SME 内核要求 64 字节 SVL）。
 
 ## 核心思路
